@@ -2,6 +2,7 @@
 #define MENU_H_INCLUDED
 
 #include <WMenu>
+#include <WMenuItem>
 #include <WStackedWidget>
 
 #include "defines.h"
@@ -19,7 +20,17 @@ private:
     WMenu * menu;
     WLineEdit * login;
     WLineEdit * pass;
+    WPushButton * btn;
     SessionInfo * session;
+    WBreak ** breakTab;
+
+    WPushButton * plLang;
+    WPushButton * enLang;
+
+    void LogMeIn();
+    void SetPlLang();
+    void SetEngLang();
+    void RefreshMenuWidgets();
 };
 
 #endif // MENU_H_INCLUDED

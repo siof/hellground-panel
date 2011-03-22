@@ -9,8 +9,10 @@ public:
     DefaultPage(SessionInfo * sess, WContainerWidget * parent = 0);
     ~DefaultPage() {}
 
+    void refresh();
 private:
     SessionInfo * session;
+    void ShowText();
 };
 
 #endif // DEFAULT_H_INCLUDED
