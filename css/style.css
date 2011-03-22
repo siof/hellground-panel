@@ -9,6 +9,13 @@
 	padding: 0px;
 }
 
+button
+{
+    margin: 5px;
+    min-width: 10px;
+    min-height: 10px;
+}
+
 a img 
 {
 	border-width: 0px;
@@ -101,7 +108,7 @@ body
 #logo
 {
 	position: absolute;
-	left: 18%;
+	left: 40%;
 	top: 12%;
 	/*height: 63px;
 	width: 572px;*/
@@ -214,6 +221,7 @@ body
 	margin: 0 auto;
 	padding: 20px 0 0 0;
 	width: 190px;
+    min-height: 500px;
 }
 
 .menus

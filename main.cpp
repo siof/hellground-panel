@@ -54,7 +54,7 @@ PlayersPanel::PlayersPanel(const WEnvironment& env)
     tmpContainer2->setId("character");
     tmpContainer->addWidget(tmpContainer2);
     // add img logo to div "header"
-    WImage * tmpImg = new WImage("logo", tmpContainer);
+    WImage * tmpImg = new WImage("../img/logo.png", tmpContainer);
     tmpImg->setId("logo");
     tmpImg->setAlternateText(SITE_NAME);
     tmpContainer->addWidget(tmpImg);

@@ -24,6 +24,11 @@
 					<Add option="-lwt -lwthttp" />
 					<Add directory="/usr/lib" />
 				</Linker>
+				<ExtraCommands>
+					<Add after="cp -r ../img ./Debug/" />
+					<Add after="cp -r ../css ./Debug/" />
+					<Mode after="always" />
+				</ExtraCommands>
 			</Target>
 			<Target title="Release">
 				<Option output="Release/panel.wt" prefix_auto="1" extension_auto="0" />
@@ -44,6 +49,11 @@
 					<Add option="-lwt -lwthttp" />
 					<Add directory="/usr/lib" />
 				</Linker>
+				<ExtraCommands>
+					<Add after="cp -r ../img ./Release/" />
+					<Add after="cp -r ../css ./Release/" />
+					<Mode after="always" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
@@ -60,6 +70,15 @@
 			<envvars />
 			<debugger />
 			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
