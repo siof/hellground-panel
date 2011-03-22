@@ -14,6 +14,8 @@ class HGMenu : public WContainerWidget
 public:
     HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidget *parent=0);
     ~HGMenu();
+
+    void refresh();         // overload, some link should be available only if user is logged in
 private:
     WContainerWidget * container;       // contains menu + additional items added on menu side
     WStackedWidget * menuContents;      // container where menu items will be shown after click
@@ -31,6 +33,7 @@ private:
     void SetPlLang();
     void SetEngLang();
     void RefreshMenuWidgets();
+    void ShowMenuOptions();
 };
 
 #endif // MENU_H_INCLUDED

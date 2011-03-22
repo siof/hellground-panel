@@ -46,9 +46,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menu = new WMenu(menuContents, Wt::Vertical, this);
     menu->setRenderAsList(true);
-    menu->addItem("Home", new DefaultPage(session));
-    menu->addItem("test2sdfsfasfd", new WText("tescik2"));
-    menu->addItem("test3", new WText("tescik3"));
+    ShowMenuOptions();
 
     addWidget(menu);
 }
@@ -103,6 +101,7 @@ void HGMenu::LogMeIn()
 
         login->setText("");
         pass->setText("");
+        refresh();
     }
 }
 
@@ -110,10 +109,55 @@ void HGMenu::SetPlLang()
 {
     session->language = LANG_PL;
     RefreshMenuWidgets();
+    refresh();
 }
 
 void HGMenu::SetEngLang()
 {
     session->language = LANG_EN;
     RefreshMenuWidgets();
+    refresh();
+}
+
+void HGMenu::ShowMenuOptions()
+{
+    std::vector<WMenuItem*>::const_iterator itr = menu->items().begin();
+    while(itr != menu->items().end())
+    {
+        WMenuItem * tmp = *itr;
+        menu->removeItem(tmp);
+        delete tmp;
+    }
+
+    menu->addItem("Home", new DefaultPage(session));
+
+    switch (session->language)
+    {
+        case LANG_PL:
+            menu->addItem("test2sdfsfasfd PL", new WText("tescik2"));
+
+            if (session->accid)
+            {
+                menu->addItem("test3 PL", new WText("tescik3"));
+
+            }
+            break;
+
+        case LANG_EN:
+            menu->addItem("test2sdfsfasfd EN", new WText("tescik2"));
+
+            if (session->accid)
+            {
+                menu->addItem("test3 EN", new WText("tescik3"));
+
+            }
+            break;
+    }
+}
+
+void HGMenu::refresh()
+{
+    ShowMenuOptions();
+
+    WContainerWidget::refresh();
 }

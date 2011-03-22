@@ -11,7 +11,7 @@ void DefaultPage::refresh()
 {
     ShowText();
 
-    WWebWidget::refresh();
+    WContainerWidget::refresh();
 }
 
 void DefaultPage::ShowText()
