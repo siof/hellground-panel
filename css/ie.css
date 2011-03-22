@@ -1,0 +1,570 @@
+/* Global Resets */
+
+*
+{
+	border-width: 0px;
+	font-family: Verdana, Arial, sans-serif;
+	line-height: 15px;
+	margin: 0px;
+	padding: 0px;
+}
+
+a img 
+{
+	border-width: 0px;
+}
+
+a:link,a:active,a:visited
+{
+	color:#aa0000;
+	text-decoration:none;
+}
+
+
+a:hover
+{
+	color:#ff0000;
+}
+
+a:focus
+{
+	outline:none;
+}
+
+table td
+{
+	vertical-align: top;
+}
+
+body
+{
+	color:#ffffff;
+	background: #000000 url('../img/bg.gif') no-repeat top center;
+	font-size:12px;
+	margin-top: 26px;
+}
+
+
+#body
+{
+	background: url('../img/borders.gif') repeat-y top center;
+	margin:0 auto;
+	position:relative;
+	top:0;
+	vertical-align: top;
+	width: 848px;
+}
+
+#showhidemenu
+{
+	z-index: 200;
+	color: #c02f20;
+	padding-top:6px;
+	position:absolute;
+	left:75px;
+	top:214px;
+	text-align:center;
+	width:100px;
+	height:19px;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 8px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	background: url('../img/showhidemenu.gif') no-repeat center;
+}
+#showhidemenu a
+{
+	color: #bb0000;
+	z-index: 300;
+}
+
+#header
+{
+	background: url('../img/header_bg.jpg') no-repeat top center;
+	height: 186px;
+	position: relative;
+	text-align: center;
+}
+
+#character
+{
+	background: url('../img/chaos.png') no-repeat top left;
+	position: absolute;
+	left: -10px;
+	top: -47px;
+	height: 234px;
+	width: 265px;
+	z-index: 15;
+}
+
+#logo
+{
+	position: absolute;
+	left: 18%;
+	top: 12%;
+	/*height: 63px;
+	width: 572px;*/
+	z-index: 25;
+}
+
+#pagetitle{
+	text-align:center;
+	font-size:10pt;
+	font-weight:bold;
+}
+#pagesubtitle{
+	text-align:center;
+	font-size:9pt;
+	font-weight:normal;
+	padding-bottom: 20px;
+}
+
+.nav
+{
+	background: url('../img/nav_bg.png') repeat-x bottom center;
+	height: 28px;
+	margin:0 auto;
+	position: absolute;
+	left: 14px;
+	top: 159px;
+	width: 820px;
+	z-index: 50;
+}
+
+#navmenu
+{
+	font-size:12px;
+	font-family:Arial, Helvetica, Sans-Serif;
+	font-weight:bold;
+	height: 25px;
+	margin-top: 7px;
+	overflow:hidden;
+	text-align:center;
+	text-transform:uppercase;
+	width:820px;
+}
+
+#navmenu a:link,a:active,a:visited
+{
+	color:#cc0000;
+	text-decoration:none;
+}
+
+#navmenu a:hover
+{
+	color:#aa0000;
+}
+
+
+#navmenu ul
+{
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+
+#navmenu ul li
+{
+	background:url('../img/nav_separator.png') left center no-repeat;
+	display:inline;
+	height: 25px;
+	list-style:none;
+	margin:0;
+	padding:0 15px 0 27px;
+}
+
+#navmenu .first
+{
+	background:none;
+	padding-left:0;
+}
+
+#header-bot
+{
+	background:url('../img/header_bot.jpg') repeat-x;
+	height: 18px;
+	width: 820px;
+}
+
+#content
+{
+	background: url('../img/sidebar_border.jpg') repeat-y;
+	background-position:  218px 0px;
+	margin: 0 auto;
+	width: 820px;
+}
+
+.content-collapsed
+{
+	background:none !important
+}
+
+#sidebar
+{
+	background:url('../img/sidebar_bg.jpg') no-repeat top left;
+	width: 218px;
+	text-align: left;
+	vertical-align: top;
+}
+
+#sidemenubar
+{
+	margin: 0 auto;
+	padding: 20px 0 0 0;
+	width: 190px;
+}
+
+.menus
+{
+	background:url('../img/side_bg.png') no-repeat;
+	margin:  0 auto;
+	padding: 0;
+	width:190px;
+	text-align:left;
+}
+
+#guidemenu .menus
+{
+	background:url('../img/hover_bg.png') no-repeat !important;
+}
+
+
+.menus .menucontent
+{
+	margin:  0 auto;
+	width:175px;
+	text-align:left;
+}
+
+.menus h1
+{
+	color:#c02f20;
+	font-size:13px;
+	font-family:Georgia,"Times New Roman",Times,serif;
+	font-variant: small-caps;
+	font-weight:bold;
+	height: 30px;
+	margin:0;
+	padding:8px 0 0 0;
+	text-align: center;
+}
+
+.menus .menucontent ul
+{
+	list-style:none;
+	padding: 0 0 0 10px;
+	margin:0px:
+}
+
+.menus .menucontent ul li
+{
+	padding:0px 0 2px 20px;
+	margin:0px;
+	background:url('../img/bullet.png') no-repeat left;
+	font-size:12px;
+	font-weight: bold;
+	font-family:Arial,Helvetica,sans-serif;
+}
+
+.menus table td
+{
+	text-align: left;
+}
+
+.menus div table {
+	margin: 0 auto;
+}
+
+.base
+{
+	height:11px;
+	width:190px;
+	margin-bottom:12px;
+	background:url('../img/side_base.png') no-repeat;
+}
+
+#main
+{
+	min-height: 800px;
+	width: 602px;
+}
+
+.main-collapsed
+{
+	width:602px !important
+}	
+
+#footer
+{
+	background: url('../img/footer_bg.jpg') no-repeat top center;
+	height: 19px;
+	position: relative;
+	width: 848px;
+}
+
+#chains
+{
+	background: url('../img/chains.png') no-repeat;
+	height: 40px;
+	position: absolute;
+	left: 0px;
+	top: -7px;
+	width: 848px;
+}
+
+#mainframe
+{
+	empty-cells:show;
+	font-size: 11px;
+	margin: 0 auto;
+	overflow:auto;
+	padding: 10px 0 20px 0;
+	vertical-align:top;
+	width:580px;
+}
+
+.mainframe-collapsed
+{
+	width:598px !important
+}
+
+.listlabel
+{
+	background:url('../img/post-header.jpg') repeat-x;
+	color:#c02f20;
+	height: 20px;
+	font-weight:bold;
+}
+
+.listlabel td
+{
+	padding: 2px 5px 0 5px;
+}
+
+.listlabel i
+{
+	color:#ffffff;
+	font-weight:bold;
+}
+
+.list, .List {
+	margin: 0 auto;
+}
+
+.list, .List, .PostText {
+	background-color: #130100;
+	border: 1px solid #600303;
+}
+.PostInfo {
+	border: 1px solid #600303;
+}
+.listred {
+	background-color: #331114;
+}
+.list1, .list2, .newlist1, .newlist2
+{
+	color:#ffffff;
+	padding:5px !important;
+	font-size:8pt;
+}
+.list1 div,.list2 div
+{
+	margin-bottom:5px !important;
+	text-align: left;
+}
+#notification, #notifsmall
+{
+	background: #250101 !important;
+	position:fixed !important;
+}
+#notification a
+{
+	color:	#c02f20 !important;
+}
+.wowtooltip
+{
+	text-align: left;
+}
+.list2, .PostInfo
+{
+	background-color: #250101;
+}
+.newlist1
+{
+	background-color: #3f3615;
+	font-weight:bold;
+	color: #ffffff;
+}
+.newlist2
+{
+	background-color: #383116;
+	font-weight:bold;
+	color: #ffffff;
+}
+.calday
+{
+	width:20px;
+	height:18px;
+	text-align:center !important;
+}
+
+tr.calheader, tr.calheader td
+{
+	text-align:center !important;
+	font-weight:bold;
+}
+
+.calcurrent
+{
+	border-width:1px;
+	border-style:solid;
+	border-color:#aaaaaa
+}
+
+
+/* The next rules (all preceded with bigcal) are for the 'Big Calendar' (bigcalendar.php) */
+
+/* this is the table that displays the calendar info */
+.bigcal {width:100%;border-style:inset;border-width:1px;}
+
+/* This is the header of the calendar, displaying the month and year, and the links to the next months */
+.bigcalheader{font-size:16pt;font-weight:bold;background:url('../img/post-header.jpg') repeat-x;}
+
+/* Day Labels 'Sunday' 'Monday' etc */
+.bigcaldayheader{font-size:10pt;font-weight:bold;background:url('../img/post-header.jpg') repeat-x;}
+
+/* This is the class for each day */
+.bigcalday {width:14%;border-style:solid;border-color:#c02f20;border-width:1px;height:100px;background:#250101;}
+
+/* This is a class that is displayed on event labels (8:00pm - Gruul's Lair) */
+.bigcallabel{font-size:8pt;cursor:pointer}
+
+/* This is the div containing the day of the month */
+.bigcaldaylabel{font-size:8pt;background:url('../img/post-header.jpg') repeat-x;text-align:center}
+
+/* The class when a day on the calendar is being hovered over */
+.bigcalday_hover{border-color:#D61318}
+
+/* One of the classes displayed on today */
+.bigcalcurrent{border-color:#000000;background:#ff0000}
+
+/* One of the classes to display is something is scheduled on that day */
+.bigcalsomething{}
+
+/* This is going to be the Arrows to the right and left */
+.bigcalheader a{color:}
+
+/* This is the div that gets clicked to add a new item.  The default image is a plus.  The Overflow:hidden is because IE, for whatever reason, wants to make it higher than the height attribute */
+.bigcalplus{	position:relative;
+		top:2px;
+		float:right;
+		width:10px;
+		height:10px;
+		overflow:hidden;
+		line-height:1px;
+		background-image:url(plus.gif);
+		cursor:pointer;}		
+
+/* A day that's not in the current month (at the beginning and end of the calendar display) */
+.bigcalblank {}
+
+
+/* The following are the rules for tabs */
+div.tabrow{float:left;width:100%;padding-top:5px;}
+ul.tabrow, ul.tabrow li{list-style-type:none;margin:0;padding:0}
+ul.tabrow{margin-left:10px;}
+ul.tabrow li{list-style-image:none;float:left;margin-right: 3px;text-align:center;font-size:inherit}
+ul.tabrow a{float:left;width:8em;padding: 5px 0;background-color:#57667a;}
+ul.tabrow a:hover {background:#347892;color:#ffffff}
+ul.tabrow li.selected a,ul.tabrow li.selected a:hover {background-color:#22224f;color:#ffffff}
+
+/* Login elements */
+#loginstuff {
+	color: #ffffff;
+	font-size: 10px;
+	font-weight: bold;
+	text-align: center;
+}
+
+#loginstuff input {
+	width: 80px;
+	background-color: #250101;
+	color: #ffffff;
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px;
+	margin: 2px;
+	border: 1px solid #130100;
+}
+
+#loginstuff input.button {
+	width: auto;
+}
+
+input.button{
+	width:auto;
+	background-color: #250101;
+	color: #ffffff;
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px;
+	margin: 2px;
+	border: 1px solid #aa0000;
+}
+
+select{
+	padding:2px;
+	margin:2px;
+}
+
+#loginstuff table td {
+	text-align:right !important;
+	vertical-align: middle;
+}
+
+.MenuChoice td {
+	font-size: 10px;
+}
+
+/* Guides */
+.GuideTitle, .GuideSubTitle {
+	display: block;
+	font-weight: bold;
+	border-bottom: 1px solid #1b354a;
+}
+.GuideTitle {
+	font-size: 1.4em;
+}
+.GuideSubTitle {
+	font-size: 1.2em;
+}
+
+.plain{
+	font-size:8pt
+}
+
+.xsmall{
+	font-size:7pt;
+}
+
+textarea{
+	font-size:10pt;
+	font-family:monospace;
+}
+
+
+
+
+* html * td, * html * div
+{
+	text-align:left;
+}
+
+.menus{
+	float:left;
+}
+
+.list, .List, .PostText,.PostInfo,.listred,.list1, .list2, .newlist1, .newlist2 {
+	text-align:left
+}

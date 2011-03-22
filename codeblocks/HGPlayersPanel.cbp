@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="HGPlayersPanel" />
+		<Option pch_mode="2" />
+		<Option default_target="Release" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="Debug/panel.wt" prefix_auto="1" extension_auto="0" />
+				<Option object_output="Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="/usr/include" />
+					<Add directory="/usr/include/Wt" />
+					<Add directory="/usr/local/Wt/include" />
+					<Add directory="/usr/local/wt/include" />
+					<Add directory="/usr/local/wt" />
+				</Compiler>
+				<Linker>
+					<Add option="-lwt -lwthttp" />
+					<Add directory="/usr/lib" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="Release/panel.wt" prefix_auto="1" extension_auto="0" />
+				<Option object_output="Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="--docroot . --http-address 0.0.0.0 --http-port 8080" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="/usr/include" />
+					<Add directory="/usr/include/Wt" />
+					<Add directory="/usr/local/Wt/include" />
+					<Add directory="/usr/local/wt/include" />
+					<Add directory="/usr/local/wt" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-lwt -lwthttp" />
+					<Add directory="/usr/lib" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../defines.h" />
+		<Unit filename="../main.cpp" />
+		<Unit filename="../menu.cpp" />
+		<Unit filename="../menu.h" />
+		<Unit filename="../pages/default.cpp" />
+		<Unit filename="../pages/default.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
