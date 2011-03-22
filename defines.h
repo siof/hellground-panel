@@ -11,6 +11,8 @@
 #include <WImage>
 #include <WTable>
 
+#include <cstdio>
+
 using namespace Wt;
 
 typedef uint64_t uint64;

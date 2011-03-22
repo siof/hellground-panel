@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1300796967 source:/home/gareth/projekty/hgpanel/main.cpp
+1300819674 source:/home/gareth/projekty/hgpanel/main.cpp
 	<WApplication>
 	<WEnvironment>
 	<WMenu>
@@ -7,7 +7,6 @@
 	<WBorderLayout>
 	"defines.h"
 	"menu.h"
-	<cstdio>
 
 1290515139 /usr/include/Wt/WApplication
 	<vector>
@@ -4025,7 +4024,7 @@
 1287240871 /usr/include/Wt/WStackedWidget
 	<Wt/WContainerWidget>
 
-1300793506 /home/gareth/projekty/hgpanel/defines.h
+1300819678 /home/gareth/projekty/hgpanel/defines.h
 	<WString>
 	<WBreak>
 	<WContainerWidget>
@@ -4034,8 +4033,9 @@
 	<WText>
 	<WImage>
 	<WTable>
+	<cstdio>
 
-1300811660 /home/gareth/projekty/hgpanel/menu.h
+1300818965 /home/gareth/projekty/hgpanel/menu.h
 	<WMenu>
 	<WMenuItem>
 	<WStackedWidget>
@@ -4045,10 +4045,10 @@
 	"menu.h"
 	"pages/default.h"
 
-1300804458 /home/gareth/projekty/hgpanel/pages/default.h
+1300818255 /home/gareth/projekty/hgpanel/pages/default.h
 	"../defines.h"
 
-1300805850 source:/home/gareth/projekty/hgpanel/pages/default.cpp
+1300819244 source:/home/gareth/projekty/hgpanel/pages/default.cpp
 	"default.h"
 
 1290677799 /usr/include/Wt/WEnvironment

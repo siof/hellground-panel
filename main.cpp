@@ -9,8 +9,6 @@
 #include "menu.h"
 //#include "footer.h"
 
-#include <cstdio>
-
 using namespace Wt;
 
 class PlayersPanel : public WApplication
@@ -43,7 +41,7 @@ PlayersPanel::PlayersPanel(const WEnvironment& env)
     page->setId("body");
 
     // add header img
-    page->addWidget(new WImage("../img/header_top.jpg", page));
+    page->addWidget(new WImage("img/header_top.jpg", page));
 
     // create and add div "header"
     WContainerWidget * tmpContainer = new WContainerWidget(page);
@@ -54,7 +52,7 @@ PlayersPanel::PlayersPanel(const WEnvironment& env)
     tmpContainer2->setId("character");
     tmpContainer->addWidget(tmpContainer2);
     // add img logo to div "header"
-    WImage * tmpImg = new WImage("../img/logo.png", tmpContainer);
+    WImage * tmpImg = new WImage("img/logo.png", tmpContainer);
     tmpImg->setId("logo");
     tmpImg->setAlternateText(SITE_NAME);
     tmpContainer->addWidget(tmpImg);
