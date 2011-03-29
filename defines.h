@@ -17,6 +17,26 @@ using namespace Wt;
 
 typedef uint64_t uint64;
 
+#define SHOW_MYSQL_ERRORS
+
+#define DEBUG
+
+#ifdef DEBUG
+#include <iostream>
+#endif
+
+#define SITE_TITLE  "HellGround Player's Panel"
+
+#define SITE_NAME   "HellGround"
+
+#define SQL_LOGIN       ""
+#define SQL_PASSWORD    ""
+#define SQL_HOST        ""
+
+#define SQL_REALMDB     ""
+#define SQL_CHARDB      ""
+#define SQL_WORLDDB     ""
+
 enum Lang
 {
     LANG_PL = 0,
@@ -40,12 +60,20 @@ struct SessionInfo
     uint64 accid;
     WString pass;
     WString email;
+    WString joinDate;
+    WString lastLogin;
+    WString lastIp;
     Lang language;
     AccountLevel accLvl;
+    bool locked;
+    int expansion;
 };
 
-#define SITE_TITLE  "HellGround Player's Panel"
-
-#define SITE_NAME   "HellGround"
+enum Errors
+{
+    ERROR_DB_CONNECT    = 0,
+    ERROR_LOGIN         = 1,
+    ERROR_ROW_NOT_FOUND = 2
+};
 
 #endif // DEFINES_H_INCLUDED

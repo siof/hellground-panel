@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "pages/default.h"
+#include "database.h"
 
 HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidget *parent)
 : WContainerWidget(parent)
@@ -70,38 +71,99 @@ void HGMenu::RefreshMenuWidgets()
         menuContents->widget(i)->refresh();
 }
 
+void HGMenu::RefreshActiveMenuWidget()
+{
+    menuContents->currentWidget()->refresh();
+}
+
 void HGMenu::LogMeIn()
 {
-    // just for test - must be replaced with normal auth check
-    if (login->text() == "test" && pass->text() == "test")
+    Database * db;
+    if (!(db = new Database(SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_REALMDB, 0)))
     {
-        login->setHidden(true);
-        pass->setHidden(true);
-        btn->setHidden(true);
-        login->setDisabled(true);
-        pass->setDisabled(true);
-        btn->setDisabled(true);
+        errorPage->SetErrorMsg(ERROR_DB_CONNECT);
+        menu->select(errorPageMenuItem);
+        RefreshActiveMenuWidget();
+        return;
+    }
 
-        removeWidget(login);
-        removeWidget(pass);
-        removeWidget(btn);
+    // simple login check ... should be replaced with something better
 
-        for (int i = 0; i < 3; ++i)
+    std::string escapedLogin = db->EscapeString(login->text());
+    std::string escapedPass = db->EscapeString(pass->text());
+
+    std::string query = "SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, last_login, locked, expansion FROM account WHERE username = '";
+    query += escapedLogin;
+    query += "' AND sha_pass_hash = SHA1(UPPER('";
+    query += escapedLogin;
+    query += ":";
+    query += escapedPass;
+    query += "'));";
+
+    printf("\n\nquery: %s\n\n", query.c_str());
+
+    db->SetQuery(query);
+
+    printf("\n\nquery: %s\n\n", db->GetQuery().c_str());
+
+    if (db->ExecuteQuery() > 0)
+    {
+        DatabaseRow * row = db->GetRow(0);
+        if (row)
         {
-            breakTab[i]->setHidden(true);
-            breakTab[i]->setDisabled(true);
-            removeWidget(breakTab[i]);
+            session->login = row->fields[0].GetWString();
+            session->pass = row->fields[1].GetWString();
+            session->accid = row->fields[2].GetUInt64();
+            session->accLvl = row->fields[3].GetAccountLevel();
+            session->email = row->fields[4].GetWString();
+            session->joinDate = row->fields[5].GetWString();
+            session->lastIp = row->fields[6].GetWString();
+            session->lastLogin = row->fields[7].GetWString();
+            session->locked = row->fields[8].GetBool();
+            session->expansion = row->fields[9].GetInt();
+
+            login->setText("");
+            pass->setText("");
+
+            login->setHidden(true);
+            pass->setHidden(true);
+            btn->setHidden(true);
+            login->setDisabled(true);
+            pass->setDisabled(true);
+            btn->setDisabled(true);
+
+            removeWidget(login);
+            removeWidget(pass);
+            removeWidget(btn);
+
+            for (int i = 0; i < 3; ++i)
+            {
+                breakTab[i]->setHidden(true);
+                breakTab[i]->setDisabled(true);
+                removeWidget(breakTab[i]);
+            }
+
+            refresh();
+            errorPageMenuItem->hide();
+            menu->select(0);
+            RefreshActiveMenuWidget();
         }
+        else
+        {
+            errorPage->SetErrorMsg(ERROR_ROW_NOT_FOUND);
+            menu->select(errorPageMenuItem);
+            RefreshActiveMenuWidget();
+        }
+    }
+    else
+    {
+        #ifdef SHOW_MYSQL_ERRORS
+        errorPage->SetAdditionalErrorMsg(db->GetError());
+        #endif
 
-        session->login = login->text();
-        session->pass = pass->text();
-        session->accid = 1;
-
-        RefreshMenuWidgets();
-
-        login->setText("");
-        pass->setText("");
-        refresh();
+        errorPage->SetErrorMsg(ERROR_LOGIN);
+        menu->select(errorPageMenuItem);
+        RefreshActiveMenuWidget();
     }
 }
 
@@ -153,6 +215,12 @@ void HGMenu::ShowMenuOptions()
             }
             break;
     }
+
+    errorPage = new ErrorPage(session);
+    errorPageMenuItem = new WMenuItem("error", errorPage);
+    errorPageMenuItem->hide();
+    errorPageMenuItem->disable();
+    menu->addItem(errorPageMenuItem);
 }
 
 void HGMenu::refresh()

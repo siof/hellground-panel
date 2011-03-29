@@ -6,6 +6,7 @@
 #include <WStackedWidget>
 
 #include "defines.h"
+#include "pages/error.h"
 
 using namespace Wt;
 
@@ -24,6 +25,8 @@ private:
     WLineEdit * pass;
     WPushButton * btn;
     SessionInfo * session;
+    ErrorPage * errorPage;
+    WMenuItem * errorPageMenuItem;
     WBreak ** breakTab;
 
     WPushButton * plLang;
@@ -33,6 +36,7 @@ private:
     void SetPlLang();
     void SetEngLang();
     void RefreshMenuWidgets();
+    void RefreshActiveMenuWidget();
     void ShowMenuOptions();
 };
 

@@ -2,12 +2,9 @@
 #include <WEnvironment>
 #include <WMenu>
 #include <WStackedWidget>
-#include <WBorderLayout>
 
 #include "defines.h"
-//#include "header.h"
 #include "menu.h"
-//#include "footer.h"
 
 using namespace Wt;
 
@@ -21,7 +18,6 @@ private:
     WContainerWidget * page;        // whole page container
     HGMenu * menu;                  // menu
     SessionInfo * session;          // store info about user session
-    //void greet();
 };
 
 PlayersPanel::PlayersPanel(const WEnvironment& env)
@@ -51,6 +47,7 @@ PlayersPanel::PlayersPanel(const WEnvironment& env)
     WContainerWidget * tmpContainer2 = new WContainerWidget(tmpContainer);
     tmpContainer2->setId("character");
     tmpContainer->addWidget(tmpContainer2);
+
     // add img logo to div "header"
     WImage * tmpImg = new WImage("img/logo.png", tmpContainer);
     tmpImg->setId("logo");

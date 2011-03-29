@@ -37,7 +37,10 @@
 				<Option compiler="gcc" />
 				<Option parameters="--docroot . --http-address 0.0.0.0 --http-port 8080" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-fomit-frame-pointer" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-Os" />
+					<Add option="-O3" />
 					<Add directory="/usr/include" />
 					<Add directory="/usr/include/Wt" />
 					<Add directory="/usr/local/Wt/include" />
@@ -46,7 +49,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="-lwt -lwthttp" />
+					<Add option="-lwt -lwthttp -lmysqlclient" />
 					<Add directory="/usr/lib" />
 				</Linker>
 				<ExtraCommands>
@@ -59,12 +62,18 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="../database.cpp" />
+		<Unit filename="../database.h" />
 		<Unit filename="../defines.h" />
 		<Unit filename="../main.cpp" />
 		<Unit filename="../menu.cpp" />
 		<Unit filename="../menu.h" />
+		<Unit filename="../pages/accInfo.cpp" />
+		<Unit filename="../pages/accInfo.h" />
 		<Unit filename="../pages/default.cpp" />
 		<Unit filename="../pages/default.h" />
+		<Unit filename="../pages/error.cpp" />
+		<Unit filename="../pages/error.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
