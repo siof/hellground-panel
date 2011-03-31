@@ -3,7 +3,8 @@
 
 #include "defines.h"
 #ifdef WIN32
-#include <mysql.h>
+#include <winsock.h>
+#include "mysql.h"
 #else
 #include <mysql/mysql.h>
 #endif
