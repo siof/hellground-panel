@@ -62,9 +62,12 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="../LICENCE" />
+		<Unit filename="../LICENCE_PL" />
 		<Unit filename="../database.cpp" />
 		<Unit filename="../database.h" />
 		<Unit filename="../defines.h" />
+		<Unit filename="../defines.h.dist" />
 		<Unit filename="../main.cpp" />
 		<Unit filename="../menu.cpp" />
 		<Unit filename="../menu.h" />
