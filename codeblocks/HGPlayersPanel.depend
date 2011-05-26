@@ -182,7 +182,7 @@
 1290529094 /usr/include/bits/local_lim.h
 	<linux/limits.h>
 
-1290449210 /usr/include/linux/limits.h
+1301381440 /usr/include/linux/limits.h
 
 1290529094 /usr/include/bits/posix2_lim.h
 
@@ -4029,7 +4029,7 @@
 1287240871 /usr/include/Wt/WStackedWidget
 	<Wt/WContainerWidget>
 
-1301390625 /home/gareth/projekty/hgpanel/defines.h
+1301748599 /home/gareth/projekty/hgpanel/defines.h
 	<WString>
 	<WBreak>
 	<WContainerWidget>
@@ -4041,7 +4041,7 @@
 	<cstdio>
 	<iostream>
 
-1301318136 /home/gareth/projekty/hgpanel/menu.h
+1301748355 /home/gareth/projekty/hgpanel/menu.h
 	<WMenu>
 	<WMenuItem>
 	<WStackedWidget>
@@ -4053,7 +4053,7 @@
 	"pages/default.h"
 	"database.h"
 
-1300818255 /home/gareth/projekty/hgpanel/pages/default.h
+1301748355 /home/gareth/projekty/hgpanel/pages/default.h
 	"../defines.h"
 
 1300819244 source:/home/gareth/projekty/hgpanel/pages/default.cpp
@@ -4135,17 +4135,24 @@
 
 1300618134 /usr/include/mysql/my_alloc.h
 
-1301326938 /home/gareth/projekty/hgpanel/pages/error.h
+1301748355 /home/gareth/projekty/hgpanel/pages/error.h
 	"../defines.h"
 
 1301331381 source:/home/gareth/projekty/hgpanel/pages/error.cpp
 	"error.h"
 
-1301388097 source:/home/gareth/projekty/hgpanel/database.cpp
+1301391787 source:/home/gareth/projekty/hgpanel/database.cpp
 	"database.h"
 
-1301388872 /home/gareth/projekty/hgpanel/database.h
+1301748355 /home/gareth/projekty/hgpanel/database.h
 	"defines.h"
-	<mysql.h>
+	<winsock.h>
+	"mysql.h"
 	<mysql/mysql.h>
+
+1301399433 source:/home/gareth/projekty/hgpanel/pages/accInfo.cpp
+	"accInfo.h"
+
+1301748355 /home/gareth/projekty/hgpanel/pages/accInfo.h
+	"../defines.h"
 
