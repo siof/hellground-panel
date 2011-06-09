@@ -18,6 +18,7 @@
 
 #include "menu.h"
 #include "pages/default.h"
+#include "pages/accInfo.h"
 #include "database.h"
 
 HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidget *parent)
@@ -44,12 +45,16 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     tmpCont = NULL;
 
     login = new WLineEdit();
+    login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
     login->setEchoMode(WLineEdit::Normal);
+    login->focussed().connect(this, &HGMenu::ClearLogin);
 
     pass = new WLineEdit();
+    pass->setText(WString("pass"));
     pass->setEchoMode(WLineEdit::Password);
+    pass->focussed().connect(this, &HGMenu::ClearPass);
 
-    btn = new WPushButton("log me in");
+    btn = new WPushButton(session->GetText(TXT_BTN_LOGIN));
     btn->clicked().connect(this, &HGMenu::LogMeIn);
 
     breakTab = new WBreak*[3];
@@ -118,11 +123,7 @@ void HGMenu::LogMeIn()
     query += escapedPass;
     query += "'));";
 
-    printf("\n\nquery: %s\n\n", query.c_str());
-
     db->SetQuery(query);
-
-    printf("\n\nquery: %s\n\n", db->GetQuery().c_str());
 
     if (db->ExecuteQuery() > 0)
     {
@@ -183,6 +184,9 @@ void HGMenu::LogMeIn()
         menu->select(errorPageMenuItem);
         RefreshActiveMenuWidget();
     }
+
+    delete db;
+    db = NULL;
 }
 
 void HGMenu::SetPlLang()
@@ -209,29 +213,12 @@ void HGMenu::ShowMenuOptions()
         delete tmp;
     }
 
-    menu->addItem("Home", new DefaultPage(session));
+    menu->addItem(session->GetText(TXT_MENU_HOME), new DefaultPage(session));
 
-    switch (session->language)
+    // if player is logged in
+    if (session->accid)
     {
-        case LANG_PL:
-            menu->addItem("test2sdfsfasfd PL", new WText("tescik2"));
-
-            if (session->accid)
-            {
-                menu->addItem("test3 PL", new WText("tescik3"));
-
-            }
-            break;
-
-        case LANG_EN:
-            menu->addItem("test2sdfsfasfd EN", new WText("tescik2"));
-
-            if (session->accid)
-            {
-                menu->addItem("test3 EN", new WText("tescik3"));
-
-            }
-            break;
+        menu->addItem(session->GetText(TXT_MENU_ACC_INFO), new AccountInfoPage(session));
     }
 
     errorPage = new ErrorPage(session);
@@ -246,4 +233,16 @@ void HGMenu::refresh()
     ShowMenuOptions();
 
     WContainerWidget::refresh();
+}
+
+void HGMenu::ClearLogin()
+{
+    if (login)
+        login->setText("");
+}
+
+void HGMenu::ClearPass()
+{
+    if (pass)
+        pass->setText("");
 }

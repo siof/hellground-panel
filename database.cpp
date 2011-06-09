@@ -43,6 +43,13 @@ uint64 DatabaseField::GetUInt64()
     return tmp;
 }
 
+uint32 DatabaseField::GetUInt32()
+{
+    uint32 tmp = 0;
+    sscanf(value.c_str(), "%u", &tmp);
+    return tmp;
+}
+
 int DatabaseField::GetInt()
 {
     int tmp = 0;
@@ -120,6 +127,7 @@ Database::Database(std::string host, std::string login, std::string pass, std::s
 
 Database::~Database()
 {
+    Clear();
     mysql_close(connection);
     connection = NULL;
 }
