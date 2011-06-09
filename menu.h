@@ -56,6 +56,8 @@ private:
     void RefreshMenuWidgets();
     void RefreshActiveMenuWidget();
     void ShowMenuOptions();
+    void ClearLogin();
+    void ClearPass();
 };
 
 #endif // MENU_H_INCLUDED

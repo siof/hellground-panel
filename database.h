@@ -39,6 +39,7 @@ struct DatabaseField
     const char * GetCString();
     std::string GetString();
     uint64 GetUInt64();
+    uint32 GetUInt32();
     int GetInt();
     bool GetBool();
     AccountLevel GetAccountLevel();
@@ -71,6 +72,7 @@ public:
     const char * GetError();
     void AddRow(MYSQL_ROW row, int count);
     void Clear();
+    int GetRowsCount() { return rows.size(); }
     DatabaseRow * GetRow(int index);
     std::list<DatabaseRow*> GetRows();
     std::string GetQuery() { return actualQuery; }

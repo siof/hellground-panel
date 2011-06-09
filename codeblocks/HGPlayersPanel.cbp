@@ -21,7 +21,9 @@
 					<Add directory="/usr/local/wt" />
 				</Compiler>
 				<Linker>
-					<Add option="-lwt -lwthttp" />
+					<Add library="wt" />
+					<Add library="wthttp" />
+					<Add library="mysqlclient" />
 					<Add directory="/usr/lib" />
 				</Linker>
 				<ExtraCommands>
@@ -49,7 +51,9 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="-lwt -lwthttp -lmysqlclient" />
+					<Add library="wt" />
+					<Add library="wthttp" />
+					<Add library="mysqlclient" />
 					<Add directory="/usr/lib" />
 				</Linker>
 				<ExtraCommands>
@@ -77,6 +81,7 @@
 		<Unit filename="../pages/default.h" />
 		<Unit filename="../pages/error.cpp" />
 		<Unit filename="../pages/error.h" />
+		<Unit filename="../sql/panel.sql" />
 		<Extensions>
 			<code_completion />
 			<envvars />

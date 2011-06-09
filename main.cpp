@@ -23,6 +23,7 @@
 
 #include "defines.h"
 #include "menu.h"
+#include "database.h"
 
 using namespace Wt;
 
@@ -36,6 +37,7 @@ private:
     WContainerWidget * page;        // whole page container
     HGMenu * menu;                  // menu
     SessionInfo * session;          // store info about user session
+    void GetLangTexts();
 };
 
 PlayersPanel::PlayersPanel(const WEnvironment& env)
@@ -50,6 +52,7 @@ PlayersPanel::PlayersPanel(const WEnvironment& env)
     page->setContentAlignment(AlignCenter);
     content = new WStackedWidget();
     session = new SessionInfo();
+    GetLangTexts();
     menu = new HGMenu(content, session);
 
     page->setId("body");
@@ -150,6 +153,35 @@ PlayersPanel::~PlayersPanel()
     delete content;
     delete session;
     delete page;
+}
+
+void PlayersPanel::GetLangTexts()
+{
+
+    if (Database * tmpDb = new Database(PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, SQL_PANELDB, PANEL_SQL_PORT))
+    {
+        tmpDb->SetQuery("SELECT id, lang_0, lang_1 FROM LangTexts");
+
+        if (tmpDb->ExecuteQuery() > 0)
+        {
+            std::list<DatabaseRow*> tmpList = tmpDb->GetRows();
+
+            for (std::list<DatabaseRow*>::const_iterator itr = tmpList.begin(); itr != tmpList.end(); ++itr)
+            {
+                DatabaseRow * row = *itr;
+
+                if (row)
+                {
+                    Text tmpText(row->fields[0].GetUInt32());
+
+                    for (int i = 0; i < LANG_COUNT; ++i)
+                        tmpText.texts[i] = row->fields[i+1].GetWString();
+
+                    session->langTexts[tmpText.textId] = tmpText;
+                }
+            }
+        }
+    }
 }
 
 WApplication *createApplication(const WEnvironment& env)
