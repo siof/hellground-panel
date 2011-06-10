@@ -33,7 +33,7 @@ struct DatabaseField
     DatabaseField(){}
     ~DatabaseField(){}
 
-    std::string value;
+    WString value;
 
     WString GetWString();
     const char * GetCString();

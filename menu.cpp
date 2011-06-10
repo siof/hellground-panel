@@ -54,8 +54,8 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     pass->setEchoMode(WLineEdit::Password);
     pass->focussed().connect(this, &HGMenu::ClearPass);
 
-    btn = new WPushButton(session->GetText(TXT_BTN_LOGIN));
-    btn->clicked().connect(this, &HGMenu::LogMeIn);
+    btnLog = new WPushButton(session->GetText(TXT_BTN_LOGIN));
+    btnLog->clicked().connect(this, &HGMenu::LogMeIn);
 
     breakTab = new WBreak*[3];
     for (int i = 0; i < 3; i++)
@@ -65,7 +65,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     addWidget(breakTab[0]);
     addWidget(pass);
     addWidget(breakTab[1]);
-    addWidget(btn);
+    addWidget(btnLog);
     addWidget(breakTab[2]);
 
     menu = new WMenu(menuContents, Wt::Vertical, this);
@@ -80,7 +80,7 @@ HGMenu::~HGMenu()
     delete menu;
     delete login;
     delete pass;
-    delete btn;
+    delete btnLog;
 
     for (int i = 0; i < 3; i++)
         delete breakTab[i];
@@ -102,7 +102,7 @@ void HGMenu::RefreshActiveMenuWidget()
 void HGMenu::LogMeIn()
 {
     Database * db;
-    if (!(db = new Database(SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_REALMDB, 0)))
+    if (!(db = new Database(SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_REALMDB, SQL_PORT)))
     {
         errorPage->SetErrorMsg(ERROR_DB_CONNECT);
         menu->select(errorPageMenuItem);
@@ -146,14 +146,14 @@ void HGMenu::LogMeIn()
 
             login->setHidden(true);
             pass->setHidden(true);
-            btn->setHidden(true);
+            btnLog->setHidden(true);
             login->setDisabled(true);
             pass->setDisabled(true);
-            btn->setDisabled(true);
+            btnLog->setDisabled(true);
 
             removeWidget(login);
             removeWidget(pass);
-            removeWidget(btn);
+            removeWidget(btnLog);
 
             for (int i = 0; i < 3; ++i)
             {
@@ -219,6 +219,17 @@ void HGMenu::ShowMenuOptions()
     if (session->accid)
     {
         menu->addItem(session->GetText(TXT_MENU_ACC_INFO), new AccountInfoPage(session));
+    }
+    else
+    {
+        if (login)
+            login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
+
+        if (pass)
+            pass->setText(WString("pass"));
+
+        if (btnLog)
+            btnLog->setText(session->GetText(TXT_BTN_LOGIN));
     }
 
     errorPage = new ErrorPage(session);
