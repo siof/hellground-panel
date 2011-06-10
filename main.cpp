@@ -27,6 +27,22 @@
 
 using namespace Wt;
 
+void SendMail(WString from, WString to, WString msg)
+{
+    from = from.toUTF8();
+    to = to.toUTF8();
+    msg = msg.toUTF8();
+
+    // Add filtering for strings
+
+    FILE *email= popen("/usr/lib/sendmail", "wb");
+    fprintf(email, "To: %s \r\n", to.toUTF8().c_str());
+    fprintf(email, "From: %s \r\n", from.toUTF8().c_str());
+    fprintf(email, "\r\n");
+    fprintf(email, "%s \r\n", msg.toUTF8().c_str());
+    pclose(email);
+}
+
 class PlayersPanel : public WApplication
 {
 public:
@@ -37,14 +53,12 @@ private:
     WContainerWidget * page;        // whole page container
     HGMenu * menu;                  // menu
     SessionInfo * session;          // store info about user session
-    void GetLangTexts();
+    void LoadLangTexts();
 };
 
 PlayersPanel::PlayersPanel(const WEnvironment& env)
 : WApplication(env)
 {
-    setTitle(SITE_TITLE);
-
     // create all variables and set id/class for css use (based on css/layout.html)
 
     // div body
@@ -52,7 +66,11 @@ PlayersPanel::PlayersPanel(const WEnvironment& env)
     page->setContentAlignment(AlignCenter);
     content = new WStackedWidget();
     session = new SessionInfo();
-    GetLangTexts();
+    session->sessionIp = env.clientAddress();
+    LoadLangTexts();
+
+    setTitle(session->GetText(TXT_SITE_TITLE));
+
     menu = new HGMenu(content, session);
 
     page->setId("body");
@@ -155,7 +173,7 @@ PlayersPanel::~PlayersPanel()
     delete page;
 }
 
-void PlayersPanel::GetLangTexts()
+void PlayersPanel::LoadLangTexts()
 {
 
     if (Database * tmpDb = new Database(PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, SQL_PANELDB, PANEL_SQL_PORT))

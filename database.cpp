@@ -23,44 +23,44 @@
 
 WString DatabaseField::GetWString()
 {
-    return WString(value);
+    return value;
 }
 
 const char * DatabaseField::GetCString()
 {
-    return value.c_str();
+    return value.toUTF8().c_str();
 }
 
 std::string DatabaseField::GetString()
 {
-    return value;
+    return value.toUTF8();
 }
 
 uint64 DatabaseField::GetUInt64()
 {
     uint64 tmp = 0;
-    sscanf(value.c_str(), "%u", &tmp);
+    sscanf(value.toUTF8().c_str(), "%u", &tmp);
     return tmp;
 }
 
 uint32 DatabaseField::GetUInt32()
 {
     uint32 tmp = 0;
-    sscanf(value.c_str(), "%u", &tmp);
+    sscanf(value.toUTF8().c_str(), "%u", &tmp);
     return tmp;
 }
 
 int DatabaseField::GetInt()
 {
     int tmp = 0;
-    sscanf(value.c_str(), "%i", &tmp);
+    sscanf(value.toUTF8().c_str(), "%i", &tmp);
     return tmp;
 }
 
 bool DatabaseField::GetBool()
 {
     int tmp = 0;
-    sscanf(value.c_str(), "%i", &tmp);
+    sscanf(value.toUTF8().c_str(), "%i", &tmp);
 
     if (tmp)
         return true;
@@ -71,7 +71,7 @@ bool DatabaseField::GetBool()
 AccountLevel DatabaseField::GetAccountLevel()
 {
     int tmp = 0;
-    sscanf(value.c_str(), "%i", &tmp);
+    sscanf(value.toUTF8().c_str(), "%i", &tmp);
 
     switch (tmp)
     {
@@ -100,7 +100,7 @@ DatabaseRow::DatabaseRow(MYSQL_ROW row, int count)
     fields = new DatabaseField[count];
     for (int i = 0; i < count; ++i)
     {
-        fields[i].value = (row[i] ? row[i] : "");
+        fields[i].value = WString::fromUTF8(row[i] ? row[i] : "");
         #ifdef DEBUG
         std::cout << i << " : " << (row[i] ? row[i] : "") << std::endl;
         #endif

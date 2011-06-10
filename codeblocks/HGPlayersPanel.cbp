@@ -29,6 +29,7 @@
 				<ExtraCommands>
 					<Add after="cp -r ../img ./Debug/" />
 					<Add after="cp -r ../css ./Debug/" />
+					<Add after="cp ../favicon.ico ./Debug/" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -59,12 +60,14 @@
 				<ExtraCommands>
 					<Add after="cp -r ../img ./Release/" />
 					<Add after="cp -r ../css ./Release/" />
+					<Add after="cp ../favicon.ico ./Release/" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="../../hgpanel" />
 		</Compiler>
 		<Unit filename="../LICENCE" />
 		<Unit filename="../LICENCE_PL" />

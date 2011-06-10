@@ -41,7 +41,7 @@ private:
     WMenu * menu;
     WLineEdit * login;
     WLineEdit * pass;
-    WPushButton * btn;
+    WPushButton * btnLog;
     SessionInfo * session;
     ErrorPage * errorPage;
     WMenuItem * errorPageMenuItem;

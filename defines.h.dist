@@ -52,12 +52,12 @@ typedef uint32_t uint32;
 #define SQL_HOST        ""
 #define SQL_LOGIN       ""
 #define SQL_PASSWORD    ""
-#define SQL_PORT        3060
+#define SQL_PORT        3306
 
 #define PANEL_SQL_HOST  ""
 #define PANEL_SQL_LOGIN ""
 #define PANEL_SQL_PASS  ""
-#define PANEL_SQL_PORT  3060
+#define PANEL_SQL_PORT  3306
 
 #define SQL_REALMDB     ""
 #define SQL_CHARDB      ""
@@ -201,6 +201,7 @@ enum Texts
     TXT_LBL_BAN_BY                  = 163,
     TXT_LBL_BAN_REASON              = 164,
     TXT_LBL_BAN_ACTIVE              = 165,
+    TXT_LBL_BAN_NOT_ACTIVE          = 166,
 
     // Button labels
     TXT_BTN_PASS_CHANGE             = 200,
@@ -223,15 +224,6 @@ enum Texts
     TXT_INSTANCES                   = 232,
 };
 
-/*
-FILE *email= popen ("/usr/lib/sendmail", "wb");
-
-fprintf (email, "To: john@foo.com\r\n" );
-fprintf (email, "From: james@foo.com\r\n" );
-fprintf (email, "\r\n" );
-fprintf (email, "Hello!\r\n" );
-
-pclose (email);
-*/
+void SendMail(WString from, WString to, WString msg);
 
 #endif // DEFINES_H_INCLUDED
