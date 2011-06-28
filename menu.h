@@ -28,6 +28,26 @@
 
 using namespace Wt;
 
+class HGMenuOption
+{
+public:
+    HGMenuOption(MenuOptions menuOption, WObject * parent = NULL);
+    ~HGMenuOption();
+
+    void AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem);
+    void AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item);
+    void RemoveMenuItem(WMenuItem * menuItem, bool alsoDelete = true);
+    void RemoveMenuItem(AccountLevel accLvl, bool alsoDelete = true);
+
+    WMenuItem * GetMenuItemForLevel(AccountLevel accLvl);
+    void UpdateTexts(SessionInfo * sess);
+private:
+    WObject * itemsParent;
+    uint32 * textIds;
+    MenuOptions menuOption;
+    WMenuItem ** items;
+};
+
 class HGMenu : public WContainerWidget
 {
 public:
@@ -35,6 +55,7 @@ public:
     ~HGMenu();
 
     void refresh();         // overload, some link should be available only if user is logged in
+    void ShowError(int error, std::string additionalMsg = "", bool dbError = false);
 private:
     WContainerWidget * container;       // contains menu + additional items added on menu side
     WStackedWidget * menuContents;      // container where menu items will be shown after click
@@ -43,12 +64,12 @@ private:
     WLineEdit * pass;
     WPushButton * btnLog;
     SessionInfo * session;
-    ErrorPage * errorPage;
-    WMenuItem * errorPageMenuItem;
     WBreak ** breakTab;
 
     WPushButton * plLang;
     WPushButton * enLang;
+
+    HGMenuOption * menuSlots[MENU_SLOT_COUNT];
 
     void LogMeIn();
     void SetPlLang();
@@ -56,6 +77,7 @@ private:
     void RefreshMenuWidgets();
     void RefreshActiveMenuWidget();
     void ShowMenuOptions();
+    void UpdateMenuOptions();
     void ClearLogin();
     void ClearPass();
 };

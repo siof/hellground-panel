@@ -25,12 +25,34 @@ class AccountInfoPage : public WContainerWidget
 {
 public:
     AccountInfoPage(SessionInfo * sess, WContainerWidget * parent = 0);
-    ~AccountInfoPage() {}
+    ~AccountInfoPage() { clear(); }
 
     void refresh();     // overload WWidget::refresh() for automatic content change ;) this should be done for all pages
 private:
     SessionInfo * session;
+
+    // contains
+    WText * currentIP;
+    WText * accInfoText;
+    WText * accType;
+    WText * accCreateDate;
+    WText * accLastLoginDate;
+    WText * accLastLoggedIp;
+    WText * accIPLock;
+    WText * accBan;
+    WText * accIPBan;
+    WText * accSessionIPBan;
+    WText * accOnline;
+    WText * accClientVersion;
+    WText * accVotePoints;
+    WText * accMultiAcc;
+    WText * accCharacters;
+    WText * charName;
+    WText * charClass;
+
+    void UpdateTextWidgets();
     void ShowAccountInfo();
+    std::vector<WBreak*> brVector;
 };
 
 #endif // ACCINFO_H_INCLUDED

@@ -27,6 +27,8 @@
 #include <mysql/mysql.h>
 #endif
 
+#define MAX_QUERY_LEN 256
+
 // connect to database, set query, escape query + execute query
 struct DatabaseField
 {
@@ -58,28 +60,30 @@ class Database
 {
 public:
     Database();
-    Database(std::string host, std::string login, std::string pass, std::string db, unsigned int port);
+    Database(std::string host, std::string login, std::string pass, unsigned int port, std::string db);
     ~Database();
 
-    void SetQuery(std::string query);
-    bool Connect(std::string host, std::string login, std::string pass, std::string db, unsigned int port);
+    void SetQuery(std::string query);   // set query to execute
+    bool SetPQuery(const char *format, ...);
+    bool Connect(std::string host, std::string login, std::string pass, unsigned int port, std::string db); // connects to db
     bool SelectDatabase(std::string db);
-    void EscapeQuery();
-    std::string EscapeString(std::string str);
-    std::string EscapeString(WString str);
-    int ExecuteQuery();
-    int ExecuteQuery(std::string query, bool escape = true);
-    const char * GetError();
-    void AddRow(MYSQL_ROW row, int count);
-    void Clear();
-    int GetRowsCount() { return rows.size(); }
-    DatabaseRow * GetRow(int index);
-    std::list<DatabaseRow*> GetRows();
+    void EscapeQuery(); // escape actual query
+    std::string EscapeString(std::string str);  // escape given string
+    std::string EscapeString(WString str);      // escape given string
+    int ExecuteQuery(); // execute setted query and returns row count
+    int ExecuteQuery(std::string query, bool escape = true);    // execute given query and return row count
+    const char * GetError();    // get mysql error
+    void AddRow(MYSQL_ROW row, int count);  // add new row
+    void Clear();   // clear (+ delete from memory) result
+    int GetRowsCount() { return rows.size(); }  // return rows count
+    DatabaseRow * GetRow(int index);    // returns row from given index
+    DatabaseRow * GetRow();             // returns first row
+    std::list<DatabaseRow*> GetRows();  // returns all rows
     std::string GetQuery() { return actualQuery; }
 private:
-    MYSQL * connection;
-    std::string actualQuery;
-    std::list<DatabaseRow*> rows;
+    MYSQL * connection;             // mysql connection
+    std::string actualQuery;        // actual query
+    std::list<DatabaseRow*> rows;   // query result
 };
 
 #endif // DATABASE_H_INCLUDED

@@ -43,6 +43,34 @@ void SendMail(WString from, WString to, WString msg)
     pclose(email);
 }
 
+WString GetExpansionName(SessionInfo * sess, int index)
+{
+    switch (index)
+    {
+        case EXPANSION_PRETBC:
+            return sess->GetText(TXT_EXPANSION_PRETBC);
+        case EXPANSION_TBC:
+            return sess->GetText(TXT_EXPANSION_TBC);
+        case EXPANSION_WOTLK:
+            return sess->GetText(TXT_EXPANSION_WOTLK);
+        case EXPANSION_CATA:
+            return sess->GetText(TXT_EXPANSION_CATACLYSM);
+        default:
+            return sess->GetText(TXT_EXPANSION_PRETBC);
+    }
+}
+
+WString GetLocale(int index)
+{
+    switch (index)
+    {
+        case 0:
+            return WString::fromUTF8("en");
+        default:
+            return WString::fromUTF8("unknown");
+    }
+}
+
 class PlayersPanel : public WApplication
 {
 public:
@@ -176,7 +204,7 @@ PlayersPanel::~PlayersPanel()
 void PlayersPanel::LoadLangTexts()
 {
 
-    if (Database * tmpDb = new Database(PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, SQL_PANELDB, PANEL_SQL_PORT))
+    if (Database * tmpDb = new Database(PANEL_DB_DATA, SQL_PANELDB))
     {
         tmpDb->SetQuery("SELECT id, lang_0, lang_1 FROM LangTexts");
 
@@ -199,6 +227,7 @@ void PlayersPanel::LoadLangTexts()
                 }
             }
         }
+        delete tmpDb;
     }
 }
 
