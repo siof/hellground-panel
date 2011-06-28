@@ -27,6 +27,9 @@ DefaultPage::DefaultPage(SessionInfo * sess, WContainerWidget * parent)
 
 void DefaultPage::refresh()
 {
+    if (isHidden() || isDisabled())
+        return;
+
     ShowText();
 
     WContainerWidget::refresh();
@@ -34,18 +37,7 @@ void DefaultPage::refresh()
 
 void DefaultPage::ShowText()
 {
-    if (count())
-    {
-        for (int i = 0; i < count(); ++i)
-        {
-            WWidget * tmp = widget(i);
-            removeWidget(tmp);
-            delete tmp;
-            tmp = NULL;
-        }
-    }
+    clear();
 
-    WString text = session->GetText(TXT_SERVER_INFO);
-
-    addWidget(new WText(text.toUTF8()));
+    addWidget(new WText(session->GetText(TXT_SERVER_INFO), this));
 }

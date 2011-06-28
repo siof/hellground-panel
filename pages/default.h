@@ -25,7 +25,7 @@ class DefaultPage : public WContainerWidget
 {
 public:
     DefaultPage(SessionInfo * sess, WContainerWidget * parent = 0);
-    ~DefaultPage() {}
+    ~DefaultPage() { clear(); }
 
     void refresh();     // overload WWidget::refresh() for automatic content change ;) this should be done for all pages
 private:

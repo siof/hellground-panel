@@ -60,6 +60,9 @@ void ErrorPage::SetErrorMsg(int error)
                     break;
             }
             break;
+        case ERROR_EMPTY_QUERY:
+            errormsg = "EMPTY QUERY";
+            break;
         default:
             errormsg = "";
             break;

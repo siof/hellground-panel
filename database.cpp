@@ -17,6 +17,7 @@
 */
 
 #include "database.h"
+#include <cstdarg>
 
 
 /// DatabaseField
@@ -119,10 +120,10 @@ Database::Database()
     connection = mysql_init(NULL);
 }
 
-Database::Database(std::string host, std::string login, std::string pass, std::string db, unsigned int port)
+Database::Database(std::string host, std::string login, std::string pass, unsigned int port, std::string db)
 {
     connection = mysql_init(NULL);
-    Connect(host, login, pass, db, port);
+    Connect(host, login, pass, port, db);
 }
 
 Database::~Database()
@@ -137,7 +138,22 @@ void Database::SetQuery(std::string query)
     actualQuery = query;
 }
 
-bool Database::Connect(std::string host, std::string login, std::string pass, std::string db, unsigned int port)
+bool Database::SetPQuery(const char *format, ...)
+{
+    va_list ap;
+    char szQuery[MAX_QUERY_LEN];
+    va_start(ap, format);
+    int res = vsnprintf(szQuery, MAX_QUERY_LEN, format, ap);
+    va_end(ap);
+
+    if (res == -1)
+        return false;
+
+    SetQuery(szQuery);
+    return true;
+}
+
+bool Database::Connect(std::string host, std::string login, std::string pass, unsigned int port, std::string db)
 {
     return mysql_real_connect(connection, host.c_str(), login.c_str(), pass.c_str(), db.c_str(), port, NULL, 0);
 }
@@ -257,6 +273,14 @@ DatabaseRow * Database::GetRow(int index)
     advance(itr, index);
 
     return *itr;
+}
+
+DatabaseRow * Database::GetRow()
+{
+    if (!rows.size())
+        return NULL;
+
+    return rows.front();
 }
 
 std::list<DatabaseRow*> Database::GetRows()

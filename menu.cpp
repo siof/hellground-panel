@@ -21,6 +21,138 @@
 #include "pages/accInfo.h"
 #include "database.h"
 
+HGMenuOption::HGMenuOption(MenuOptions menuOption, WObject * parent):
+    menuOption(menuOption), itemsParent(parent)
+{
+    items = new WMenuItem*[ACCOUNT_LEVEL_COUNT];
+    textIds = new uint32[ACCOUNT_LEVEL_COUNT];
+
+    for (int i = 0; i < ACCOUNT_LEVEL_COUNT; ++i)
+    {
+        items[i] = NULL;
+        textIds[i] = 0;
+    }
+}
+
+HGMenuOption::~HGMenuOption()
+{
+    delete [] textIds;
+
+    if (!items)
+        return;
+
+    for (int i = 0; i < ACCOUNT_LEVEL_COUNT; ++i)
+    {
+        if (items[i])
+        {
+            WWidget * tmpW = items[i]->itemWidget();
+
+            if (tmpW)
+                delete tmpW;
+
+            tmpW = NULL;
+
+            delete items[i];
+            items[i] = NULL;
+        }
+    }
+
+    delete [] items;
+}
+
+void HGMenuOption::AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem)
+{
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || !menuItem)
+        return;
+
+    RemoveMenuItem(accLvl);
+
+    items[accLvl+1] = menuItem;
+    textIds[accLvl+1] = textId;
+    menuItem = NULL;
+}
+
+void HGMenuOption::AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item)
+{
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || !sess || !item)
+        return;
+
+    RemoveMenuItem(accLvl);
+
+    items[accLvl+1] = new WMenuItem(sess->GetText(textId), item);
+    textIds[accLvl+1] = textId;
+    item = NULL;
+}
+
+void HGMenuOption::RemoveMenuItem(WMenuItem * menuItem, bool alsoDelete)
+{
+    if (!menuItem)
+        return;
+
+    for (int i = 0; i < ACCOUNT_LEVEL_COUNT; ++i)
+    {
+        if (items[i] == menuItem)
+        {
+            items[i] = NULL;
+            textIds[i] = 0;
+        }
+    }
+
+    if (alsoDelete)
+    {
+        delete menuItem->itemWidget();
+        delete menuItem;
+        menuItem = NULL;
+    }
+}
+
+void HGMenuOption::RemoveMenuItem(AccountLevel accLvl, bool alsoDelete)
+{
+    if (accLvl >= ACCOUNT_LEVEL_COUNT)
+        return;
+
+    if (alsoDelete)
+    {
+        WMenuItem * tmpI = items[accLvl+1];
+
+        if (tmpI)
+        {
+            WObject * tmpObj = tmpI->itemWidget();
+            delete tmpObj;
+            tmpObj = NULL;
+        }
+
+        delete items[accLvl+1];
+    }
+
+    items[accLvl+1] = NULL;
+    textIds[accLvl+1] = 0;
+}
+
+WMenuItem * HGMenuOption::GetMenuItemForLevel(AccountLevel accLvl)
+{
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_PLAYER)
+        return items[LVL_NOT_LOGGED+1];
+
+    // if menu item for given lvl doesn't exist, check lower logged levels
+    for (int i = accLvl; i > LVL_NOT_LOGGED; --i)
+        if (items[i+1])
+            return items[i+1];
+
+    return NULL;
+}
+
+void HGMenuOption::UpdateTexts(SessionInfo * sess)
+{
+    if (!items || !sess)
+        return;
+
+    for (int i = 0; i < ACCOUNT_LEVEL_COUNT; ++i)
+        if (WMenuItem * tmpItem = items[i])
+            tmpItem->setText(sess->GetText(textIds[i]));
+}
+
+
 HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidget *parent)
 : WContainerWidget(parent)
 {
@@ -70,8 +202,36 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menu = new WMenu(menuContents, Wt::Vertical, this);
     menu->setRenderAsList(false);
+
+    for (int i = 0; i < MENU_SLOT_COUNT; ++i)
+        menuSlots[i] = NULL;
+
+    menuSlots[MENU_SLOT_HOME] = new HGMenuOption(MENU_SLOT_HOME);
+    menuSlots[MENU_SLOT_HOME]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_HOME, new DefaultPage(sess));
+    menuSlots[MENU_SLOT_HOME]->AddMenuItem(LVL_PLAYER, TXT_MENU_HOME, menuSlots[MENU_SLOT_HOME]->GetMenuItemForLevel(LVL_NOT_LOGGED));
+
+    menuSlots[MENU_SLOT_ACCOUNT] = new HGMenuOption(MENU_SLOT_ACCOUNT);
+//    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess));
+    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess));
+
+//    menuSlots[MENU_SLOT_PASSWORD] = new HGMenuOption(MENU_SLOT_PASSWORD);
+//    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_PASS_RECOVERY, new PasswordRecoveryPage(sess));
+//    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_PASS_CHANGE, new PasswordChangePage(sess));
+
+//    menuSlots[MENU_SLOT_SERVER_STATUS] = new HGMenuOption(MENU_SLOT_SERVER_STATUS);
+//    menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess));
+
+
+
+    menuSlots[MENU_SLOT_ERROR] = new HGMenuOption(MENU_SLOT_ERROR);
+    menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_ERROR, new ErrorPage(session));
+    menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_PLAYER, TXT_MENU_ERROR, menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_NOT_LOGGED));
+    menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->hide();
+    menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->disable();
+
     ShowMenuOptions();
 
+    menu->itemSelected().connect(this, &HGMenu::RefreshActiveMenuWidget);
     addWidget(menu);
 }
 
@@ -86,6 +246,8 @@ HGMenu::~HGMenu()
         delete breakTab[i];
 
     delete [] breakTab;
+
+    clear();
 }
 
 void HGMenu::RefreshMenuWidgets()
@@ -101,12 +263,10 @@ void HGMenu::RefreshActiveMenuWidget()
 
 void HGMenu::LogMeIn()
 {
-    Database * db;
-    if (!(db = new Database(SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_REALMDB, SQL_PORT)))
+    Database * db = new Database();
+    if (!db->Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        errorPage->SetErrorMsg(ERROR_DB_CONNECT);
-        menu->select(errorPageMenuItem);
-        RefreshActiveMenuWidget();
+        ShowError(ERROR_DB_CONNECT, db->GetError(), true);
         return;
     }
 
@@ -115,7 +275,7 @@ void HGMenu::LogMeIn()
     std::string escapedLogin = db->EscapeString(login->text());
     std::string escapedPass = db->EscapeString(pass->text());
 
-    std::string query = "SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, last_login, locked, expansion FROM account WHERE username = '";
+    std::string query = "SELECT username, sha_pass_hash, id, gmlevel, email, FROM_UNIXTIME(joindate), last_ip, locked, expansion FROM account WHERE username = '";
     query += escapedLogin;
     query += "' AND sha_pass_hash = SHA1(UPPER('";
     query += escapedLogin;
@@ -137,9 +297,8 @@ void HGMenu::LogMeIn()
             session->email = row->fields[4].GetWString();
             session->joinDate = row->fields[5].GetWString();
             session->lastIp = row->fields[6].GetWString();
-            session->lastLogin = row->fields[7].GetWString();
-            session->locked = row->fields[8].GetBool();
-            session->expansion = row->fields[9].GetInt();
+            session->locked = row->fields[7].GetBool();
+            session->expansion = row->fields[8].GetInt();
 
             login->setText("");
             pass->setText("");
@@ -162,28 +321,21 @@ void HGMenu::LogMeIn()
                 removeWidget(breakTab[i]);
             }
 
+            ShowMenuOptions();
             refresh();
-            errorPageMenuItem->hide();
+
+            WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER);
+            if (tmpItem)
+                tmpItem->hide();
+
             menu->select(0);
             RefreshActiveMenuWidget();
         }
         else
-        {
-            errorPage->SetErrorMsg(ERROR_ROW_NOT_FOUND);
-            menu->select(errorPageMenuItem);
-            RefreshActiveMenuWidget();
-        }
+            ShowError(ERROR_ROW_NOT_FOUND);
     }
     else
-    {
-        #ifdef SHOW_MYSQL_ERRORS
-        errorPage->SetAdditionalErrorMsg(db->GetError());
-        #endif
-
-        errorPage->SetErrorMsg(ERROR_LOGIN);
-        menu->select(errorPageMenuItem);
-        RefreshActiveMenuWidget();
-    }
+        ShowError(ERROR_LOGIN, db->GetError(), true);
 
     delete db;
     db = NULL;
@@ -192,35 +344,44 @@ void HGMenu::LogMeIn()
 void HGMenu::SetPlLang()
 {
     session->language = LANG_PL;
-    RefreshMenuWidgets();
     refresh();
 }
 
 void HGMenu::SetEngLang()
 {
     session->language = LANG_EN;
-    RefreshMenuWidgets();
     refresh();
 }
 
 void HGMenu::ShowMenuOptions()
 {
+    if (!menuSlots)
+        return;
+
+    WMenuItem * tmp;
+
     std::vector<WMenuItem*>::const_iterator itr = menu->items().begin();
     while(itr != menu->items().end())
     {
-        WMenuItem * tmp = *itr;
+        tmp = *itr;
+        //++itr;
         menu->removeItem(tmp);
-        delete tmp;
+        tmp = NULL;
+        itr = menu->items().begin();
     }
 
-    menu->addItem(session->GetText(TXT_MENU_HOME), new DefaultPage(session));
+    HGMenuOption * tmpOption = NULL;
 
-    // if player is logged in
-    if (session->accid)
-    {
-        menu->addItem(session->GetText(TXT_MENU_ACC_INFO), new AccountInfoPage(session));
-    }
-    else
+    for (int i = 0; i < MENU_SLOT_COUNT; ++i)
+        if (tmpOption = menuSlots[i])
+            if (tmp = tmpOption->GetMenuItemForLevel(session->accLvl))
+                menu->addItem(tmp);
+
+    tmp = NULL;
+    tmpOption = NULL;
+
+    // if player isn't logged
+    if (session->accid < 1)
     {
         if (login)
             login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
@@ -231,17 +392,31 @@ void HGMenu::ShowMenuOptions()
         if (btnLog)
             btnLog->setText(session->GetText(TXT_BTN_LOGIN));
     }
+}
 
-    errorPage = new ErrorPage(session);
-    errorPageMenuItem = new WMenuItem("error", errorPage);
-    errorPageMenuItem->hide();
-    errorPageMenuItem->disable();
-    menu->addItem(errorPageMenuItem);
+void HGMenu::UpdateMenuOptions()
+{
+    HGMenuOption * tmpOption = NULL;
+    for (int i = 0; i < MENU_SLOT_COUNT; ++i)
+        if (tmpOption = menuSlots[i])
+            tmpOption->UpdateTexts(session);
+
+    tmpOption = NULL;
+
+    if (login)
+        login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
+
+    if (pass)
+        pass->setText(WString("pass"));
+
+    if (btnLog)
+        btnLog->setText(session->GetText(TXT_BTN_LOGIN));
 }
 
 void HGMenu::refresh()
 {
-    ShowMenuOptions();
+    UpdateMenuOptions();
+    RefreshActiveMenuWidget();
 
     WContainerWidget::refresh();
 }
@@ -256,4 +431,28 @@ void HGMenu::ClearPass()
 {
     if (pass)
         pass->setText("");
+}
+
+void HGMenu::ShowError(int error, std::string additionalMsg, bool dbError)
+{
+    WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
+
+    if (!tmpItem)
+        return;
+
+    ErrorPage * tmpError = (ErrorPage*)tmpItem->itemWidget();
+
+    if (!tmpError)
+        return;
+
+    if (!dbError)
+        tmpError->SetAdditionalErrorMsg(additionalMsg);
+    #ifdef SHOW_DATABASE_ERRORS
+    else
+        tmpError->SetAdditionalErrorMsg(additionalMsg);
+    #endif
+
+    tmpError->SetErrorMsg(error);
+    menu->select(tmpItem);
+    RefreshActiveMenuWidget();
 }
