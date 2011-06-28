@@ -37,7 +37,7 @@ using namespace Wt;
 typedef uint64_t uint64;
 typedef uint32_t uint32;
 
-#define SHOW_MYSQL_ERRORS
+#define SHOW_DATABASE_ERRORS
 
 //#define DEBUG
 
@@ -54,15 +54,19 @@ typedef uint32_t uint32;
 #define SQL_PASSWORD    ""
 #define SQL_PORT        3306
 
+#define SERVER_DB_DATA  SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_PORT
+
 #define PANEL_SQL_HOST  ""
 #define PANEL_SQL_LOGIN ""
 #define PANEL_SQL_PASS  ""
 #define PANEL_SQL_PORT  3306
 
-#define SQL_REALMDB     ""
-#define SQL_CHARDB      ""
-#define SQL_WORLDDB     ""
+#define SQL_REALMDB     "realm"
+#define SQL_CHARDB      "chars"
+#define SQL_WORLDDB     "world"
 #define SQL_PANELDB     "panel"
+
+#define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
 
 enum Lang
 {
@@ -74,12 +78,15 @@ enum Lang
 
 enum AccountLevel
 {
+    LVL_NOT_LOGGED  = -1,
     LVL_PLAYER      = 0,
     LVL_GM_TRIAL    = 1,
     LVL_GM_HELPER   = 2,
     LVL_GM_HEAD     = 3,
     LVL_ADM         = 4
 };
+
+#define ACCOUNT_LEVEL_COUNT 6
 
 struct Text
 {
@@ -89,7 +96,7 @@ struct Text
 
     WString GetText(Lang lang)
     {
-        return texts[lang].toUTF8();
+        return texts[lang];
     }
 
     uint32 textId;
@@ -98,21 +105,21 @@ struct Text
 
 struct SessionInfo
 {
-    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_PLAYER) {}
+    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED) {}
     ~SessionInfo() {}
 
-    WString login;
-    uint64 accid;
-    WString pass;
-    WString email;
-    WString joinDate;
-    WString lastLogin;
-    WString lastIp;
-    Lang language;
-    AccountLevel accLvl;
-    std::map<uint32 ,Text> langTexts;
-    bool locked;
-    int expansion;
+    WString login;          // account login
+    uint64 accid;           // account id
+    WString pass;           // account password
+    WString email;          // account email
+    WString joinDate;       // account create time
+    WString lastIp;         // server last ip
+    WString sessionIp;      // panel session ip
+    Lang language;          // actual language
+    AccountLevel accLvl;    // account level (player, gm etc)
+    std::map<uint32 ,Text> langTexts;   // text depend on language loaded from database
+    bool locked;            // IP lock
+    int expansion;          // expansion
 
     WString GetText(uint32 id)
     {
@@ -129,7 +136,41 @@ enum Errors
 {
     ERROR_DB_CONNECT    = 0,
     ERROR_LOGIN         = 1,
-    ERROR_ROW_NOT_FOUND = 2
+    ERROR_ROW_NOT_FOUND = 2,
+    ERROR_EMPTY_QUERY   = 3
+};
+
+enum Expansion
+{
+    EXPANSION_PRETBC    = 0,
+    EXPANSION_TBC       = 1,
+    EXPANSION_WOTLK     = 2,
+    EXPANSION_CATA      = 3
+};
+
+enum MenuOptions    // this also defines menu order
+{
+    MENU_SLOT_HOME = 0,         // home
+    MENU_SLOT_ACCOUNT,          // register/acc info
+    MENU_SLOT_PASSWORD,         // pass recovery/change
+    MENU_SLOT_SERVER_STATUS,    // server status
+    MENU_SLOT_SUPPORT,          // donate, vote
+    MENU_SLOT_LINKS,            // links
+    MENU_SLOT_TELEPORT,         // /teleport
+    MENU_SLOT_IP_LOCK,          // /ip lock
+    MENU_SLOT_BAN,              // /baninfo/banlist
+    MENU_SLOT_MUTE,             // /muteinfo/mutelist
+
+    MENU_SLOT_GM_PANEL,         // panel gm
+    MENU_SLOT_GM_TICKETS,       // panel gm - tickets
+    MENU_SLOT_GM_ONLINE,        // panel gm - online check
+    MENU_SLOT_GM_FACTION,       // panel gm - faction check
+
+    MENU_SLOT_LOGIN,            // login/logout
+
+    MENU_SLOT_ERROR,            // for errors (shouldn't be visible)
+
+    MENU_SLOT_COUNT
 };
 
 enum Texts
@@ -152,6 +193,7 @@ enum Texts
     TXT_MENU_BANLIST                = 14,
     TXT_MENU_MUTEINFO               = 15,
     TXT_MENU_MUTELIST               = 16,
+    TXT_MENU_ERROR                  = 17,
 
     TXT_MENU_GM_PANEL               = 50,
     TXT_MENU_GM_TICKETS             = 51,
@@ -169,7 +211,7 @@ enum Texts
     TXT_LBL_ACC_CREATE_DATE         = 101,
     TXT_LBL_ACC_LAST_LOGIN          = 102,
     TXT_LBL_ACC_LAST_IP             = 103,
-    TXT_LBL_ACC_IP_BLOCK            = 104,
+    TXT_LBL_ACC_IP_LOCK             = 104,
     TXT_LBL_ACC_BAN                 = 105,
     TXT_LBL_ACC_ONLINE              = 106,
     TXT_LBL_ACC_VP                  = 107,
@@ -180,6 +222,10 @@ enum Texts
     TXT_LBL_ACC_LOGIN               = 112,
     TXT_LBL_ACC_MAIL                = 113,
     TXT_LBL_ACC_GG                  = 114,
+    TXT_LBL_ACC_INFO                = 115,      // page title
+    TXT_LBL_ACC_IP_LOCK_ON          = 116,      // ip lock is currently on
+    TXT_LBL_ACC_IP_LOCK_OFF         = 117,      // ip lock is currently off
+    TXT_LBL_ACC_IP_BAN              = 118,
 
     TXT_LBL_PASS_CHANGE             = 130,
     TXT_LBL_PASS_OLD                = 131,
@@ -202,6 +248,8 @@ enum Texts
     TXT_LBL_BAN_REASON              = 164,
     TXT_LBL_BAN_ACTIVE              = 165,
     TXT_LBL_BAN_NOT_ACTIVE          = 166,
+    TXT_LBL_BAN_YES                 = 167,
+    TXT_LBL_BAN_NO                  = 168,
 
     // Button labels
     TXT_BTN_PASS_CHANGE             = 200,
@@ -218,12 +266,24 @@ enum Texts
     TXT_SITE_FOOTER                 = 226,
     TXT_SERVER_INFO                 = 227,
     TXT_TELEPORT                    = 228,
-    TXT_IP_BLOCK_ON                 = 229,
-    TXT_IP_BLOCK_OFF                = 230,
+    TXT_IP_LOCK_ON                  = 229,
+    TXT_IP_LOCK_OFF                 = 230,
     TXT_BAN                         = 231,
     TXT_INSTANCES                   = 232,
+    TXT_EXPANSION_PRETBC            = 233,
+    TXT_EXPANSION_TBC               = 234,
+    TXT_EXPANSION_WOTLK             = 235,
+    TXT_EXPANSION_CATACLYSM         = 236,
+    TXT_CURRENT_IP                  = 237,
+    TXT_IS_ONLINE                   = 238,
+    TXT_IS_OFFLINE                  = 239,
+    TXT_CURRENT_IP_BAN              = 240
 };
 
+
+
 void SendMail(WString from, WString to, WString msg);
+WString GetExpansionName(SessionInfo * sess, int index);
+WString GetLocale(int index);
 
 #endif // DEFINES_H_INCLUDED
