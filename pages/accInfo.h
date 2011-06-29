@@ -21,37 +21,68 @@
 
 #include "../defines.h"
 
+enum AccountInfoSlot    // also determines items order
+{
+    ACCINFO_SLOT_INFO   = 0,
+    ACCINFO_SLOT_TYPE,
+    ACCINFO_SLOT_CURRENT_IP,
+    ACCINFO_SLOT_CREATE_DATE,
+    ACCINFO_SLOT_LAST_LOGIN_DATE,
+    ACCINFO_SLOT_LAST_LOGGED_IP,
+    ACCINFO_SLOT_IP_LOCK,
+    ACCINFO_SLOT_ONLINE,
+    ACCINFO_SLOT_CLIENT_VERSION,
+    ACCINFO_SLOT_VOTE_POINTS,
+    ACCINFO_SLOT_MULTIACC,
+    ACCINFO_SLOT_ACC_BAN,
+    ACCINFO_SLOT_LAST_IP_BAN,
+    ACCINFO_SLOT_CURR_IP_BAN,
+
+    ACCINFO_SLOT_COUNT
+};
+
+class AccountInfoSlotItem
+{
+public:
+    AccountInfoSlotItem() : label(NULL), widget(NULL) {}
+    AccountInfoSlotItem(WText * lbl, WWidget * wid) : label(lbl), widget(wid) {}
+    ~AccountInfoSlotItem();
+
+    void UpdateLabel(SessionInfo * sess);
+
+    void SetLabel(WText * lbl);
+    void SetWidget(WWidget * wid);
+    void SetBreakCount(int br) { breaks = br; }
+    void SetTextId(uint32 txtId) { textId = txtId; }
+
+    void SetAll(WText * txt, WWidget * wid, int br, uint32 txtId);
+
+    WText * GetLabel() { return label; }
+    WWidget * GetWidget() { return widget; }
+    int GetBreakCount() { return breaks; }
+private:
+    uint32 textId;
+    int breaks;
+    WText * label;
+    WWidget * widget;
+};
+
 class AccountInfoPage : public WContainerWidget
 {
 public:
     AccountInfoPage(SessionInfo * sess, WContainerWidget * parent = 0);
-    ~AccountInfoPage() { clear(); }
+    ~AccountInfoPage();
 
     void refresh();     // overload WWidget::refresh() for automatic content change ;) this should be done for all pages
 private:
     SessionInfo * session;
+    bool needInfoCreation;
 
-    // contains
-    WText * currentIP;
-    WText * accInfoText;
-    WText * accType;
-    WText * accCreateDate;
-    WText * accLastLoginDate;
-    WText * accLastLoggedIp;
-    WText * accIPLock;
-    WText * accBan;
-    WText * accIPBan;
-    WText * accSessionIPBan;
-    WText * accOnline;
-    WText * accClientVersion;
-    WText * accVotePoints;
-    WText * accMultiAcc;
-    WText * accCharacters;
-    WText * charName;
-    WText * charClass;
+    AccountInfoSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];
 
     void UpdateTextWidgets();
-    void ShowAccountInfo();
+    void CreateAccountInfo();
+    void UpdateAccountInfo();
     std::vector<WBreak*> brVector;
 };
 
