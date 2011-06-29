@@ -106,8 +106,8 @@ void AccountInfoPage::UpdateAccountInfo()
     Database * realmDb = new Database(SERVER_DB_DATA, SQL_REALMDB);
     Database * charDb = new Database(SERVER_DB_DATA, SQL_CHARDB);
     DatabaseRow * tmpRow;
-                    //          0     1               2                   3        4        5       6
-    realmDb->SetPQuery("SELECT id, last_ip, FROM_UNIXTIME(last_login), online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
+                    //          0     1         2         3        4        5       6
+    realmDb->SetPQuery("SELECT id, last_ip, last_login, online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
 
     // there should be only one record in db
     if (realmDb->ExecuteQuery() > 0)
@@ -172,8 +172,8 @@ void AccountInfoPage::CreateAccountInfo()
     Database * realmDb = new Database(SERVER_DB_DATA, SQL_REALMDB);
     Database * charDb = new Database(SERVER_DB_DATA, SQL_CHARDB);
     DatabaseRow * tmpRow;
-                    //          0     1               2                   3        4        5       6
-    realmDb->SetPQuery("SELECT id, last_ip, FROM_UNIXTIME(last_login), online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
+                    //          0     1         2         3        4        5       6
+    realmDb->SetPQuery("SELECT id, last_ip, last_login, online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
 
     // there should be only one record in db
     if (realmDb->ExecuteQuery() > 0)
