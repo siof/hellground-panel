@@ -95,7 +95,7 @@ AccountLevel DatabaseField::GetAccountLevel()
 DatabaseRow::DatabaseRow(MYSQL_ROW row, int count)
 {
     #ifdef DEBUG
-    printf("Call DatabaseRow::DatabaseRow(MYSQL_ROW row, int count = %i)", count);
+    printf("Call DatabaseRow::DatabaseRow(MYSQL_ROW row, int count = %i)\n", count);
     #endif
     this->count = count;
     fields = new DatabaseField[count];

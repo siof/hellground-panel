@@ -275,15 +275,8 @@ void HGMenu::LogMeIn()
     std::string escapedLogin = db->EscapeString(login->text());
     std::string escapedPass = db->EscapeString(pass->text());
 
-    std::string query = "SELECT username, sha_pass_hash, id, gmlevel, email, FROM_UNIXTIME(joindate), last_ip, locked, expansion FROM account WHERE username = '";
-    query += escapedLogin;
-    query += "' AND sha_pass_hash = SHA1(UPPER('";
-    query += escapedLogin;
-    query += ":";
-    query += escapedPass;
-    query += "'));";
-
-    db->SetQuery(query);
+                //           0            1         2     3       4       5         6       7         8
+    db->SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion FROM account WHERE username = '%s' AND sha_pass_hash = SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedLogin.c_str(), escapedPass.c_str());
 
     if (db->ExecuteQuery() > 0)
     {
@@ -299,6 +292,8 @@ void HGMenu::LogMeIn()
             session->lastIp = row->fields[6].GetWString();
             session->locked = row->fields[7].GetBool();
             session->expansion = row->fields[8].GetInt();
+
+
 
             login->setText("");
             pass->setText("");
