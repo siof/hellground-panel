@@ -76,7 +76,6 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
 AccountInfoPage::~AccountInfoPage()
 {
     session = NULL;
-    clear();
 }
 
 void AccountInfoPage::refresh()
