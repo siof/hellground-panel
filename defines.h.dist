@@ -68,6 +68,14 @@ typedef uint32_t uint32;
 
 #define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
 
+#ifdef WIN32
+#define SSCANF      sscanf_s
+#define VSNPRINTF   vsnprintf_s
+#else
+#define SSCANF      sscanf
+#define VSNPRINTF   vsnprintf
+#endif
+
 enum Lang
 {
     LANG_PL = 0,
