@@ -40,28 +40,28 @@ std::string DatabaseField::GetString()
 uint64 DatabaseField::GetUInt64()
 {
     uint64 tmp = 0;
-    sscanf_s(value.toUTF8().c_str(), "%u", &tmp);
+    SSCANF(value.toUTF8().c_str(), "%u", &tmp);
     return tmp;
 }
 
 uint32 DatabaseField::GetUInt32()
 {
     uint32 tmp = 0;
-    sscanf_s(value.toUTF8().c_str(), "%u", &tmp);
+    SSCANF(value.toUTF8().c_str(), "%u", &tmp);
     return tmp;
 }
 
 int DatabaseField::GetInt()
 {
     int tmp = 0;
-    sscanf_s(value.toUTF8().c_str(), "%i", &tmp);
+    SSCANF(value.toUTF8().c_str(), "%i", &tmp);
     return tmp;
 }
 
 bool DatabaseField::GetBool()
 {
     int tmp = 0;
-    sscanf_s(value.toUTF8().c_str(), "%i", &tmp);
+    SSCANF(value.toUTF8().c_str(), "%i", &tmp);
 
     if (tmp)
         return true;
@@ -72,7 +72,7 @@ bool DatabaseField::GetBool()
 AccountLevel DatabaseField::GetAccountLevel()
 {
     int tmp = 0;
-    sscanf_s(value.toUTF8().c_str(), "%i", &tmp);
+    SSCANF(value.toUTF8().c_str(), "%i", &tmp);
 
     switch (tmp)
     {
@@ -143,7 +143,7 @@ bool Database::SetPQuery(const char *format, ...)
     va_list ap;
     char szQuery[MAX_QUERY_LEN];
     va_start(ap, format);
-    int res = vsnprintf_s(szQuery, MAX_QUERY_LEN, format, ap);
+    int res = VSNPRINTF(szQuery, MAX_QUERY_LEN, format, ap);
     va_end(ap);
 
     if (res == -1)
