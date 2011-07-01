@@ -1,7 +1,12 @@
 glob:defines.h
 glob:visualstudio/lib/wt.lib
 glob:visualstudio/lib/wthttp.lib
-glob:visualstudio/panel.wt.sdf
-glob:visualstudio/panel.wt.suo
+glob:*/Release/*.*
+glob:*/Debug/*.*
+glob:*.sdf
+glob:*.opensdf
+glob:*.suo
+glob:codeblocks/HGPlayersPanel.layout
+glob:codeblocks/HGPlayersPanel.layout
 glob:codeblocks/HGPlayersPanel.depend
 glob:codeblocks/HGPlayersPanel.layout

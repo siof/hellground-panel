@@ -27,14 +27,6 @@
 
 using namespace Wt;
 
-#ifdef WIN32
-#define OPENFILE fopen_s
-#define CLOSEFILE fclose
-#else
-#define OPENFILE popen
-#define CLOSEFILE pclose
-#endif
-
 void SendMail(WString from, WString to, WString msg)
 {
     from = from.toUTF8();
