@@ -71,17 +71,13 @@ typedef uint32_t uint32;
 #ifdef WIN32
 #define SSCANF      sscanf_s
 #define VSNPRINTF   vsnprintf_s
+#define OPENFILE    fopen_s
+#define CLOSEFILE   fclose
 #else
 #define SSCANF      sscanf
 #define VSNPRINTF   vsnprintf
-#endif
-
-#ifdef WIN32
-#define OPENFILE fopen_s
-#define CLOSEFILE fclose
-#else
-#define OPENFILE popen
-#define CLOSEFILE pclose
+#define OPENFILE    popen
+#define CLOSEFILE   pclose
 #endif
 
 enum Lang
