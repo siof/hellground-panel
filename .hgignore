@@ -1,0 +1,5 @@
+glob:defines.h
+glob:visualstudio/lib/wt.lib
+glob:visualstudio/lib/wthttp.lib
+glob:visualstudio/panel.wt.sdf
+glob:visualstudio/panel.wt.suo
