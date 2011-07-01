@@ -76,6 +76,14 @@ typedef uint32_t uint32;
 #define VSNPRINTF   vsnprintf
 #endif
 
+#ifdef WIN32
+#define OPENFILE fopen_s
+#define CLOSEFILE fclose
+#else
+#define OPENFILE popen
+#define CLOSEFILE pclose
+#endif
+
 enum Lang
 {
     LANG_PL = 0,
