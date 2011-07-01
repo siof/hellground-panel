@@ -162,6 +162,11 @@ void AccountInfoPage::UpdateAccountInfo()
         else
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
     }
+
+    delete charDb;
+    charDb = NULL;
+    delete realmDb;
+    realmDb = NULL;
 }
 
 void AccountInfoPage::CreateAccountInfo()
