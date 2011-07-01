@@ -27,6 +27,14 @@
 
 using namespace Wt;
 
+#ifdef WIN32
+#define OPENFILE fopen_s
+#define CLOSEFILE fclose
+#else
+#define OPENFILE popen
+#define CLOSEFILE pclose
+#endif
+
 void SendMail(WString from, WString to, WString msg)
 {
     from = from.toUTF8();
@@ -35,12 +43,15 @@ void SendMail(WString from, WString to, WString msg)
 
     // Add filtering for strings
 
-    FILE *email= popen("/usr/lib/sendmail", "wb");
+    // this is linux specific code :P
+#ifdef UNIX
+    FILE *email= OPENFILE("/usr/lib/sendmail", "wb");
     fprintf(email, "To: %s \r\n", to.toUTF8().c_str());
     fprintf(email, "From: %s \r\n", from.toUTF8().c_str());
     fprintf(email, "\r\n");
     fprintf(email, "%s \r\n", msg.toUTF8().c_str());
-    pclose(email);
+    CLOSEFILE(email);
+#endif
 }
 
 WString GetExpansionName(SessionInfo * sess, int index)
