@@ -155,12 +155,12 @@ bool Database::SetPQuery(const char *format, ...)
 
 bool Database::Connect(std::string host, std::string login, std::string pass, unsigned int port, std::string db)
 {
-    return mysql_real_connect(connection, host.c_str(), login.c_str(), pass.c_str(), db.c_str(), port, NULL, 0);
+    return mysql_real_connect(connection, host.c_str(), login.c_str(), pass.c_str(), db.c_str(), port, NULL, 0) != NULL;
 }
 
 bool Database::SelectDatabase(std::string db)
 {
-    return mysql_select_db(connection, db.c_str());
+    return mysql_select_db(connection, db.c_str()) != NULL;
 }
 
 void Database::EscapeQuery()

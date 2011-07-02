@@ -55,10 +55,10 @@ public:
     ~HGMenu();
 
     void refresh();         // overload, some link should be available only if user is logged in
-    void ShowError(ErrorSlots error, std::string msg = "");
+    void ShowError(ErrorSlots error, std::string &msg);
     void ShowError(ErrorSlots error, uint32 textId = 0);
     void ShowError();
-    bool SetError(ErrorSlots error, std::string msg = "", ErrorPage * err = NULL);
+    bool SetError(ErrorSlots error, std::string &msg, ErrorPage * err = NULL);
     bool SetError(ErrorSlots error, uint32 textId = 0, ErrorPage * err = NULL);
 private:
     WContainerWidget * container;       // contains menu + additional items added on menu side

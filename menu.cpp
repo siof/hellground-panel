@@ -268,7 +268,7 @@ void HGMenu::LogMeIn()
     if (!db->Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
         SetError(ERROR_SLOT_BASE, TXT_MENU_ERROR);
-        SetError(ERROR_SLOT_DB, db->GetError());
+        SetError(ERROR_SLOT_DB, std::string(db->GetError()));
         ShowError();
         return;
     }
@@ -295,8 +295,6 @@ void HGMenu::LogMeIn()
             session->lastIp = row->fields[6].GetWString();
             session->locked = row->fields[7].GetBool();
             session->expansion = row->fields[8].GetInt();
-
-
 
             login->setText("");
             pass->setText("");
@@ -330,10 +328,10 @@ void HGMenu::LogMeIn()
             RefreshActiveMenuWidget();
         }
         else
-            ShowError(ERROR_SLOT_BASE, "ERROR: Row not found!");
+            ShowError(ERROR_SLOT_BASE, std::string("ERROR: Row not found!"));
     }
     else
-        ShowError(ERROR_SLOT_DB, db->GetError());
+        ShowError(ERROR_SLOT_DB, std::string(db->GetError())); // I don't think DB will return error if no data was selected due to mismatched criterias;
 
     delete db;
     db = NULL;
@@ -432,7 +430,7 @@ void HGMenu::ClearPass()
 }
 
 
-bool HGMenu::SetError(ErrorSlots error, std::string msg, ErrorPage * err)
+bool HGMenu::SetError(ErrorSlots error, std::string &msg, ErrorPage * err)
 {
     ErrorPage * tmpError = err;
     if (!tmpError)
@@ -474,7 +472,7 @@ bool HGMenu::SetError(ErrorSlots error, uint32 textId, ErrorPage * err)
     return true;
 }
 
-void HGMenu::ShowError(ErrorSlots error, std::string msg)
+void HGMenu::ShowError(ErrorSlots error, std::string &msg)
 {
     WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
 
