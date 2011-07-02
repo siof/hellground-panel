@@ -296,7 +296,7 @@ void AccountInfoPage::CreateAccountInfo()
         realmDb = NULL;
 
         if (tmpMenu)
-            tmpMenu->ShowError(ERROR_EMPTY_QUERY, dbError, true);
+            tmpMenu->ShowError(ERROR_SLOT_DB, dbError);
 
         return;
     }

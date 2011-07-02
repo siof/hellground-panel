@@ -144,12 +144,13 @@ struct SessionInfo
     }
 };
 
-enum Errors
+enum ErrorSlots
 {
-    ERROR_DB_CONNECT    = 0,
-    ERROR_LOGIN         = 1,
-    ERROR_ROW_NOT_FOUND = 2,
-    ERROR_EMPTY_QUERY   = 3
+    ERROR_SLOT_BASE     = 0,
+    ERROR_SLOT_ADDITIONAL,
+    ERROR_SLOT_DB,
+    ERROR_SLOT_INFO,
+    ERROR_SLOT_COUNT
 };
 
 enum Expansion

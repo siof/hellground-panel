@@ -18,86 +18,167 @@
 
 #include "error.h"
 
-ErrorPage::ErrorPage(SessionInfo * sess, WContainerWidget * parent)
-: WContainerWidget(parent)
+
+ErrorPageSlot::~ErrorPageSlot()
 {
-    session = sess;
-    ShowError();
+    if (text)
+        delete text;
+
+    text = NULL;
+}
+
+void ErrorPageSlot::SetText(WText * txt, uint32 id)
+{
+    DeleteText();
+
+    text = txt;
+    textId = id;
+    textIdBased = true;
+}
+
+void ErrorPageSlot::SetText(WText * txt, WString strn)
+{
+    DeleteText();
+
+    text = txt;
+    str = strn;
+    textIdBased = false;
+}
+
+void ErrorPageSlot::SetText(WString strn)
+{
+    str = strn;
+    textIdBased = false;
+}
+
+void ErrorPageSlot::SetText(SessionInfo * sess, uint32 id)
+{
+    #ifdef DEBUG
+    printf("\nErrorPageSlot::SetText(sess: %i)\n", sess ? 1 : 0);
+    #endif
+    if (!sess)
+        return;
+
+    textId = id;
+    textIdBased = true;
+}
+
+WText * ErrorPageSlot::CreateText(SessionInfo * sess)
+{
+    #ifdef DEBUG
+    printf("\nErrorPageSlot::CreateText(sess: %i)\n", sess ? 1 : 0);
+    #endif
+    if (!sess)
+        return NULL;
+
+    if (text)
+    {
+        UpdateText(sess);
+        return text;
+    }
+
+    if (textIdBased)
+    {
+        if (textId)
+            text = new WText(sess->GetText(textId));
+    }
+    else if (!str.empty())
+        text = new WText(str);
+
+    return text;
+}
+
+void ErrorPageSlot::DeleteText()
+{
+    if (text)
+        delete text;
+
+    text = NULL;
+}
+
+void ErrorPageSlot::UpdateText(SessionInfo * sess)
+{
+    #ifdef DEBUG
+    printf("\nErrorPageSlot::UpdateText(sess: %i)\n", sess ? 1 : 0);
+    #endif
+    if (!sess || !text)
+        return;
+
+    if (textIdBased && textId)
+        text->setText(sess->GetText(textId));
+    else
+        text->setText(str);
+}
+
+
+ErrorPage::ErrorPage(SessionInfo * sess, WContainerWidget * parent)
+: WContainerWidget(parent), session(sess), created(false)
+{
+    #ifdef DEBUG
+    printf("\nErrorPage::ErrorPage(sess: %i)\n", sess ? 1 : 0);
+    #endif
 }
 
 void ErrorPage::refresh()
 {
-    ShowError();
+    #ifdef DEBUG
+    printf("\nErrorPage::refresh()\n");
+    #endif
+
+    if (created)
+        UpdateErrors();
+    else
+        CreateErrors();
 
     WContainerWidget::refresh();
 }
 
-void ErrorPage::SetErrorMsg(int error)
+void ErrorPage::SetErrorMsg(ErrorSlots slot, uint32 txtId)
 {
-    switch (error)
-    {
-        case ERROR_DB_CONNECT:
-            switch (session->language)
-            {
-                case LANG_EN:
-                    errormsg = "Can't connect to database !";
-                    break;
-                case LANG_PL:
-                default:
-                    errormsg = "Błąd połączenia z bazą danych !";
-                    break;
-            }
-            break;
-        case ERROR_LOGIN:
-            switch (session->language)
-            {
-                case LANG_EN:
-                    errormsg = "Invalid login or password";
-                    break;
-                case LANG_PL:
-                default:
-                    errormsg = "Błędny login lub hasło";
-                    break;
-            }
-            break;
-        case ERROR_EMPTY_QUERY:
-            errormsg = "EMPTY QUERY";
-            break;
-        default:
-            errormsg = "";
-            break;
-    }
-
-    ShowError();
-}
-
-void ErrorPage::SetAdditionalErrorMsg(const char * str)
-{
-    if (!str)
+    #ifndef SHOW_DATABASE_ERRORS
+    if (slot == ERROR_SLOT_DB)
         return;
+    #endif
 
-    additionalMsg = str;
+    errors[slot].SetText(session, txtId);
 }
 
-void ErrorPage::SetAdditionalErrorMsg(std::string str)
+void ErrorPage::SetErrorMsg(ErrorSlots slot, WString str)
 {
-    SetAdditionalErrorMsg(str.c_str());
+    #ifndef SHOW_DATABASE_ERRORS
+    if (slot == ERROR_SLOT_DB)
+        return;
+    #endif
+
+    errors[slot].SetText(str);
 }
 
-void ErrorPage::ShowError()
+void ErrorPage::UpdateErrors()
 {
-    if (count())
+    for (int i = 0; i < ERROR_SLOT_COUNT; ++i)
+        #ifndef SHOW_DATABASE_ERRORS
+        if (i != ERROR_SLOT_DB)
+        #endif
+            errors[i].UpdateText(session);
+}
+
+void ErrorPage::CreateErrors()
+{
+    WText * tmpW = NULL;
+    for (int i = 0; i < ERROR_SLOT_COUNT; ++i)
     {
-        for (int i = count() - 1; i >= 0; --i)
+        #ifndef SHOW_DATABASE_ERRORS
+        if (i != ERROR_SLOT_DB)
         {
-            WWidget * tmp = widget(i);
-            removeWidget(tmp);
-            delete tmp;
-            tmp = NULL;
+        #endif
+            if (tmpW = errors[i].CreateText(session))
+            {
+                addWidget(tmpW);
+                addWidget(new WBreak());
+                addWidget(new WBreak());
+            }
+        #ifndef SHOW_DATABASE_ERRORS
         }
+        #endif
     }
-
-    addWidget(new WText(utf8(errormsg)));
-    addWidget(new WBreak());
-    addWidget(new WText(utf8(additionalMsg)));
 }

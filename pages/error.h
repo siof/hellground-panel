@@ -21,6 +21,29 @@
 
 #include "../defines.h"
 
+class ErrorPageSlot
+{
+public:
+    ErrorPageSlot() : text(NULL), textId(0), str(WString::fromUTF8("")), textIdBased(false) {}
+    ~ErrorPageSlot();
+
+    void SetText(WText * txt, uint32 id);
+    void SetText(WText * txt, WString strn);
+    void SetText(WString strn);
+    void SetText(SessionInfo * sess, uint32 id);
+
+    WText * CreateText(SessionInfo * sess);
+    void DeleteText();
+    void UpdateText(SessionInfo * sess);
+
+    WText * GetText() { return text; }
+private:
+    WText * text;
+    uint32 textId;
+    WString str;
+    bool textIdBased;
+};
+
 class ErrorPage : public WContainerWidget
 {
 public:
@@ -28,15 +51,15 @@ public:
     ~ErrorPage() {}
 
     void refresh();     // overload WWidget::refresh() for automatic content change ;) this should be done for all pages
-    void SetErrorMsg(int error);
-    void SetAdditionalErrorMsg(const char * str);
-    void SetAdditionalErrorMsg(std::string str);
+    void SetErrorMsg(ErrorSlots slot, uint32 txtId);
+    void SetErrorMsg(ErrorSlots slot, WString str);
 private:
-    void ShowError();
+    void CreateErrors();
+    void UpdateErrors();
 
     SessionInfo * session;
-    std::string errormsg;
-    std::string additionalMsg;
+    ErrorPageSlot errors[ERROR_SLOT_COUNT];
+    bool created;
 };
 
 #endif // ERROR_H_INCLUDED

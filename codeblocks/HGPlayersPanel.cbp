@@ -67,6 +67,8 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-DUNIX" />
+			<Add option="-DLINUX" />
 			<Add directory="../../hgpanel" />
 		</Compiler>
 		<Unit filename="../LICENCE" />

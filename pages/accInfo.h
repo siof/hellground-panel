@@ -83,7 +83,6 @@ private:
     void UpdateTextWidgets();
     void CreateAccountInfo();
     void UpdateAccountInfo();
-    std::vector<WBreak*> brVector;
 };
 
 #endif // ACCINFO_H_INCLUDED
