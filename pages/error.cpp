@@ -36,16 +36,17 @@ void ErrorPageSlot::SetText(WText * txt, uint32 id)
     textIdBased = true;
 }
 
-void ErrorPageSlot::SetText(WText * txt, WString strn)
+void ErrorPageSlot::SetText(WText * txt, WString &strn)
 {
     DeleteText();
 
     text = txt;
+
     str = strn;
     textIdBased = false;
 }
 
-void ErrorPageSlot::SetText(WString strn)
+void ErrorPageSlot::SetText(WString &strn)
 {
     str = strn;
     textIdBased = false;
@@ -143,7 +144,7 @@ void ErrorPage::SetErrorMsg(ErrorSlots slot, uint32 txtId)
     errors[slot].SetText(session, txtId);
 }
 
-void ErrorPage::SetErrorMsg(ErrorSlots slot, WString str)
+void ErrorPage::SetErrorMsg(ErrorSlots slot, WString &str)
 {
     #ifndef SHOW_DATABASE_ERRORS
     if (slot == ERROR_SLOT_DB)

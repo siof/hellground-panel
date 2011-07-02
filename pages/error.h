@@ -28,8 +28,8 @@ public:
     ~ErrorPageSlot();
 
     void SetText(WText * txt, uint32 id);
-    void SetText(WText * txt, WString strn);
-    void SetText(WString strn);
+    void SetText(WText * txt, WString &strn);
+    void SetText(WString &strn);
     void SetText(SessionInfo * sess, uint32 id);
 
     WText * CreateText(SessionInfo * sess);
@@ -52,7 +52,7 @@ public:
 
     void refresh();     // overload WWidget::refresh() for automatic content change ;) this should be done for all pages
     void SetErrorMsg(ErrorSlots slot, uint32 txtId);
-    void SetErrorMsg(ErrorSlots slot, WString str);
+    void SetErrorMsg(ErrorSlots slot, WString &str);
 private:
     void CreateErrors();
     void UpdateErrors();
