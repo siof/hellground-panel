@@ -224,10 +224,11 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
 
     menuSlots[MENU_SLOT_ERROR] = new HGMenuOption(MENU_SLOT_ERROR);
-    menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_ERROR, new ErrorPage(session));
+    //menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_ERROR, new ErrorPage(session));
+    menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, TXT_MENU_ERROR, new WMenuItem(sess->GetText(TXT_MENU_ERROR), new ErrorPage(session)));
     menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_PLAYER, TXT_MENU_ERROR, menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_NOT_LOGGED));
     menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->hide();
-    menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->disable();
+//    menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->disable();
 
     ShowMenuOptions();
 
@@ -266,7 +267,9 @@ void HGMenu::LogMeIn()
     Database * db = new Database();
     if (!db->Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        ShowError(ERROR_DB_CONNECT, db->GetError(), true);
+        SetError(ERROR_SLOT_BASE, TXT_MENU_ERROR);
+        SetError(ERROR_SLOT_DB, db->GetError());
+        ShowError();
         return;
     }
 
@@ -327,10 +330,10 @@ void HGMenu::LogMeIn()
             RefreshActiveMenuWidget();
         }
         else
-            ShowError(ERROR_ROW_NOT_FOUND);
+            ShowError(ERROR_SLOT_BASE, "ERROR: Row not found!");
     }
     else
-        ShowError(ERROR_LOGIN, db->GetError(), true);
+        ShowError(ERROR_SLOT_DB, db->GetError());
 
     delete db;
     db = NULL;
@@ -428,26 +431,97 @@ void HGMenu::ClearPass()
         pass->setText("");
 }
 
-void HGMenu::ShowError(int error, std::string additionalMsg, bool dbError)
+
+bool HGMenu::SetError(ErrorSlots error, std::string msg, ErrorPage * err)
+{
+    ErrorPage * tmpError = err;
+    if (!tmpError)
+    {
+        WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
+
+        if (!tmpItem)
+            return false;
+
+        ErrorPage * tmpError = (ErrorPage*)(tmpItem->itemWidget());
+
+        if (!tmpError)
+            return false;
+    }
+
+    tmpError->SetErrorMsg(error, WString::fromUTF8(msg));
+
+    return true;
+}
+
+bool HGMenu::SetError(ErrorSlots error, uint32 textId, ErrorPage * err)
+{
+    ErrorPage * tmpError = err;
+    if (!tmpError)
+    {
+        WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
+
+        if (!tmpItem)
+            return false;
+
+        ErrorPage * tmpError = (ErrorPage*)(tmpItem->itemWidget());
+
+        if (!tmpError)
+            return false;
+    }
+
+    tmpError->SetErrorMsg(error, textId);
+
+    return true;
+}
+
+void HGMenu::ShowError(ErrorSlots error, std::string msg)
 {
     WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
 
     if (!tmpItem)
         return;
 
-    ErrorPage * tmpError = (ErrorPage*)tmpItem->itemWidget();
+    ErrorPage * tmpError = (ErrorPage*)(tmpItem->itemWidget());
 
     if (!tmpError)
         return;
 
-    if (!dbError)
-        tmpError->SetAdditionalErrorMsg(additionalMsg);
-    #ifdef SHOW_DATABASE_ERRORS
-    else
-        tmpError->SetAdditionalErrorMsg(additionalMsg);
-    #endif
+    SetError(error, msg, tmpError);
 
-    tmpError->SetErrorMsg(error);
+    menu->select(tmpItem);
+    RefreshActiveMenuWidget();
+}
+
+void HGMenu::ShowError(ErrorSlots error, uint32 textId)
+{
+    WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
+
+    if (!tmpItem)
+        return;
+
+    ErrorPage * tmpError = (ErrorPage*)(tmpItem->itemWidget());
+
+    if (!tmpError)
+        return;
+
+    SetError(error, textId, tmpError);
+
+    menu->select(tmpItem);
+    RefreshActiveMenuWidget();
+}
+
+void HGMenu::ShowError()
+{
+    WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
+
+    if (!tmpItem)
+        return;
+
+    ErrorPage * tmpError = (ErrorPage*)(tmpItem->itemWidget());
+
+    if (!tmpError)
+        return;
+
     menu->select(tmpItem);
     RefreshActiveMenuWidget();
 }
