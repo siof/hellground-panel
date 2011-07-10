@@ -215,7 +215,7 @@ int Database::ExecuteQuery()
     }
 
     #ifdef DEBUG
-    printf("\n\nExecuteQuery(): test6: rows.size(): %i\n", rows.size());
+    printf("\n\nExecuteQuery(): test6: rows.size(): %i\n", (int)rows.size());
     #endif
 
     return rows.size();

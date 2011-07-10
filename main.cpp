@@ -27,7 +27,7 @@
 
 using namespace Wt;
 
-void SendMail(WString from, WString to, WString msg)
+void SendMail(WString& from, WString& to, WString& msg)
 {
     from = from.toUTF8();
     to = to.toUTF8();

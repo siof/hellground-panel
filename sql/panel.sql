@@ -65,6 +65,7 @@ INSERT INTO LangTexts VALUES
 (151, "Zamknięta", "Closed"),
 (155, "Zakładając konto w pełni akceptujesz <a href=\"http://wow.gamefreedom.pl/regulamin-serwera/\">regulamin serwera<\a>", "You read <a href=\"http://gamefreedom.pl/showthread.php?t=8454\">Server Rules<\a> and you accept them?"),
 (156, "Tak", "Yes"),
+(157, "HellGround - Rejestracja", "HellGround - Register"),
 (160, "Login", "Login"),
 (161, "Zbanowany od", "Banned from"),
 (162, "Zbanowany do", "Banned till"),

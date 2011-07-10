@@ -75,6 +75,8 @@ private:
 
     HGMenuOption * menuSlots[MENU_SLOT_COUNT];
 
+    bool refreshing;
+
     void LogMeIn();
     void SetPlLang();
     void SetEngLang();
