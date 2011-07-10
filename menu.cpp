@@ -19,6 +19,7 @@
 #include "menu.h"
 #include "pages/default.h"
 #include "pages/accInfo.h"
+#include "pages/register.h"
 #include "database.h"
 
 HGMenuOption::HGMenuOption(MenuOptions menuOption, WObject * parent):
@@ -211,7 +212,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     menuSlots[MENU_SLOT_HOME]->AddMenuItem(LVL_PLAYER, TXT_MENU_HOME, menuSlots[MENU_SLOT_HOME]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
     menuSlots[MENU_SLOT_ACCOUNT] = new HGMenuOption(MENU_SLOT_ACCOUNT);
-//    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess));
+    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess));
     menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess));
 
 //    menuSlots[MENU_SLOT_PASSWORD] = new HGMenuOption(MENU_SLOT_PASSWORD);
@@ -268,7 +269,8 @@ void HGMenu::LogMeIn()
     if (!db->Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
         SetError(ERROR_SLOT_BASE, TXT_MENU_ERROR);
-        SetError(ERROR_SLOT_DB, std::string(db->GetError()));
+        std::string tmpErr = db->GetError();
+        SetError(ERROR_SLOT_DB, tmpErr);
         ShowError();
         return;
     }
@@ -328,10 +330,19 @@ void HGMenu::LogMeIn()
             RefreshActiveMenuWidget();
         }
         else
-            ShowError(ERROR_SLOT_BASE, std::string("ERROR: Row not found!"));
+        {
+            std::string tmpErr = "ERROR: Row not found!";
+            ShowError(ERROR_SLOT_BASE, tmpErr);
+        }
     }
     else
-        ShowError(ERROR_SLOT_DB, std::string(db->GetError())); // I don't think DB will return error if no data was selected due to mismatched criterias;
+    {
+        // I don't think DB will return error if no data was selected due to mismatched criterias;
+        // in this case yes, but if we will have sql syntax error caused by user ? or database connection will be lost for some reasons ? (in future all errors must be logged :P)
+        // execute will return 0 if result will be empty and -1 if there will be DB error.
+        std::string tmpErr = db->GetError();
+        ShowError(ERROR_SLOT_DB, tmpErr);
+    }
 
     delete db;
     db = NULL;
@@ -446,7 +457,8 @@ bool HGMenu::SetError(ErrorSlots error, std::string &msg, ErrorPage * err)
             return false;
     }
 
-    tmpError->SetErrorMsg(error, WString::fromUTF8(msg));
+    WString tmpErr = WString::fromUTF8(msg);
+    tmpError->SetErrorMsg(error, tmpErr);
 
     return true;
 }

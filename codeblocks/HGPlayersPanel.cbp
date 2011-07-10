@@ -66,6 +66,8 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Wfatal-errors" />
+			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-DUNIX" />
 			<Add option="-DLINUX" />
@@ -86,7 +88,12 @@
 		<Unit filename="../pages/default.h" />
 		<Unit filename="../pages/error.cpp" />
 		<Unit filename="../pages/error.h" />
+		<Unit filename="../pages/register.cpp" />
+		<Unit filename="../pages/register.h" />
+		<Unit filename="../sql/char.sql" />
 		<Unit filename="../sql/panel.sql" />
+		<Unit filename="../textItems.cpp" />
+		<Unit filename="../textItems.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
