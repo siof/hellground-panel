@@ -44,8 +44,8 @@ enum AccountInfoSlot    // also determines items order
 class AccountInfoSlotItem
 {
 public:
-    AccountInfoSlotItem() : label(NULL), widget(NULL) {}
-    AccountInfoSlotItem(WText * lbl, WWidget * wid) : label(lbl), widget(wid) {}
+    AccountInfoSlotItem() : textId(0), breaks(0), label(NULL), widget(NULL) {}
+    AccountInfoSlotItem(WText * lbl, WWidget * wid) : textId(0), breaks(0), label(lbl), widget(wid) {}
     ~AccountInfoSlotItem();
 
     void UpdateLabel(SessionInfo * sess);
