@@ -171,6 +171,9 @@ void AccountInfoPage::UpdateAccountInfo()
 
 void AccountInfoPage::CreateAccountInfo()
 {
+    #ifdef DEBUG
+    printf("\nCall void AccountInfoPage::CreateAccountInfo()\n");
+    #endif
     clear();
 
     Database * realmDb = new Database(SERVER_DB_DATA, SQL_REALMDB);
@@ -182,13 +185,16 @@ void AccountInfoPage::CreateAccountInfo()
     // there should be only one record in db
     if (realmDb->ExecuteQuery() > 0)
     {
+        #ifdef DEBUG
+        printf("\nCreateAccountInfo(): Account founded\n");
+        #endif
         needInfoCreation = false;
         tmpRow = realmDb->GetRow();
 
         WText * tmpTxt = NULL;
         WWidget * tmpWidget = NULL;
 
-        tmpTxt = new WText("<h3>" + session->GetText(TXT_LBL_ACC_INFO) + "</h3>");
+        tmpTxt = new WText(session->GetText(TXT_LBL_ACC_INFO));
         accInfoSlots[ACCINFO_SLOT_INFO].SetAll(tmpTxt, NULL, 3, TXT_LBL_ACC_INFO);
 
         tmpTxt = new WText(session->GetText(TXT_LBL_ACC_EXPANSION));
@@ -266,6 +272,11 @@ void AccountInfoPage::CreateAccountInfo()
 
 
         int tmpCount;
+
+        #ifdef DEBUG
+        printf("\nCreateAccountInfo(): ACC_INFO_SLOT_COUNT: %i\n", ACCINFO_SLOT_COUNT);
+        #endif
+
         // add widgets to page
         for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
         {
@@ -279,6 +290,9 @@ void AccountInfoPage::CreateAccountInfo()
 
             tmpCount = accInfoSlots[i].GetBreakCount();
 
+            #ifdef DEBUG
+            printf("\nCreateAccountInfo(): i: %i, tmpCount: %i\n", i, tmpCount);
+            #endif
             for (int j = 0; j < tmpCount; ++j)
                 addWidget(new WBreak());
         }

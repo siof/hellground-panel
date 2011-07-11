@@ -175,7 +175,7 @@ void Database::EscapeQuery()
 int Database::ExecuteQuery()
 {
     #ifdef DEBUG
-    printf("Call int Database::ExecuteQuery()");
+    printf("\nCall int Database::ExecuteQuery() : actualQuery: %s", actualQuery.c_str());
     #endif
 
     Clear();
