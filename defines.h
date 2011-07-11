@@ -19,6 +19,8 @@
 #ifndef DEFINES_H_INCLUDED
 #define DEFINES_H_INCLUDED
 
+#include "config.h"
+
 // standard includes for most files
 #include <WString>
 #include <WBreak>
@@ -36,42 +38,12 @@ using namespace Wt;
 
 typedef uint64_t uint64;
 typedef uint32_t uint32;
-
-#define SHOW_DATABASE_ERRORS
-
-//#define DEBUG
+typedef uint16_t uint16;
+typedef uint8_t  uint8;
 
 #ifdef DEBUG
 #include <iostream>
 #endif
-
-#define SITE_TITLE  "HellGround Player's Panel"
-
-#define SITE_NAME   "HellGround"
-
-#define SQL_HOST        ""
-#define SQL_LOGIN       ""
-#define SQL_PASSWORD    ""
-#define SQL_PORT        3306
-
-#define SERVER_DB_DATA  SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_PORT
-
-#define PANEL_SQL_HOST  ""
-#define PANEL_SQL_LOGIN ""
-#define PANEL_SQL_PASS  ""
-#define PANEL_SQL_PORT  3306
-
-#define SQL_REALMDB     "realm"
-#define SQL_CHARDB      "chars"
-#define SQL_WORLDDB     "world"
-#define SQL_PANELDB     "panel"
-
-#define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
-
-#define PASSWORD_ANSI_START 33
-#define PASSWORD_ANSI_END   126
-#define PASSWORD_LENGTH_MIN 8
-#define PASSWORD_LENGTH_MAX 12
 
 #ifdef WIN32
 #define SSCANF      sscanf_s
@@ -111,7 +83,7 @@ struct Text
     Text(uint32 id) : textId(id) {}
     ~Text() {}
 
-    WString GetText(Lang lang)
+    WString& GetText(Lang lang)
     {
         return texts[lang];
     }
@@ -122,7 +94,7 @@ struct Text
 
 struct SessionInfo
 {
-    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED) {}
+    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), textMissing("Error ! Text missing !") {}
     ~SessionInfo() {}
 
     WString login;          // account login
@@ -138,12 +110,14 @@ struct SessionInfo
     bool locked;            // IP lock
     int expansion;          // expansion
 
-    WString GetText(uint32 id)
+    WString textMissing;
+
+    WString& GetText(uint32 id)
     {
         std::map<uint32, Text>::iterator itr = langTexts.find(id);
 
         if (itr == langTexts.end())
-            return WString("Error ! Text missing !");
+            return textMissing;
 
         return itr->second.GetText(language);
     }
@@ -253,11 +227,12 @@ enum Texts
     TXT_LBL_PASS_MAIL               = 135,
     TXT_LBL_PASS_GG                 = 136,
 
-    TXT_LBL_INSTANCE_OPEN           = 150,
-    TXT_LBL_INSTANCE_CLOSED         = 151,
+    TXT_LBL_INSTANCE_OPEN           = 150,      // instance is open
+    TXT_LBL_INSTANCE_CLOSED         = 151,      // instance is closed (min lvl > 70)
 
-    TXT_LBL_REGISTER_RULES          = 155,
-    TXT_LBL_REGISTER_RULES_ACCEPT   = 156,
+    TXT_LBL_REGISTER_RULES          = 155,      // info that user must accept server rules
+    TXT_LBL_REGISTER_RULES_ACCEPT   = 156,      // checkbox text
+    TXT_LBL_REGISTER_MAIN           = 157,      // registration page title
 
     TXT_LBL_BAN_LOGIN               = 160,
     TXT_LBL_BAN_FROM                = 161,
@@ -295,13 +270,13 @@ enum Texts
     TXT_CURRENT_IP                  = 237,
     TXT_IS_ONLINE                   = 238,
     TXT_IS_OFFLINE                  = 239,
-    TXT_CURRENT_IP_BAN              = 240
+    TXT_CURRENT_IP_BAN              = 240,
+    TXT_REGISTRATION_MAIL           = 241
 };
 
-
-
-void SendMail(WString from, WString to, WString msg);
+void SendMail(WString& from, WString& to, WString& msg);
 WString GetExpansionName(SessionInfo * sess, int index);
 WString GetLocale(int index);
+int irand(int min, int max);
 
 #endif // DEFINES_H_INCLUDED
