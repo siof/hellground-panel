@@ -17,7 +17,7 @@
 */
 
 #include "register.h"
-
+#include "../database.h"
 
 RegisterPage::RegisterPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess), needCreation(true)
@@ -56,11 +56,17 @@ void RegisterPage::UpdateTextWidgets()
 void RegisterPage::CreateRegisterPage()
 {
     clear();
+    needCreation = false;
 
     textSlots[REG_TEXT_MAIN].SetLabel(session, TXT_LBL_REGISTER_MAIN);
     addWidget(textSlots[REG_TEXT_MAIN].GetLabel());
     addWidget(new WBreak());
     addWidget(new WBreak());
+    addWidget(new WBreak());
+    addWidget(new WBreak());
+
+    textSlots[REG_TEXT_INFO].SetLabel("");
+    addWidget(textSlots[REG_TEXT_INFO].GetLabel());
     addWidget(new WBreak());
     addWidget(new WBreak());
 
@@ -88,13 +94,13 @@ void RegisterPage::CreateRegisterPage()
     addWidget(new WBreak());
 
     btnRegister = new WPushButton(session->GetText(TXT_BTN_REGISTER));
+    btnRegister->setEnabled(false);
     addWidget(btnRegister);
 
     txtLogin->focussed().connect(this, &RegisterPage::ClearLogin);
     txtEmail->focussed().connect(this, &RegisterPage::ClearEmail);
     chRules->changed().connect(this, &RegisterPage::CheckChange);
     btnRegister->clicked().connect(this, &RegisterPage::Register);
-    btnRegister->disable();
 }
 
 void RegisterPage::ClearLogin()
@@ -115,7 +121,44 @@ void RegisterPage::CheckChange()
 void RegisterPage::Register()
 {
     if (!chRules->isChecked())
-        return;
+    {
 
-    // ADD REGISTRATION CODE
+        return;
+    }
+
+    WString login, mail, pass;
+
+    login = txtLogin->text();
+    mail = txtEmail->text();
+
+    pass = "";
+
+    int passLen = irand(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
+
+    std::string tmpStr;
+
+    for (int i = 0; i < passLen; ++i)
+        tmpStr += (char)(irand(PASSWORD_ANSI_START, PASSWORD_ANSI_END));
+
+    pass = WString::fromUTF8(tmpStr);
+
+    WString from, msg;
+    from = MAIL_FROM;
+
+    Database * db = new Database(SERVER_DB_DATA, SQL_REALMDB);
+
+    login = db->EscapeString(login);
+    pass = db->EscapeString(pass);
+
+    // check should be moved to other place but here will be usefull for SendMail tests ;)
+    #ifdef REGISTRATION_ENABLED
+    db->SetPQuery("INSERT INTO account (username, email, sha_passphrase) VALUES ('%s', '%s', SHA('%s:%s'))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
+    db->ExecuteQuery();
+    #endif
+
+    msg = "test msg :D passs jest taki se:" + pass;
+
+    SendMail(from, mail, msg);
+
+    delete db;
 }

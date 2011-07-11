@@ -24,7 +24,7 @@
 class TextItems
 {
 public:
-    TextItems() : label(NULL), textId(0) {}
+    TextItems() : textId(0), label(NULL) {}
     TextItems(SessionInfo * sess, uint32 txtId);
     TextItems(WString &lbl);
     ~TextItems();
@@ -35,10 +35,14 @@ public:
     void SetLabel(WText * lbl, uint32 id = 0);
     void SetLabel(WString &lbl);
     void SetLabel(SessionInfo * sess, uint32 id);
+    void SetLabel(std::string &lbl);
+    void SetLabel(const char* lbl);
 
     void SetText(WText * txt, uint32 id = 0);
     void SetText(WString &lbl);
     void SetText(SessionInfo * sess, uint32 id);
+    void SetText(std::string &lbl);
+    void SetText(const char* lbl);
 
     void SetTextId(uint32 txtId) { textId = txtId; }
 

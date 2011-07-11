@@ -26,6 +26,7 @@
 enum RegistrationTextSlots
 {
     REG_TEXT_MAIN = 0,
+    REG_TEXT_INFO,
     REG_TEXT_LOGIN,
     REG_TEXT_EMAIL,
     REG_TEXT_RULES,

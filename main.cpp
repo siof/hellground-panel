@@ -27,6 +27,7 @@
 
 using namespace Wt;
 
+// TODO: Implement Mail Sending for both (unix and win) OS
 void SendMail(WString& from, WString& to, WString& msg)
 {
     from = from.toUTF8();
@@ -37,8 +38,8 @@ void SendMail(WString& from, WString& to, WString& msg)
 
     // this is linux specific code :P
 #ifdef UNIX
-    FILE *email= OPENFILE("/usr/lib/sendmail", "wb");
-    fprintf(email, "To: %s \r\n", to.toUTF8().c_str());
+    FILE *email= OPENFILE("/usr/lib/sendmail", "w");
+    fprintf(email, "%s \r\n", to.toUTF8().c_str());
     fprintf(email, "From: %s \r\n", from.toUTF8().c_str());
     fprintf(email, "\r\n");
     fprintf(email, "%s \r\n", msg.toUTF8().c_str());
@@ -72,6 +73,10 @@ WString GetLocale(int index)
         default:
             return WString::fromUTF8("unknown");
     }
+}
+int irand(int min, int max)
+{
+    return rand()%(max - min) + min;
 }
 
 class PlayersPanel : public WApplication
