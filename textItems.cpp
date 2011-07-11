@@ -88,6 +88,19 @@ void TextItems::SetLabel(SessionInfo * sess, uint32 id)
     SetLabel(sess->GetText(textId));
 }
 
+
+void TextItems::SetLabel(std::string &lbl)
+{
+    WString tmpStr = WString::fromUTF8(lbl);
+    SetLabel(tmpStr);
+}
+
+void TextItems::SetLabel(const char* lbl)
+{
+    WString tmpStr = WString::fromUTF8(lbl);
+    SetLabel(tmpStr);
+}
+
 void TextItems::SetText(WText * txt, uint32 id)
 {
     SetLabel(txt, id);
@@ -101,4 +114,15 @@ void TextItems::SetText(WString &txt)
 void TextItems::SetText(SessionInfo * sess, uint32 id)
 {
     SetLabel(sess, id);
+}
+
+
+void TextItems::SetText(std::string &lbl)
+{
+    SetLabel(lbl);
+}
+
+void TextItems::SetText(const char* lbl)
+{
+    SetLabel(lbl);
 }

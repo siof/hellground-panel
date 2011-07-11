@@ -63,7 +63,7 @@ INSERT INTO LangTexts VALUES
 (136, "Numer GG", "GG number"),
 (150, "Otwarta", "Opened"),
 (151, "Zamknięta", "Closed"),
-(155, "Zakładając konto w pełni akceptujesz <a href=\"http://wow.gamefreedom.pl/regulamin-serwera/\">regulamin serwera<\a>", "You read <a href=\"http://gamefreedom.pl/showthread.php?t=8454\">Server Rules<\a> and you accept them?"),
+(155, "Zakładając konto w pełni akceptujesz <a href=\"http://wow.gamefreedom.pl/regulamin-serwera/\">regulamin serwera</a>", "You read <a href=\"http://gamefreedom.pl/showthread.php?t=8454\">Server Rules</a> and you accept them?"),
 (156, "Tak", "Yes"),
 (157, "HellGround - Rejestracja", "HellGround - Register"),
 (160, "Login", "Login"),
@@ -100,4 +100,5 @@ INSERT INTO LangTexts VALUES
 (237, "Aktualne IP: ", "Current IP: "),
 (238, "Online", "Online"),
 (239, "Offline", "Offline"),
-(240, "Aktualne IP jest zbanowane: ", "Current IP is banned: ");
+(240, "Aktualne IP jest zbanowane: ", "Current IP is banned: "),
+(241, "", "");

@@ -23,7 +23,7 @@
 #include "database.h"
 
 HGMenuOption::HGMenuOption(MenuOptions menuOption, WObject * parent):
-    menuOption(menuOption), itemsParent(parent)
+    itemsParent(parent), menuOption(menuOption)
 {
     items = new WMenuItem*[ACCOUNT_LEVEL_COUNT];
     textIds = new uint32[ACCOUNT_LEVEL_COUNT];
