@@ -29,7 +29,6 @@
 
 using namespace Wt;
 
-// TODO: Implement Mail Sending for both (unix and win) OS
 void SendMail(WString& from, WString& to, WString& msg)
 {
     jwsmtp::mailer mail;
@@ -43,21 +42,20 @@ void SendMail(WString& from, WString& to, WString& msg)
     mail.username(MAIL_USER);
     mail.password(MAIL_PASS);
 
-    mail.send( );
+    mail.send();
 }
 
 WString GetExpansionName(SessionInfo * sess, int index)
 {
     switch (index)
     {
-        case EXPANSION_PRETBC:
-            return sess->GetText(TXT_EXPANSION_PRETBC);
         case EXPANSION_TBC:
             return sess->GetText(TXT_EXPANSION_TBC);
         case EXPANSION_WOTLK:
             return sess->GetText(TXT_EXPANSION_WOTLK);
         case EXPANSION_CATA:
             return sess->GetText(TXT_EXPANSION_CATACLYSM);
+        case EXPANSION_PRETBC:
         default:
             return sess->GetText(TXT_EXPANSION_PRETBC);
     }
@@ -73,6 +71,7 @@ WString GetLocale(int index)
             return WString::fromUTF8("unknown");
     }
 }
+
 int irand(int min, int max)
 {
     return rand()%(max - min) + min;
