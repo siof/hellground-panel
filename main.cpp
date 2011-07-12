@@ -25,26 +25,25 @@
 #include "menu.h"
 #include "database.h"
 
+#include "jwsmtp/jwsmtp.h"
+
 using namespace Wt;
 
 // TODO: Implement Mail Sending for both (unix and win) OS
 void SendMail(WString& from, WString& to, WString& msg)
 {
-    from = from.toUTF8();
-    to = to.toUTF8();
-    msg = msg.toUTF8();
+    jwsmtp::mailer mail;
 
-    // Add filtering for strings
+    mail.addrecipient(to.toUTF8().c_str());
+    mail.setsender(from.toUTF8().c_str());
+    mail.setsubject("TEMAT");
+    mail.setmessage(msg.toUTF8().c_str());
 
-    // this is linux specific code :P
-#ifdef UNIX
-    FILE *email= OPENFILE("/usr/lib/sendmail", "w");
-    fprintf(email, "%s \r\n", to.toUTF8().c_str());
-    fprintf(email, "From: %s \r\n", from.toUTF8().c_str());
-    fprintf(email, "\r\n");
-    fprintf(email, "%s \r\n", msg.toUTF8().c_str());
-    CLOSEFILE(email);
-#endif
+    mail.setserver(MAIL_HOST);
+    mail.username(MAIL_USER);
+    mail.password(MAIL_PASS);
+
+    mail.send( );
 }
 
 WString GetExpansionName(SessionInfo * sess, int index)
