@@ -31,6 +31,12 @@
     <ClCompile Include="..\..\..\pages\error.cpp">
       <Filter>Source Files\pages</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\pages\register.cpp">
+      <Filter>Source Files\pages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\textItems.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\database.h">
@@ -49,6 +55,12 @@
       <Filter>Source Files\pages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\defines.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\pages\register.h">
+      <Filter>Source Files\pages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\textItems.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
