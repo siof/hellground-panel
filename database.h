@@ -21,12 +21,11 @@
 
 #include "defines.h"
 #ifdef WIN32
-#include <winsock.h>
+#include <winsock2.h>
 //#include "mysql.h"
 #endif
 
 #include <mysql/mysql.h>
-
 
 #define MAX_QUERY_LEN 256
 

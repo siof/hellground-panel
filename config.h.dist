@@ -55,6 +55,10 @@
 
 #define MAIL_FROM   "kontakt@gamefreedom.pl"
 
+#define MAIL_HOST  "localhost"
+#define MAIL_USER  "root"
+#define MAIL_PASS  "root"
+
 #define REGISTRATION_ENABLED
 
 #endif // CONFIG_H_INCLUDED
