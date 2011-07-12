@@ -76,6 +76,8 @@
     <ClCompile Include="..\..\..\pages\accInfo.cpp" />
     <ClCompile Include="..\..\..\pages\default.cpp" />
     <ClCompile Include="..\..\..\pages\error.cpp" />
+    <ClCompile Include="..\..\..\pages\register.cpp" />
+    <ClCompile Include="..\..\..\textItems.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\database.h" />
@@ -84,6 +86,8 @@
     <ClInclude Include="..\..\..\pages\accInfo.h" />
     <ClInclude Include="..\..\..\pages\default.h" />
     <ClInclude Include="..\..\..\pages\error.h" />
+    <ClInclude Include="..\..\..\pages\register.h" />
+    <ClInclude Include="..\..\..\textItems.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\favicon.ico" />
