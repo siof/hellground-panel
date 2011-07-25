@@ -229,7 +229,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, TXT_MENU_ERROR, new WMenuItem(sess->GetText(TXT_MENU_ERROR), new ErrorPage(session)));
     menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_PLAYER, TXT_MENU_ERROR, menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_NOT_LOGGED));
     menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->hide();
-//    menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->disable();
+    menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->disable();
 
     ShowMenuOptions();
 
@@ -282,66 +282,78 @@ void HGMenu::LogMeIn()
 
                 //           0            1         2     3       4       5         6       7         8
     db->SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion FROM account WHERE username = '%s' AND sha_pass_hash = SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedLogin.c_str(), escapedPass.c_str());
+    int executeResult = db->ExecuteQuery();
 
-    if (db->ExecuteQuery() > 0)
+    // execute will return 0 if result will be empty and -1 if there will be DB error.
+    switch (executeResult)
     {
-        DatabaseRow * row = db->GetRow(0);
-        if (row)
+        case -1:
         {
-            session->login = row->fields[0].GetWString();
-            session->pass = row->fields[1].GetWString();
-            session->accid = row->fields[2].GetUInt64();
-            session->accLvl = row->fields[3].GetAccountLevel();
-            session->email = row->fields[4].GetWString();
-            session->joinDate = row->fields[5].GetWString();
-            session->lastIp = row->fields[6].GetWString();
-            session->locked = row->fields[7].GetBool();
-            session->expansion = row->fields[8].GetInt();
-
-            login->setText("");
-            pass->setText("");
-
-            login->setHidden(true);
-            pass->setHidden(true);
-            btnLog->setHidden(true);
-            login->setDisabled(true);
-            pass->setDisabled(true);
-            btnLog->setDisabled(true);
-
-            removeWidget(login);
-            removeWidget(pass);
-            removeWidget(btnLog);
-
-            for (int i = 0; i < 3; ++i)
+            // if there was database error
+            std::string tmpErr = db->GetError();
+            ShowError(ERROR_SLOT_DB, tmpErr);
+            break;
+        }
+        case 0:
+        {
+            //if wrong data
+            ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
+            ClearLogin();
+            ClearPass();
+            break;
+        }
+        default:
+        {
+            DatabaseRow * row = db->GetRow(0);
+            if (row)
             {
-                breakTab[i]->setHidden(true);
-                breakTab[i]->setDisabled(true);
-                removeWidget(breakTab[i]);
+                session->login = row->fields[0].GetWString();
+                session->pass = row->fields[1].GetWString();
+                session->accid = row->fields[2].GetUInt64();
+                session->accLvl = row->fields[3].GetAccountLevel();
+                session->email = row->fields[4].GetWString();
+                session->joinDate = row->fields[5].GetWString();
+                session->lastIp = row->fields[6].GetWString();
+                session->locked = row->fields[7].GetBool();
+                session->expansion = row->fields[8].GetInt();
+
+                login->setText("");
+                pass->setText("");
+
+                login->setHidden(true);
+                pass->setHidden(true);
+                btnLog->setHidden(true);
+                login->setDisabled(true);
+                pass->setDisabled(true);
+                btnLog->setDisabled(true);
+
+                removeWidget(login);
+                removeWidget(pass);
+                removeWidget(btnLog);
+
+                for (int i = 0; i < 3; ++i)
+                {
+                    breakTab[i]->setHidden(true);
+                    breakTab[i]->setDisabled(true);
+                    removeWidget(breakTab[i]);
+                }
+
+                ShowMenuOptions();
+                refresh();
+
+                WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER);
+                if (tmpItem)
+                    tmpItem->hide();
+
+                menu->select(0);
+                RefreshActiveMenuWidget();
             }
-
-            ShowMenuOptions();
-            refresh();
-
-            WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER);
-            if (tmpItem)
-                tmpItem->hide();
-
-            menu->select(0);
-            RefreshActiveMenuWidget();
+            else
+            {
+                std::string tmpErr = "ERROR: Row not found!";
+                ShowError(ERROR_SLOT_BASE, tmpErr);
+            }
         }
-        else
-        {
-            std::string tmpErr = "ERROR: Row not found!";
-            ShowError(ERROR_SLOT_BASE, tmpErr);
-        }
-    }
-    else
-    {
-        // I don't think DB will return error if no data was selected due to mismatched criterias;
-        // in this case yes, but if we will have sql syntax error caused by user ? or database connection will be lost for some reasons ? (in future all errors must be logged :P)
-        // execute will return 0 if result will be empty and -1 if there will be DB error.
-        std::string tmpErr = db->GetError();
-        ShowError(ERROR_SLOT_DB, tmpErr);
     }
 
     delete db;
@@ -443,6 +455,9 @@ void HGMenu::ClearPass()
 
 bool HGMenu::SetError(ErrorSlots error, std::string &msg, ErrorPage * err)
 {
+    #ifdef DEBUG
+    printf("\nHGMenu::SetError(ErrorSlots error = %i, std::string &msg = %s, ErrorPage * err = %i)\n", error, msg.c_str(), err ? 1 : 0);
+    #endif
     ErrorPage * tmpError = err;
     if (!tmpError)
     {
@@ -465,6 +480,9 @@ bool HGMenu::SetError(ErrorSlots error, std::string &msg, ErrorPage * err)
 
 bool HGMenu::SetError(ErrorSlots error, uint32 textId, ErrorPage * err)
 {
+    #ifdef DEBUG
+    printf("\nHGMenu::SetError(ErrorSlots error = %i, uint32 textId = %u, ErrorPage * err = %i)\n", error, textId, err ? 1 : 0);
+    #endif
     ErrorPage * tmpError = err;
     if (!tmpError)
     {
@@ -486,6 +504,9 @@ bool HGMenu::SetError(ErrorSlots error, uint32 textId, ErrorPage * err)
 
 void HGMenu::ShowError(ErrorSlots error, std::string &msg)
 {
+    #ifdef DEBUG
+    printf("\nHGMenu::ShowError(ErrorSlots error = %i, std::string &msg = %s)\n", error, msg.c_str());
+    #endif
     WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
 
     if (!tmpItem)
@@ -504,6 +525,9 @@ void HGMenu::ShowError(ErrorSlots error, std::string &msg)
 
 void HGMenu::ShowError(ErrorSlots error, uint32 textId)
 {
+    #ifdef DEBUG
+    printf("\nHGMenu::ShowError(ErrorSlots error = %i, uint32 textId = %u)\n", error, textId);
+    #endif
     WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
 
     if (!tmpItem)
@@ -522,6 +546,9 @@ void HGMenu::ShowError(ErrorSlots error, uint32 textId)
 
 void HGMenu::ShowError()
 {
+    #ifdef DEBUG
+    printf("\nHGMenu::ShowError()\n");
+    #endif
     WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
 
     if (!tmpItem)
