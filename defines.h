@@ -59,23 +59,33 @@ typedef uint8_t  uint8;
 
 enum Lang
 {
-    LANG_PL = 0,
-    LANG_EN,
+    LANG_PL = 0,    /**< Polish */
+    LANG_EN,        /**< English */
 
     LANG_COUNT
 };
 
 enum AccountLevel
 {
-    LVL_NOT_LOGGED  = -1,
-    LVL_PLAYER      = 0,
-    LVL_GM_TRIAL    = 1,
-    LVL_GM_HELPER   = 2,
-    LVL_GM_HEAD     = 3,
-    LVL_ADM         = 4
+    LVL_NOT_LOGGED  = -1,   /**< not logged yet or new player */
+    LVL_PLAYER      = 0,    /**< logged normal player with no special rights */
+    LVL_GM_TRIAL    = 1,    /**< Game Master level 1 (Trial/Moderator) */
+    LVL_GM_HELPER   = 2,    /**< Game Master level 2 (Helper) */
+    LVL_GM_HEAD     = 3,    /**< Game Master level 3 (Head/Root Game Master) */
+    LVL_ADM         = 4     /**< Server Administrator */
 };
 
 #define ACCOUNT_LEVEL_COUNT 6
+
+/********************************************//**
+ * \brief Represents single text loaded from DB
+ *
+ * \param textId - this text id (unique for each text)
+ * \param texts[LANG_COUNT] - text for all supported languages
+ *
+ * Contains single text with unique id in all supported languages.
+ *
+ ***********************************************/
 
 struct Text
 {
@@ -92,23 +102,43 @@ struct Text
     WString texts[LANG_COUNT];
 };
 
+/********************************************//**
+ * \brief Contains session informations
+ *
+ * \param account login
+ * \param account id
+ * \param account password
+ * \param account email
+ * \param account create date
+ * \param last logged in ip
+ * \param current panel session ip
+ * \param actual panel language
+ * \param account level
+ * \param language texts
+ * \param ip lock
+ * \param account expansion
+ *
+ * Contains players panel session informations.
+ * Each player (logged or not) has his own session info.
+ ***********************************************/
+
 struct SessionInfo
 {
     SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), textMissing("Error ! Text missing !") {}
     ~SessionInfo() {}
 
-    WString login;          // account login
-    uint64 accid;           // account id
-    WString pass;           // account password
-    WString email;          // account email
-    WString joinDate;       // account create time
-    WString lastIp;         // server last ip
-    WString sessionIp;      // panel session ip
-    Lang language;          // actual language
-    AccountLevel accLvl;    // account level (player, gm etc)
-    std::map<uint32 ,Text> langTexts;   // text depend on language loaded from database
-    bool locked;            // IP lock
-    int expansion;          // expansion
+    WString login;          /**< account login */
+    uint64 accid;           /**< account id */
+    WString pass;           /**< account password */
+    WString email;          /**< account email */
+    WString joinDate;       /**< account create time */
+    WString lastIp;         /**< server last ip */
+    WString sessionIp;      /**< panel session ip */
+    Lang language;          /**< actual language */
+    AccountLevel accLvl;    /**< account level (player, gm etc) */
+    std::map<uint32 ,Text> langTexts;   /**< text depend on language loaded from database */
+    bool locked;            /**< IP lock */
+    int expansion;          /**< expansion */
 
     WString textMissing;
 
@@ -134,33 +164,33 @@ enum ErrorSlots
 
 enum Expansion
 {
-    EXPANSION_PRETBC    = 0,
-    EXPANSION_TBC       = 1,
-    EXPANSION_WOTLK     = 2,
-    EXPANSION_CATA      = 3
+    EXPANSION_PRETBC    = 0,    /**< Vanilla WoW (pre TBC, without expansion) */
+    EXPANSION_TBC       = 1,    /**< The Burning Crusade expansion */
+    EXPANSION_WOTLK     = 2,    /**< Wrath of the Lich King expansion */
+    EXPANSION_CATA      = 3     /**< Cataclysm expansion */
 };
 
 enum MenuOptions    // this also defines menu order
 {
-    MENU_SLOT_HOME = 0,         // home
-    MENU_SLOT_ACCOUNT,          // register/acc info
-    MENU_SLOT_PASSWORD,         // pass recovery/change
-    MENU_SLOT_SERVER_STATUS,    // server status
-    MENU_SLOT_SUPPORT,          // donate, vote
-    MENU_SLOT_LINKS,            // links
-    MENU_SLOT_TELEPORT,         // /teleport
-    MENU_SLOT_IP_LOCK,          // /ip lock
-    MENU_SLOT_BAN,              // /baninfo/banlist
-    MENU_SLOT_MUTE,             // /muteinfo/mutelist
+    MENU_SLOT_HOME = 0,         /**< home */
+    MENU_SLOT_ACCOUNT,          /**< register/acc info */
+    MENU_SLOT_PASSWORD,         /**< pass recovery/pass change */
+    MENU_SLOT_SERVER_STATUS,    /**< server status */
+    MENU_SLOT_SUPPORT,          /**< donate, vote */
+    MENU_SLOT_LINKS,            /**< links */
+    MENU_SLOT_TELEPORT,         /**< nothing/teleport */
+    MENU_SLOT_IP_LOCK,          /**< nothing/ip lock */
+    MENU_SLOT_BAN,              /**< nothing/baninfo/banlist */
+    MENU_SLOT_MUTE,             /**< nothing/muteinfo/mutelist */
 
-    MENU_SLOT_GM_PANEL,         // panel gm
-    MENU_SLOT_GM_TICKETS,       // panel gm - tickets
-    MENU_SLOT_GM_ONLINE,        // panel gm - online check
-    MENU_SLOT_GM_FACTION,       // panel gm - faction check
+    MENU_SLOT_GM_PANEL,         /**< nothing/nothing/panel gm */
+    MENU_SLOT_GM_TICKETS,       /**< nothing/nothing/panel gm - tickets */
+    MENU_SLOT_GM_ONLINE,        /**< nothing/nothing/panel gm - online check */
+    MENU_SLOT_GM_FACTION,       /**< nothing/nothing/panel gm - faction check */
 
-    MENU_SLOT_LOGIN,            // login/logout
+    MENU_SLOT_LOGIN,            /**< login/logout */
 
-    MENU_SLOT_ERROR,            // for errors (shouldn't be visible)
+    MENU_SLOT_ERROR,            /**< for errors (shouldn't be visible) */
 
     MENU_SLOT_COUNT
 };
@@ -271,7 +301,9 @@ enum Texts
     TXT_IS_ONLINE                   = 238,
     TXT_IS_OFFLINE                  = 239,
     TXT_CURRENT_IP_BAN              = 240,
-    TXT_REGISTRATION_MAIL           = 241
+    TXT_REGISTRATION_MAIL           = 241,
+
+    TXT_ERROR_WRONG_LOGIN_DATA      = 350
 };
 
 void SendMail(WString& from, WString& to, WString& msg);
