@@ -74,24 +74,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\database.cpp" />
-    <ClCompile Include="..\..\..\main.cpp" />
-    <ClCompile Include="..\..\..\menu.cpp" />
-    <ClCompile Include="..\..\..\pages\accInfo.cpp" />
-    <ClCompile Include="..\..\..\pages\default.cpp" />
-    <ClCompile Include="..\..\..\pages\error.cpp" />
-    <ClCompile Include="..\..\..\pages\register.cpp" />
-    <ClCompile Include="..\..\..\textItems.cpp" />
+    <ClCompile Include="..\..\..\src\database.cpp" />
+    <ClCompile Include="..\..\..\src\main.cpp" />
+    <ClCompile Include="..\..\..\src\menu.cpp" />
+    <ClCompile Include="..\..\..\src\pages\accInfo.cpp" />
+    <ClCompile Include="..\..\..\src\pages\default.cpp" />
+    <ClCompile Include="..\..\..\src\pages\error.cpp" />
+    <ClCompile Include="..\..\..\src\pages\register.cpp" />
+    <ClCompile Include="..\..\..\src\textItems.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\database.h" />
-    <ClInclude Include="..\..\..\defines.h" />
-    <ClInclude Include="..\..\..\menu.h" />
-    <ClInclude Include="..\..\..\pages\accInfo.h" />
-    <ClInclude Include="..\..\..\pages\default.h" />
-    <ClInclude Include="..\..\..\pages\error.h" />
-    <ClInclude Include="..\..\..\pages\register.h" />
-    <ClInclude Include="..\..\..\textItems.h" />
+    <ClInclude Include="..\..\..\src\database.h" />
+    <ClInclude Include="..\..\..\src\defines.h" />
+    <ClInclude Include="..\..\..\src\menu.h" />
+    <ClInclude Include="..\..\..\src\pages\accInfo.h" />
+    <ClInclude Include="..\..\..\src\pages\default.h" />
+    <ClInclude Include="..\..\..\src\pages\error.h" />
+    <ClInclude Include="..\..\..\src\pages\register.h" />
+    <ClInclude Include="..\..\..\src\textItems.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\favicon.ico" />
