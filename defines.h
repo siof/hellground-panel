@@ -57,6 +57,10 @@ typedef uint8_t  uint8;
 #define CLOSEFILE   pclose
 #endif
 
+/********************************************//**
+ * \brief Contains numbers represents all supported languages. Order should be the same as columns order in database.
+ ***********************************************/
+
 enum Lang
 {
     LANG_PL = 0,    /**< Polish */
@@ -64,6 +68,10 @@ enum Lang
 
     LANG_COUNT
 };
+
+/********************************************//**
+ * \brief Contains ids for all account levels
+ ***********************************************/
 
 enum AccountLevel
 {
@@ -140,7 +148,7 @@ struct SessionInfo
     bool locked;            /**< IP lock */
     int expansion;          /**< expansion */
 
-    WString textMissing;
+    WString textMissing;    /**< "Error ! Text missing !" info */
 
     WString& GetText(uint32 id)
     {
@@ -153,14 +161,22 @@ struct SessionInfo
     }
 };
 
+/********************************************//**
+ * \brief Slots for text visible on Error page. This also defines order (if there will be errors in more than 1 slot)
+ ***********************************************/
+
 enum ErrorSlots
 {
-    ERROR_SLOT_BASE     = 0,
-    ERROR_SLOT_ADDITIONAL,
-    ERROR_SLOT_DB,
-    ERROR_SLOT_INFO,
-    ERROR_SLOT_COUNT
+    ERROR_SLOT_BASE     = 0,    /**< Base slot - for basic errors */
+    ERROR_SLOT_ADDITIONAL,      /**< Additional slot - if we want to add some info to base error */
+    ERROR_SLOT_DB,              /**< Database slot - for database errors */
+    ERROR_SLOT_INFO,            /**< Informations slot - for additional informations to display */
+    ERROR_SLOT_COUNT            /**< Slots count */
 };
+
+/********************************************//**
+ * \brief World of Warcraft expansions
+ ***********************************************/
 
 enum Expansion
 {
@@ -169,6 +185,11 @@ enum Expansion
     EXPANSION_WOTLK     = 2,    /**< Wrath of the Lich King expansion */
     EXPANSION_CATA      = 3     /**< Cataclysm expansion */
 };
+
+/********************************************//**
+ * \brief Menu slots for menu options (in 1 slot can be options for all account levels). This also define menu order.
+ *
+ ***********************************************/
 
 enum MenuOptions    // this also defines menu order
 {
@@ -192,123 +213,169 @@ enum MenuOptions    // this also defines menu order
 
     MENU_SLOT_ERROR,            /**< for errors (shouldn't be visible) */
 
-    MENU_SLOT_COUNT
+    MENU_SLOT_COUNT             /**< menu slots count */
 };
+
+/********************************************//**
+ * \brief Language depend text ids. Ids must be the same as in database.
+ *
+ ***********************************************/
 
 enum Texts
 {
-    // Menu buttons
-    TXT_MENU_HOME                   = 0,
-    TXT_MENU_LOGIN                  = 1,
-    TXT_MENU_LOGOUT                 = 2,
-    TXT_MENU_REGISTER               = 3,
-    TXT_MENU_PASS_RECOVERY          = 4,
-    TXT_MENU_PASS_CHANGE            = 5,
-    TXT_MENU_ACC_INFO               = 6,
-    TXT_MENU_SERVER_STATUS          = 7,
-    TXT_MENU_DONATE                 = 8,
-    TXT_MENU_VOTE                   = 9,
-    TXT_MENU_LINKS                  = 10,
-    TXT_MENU_TELEPORT               = 11,
-    TXT_MENU_IP_BLOCK               = 12,
-    TXT_MENU_BANINFO                = 13,
-    TXT_MENU_BANLIST                = 14,
-    TXT_MENU_MUTEINFO               = 15,
-    TXT_MENU_MUTELIST               = 16,
-    TXT_MENU_ERROR                  = 17,
+    /**< Buttons */
+    TXT_MENU_HOME                   = 0,    /**< Home menu button */
+    TXT_MENU_LOGIN                  = 1,    /**< Login menu button */
+    TXT_MENU_LOGOUT                 = 2,    /**< Logout menu button */
+    TXT_MENU_REGISTER               = 3,    /**< Register menu button */
+    TXT_MENU_PASS_RECOVERY          = 4,    /**< Password recovery menu button */
+    TXT_MENU_PASS_CHANGE            = 5,    /**< Password change menu button */
+    TXT_MENU_ACC_INFO               = 6,    /**< Account info menu button */
+    TXT_MENU_SERVER_STATUS          = 7,    /**< Server status menu button */
+    TXT_MENU_DONATE                 = 8,    /**< Donate menu button */
+    TXT_MENU_VOTE                   = 9,    /**< Vote menu button */
+    TXT_MENU_LINKS                  = 10,   /**< Links menu button */
+    TXT_MENU_TELEPORT               = 11,   /**< Teleport/Unstack menu button */
+    TXT_MENU_IP_BLOCK               = 12,   /**< Ip lock menu button */
+    TXT_MENU_BANINFO                = 13,   /**< Ban informations menu button */
+    TXT_MENU_BANLIST                = 14,   /**< Ban list menu button */
+    TXT_MENU_MUTEINFO               = 15,   /**< Mute informations menu button */
+    TXT_MENU_MUTELIST               = 16,   /**< Mute list menu button */
+    TXT_MENU_ERROR                  = 17,   /**< Error page (shouldn't be visible) */
 
-    TXT_MENU_GM_PANEL               = 50,
-    TXT_MENU_GM_TICKETS             = 51,
-    TXT_MENU_GM_ONLINE              = 52,
-    TXT_MENU_GM_FACTION             = 53,
+    TXT_MENU_GM_PANEL               = 50,   /**< Game Masters panel menu button */
+    TXT_MENU_GM_TICKETS             = 51,   /**< Game Masters tickets (in panel) menu button*/
+    TXT_MENU_GM_ONLINE              = 52,   /**< Game Masters online check (in panel) menu button */
+    TXT_MENU_GM_FACTION             = 53,   /**< Game Masters faction check (in panel) menu button */
 
-    // Static labels
-    TXT_LBL_CHAR_NAME               = 75,
-    TXT_LBL_CHAR_LVL                = 76,
-    TXT_LBL_CHAR_CLASS              = 77,
-    TXT_LBL_CHAR_TOTAL_PLAYED       = 78,
-    TXT_LBL_CHAR_LVL_PLAYED         = 79,
+    /**< Static texts/labels */
+    /**< Character */
+    TXT_LBL_CHAR_NAME               = 75,   /**< Character name label */
+    TXT_LBL_CHAR_LVL                = 76,   /**< Character level label */
+    TXT_LBL_CHAR_CLASS              = 77,   /**< Character class label */
+    TXT_LBL_CHAR_TOTAL_PLAYED       = 78,   /**< Character total played time label */
+    TXT_LBL_CHAR_LVL_PLAYED         = 79,   /**< Character current level played time label*/
 
-    TXT_LBL_ACC_CHARS               = 100,
-    TXT_LBL_ACC_CREATE_DATE         = 101,
-    TXT_LBL_ACC_LAST_LOGIN          = 102,
-    TXT_LBL_ACC_LAST_IP             = 103,
-    TXT_LBL_ACC_IP_LOCK             = 104,
-    TXT_LBL_ACC_BAN                 = 105,
-    TXT_LBL_ACC_ONLINE              = 106,
-    TXT_LBL_ACC_VP                  = 107,
-    TXT_LBL_ACC_EXPANSION           = 108,
-    TXT_LBL_ACC_CLIENT_VERSION      = 109,
-    TXT_LBL_ACC_MULTIACC            = 110,
-    TXT_LBL_ACC_LAST_PASS_RECOVERY  = 111,
-    TXT_LBL_ACC_LOGIN               = 112,
-    TXT_LBL_ACC_MAIL                = 113,
-    TXT_LBL_ACC_GG                  = 114,
-    TXT_LBL_ACC_INFO                = 115,      // page title
-    TXT_LBL_ACC_IP_LOCK_ON          = 116,      // ip lock is currently on
-    TXT_LBL_ACC_IP_LOCK_OFF         = 117,      // ip lock is currently off
-    TXT_LBL_ACC_IP_BAN              = 118,
+    /**< Account */
+    TXT_LBL_ACC_CHARS               = 100,  /**< Account characters label */
+    TXT_LBL_ACC_CREATE_DATE         = 101,  /**< Account create time label*/
+    TXT_LBL_ACC_LAST_LOGIN          = 102,  /**< Account last login time label */
+    TXT_LBL_ACC_LAST_IP             = 103,  /**< Account last login ip (server) label */
+    TXT_LBL_ACC_IP_LOCK             = 104,  /**< Account ip lock label */
+    TXT_LBL_ACC_BAN                 = 105,  /**< Account ban label */
+    TXT_LBL_ACC_ONLINE              = 106,  /**< Account online label */
+    TXT_LBL_ACC_VP                  = 107,  /**< Account vote points label */
+    TXT_LBL_ACC_EXPANSION           = 108,  /**< Account expansion label */
+    TXT_LBL_ACC_CLIENT_VERSION      = 109,  /**< Account client version label */
+    TXT_LBL_ACC_MULTIACC            = 110,  /**< Account multiacc (account have enabled multiacc with other account ?) label */
+    TXT_LBL_ACC_LAST_PASS_RECOVERY  = 111,  /**< Account last pass recovery time label */
+    TXT_LBL_ACC_LOGIN               = 112,  /**< Account login label */
+    TXT_LBL_ACC_MAIL                = 113,  /**< Account mail label */
+    TXT_LBL_ACC_GG                  = 114,  /**< Account IM label */
+    TXT_LBL_ACC_INFO                = 115,  /**< Account informations page title */
+    TXT_LBL_ACC_IP_LOCK_ON          = 116,  /**< Account ip lock is currently on label */
+    TXT_LBL_ACC_IP_LOCK_OFF         = 117,  /**< Account ip lock is currently off label */
+    TXT_LBL_ACC_IP_BAN              = 118,  /**< Account ip ban label */
 
-    TXT_LBL_PASS_CHANGE             = 130,
-    TXT_LBL_PASS_OLD                = 131,
-    TXT_LBL_PASS_NEW                = 132,
-    TXT_LBL_PASS_REPEAT             = 133,
-    TXT_LBL_PASS_RECOVERY           = 134,
-    TXT_LBL_PASS_MAIL               = 135,
-    TXT_LBL_PASS_GG                 = 136,
+    /**< Password modifications */
+    TXT_LBL_PASS_CHANGE             = 130,  /**< Password change page title */
+    TXT_LBL_PASS_OLD                = 131,  /**< Old password label */
+    TXT_LBL_PASS_NEW                = 132,  /**< New password label */
+    TXT_LBL_PASS_REPEAT             = 133,  /**< Reapeat password label */
+    TXT_LBL_PASS_RECOVERY           = 134,  /**< Password recovery page title */
+    TXT_LBL_PASS_MAIL               = 135,  /**< Mail for password recovery label */
+    TXT_LBL_PASS_GG                 = 136,  /**< IM number for password recovery label */
 
-    TXT_LBL_INSTANCE_OPEN           = 150,      // instance is open
-    TXT_LBL_INSTANCE_CLOSED         = 151,      // instance is closed (min lvl > 70)
+    /**< Instance informations */
+    TXT_LBL_INSTANCE_OPEN           = 150,  /**< Instance is open label */
+    TXT_LBL_INSTANCE_CLOSED         = 151,  /**< Instance is closed label (min lvl > 70) */
 
-    TXT_LBL_REGISTER_RULES          = 155,      // info that user must accept server rules
-    TXT_LBL_REGISTER_RULES_ACCEPT   = 156,      // checkbox text
-    TXT_LBL_REGISTER_MAIN           = 157,      // registration page title
+    /**< Registration */
+    TXT_LBL_REGISTER_RULES          = 155,  /**< Label with info that user must accept server rules (for registration) */
+    TXT_LBL_REGISTER_RULES_ACCEPT   = 156,  /**< Accept server rules checkbox text */
+    TXT_LBL_REGISTER_MAIN           = 157,  /**< Account registration page title */
 
-    TXT_LBL_BAN_LOGIN               = 160,
-    TXT_LBL_BAN_FROM                = 161,
-    TXT_LBL_BAN_TO                  = 162,
-    TXT_LBL_BAN_BY                  = 163,
-    TXT_LBL_BAN_REASON              = 164,
-    TXT_LBL_BAN_ACTIVE              = 165,
-    TXT_LBL_BAN_NOT_ACTIVE          = 166,
-    TXT_LBL_BAN_YES                 = 167,
-    TXT_LBL_BAN_NO                  = 168,
+    /**< Ban informations */
+    TXT_LBL_BAN_LOGIN               = 160,  /**< Banned account login label */
+    TXT_LBL_BAN_FROM                = 161,  /**< Ban time label */
+    TXT_LBL_BAN_TO                  = 162,  /**< Unban time label */
+    TXT_LBL_BAN_BY                  = 163,  /**< Banned by label */
+    TXT_LBL_BAN_REASON              = 164,  /**< Ban reason label */
+    TXT_LBL_BAN_ACTIVE              = 165,  /**< Ban is active label */
+    TXT_LBL_BAN_NOT_ACTIVE          = 166,  /**< Ban is inactive label */
+    TXT_LBL_BAN_YES                 = 167,  /**< Account is banned label */
+    TXT_LBL_BAN_NO                  = 168,  /**< Account isn't banned label */
 
-    // Button labels
-    TXT_BTN_PASS_CHANGE             = 200,
-    TXT_BTN_PASS_CLEAR              = 201,
-    TXT_BTN_PASS_SEND               = 202,
-    TXT_BTN_LOGIN                   = 203,
-    TXT_BTN_REGISTER                = 204,
-    TXT_BTN_TELEPORT                = 205,
-    TXT_BTN_BANNED_ACC              = 206,
-    TXT_BTN_BANNED_IP               = 207,
+    /**< Button labels */
+    TXT_BTN_PASS_CHANGE             = 200,  /**< Password change button label */
+    TXT_BTN_PASS_CLEAR              = 201,  /**< Password clear button label */
+    TXT_BTN_PASS_SEND               = 202,  /**< Send new password button label */
+    TXT_BTN_LOGIN                   = 203,  /**< Log in to panel button label */
+    TXT_BTN_REGISTER                = 204,  /**< Register button label */
+    TXT_BTN_TELEPORT                = 205,  /**< Character teleport button label */
+    TXT_BTN_BANNED_ACC              = 206,  /**< Show banned account button label */
+    TXT_BTN_BANNED_IP               = 207,  /**< Show banned ips button label */
 
-    // Other
-    TXT_SITE_TITLE                  = 225,
-    TXT_SITE_FOOTER                 = 226,
-    TXT_SERVER_INFO                 = 227,
-    TXT_TELEPORT                    = 228,
-    TXT_IP_LOCK_ON                  = 229,
-    TXT_IP_LOCK_OFF                 = 230,
-    TXT_BAN                         = 231,
-    TXT_INSTANCES                   = 232,
-    TXT_EXPANSION_PRETBC            = 233,
-    TXT_EXPANSION_TBC               = 234,
-    TXT_EXPANSION_WOTLK             = 235,
-    TXT_EXPANSION_CATACLYSM         = 236,
-    TXT_CURRENT_IP                  = 237,
-    TXT_IS_ONLINE                   = 238,
-    TXT_IS_OFFLINE                  = 239,
-    TXT_CURRENT_IP_BAN              = 240,
-    TXT_REGISTRATION_MAIL           = 241,
+    /**< Other */
+    TXT_SITE_TITLE                  = 225,  /**< Players panel site title */
+    TXT_SITE_FOOTER                 = 226,  /**< Players panel site footer */
+    TXT_SERVER_INFO                 = 227,  /**< Static server informations (machine, rates etc) */
+    TXT_TELEPORT                    = 228,  /**< Character teleport page informations */
+    TXT_IP_LOCK_ON                  = 229,  /**< IP lock is on info */
+    TXT_IP_LOCK_OFF                 = 230,  /**< IP lock is off info */
+    TXT_BAN                         = 231,  /**< Bans page title/static informations */
+    TXT_INSTANCES                   = 232,  /**< Instances information page informations */
+    TXT_EXPANSION_PRETBC            = 233,  /**< text/name for preTBC expansion */
+    TXT_EXPANSION_TBC               = 234,  /**< text/name for TBC expansion  */
+    TXT_EXPANSION_WOTLK             = 235,  /**< text/name for WOTLK expansion */
+    TXT_EXPANSION_CATACLYSM         = 236,  /**< text/name for Cata expansion */
+    TXT_CURRENT_IP                  = 237,  /**< Current ip label */
+    TXT_IS_ONLINE                   = 238,  /**< Account is online label */
+    TXT_IS_OFFLINE                  = 239,  /**< Account is offline label */
+    TXT_CURRENT_IP_BAN              = 240,  /**< Current ip ban label */
+    TXT_REGISTRATION_MAIL           = 241,  /**< Email text for registration mails */
 
-    TXT_ERROR_WRONG_LOGIN_DATA      = 350
+    TXT_ERROR_WRONG_LOGIN_DATA      = 350   /**< Error info: wrong login or password */
 };
 
+/********************************************//**
+ * \brief Sends email
+ *
+ * \param WString& from - source email address
+ * \param WString& to - destination email address
+ * \param WString& msg - message to send
+ *
+ * function to send email from source email address to destination email address contains given message
+ ***********************************************/
+
 void SendMail(WString& from, WString& to, WString& msg);
+
+/********************************************//**
+ * \brief Returns expansion name
+ *
+ * \param SessionInfo * sess - player session informations (needed to get expansion name from db)
+ * \param int index - expansion id
+ * \return WString - expansion name from db
+ *
+ * Returns expansion name for given index. Name is stored in db and loaded on session creation so there is only need to read this information depends on index.
+ ***********************************************/
+
 WString GetExpansionName(SessionInfo * sess, int index);
+
+/********************************************//**
+ * \brief Return client locale name
+ *
+ * \param int index - locale index
+ * \return WString - locale name
+ *
+ * Returns players client locale depends on locale index.
+ ***********************************************/
+
 WString GetLocale(int index);
+
 int irand(int min, int max);
+
+#define SERVER_DB_DATA  SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_PORT
+#define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
 
 #endif // DEFINES_H_INCLUDED
