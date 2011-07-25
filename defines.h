@@ -86,12 +86,12 @@ enum AccountLevel
 #define ACCOUNT_LEVEL_COUNT 6
 
 /********************************************//**
- * \brief Represents single text loaded from DB
+ * \brief Represents localized text loaded from DB
  *
  * \param textId - this text id (unique for each text)
- * \param texts[LANG_COUNT] - text for all supported languages
+ * \param texts[LANG_COUNT] - texts for all supported languages
  *
- * Contains single text with unique id in all supported languages.
+ * Contains single text with unique id for each supported language.
  *
  ***********************************************/
 
