@@ -14,16 +14,8 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
-					<Add directory="/usr/include" />
-					<Add directory="/usr/include/Wt" />
-					<Add directory="/usr/local/Wt/include" />
-					<Add directory="/usr/local/wt/include" />
-					<Add directory="/usr/local/wt" />
 				</Compiler>
 				<Linker>
-					<Add library="wt" />
-					<Add library="wthttp" />
-					<Add library="mysqlclient" />
 					<Add directory="/usr/lib" />
 				</Linker>
 				<ExtraCommands>
@@ -44,17 +36,9 @@
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-Os" />
 					<Add option="-O3" />
-					<Add directory="/usr/include" />
-					<Add directory="/usr/include/Wt" />
-					<Add directory="/usr/local/Wt/include" />
-					<Add directory="/usr/local/wt/include" />
-					<Add directory="/usr/local/wt" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="wt" />
-					<Add library="wthttp" />
-					<Add library="mysqlclient" />
 					<Add directory="/usr/lib" />
 				</Linker>
 				<ExtraCommands>
@@ -71,13 +55,26 @@
 			<Add option="-DUNIX" />
 			<Add option="-DLINUX" />
 			<Add directory="../../hgpanel" />
+			<Add directory="/usr/include" />
+			<Add directory="/usr/include/Wt" />
+			<Add directory="/usr/local/Wt/include" />
+			<Add directory="/usr/local/wt/include" />
+			<Add directory="/usr/local/wt" />
+			<Add directory="/usr/local/include/jwsmtp-1.32" />
 		</Compiler>
+		<Linker>
+			<Add library="wt" />
+			<Add library="wthttp" />
+			<Add library="mysqlclient" />
+			<Add library="jwsmtp" />
+		</Linker>
 		<Unit filename="../LICENCE" />
 		<Unit filename="../LICENCE_PL" />
+		<Unit filename="../config.h" />
+		<Unit filename="../config.h.dist" />
 		<Unit filename="../database.cpp" />
 		<Unit filename="../database.h" />
 		<Unit filename="../defines.h" />
-		<Unit filename="../defines.h.dist" />
 		<Unit filename="../main.cpp" />
 		<Unit filename="../menu.cpp" />
 		<Unit filename="../menu.h" />
@@ -99,7 +96,7 @@
 			<debugger />
 			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
-				<comment_style block="0" line="0" />
+				<comment_style block="4" line="0" />
 				<doxyfile_project />
 				<doxyfile_build />
 				<doxyfile_warnings />

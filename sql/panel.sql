@@ -101,4 +101,5 @@ INSERT INTO LangTexts VALUES
 (238, "Tak", "Yes"),
 (239, "Nie", "No"),
 (240, "Aktualne IP jest zbanowane: ", "Current IP is banned: "),
-(241, "", "");
+(241, "Mail rejestracyjny. Login: %s pass: %s", "Registration mail. Login: %s pass: %s"),
+(350, "Błędny login lub hasło", "Wrong login or password");
