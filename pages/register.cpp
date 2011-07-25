@@ -152,7 +152,7 @@ void RegisterPage::Register()
 
     // check should be moved to other place but here will be usefull for SendMail tests ;)
     #ifdef REGISTRATION_ENABLED
-    db->SetPQuery("INSERT INTO account (username, email, sha_passphrase) VALUES ('%s', '%s', SHA('%s:%s'))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
+    db->SetPQuery("INSERT INTO account (username, email,sha_pass_hash) VALUES ('%s', '%s', SHA('%s:%s'))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
     db->ExecuteQuery();
     #endif
 
