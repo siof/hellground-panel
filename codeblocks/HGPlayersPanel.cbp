@@ -70,26 +70,26 @@
 		</Linker>
 		<Unit filename="../LICENCE" />
 		<Unit filename="../LICENCE_PL" />
-		<Unit filename="../config.h" />
-		<Unit filename="../config.h.dist" />
-		<Unit filename="../database.cpp" />
-		<Unit filename="../database.h" />
-		<Unit filename="../defines.h" />
-		<Unit filename="../main.cpp" />
-		<Unit filename="../menu.cpp" />
-		<Unit filename="../menu.h" />
-		<Unit filename="../pages/accInfo.cpp" />
-		<Unit filename="../pages/accInfo.h" />
-		<Unit filename="../pages/default.cpp" />
-		<Unit filename="../pages/default.h" />
-		<Unit filename="../pages/error.cpp" />
-		<Unit filename="../pages/error.h" />
-		<Unit filename="../pages/register.cpp" />
-		<Unit filename="../pages/register.h" />
+		<Unit filename="../src/config.h" />
+		<Unit filename="../src/config.h.dist" />
+		<Unit filename="../src/database.cpp" />
+		<Unit filename="../src/database.h" />
+		<Unit filename="../src/defines.h" />
+		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/menu.cpp" />
+		<Unit filename="../src/menu.h" />
+		<Unit filename="../src/pages/accInfo.cpp" />
+		<Unit filename="../src/pages/accInfo.h" />
+		<Unit filename="../src/pages/default.cpp" />
+		<Unit filename="../src/pages/default.h" />
+		<Unit filename="../src/pages/error.cpp" />
+		<Unit filename="../src/pages/error.h" />
+		<Unit filename="../src/pages/register.cpp" />
+		<Unit filename="../src/pages/register.h" />
 		<Unit filename="../sql/char.sql" />
 		<Unit filename="../sql/panel.sql" />
-		<Unit filename="../textItems.cpp" />
-		<Unit filename="../textItems.h" />
+		<Unit filename="../src/textItems.cpp" />
+		<Unit filename="../src/textItems.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
