@@ -29,6 +29,9 @@ ErrorPageSlot::~ErrorPageSlot()
 
 void ErrorPageSlot::SetText(WText * txt, uint32 id)
 {
+    #ifdef DEBUG
+    printf("\nErrorPageSlot::SetText(WText * txt = %i, uint32 id = %u)\n", txt ? 1 : 0, id);
+    #endif
     DeleteText();
 
     text = txt;
@@ -38,6 +41,9 @@ void ErrorPageSlot::SetText(WText * txt, uint32 id)
 
 void ErrorPageSlot::SetText(WText * txt, WString &strn)
 {
+    #ifdef DEBUG
+    printf("\nErrorPageSlot::SetText(WText * txt = %i, WString &strn = %s)\n", txt ? 1 : 0, strn.toUTF8().c_str());
+    #endif
     DeleteText();
 
     text = txt;
@@ -48,6 +54,9 @@ void ErrorPageSlot::SetText(WText * txt, WString &strn)
 
 void ErrorPageSlot::SetText(WString &strn)
 {
+    #ifdef DEBUG
+    printf("\nErrorPageSlot::SetText(WString &strn = %s)\n", strn.toUTF8().c_str());
+    #endif
     str = strn;
     textIdBased = false;
 }
@@ -55,7 +64,7 @@ void ErrorPageSlot::SetText(WString &strn)
 void ErrorPageSlot::SetText(SessionInfo * sess, uint32 id)
 {
     #ifdef DEBUG
-    printf("\nErrorPageSlot::SetText(sess: %i)\n", sess ? 1 : 0);
+    printf("\nErrorPageSlot::SetText(sess: %i, uint32 id = %u)\n", sess ? 1 : 0, id);
     #endif
     if (!sess)
         return;
@@ -86,11 +95,17 @@ WText * ErrorPageSlot::CreateText(SessionInfo * sess)
     else if (!str.empty())
         text = new WText(str);
 
+    #ifdef DEBUG
+    printf("    text: %i, textIdBased: %i, textId: %u, str: %s, textmsg: %s\n", text ? 1 : 0, textIdBased, textId, str.toUTF8().c_str(), text ? text->text().toUTF8().c_str() : "");
+    #endif
     return text;
 }
 
 void ErrorPageSlot::DeleteText()
 {
+    #ifdef DEBUG
+    printf("\nErrorPageSlot::DeleteText(): text %i\n", text ? 1 : 0);
+    #endif
     if (text)
         delete text;
 
@@ -100,7 +115,7 @@ void ErrorPageSlot::DeleteText()
 void ErrorPageSlot::UpdateText(SessionInfo * sess)
 {
     #ifdef DEBUG
-    printf("\nErrorPageSlot::UpdateText(sess: %i)\n", sess ? 1 : 0);
+    printf("\nErrorPageSlot::UpdateText(sess: %i): text %i\n", sess ? 1 : 0, text ? 1 : 0);
     #endif
     if (!sess || !text)
         return;
@@ -177,6 +192,8 @@ void ErrorPage::CreateErrors()
                 addWidget(tmpW);
                 addWidget(new WBreak());
                 addWidget(new WBreak());
+
+                created = true;
             }
         #ifndef SHOW_DATABASE_ERRORS
         }
