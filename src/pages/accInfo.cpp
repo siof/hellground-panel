@@ -32,6 +32,13 @@ AccountInfoSlotItem::~AccountInfoSlotItem()
     widget = NULL;
 }
 
+/********************************************//**
+ * \brief Sets new text label widget (and deletes old one)
+ *
+ * \param lbl   text label widget
+ *
+ ***********************************************/
+
 void AccountInfoSlotItem::SetLabel(WText * lbl)
 {
     if (label)
@@ -39,6 +46,13 @@ void AccountInfoSlotItem::SetLabel(WText * lbl)
 
     label = lbl;
 }
+
+/********************************************//**
+ * \brief Sets new informations widget (and deletes old one)
+ *
+ * \param wid   informations widget
+ *
+ ***********************************************/
 
 void AccountInfoSlotItem::SetWidget(WWidget * wid)
 {
@@ -48,6 +62,16 @@ void AccountInfoSlotItem::SetWidget(WWidget * wid)
     widget = wid;
 }
 
+/********************************************//**
+ * \brief Sets all informations in one time
+ *
+ * \param txt   text label widget
+ * \param wid   informations widget
+ * \param br    break count
+ * \param txtId text id for text label widget
+ *
+ ***********************************************/
+
 void AccountInfoSlotItem::SetAll(WText * txt, WWidget * wid, int br, uint32 txtId)
 {
     SetLabel(txt);
@@ -55,6 +79,13 @@ void AccountInfoSlotItem::SetAll(WText * txt, WWidget * wid, int br, uint32 txtI
     SetBreakCount(br);
     SetTextId(txtId);
 }
+
+/********************************************//**
+ * \brief Updates text label widget depends on language.
+ *
+ * \param sess  session informations
+ *
+ ***********************************************/
 
 void AccountInfoSlotItem::UpdateLabel(SessionInfo * sess)
 {
@@ -70,13 +101,21 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
 {
     session = sess;
     setContentAlignment(AlignCenter|AlignTop);
-    needInfoCreation = true;
+    needInfoCreation = true;    /**< we should create content for new page */
 }
 
 AccountInfoPage::~AccountInfoPage()
 {
     session = NULL;
 }
+
+/********************************************//**
+ * \brief Overloads WContainerWidget::refresh() for automatic content change
+ *
+ * This function can create new or update existing content.
+ * In most situations this is used for content update ;)
+ *
+ ***********************************************/
 
 void AccountInfoPage::refresh()
 {
@@ -94,11 +133,27 @@ void AccountInfoPage::refresh()
     WContainerWidget::refresh();
 }
 
+/********************************************//**
+ * \brief Updatex text widgets
+ *
+ * All text label widgets in all slots will be updated,
+ * so if player will change language then automagically
+ * labels should change too ;)
+ *
+ ***********************************************/
+
 void AccountInfoPage::UpdateTextWidgets()
 {
     for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
         accInfoSlots[i].UpdateLabel(session);
 }
+
+/********************************************//**
+ * \brief Update Account Informations widgets
+ *
+ * Only informations update. There is no need to delete old and create new widgets.
+ *
+ ***********************************************/
 
 void AccountInfoPage::UpdateAccountInfo()
 {
@@ -168,6 +223,14 @@ void AccountInfoPage::UpdateAccountInfo()
     delete realmDb;
     realmDb = NULL;
 }
+
+/********************************************//**
+ * \brief Create informations widgets
+ *
+ * Create widgets for each slot and fills them with informations.
+ * This should be done only once for player.
+ *
+ ***********************************************/
 
 void AccountInfoPage::CreateAccountInfo()
 {

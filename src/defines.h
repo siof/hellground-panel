@@ -58,7 +58,10 @@ typedef uint8_t  uint8;
 #endif
 
 /********************************************//**
- * \brief Contains numbers represents all supported languages. Order should be the same as columns order in database.
+ * \brief Contains numbers represents all supported languages.
+ *
+ * Order should be the same as columns order in database.
+ *
  ***********************************************/
 
 enum Lang
@@ -71,6 +74,7 @@ enum Lang
 
 /********************************************//**
  * \brief Contains ids for all account levels
+ *
  ***********************************************/
 
 enum AccountLevel
@@ -88,8 +92,6 @@ enum AccountLevel
 /********************************************//**
  * \brief Represents localized text loaded from DB
  *
- * \param textId - this text id (unique for each text)
- * \param texts[LANG_COUNT] - texts for all supported languages
  *
  * Contains single text with unique id for each supported language.
  *
@@ -111,23 +113,10 @@ struct Text
 };
 
 /********************************************//**
- * \brief Contains session informations
+ * \brief Contains panel session informations.
  *
- * \param account login
- * \param account id
- * \param account password
- * \param account email
- * \param account create date
- * \param last logged in ip
- * \param current panel session ip
- * \param actual panel language
- * \param account level
- * \param language texts
- * \param ip lock
- * \param account expansion
- *
- * Contains players panel session informations.
  * Each player (logged or not) has his own session info.
+ *
  ***********************************************/
 
 struct SessionInfo
@@ -162,7 +151,10 @@ struct SessionInfo
 };
 
 /********************************************//**
- * \brief Slots for text visible on Error page. This also defines order (if there will be errors in more than 1 slot)
+ * \brief Slots for text visible on Error page.
+ *
+ * This also defines order (if there will be errors in more than 1 slot)
+ *
  ***********************************************/
 
 enum ErrorSlots
@@ -176,6 +168,7 @@ enum ErrorSlots
 
 /********************************************//**
  * \brief World of Warcraft expansions
+ *
  ***********************************************/
 
 enum Expansion
@@ -187,11 +180,14 @@ enum Expansion
 };
 
 /********************************************//**
- * \brief Menu slots for menu options (in 1 slot can be options for all account levels). This also define menu order.
+ * \brief Menu slots for menu options.
+ *
+ * In 1 slot can be options for all account levels.
+ * This also define menu order.
  *
  ***********************************************/
 
-enum MenuOptions    // this also defines menu order
+enum MenuOptions
 {
     MENU_SLOT_HOME = 0,         /**< home */
     MENU_SLOT_ACCOUNT,          /**< register/acc info */
@@ -217,7 +213,9 @@ enum MenuOptions    // this also defines menu order
 };
 
 /********************************************//**
- * \brief Language depend text ids. Ids must be the same as in database.
+ * \brief Language depend text ids.
+ *
+ * Ids must be the same as in database.
  *
  ***********************************************/
 
@@ -341,11 +339,12 @@ enum Texts
 /********************************************//**
  * \brief Sends email
  *
- * \param WString& from - source email address
- * \param WString& to - destination email address
- * \param WString& msg - message to send
+ * \param from  source email address
+ * \param to    destination email address
+ * \param msg   message to send
  *
- * function to send email from source email address to destination email address contains given message
+ * Function to send email from source email address to destination email address contains given message
+ *
  ***********************************************/
 
 void SendMail(WString& from, WString& to, WString& msg);
@@ -353,11 +352,13 @@ void SendMail(WString& from, WString& to, WString& msg);
 /********************************************//**
  * \brief Returns expansion name
  *
- * \param SessionInfo * sess - player session informations (needed to get expansion name from db)
- * \param int index - expansion id
- * \return WString - expansion name from db
+ * \param sess      player session informations (needed to get expansion name from db)
+ * \param index     expansion id
+ * \return expansion name from db
  *
- * Returns expansion name for given index. Name is stored in db and loaded on session creation so there is only need to read this information depends on index.
+ * Returns expansion name for given index.
+ * Name is stored in db and loaded on session creation so there is only need to read this information depends on index.
+ *
  ***********************************************/
 
 WString GetExpansionName(SessionInfo * sess, int index);
@@ -365,10 +366,11 @@ WString GetExpansionName(SessionInfo * sess, int index);
 /********************************************//**
  * \brief Return client locale name
  *
- * \param int index - locale index
- * \return WString - locale name
+ * \param index     locale index
+ * \return locale   name
  *
  * Returns players client locale depends on locale index.
+ *
  ***********************************************/
 
 WString GetLocale(int index);
