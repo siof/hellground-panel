@@ -21,25 +21,43 @@
 
 #include "../defines.h"
 
-enum AccountInfoSlot    // also determines items order
+/********************************************//**
+ * \brief Slots for Account Informations page
+ *
+ * Also determines order on page.
+ *
+ ***********************************************/
+
+enum AccountInfoSlot
 {
-    ACCINFO_SLOT_INFO   = 0,
-    ACCINFO_SLOT_TYPE,
-    ACCINFO_SLOT_CURRENT_IP,
-    ACCINFO_SLOT_CREATE_DATE,
-    ACCINFO_SLOT_LAST_LOGIN_DATE,
-    ACCINFO_SLOT_LAST_LOGGED_IP,
-    ACCINFO_SLOT_IP_LOCK,
-    ACCINFO_SLOT_ONLINE,
-    ACCINFO_SLOT_CLIENT_VERSION,
-    ACCINFO_SLOT_VOTE_POINTS,
-    ACCINFO_SLOT_MULTIACC,
-    ACCINFO_SLOT_ACC_BAN,
-    ACCINFO_SLOT_LAST_IP_BAN,
-    ACCINFO_SLOT_CURR_IP_BAN,
+    ACCINFO_SLOT_INFO   = 0,        /**< Page title text */
+    ACCINFO_SLOT_TYPE,              /**< Text with account expansion name */
+    ACCINFO_SLOT_CURRENT_IP,        /**< Current (panel session) ip */
+    ACCINFO_SLOT_CREATE_DATE,       /**< Account create time */
+    ACCINFO_SLOT_LAST_LOGIN_DATE,   /**< Last login date */
+    ACCINFO_SLOT_LAST_LOGGED_IP,    /**< Last logged (in game) ip */
+    ACCINFO_SLOT_IP_LOCK,           /**< Is ip lock on or not ? */
+    ACCINFO_SLOT_ONLINE,            /**< Account is actually online */
+    ACCINFO_SLOT_CLIENT_VERSION,    /**< Players client locale name */
+    ACCINFO_SLOT_VOTE_POINTS,       /**< Vote points count */
+    ACCINFO_SLOT_MULTIACC,          /**< Multiacc feature is enabled ? */
+    ACCINFO_SLOT_ACC_BAN,           /**< Is account banned ? */
+    ACCINFO_SLOT_LAST_IP_BAN,       /**< Is last logged (in game) ip banned ? */
+    ACCINFO_SLOT_CURR_IP_BAN,       /**< Is current (panel session) ip banned ? */
 
     ACCINFO_SLOT_COUNT
 };
+
+/********************************************//**
+ * \brief Contains text label and single information widget.
+ *
+ * Each slot item can contain text label and widget which should be displayed on page.
+ * Class can also update text labels depends on actual language but
+ * this needs support from db and session informations.
+ * Break count tells how much new lines should be added after information widget.
+ * Text label and information widget are in the same line (no new lines beetwean them).
+ *
+ ***********************************************/
 
 class AccountInfoSlotItem
 {
@@ -67,18 +85,28 @@ private:
     WWidget * widget;
 };
 
+/********************************************//**
+ * \brief Represents Account Informations page
+ *
+ * This class is container for other widgets with account informations.
+ * Content should be created and added only on page creation.
+ * All informations in widgets and texts which depend on language
+ * should be only updated after page creation.
+ *
+ ***********************************************/
+
 class AccountInfoPage : public WContainerWidget
 {
 public:
     AccountInfoPage(SessionInfo * sess, WContainerWidget * parent = 0);
     ~AccountInfoPage();
 
-    void refresh();     // overload WWidget::refresh() for automatic content change ;) this should be done for all pages
+    void refresh();     /**< overload WContainerWidget::refresh() for automatic content change ;) this should be done for all pages */
 private:
-    SessionInfo * session;
-    bool needInfoCreation;
+    SessionInfo * session;  /**< panel session informations */
+    bool needInfoCreation;  /**< should be true only on page creation */
 
-    AccountInfoSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];
+    AccountInfoSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];   /**< contains account info slots so we can update them in easy way ;) */
 
     void UpdateTextWidgets();
     void CreateAccountInfo();
