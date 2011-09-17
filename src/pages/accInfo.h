@@ -86,7 +86,7 @@ private:
 };
 
 /********************************************//**
- * \brief Represents Account Informations page
+ * \brief A class to represents Account Informations page
  *
  * This class is container for other widgets with account informations.
  * Content should be created and added only on page creation.
@@ -101,12 +101,15 @@ public:
     AccountInfoPage(SessionInfo * sess, WContainerWidget * parent = 0);
     ~AccountInfoPage();
 
-    void refresh();     /**< overload WContainerWidget::refresh() for automatic content change ;) this should be done for all pages */
+    void refresh();
 private:
-    SessionInfo * session;  /**< panel session informations */
-    bool needInfoCreation;  /**< should be true only on page creation */
+    /// panel session informations
+    SessionInfo * session;
+    /// should be true only on page creation
+    bool needInfoCreation;
 
-    AccountInfoSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];   /**< contains account info slots so we can update them in easy way ;) */
+    /// contains account info slots so we can update them in easy way ;)
+    AccountInfoSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];
 
     void UpdateTextWidgets();
     void CreateAccountInfo();

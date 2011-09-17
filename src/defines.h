@@ -16,6 +16,21 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/********************************************//**
+ * \addtogroup
+ * \{
+ *
+ * \file defines.h
+ * This file contains:
+ * - standard includes for most files
+ * - globally used structures
+ * - globally used enums
+ * - functions which should be accessible from each place in code
+ * - global variables (included from config.h)
+ *
+ ***********************************************/
+
+
 #ifndef DEFINES_H_INCLUDED
 #define DEFINES_H_INCLUDED
 
@@ -115,29 +130,51 @@ struct Text
 /********************************************//**
  * \brief Contains panel session informations.
  *
- * Each player (logged or not) has his own session info.
+ * Each player (logged or not) has his own session informations.
+ * Most actions are based on informations stored in this struct.
  *
  ***********************************************/
 
 struct SessionInfo
 {
+    /********************************************//**
+     * \brief Creates new SessionInfo object.
+     *
+     * \param login         Login used to log on account.
+     * \param accid         Players account id. Is 0 if player isn't logged in.
+     * \param pass          Password used to log on account.
+     * \param email         Email used to register account.
+     * \param language      Language which should be used to show informations in panel.
+     * \param acclvl        Security level for this account.
+     * \param textMissing   Text which should be show when panel can't retrieve text to show in panel in some cases.
+     *
+     ***********************************************/
+
     SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), textMissing("Error ! Text missing !") {}
     ~SessionInfo() {}
 
-    WString login;          /**< account login */
-    uint64 accid;           /**< account id */
-    WString pass;           /**< account password */
-    WString email;          /**< account email */
-    WString joinDate;       /**< account create time */
-    WString lastIp;         /**< server last ip */
-    WString sessionIp;      /**< panel session ip */
-    Lang language;          /**< actual language */
-    AccountLevel accLvl;    /**< account level (player, gm etc) */
-    std::map<uint32 ,Text> langTexts;   /**< text depend on language loaded from database */
+    WString login;          /**< Login used to log on account. */
+    uint64 accid;           /**< Players account id. Is 0 if player isn't logged in. */
+    WString pass;           /**< Password used to log on account. */
+    WString email;          /**< Email used to register account. */
+    WString joinDate;       /**< Account registration date */
+    WString lastIp;         /**< Last ip used while connecting to server. */
+    WString sessionIp;      /**< Ip for current panel session. */
+    Lang language;          /**< Chosen language which should be used to show informations in panel. */
+    AccountLevel accLvl;    /**< Security level for this account(player, gm etc). Which content should be shown depends on this variable (For example: Player can't use GM section. Not logged player can't view account informations.). */
+    std::map<uint32 ,Text> langTexts;   /**< Map with texts depend for supported languages loaded from database */
     bool locked;            /**< IP lock */
-    int expansion;          /**< expansion */
+    int expansion;          /**< Expansion enabled for this account. */
 
-    WString textMissing;    /**< "Error ! Text missing !" info */
+    WString textMissing;    /**< "Error ! Text missing !" info. Should be shown when text wasn't found in langTexts. */
+
+    /********************************************//**
+     * \brief Returns text based on ID and current language.
+     *
+     * \param id    Text id which should be returned.
+     * \return a referrence to text.
+     *
+     ***********************************************/
 
     WString& GetText(uint32 id)
     {
@@ -167,7 +204,7 @@ enum ErrorSlots
 };
 
 /********************************************//**
- * \brief World of Warcraft expansions
+ * \brief World of Warcraft expansions.
  *
  ***********************************************/
 
@@ -221,7 +258,7 @@ enum MenuOptions
 
 enum Texts
 {
-    /**< Buttons */
+    /** Buttons */
     TXT_MENU_HOME                   = 0,    /**< Home menu button */
     TXT_MENU_LOGIN                  = 1,    /**< Login menu button */
     TXT_MENU_LOGOUT                 = 2,    /**< Logout menu button */
@@ -246,15 +283,15 @@ enum Texts
     TXT_MENU_GM_ONLINE              = 52,   /**< Game Masters online check (in panel) menu button */
     TXT_MENU_GM_FACTION             = 53,   /**< Game Masters faction check (in panel) menu button */
 
-    /**< Static texts/labels */
-    /**< Character */
+    /** Static texts/labels */
+    /** Character */
     TXT_LBL_CHAR_NAME               = 75,   /**< Character name label */
     TXT_LBL_CHAR_LVL                = 76,   /**< Character level label */
     TXT_LBL_CHAR_CLASS              = 77,   /**< Character class label */
     TXT_LBL_CHAR_TOTAL_PLAYED       = 78,   /**< Character total played time label */
     TXT_LBL_CHAR_LVL_PLAYED         = 79,   /**< Character current level played time label*/
 
-    /**< Account */
+    /** Account */
     TXT_LBL_ACC_CHARS               = 100,  /**< Account characters label */
     TXT_LBL_ACC_CREATE_DATE         = 101,  /**< Account create time label*/
     TXT_LBL_ACC_LAST_LOGIN          = 102,  /**< Account last login time label */
@@ -275,7 +312,7 @@ enum Texts
     TXT_LBL_ACC_IP_LOCK_OFF         = 117,  /**< Account ip lock is currently off label */
     TXT_LBL_ACC_IP_BAN              = 118,  /**< Account ip ban label */
 
-    /**< Password modifications */
+    /** Password modifications */
     TXT_LBL_PASS_CHANGE             = 130,  /**< Password change page title */
     TXT_LBL_PASS_OLD                = 131,  /**< Old password label */
     TXT_LBL_PASS_NEW                = 132,  /**< New password label */
@@ -284,16 +321,16 @@ enum Texts
     TXT_LBL_PASS_MAIL               = 135,  /**< Mail for password recovery label */
     TXT_LBL_PASS_GG                 = 136,  /**< IM number for password recovery label */
 
-    /**< Instance informations */
+    /** Instance informations */
     TXT_LBL_INSTANCE_OPEN           = 150,  /**< Instance is open label */
     TXT_LBL_INSTANCE_CLOSED         = 151,  /**< Instance is closed label (min lvl > 70) */
 
-    /**< Registration */
+    /** Registration */
     TXT_LBL_REGISTER_RULES          = 155,  /**< Label with info that user must accept server rules (for registration) */
     TXT_LBL_REGISTER_RULES_ACCEPT   = 156,  /**< Accept server rules checkbox text */
     TXT_LBL_REGISTER_MAIN           = 157,  /**< Account registration page title */
 
-    /**< Ban informations */
+    /** Ban informations */
     TXT_LBL_BAN_LOGIN               = 160,  /**< Banned account login label */
     TXT_LBL_BAN_FROM                = 161,  /**< Ban time label */
     TXT_LBL_BAN_TO                  = 162,  /**< Unban time label */
@@ -304,7 +341,7 @@ enum Texts
     TXT_LBL_BAN_YES                 = 167,  /**< Account is banned label */
     TXT_LBL_BAN_NO                  = 168,  /**< Account isn't banned label */
 
-    /**< Button labels */
+    /** Button labels */
     TXT_BTN_PASS_CHANGE             = 200,  /**< Password change button label */
     TXT_BTN_PASS_CLEAR              = 201,  /**< Password clear button label */
     TXT_BTN_PASS_SEND               = 202,  /**< Send new password button label */
@@ -314,7 +351,7 @@ enum Texts
     TXT_BTN_BANNED_ACC              = 206,  /**< Show banned account button label */
     TXT_BTN_BANNED_IP               = 207,  /**< Show banned ips button label */
 
-    /**< Other */
+    /** Other */
     TXT_SITE_TITLE                  = 225,  /**< Players panel site title */
     TXT_SITE_FOOTER                 = 226,  /**< Players panel site footer */
     TXT_SERVER_INFO                 = 227,  /**< Static server informations (machine, rates etc) */
@@ -337,7 +374,7 @@ enum Texts
 };
 
 /********************************************//**
- * \brief Sends email
+ * \brief Sends email.
  *
  * \param from  source email address
  * \param to    destination email address
@@ -350,7 +387,7 @@ enum Texts
 void SendMail(WString& from, WString& to, WString& msg);
 
 /********************************************//**
- * \brief Returns expansion name
+ * \brief Returns expansion name.
  *
  * \param sess      player session informations (needed to get expansion name from db)
  * \param index     expansion id
@@ -364,7 +401,7 @@ void SendMail(WString& from, WString& to, WString& msg);
 WString GetExpansionName(SessionInfo * sess, int index);
 
 /********************************************//**
- * \brief Return client locale name
+ * \brief Return client locale name.
  *
  * \param index     locale index
  * \return locale   name
@@ -381,3 +418,5 @@ int irand(int min, int max);
 #define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
 
 #endif // DEFINES_H_INCLUDED
+
+/**< \} */

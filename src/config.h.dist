@@ -16,6 +16,17 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/********************************************//**
+ * \addtogroup Configuration
+ * \{
+ *
+ * \file config.h.dist
+ * This file contains variables which should be configured before program compilation.
+ * To proper work program needs to copy variables from this file to config.h and to set them.
+ *
+ ***********************************************/
+
+
 #ifndef CONFIG_H_INCLUDED
 #define CONFIG_H_INCLUDED
 
@@ -30,14 +41,12 @@
 #define SQL_HOST        "serverhost"        /**< server database host */
 #define SQL_LOGIN       "serverlogin"       /**< server database login */
 #define SQL_PASSWORD    "serverpassword"    /**< server database password */
-// default mysql port is 3306
-#define SQL_PORT        3306                /**< mysql server port for server */
+#define SQL_PORT        3306                /**< mysql server port for server (default is 3306) */
 
 #define PANEL_SQL_HOST  "panelhost"         /**< panel database host */
 #define PANEL_SQL_LOGIN "panellogin"        /**< panel database login */
 #define PANEL_SQL_PASS  "panelpassword"     /**< panel database password */
-// default mysql port is 3306
-#define PANEL_SQL_PORT  3306                /**< mysql server port for panel */
+#define PANEL_SQL_PORT  3306                /**< mysql server port for panel (default is 3306) */
 
 #define SQL_REALMDB     "realmdb"           /**< realm database name */
 #define SQL_CHARDB      "charactersdb"      /**< characters database name */
@@ -49,7 +58,7 @@
 #define PASSWORD_LENGTH_MIN 8               /**< Minimum password length to generate */
 #define PASSWORD_LENGTH_MAX 12              /**< Maximum password length to generate */
 
-#define MAIL_FROM   "kontakt@gamefreedom.pl"    /**< email addres for "from" */
+#define MAIL_FROM   "kontakt@gamefreedom.pl"    /**< email addres for "from" clause */
 
 #define MAIL_HOST  "localhost"  /**< host for emails */
 #define MAIL_USER  "root"       /**< login to email host */
@@ -58,3 +67,5 @@
 #define REGISTRATION_ENABLED    /**< comment this to disable registration */
 
 #endif // CONFIG_H_INCLUDED
+
+/**< \} */
