@@ -16,6 +16,18 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/********************************************//**
+ * \addtogroup Pages
+ * \{
+ *
+ * \addtogroup Account Informations
+ * \{
+ *
+ * \file accInfo.cpp
+ * This file contains code needed to show player account informations.
+ *
+ ***********************************************/
+
 #include "accInfo.h"
 #include "../database.h"
 #include "../menu.h"
@@ -95,6 +107,13 @@ void AccountInfoSlotItem::UpdateLabel(SessionInfo * sess)
     label->setText(sess->GetText(textId));
 }
 
+/********************************************//**
+ * \brief Creates new AccountInfoPage object.
+ *
+ * \param sess      Contains user session informations.
+ * \param parent    Parent container widget to which should be added this widget.
+ *
+ ***********************************************/
 
 AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) :
     WContainerWidget(parent)
@@ -383,3 +402,10 @@ void AccountInfoPage::CreateAccountInfo()
     delete realmDb;
     realmDb = NULL;
 }
+
+/********************************************//**
+ * \}
+ * \}
+ *
+ ***********************************************/
+

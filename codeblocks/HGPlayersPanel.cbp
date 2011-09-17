@@ -70,6 +70,8 @@
 		</Linker>
 		<Unit filename="../LICENCE" />
 		<Unit filename="../LICENCE_PL" />
+		<Unit filename="../sql/char.sql" />
+		<Unit filename="../sql/panel.sql" />
 		<Unit filename="../src/config.h" />
 		<Unit filename="../src/config.h.dist" />
 		<Unit filename="../src/database.cpp" />
@@ -86,8 +88,6 @@
 		<Unit filename="../src/pages/error.h" />
 		<Unit filename="../src/pages/register.cpp" />
 		<Unit filename="../src/pages/register.h" />
-		<Unit filename="../sql/char.sql" />
-		<Unit filename="../sql/panel.sql" />
 		<Unit filename="../src/textItems.cpp" />
 		<Unit filename="../src/textItems.h" />
 		<Extensions>
