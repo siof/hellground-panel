@@ -108,5 +108,15 @@ INSERT INTO LangTexts VALUES
 Login: %s pass: %s", "Registration mail.
 
  Login: %s pass: %s"),
-(241, "HellGround Server - Rejestracja konta", "Hellground Server - Account registration"),
+(242, "HellGround Server - Rejestracja konta", "Hellground Server - Account registration"),
+(243, "Mail odzyskiwania hasła.
+
+Data odzyskiwania: %s
+IP sesji odzyskiwania: %s
+Nowe hasło: %s", "Password Recovery Mail.
+
+Recovery date: %s
+Recovery session IP: %s
+New pass: %s"),
+(244, "HellGround Server - Odzyskiwanie hasła", "Hellground Server - Password recovery"),
 (350, "Błędny login lub hasło", "Wrong login or password");

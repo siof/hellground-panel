@@ -379,8 +379,11 @@ enum Texts
     TXT_CURRENT_IP_BAN              = 240,  /**< Current ip ban label */
     TXT_REGISTRATION_MAIL           = 241,  /**< Email text for registration mails */
     TXT_REGISTRATION_SUBJECT        = 242,  /**< Email subject for registration mails */
+    TXT_RECOVERY_MAIL               = 243,  /**< Email text for password recovery mails */
+    TXT_RECOVERY_SUBJECT            = 244,  /**< Email subject for password recovery mails */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
+    TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
 };
 
 /********************************************//**

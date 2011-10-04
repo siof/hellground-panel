@@ -86,6 +86,8 @@
 		<Unit filename="../src/pages/default.h" />
 		<Unit filename="../src/pages/error.cpp" />
 		<Unit filename="../src/pages/error.h" />
+		<Unit filename="../src/pages/passRecovery.cpp" />
+		<Unit filename="../src/pages/passRecovery.h" />
 		<Unit filename="../src/pages/register.cpp" />
 		<Unit filename="../src/pages/register.h" />
 		<Unit filename="../src/textItems.cpp" />
