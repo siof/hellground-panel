@@ -388,9 +388,10 @@ enum Texts
  *
  * \param from  source email address
  * \param to    destination email address
+ * \param sub   subject for email
  * \param msg   message to send
  *
- * Function to send email from source email address to destination email address contains given message
+ * Function to send email from source email address to destination email address contains given message and subject.
  *
  ***********************************************/
 
@@ -414,7 +415,7 @@ WString GetExpansionName(SessionInfo * sess, int index);
  * \brief Return client locale name.
  *
  * \param index     locale index
- * \return locale   name
+ * \return locale name
  *
  * Returns players client locale depends on locale index.
  *

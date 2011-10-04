@@ -47,16 +47,17 @@
 
 enum AccountInfoSlot
 {
-    ACCINFO_SLOT_INFO   = 0,        /**< Page title text */
-    ACCINFO_SLOT_TYPE,              /**< Text with account expansion name */
-    ACCINFO_SLOT_CURRENT_IP,        /**< Current (panel session) ip */
-    ACCINFO_SLOT_CREATE_DATE,       /**< Account create time */
-    ACCINFO_SLOT_LAST_LOGIN_DATE,   /**< Last login date */
-    ACCINFO_SLOT_LAST_LOGGED_IP,    /**< Last logged (in game) ip */
+    ACCINFO_SLOT_INFO   = 0,        /**< Page title text. */
+    ACCINFO_SLOT_TYPE,              /**< Text with account expansion name. */
+    ACCINFO_SLOT_CURRENT_IP,        /**< Current (panel session) ip. */
+    ACCINFO_SLOT_CREATE_DATE,       /**< Account create time. */
+    ACCINFO_SLOT_LAST_LOGIN_DATE,   /**< Last login date. */
+    ACCINFO_SLOT_LAST_LOGGED_IP,    /**< Last logged (in game) ip. */
     ACCINFO_SLOT_IP_LOCK,           /**< Is ip lock on or not ? */
-    ACCINFO_SLOT_ONLINE,            /**< Account is actually online */
-    ACCINFO_SLOT_CLIENT_VERSION,    /**< Players client locale name */
-    ACCINFO_SLOT_VOTE_POINTS,       /**< Vote points count */
+    ACCINFO_SLOT_ONLINE,            /**< Account is actually online. */
+    ACCINFO_SLOT_CLIENT_VERSION,    /**< Players client locale name. */
+    ACCINFO_SLOT_EMAIL,             /**< Player account email address. */
+    ACCINFO_SLOT_VOTE_POINTS,       /**< Vote points count. */
     ACCINFO_SLOT_MULTIACC,          /**< Multiacc feature is enabled ? */
     ACCINFO_SLOT_ACC_BAN,           /**< Is account banned ? */
     ACCINFO_SLOT_LAST_IP_BAN,       /**< Is last logged (in game) ip banned ? */
@@ -131,6 +132,8 @@ private:
     void UpdateTextWidgets();
     void CreateAccountInfo();
     void UpdateAccountInfo();
+
+    WString GetEmail();
 };
 
 #endif // ACCINFO_H_INCLUDED
