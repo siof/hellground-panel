@@ -20,60 +20,60 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Password recovery
- * Password recovery page contains code to handle
- * player password recovery.
- * Password recovery consists of mostly 2 files:
- * - passRecovery.h
- * - passRecovery.cpp
+ * \addtogroup Password change
+ * Password change page contains code to handle
+ * player password change.
+ * Password change consists of mostly 2 files:
+ * - passChange.h
+ * - passChange.cpp
  * \{
  *
- * \file passRecovery.h
- * This file contains headers needed to player password recovery.
+ * \file passChange.h
+ * This file contains headers needed to player password change.
  *
  ***********************************************/
 
-#ifndef PASSRECOVERY_H_INCLUDED
-#define PASSRECOVERY_H_INCLUDED
+#ifndef PASSCHANGE_H_INCLUDED
+#define PASSCHANGE_H_INCLUDED
 
 #include "../defines.h"
 #include "../textItems.h"
 
 /********************************************//**
- * \brief Slots for password recovery page
+ * \brief Slots for password change page
  *
  * Also determines order on page.
  *
  ***********************************************/
 
-enum RecoveryTextSlots
+enum PassChangeTextSlots
 {
-    RECOVERY_TEXT_MAIN = 0,         /**< Page title/main text shown on top. */
-    RECOVERY_TEXT_INFO,             /**< Additional info/recovery errors. */
-    RECOVERY_TEXT_LOGIN,            /**< Account login. */
-    RECOVERY_TEXT_EMAIL,            /**< Account email. On this mail password will be sent. */
+    PASS_CHANGE_TEXT_MAIN = 0,      /**< Page title/main text shown on top. */
+    PASS_CHANGE_TEXT_INFO,          /**< Additional info/change errors. */
+    PASS_CHANGE_TEXT_LOGIN,         /**< Account login. */
+    PASS_CHANGE_TEXT_PASS,          /**< New password. */
+    PASS_CHANGE_TEXT_PASS2,         /**< New password 2. */
 
-    RECOVERY_TEXT_SLOT_COUNT
+    PASS_CHANGE_TEXT_SLOT_COUNT
 };
 
 
 /********************************************//**
- * \brief A class to represents Password Recovery page
+ * \brief A class to represents Password change page
  *
- * This class is container for other widgets needed to recovery account password.
+ * This class is container for other widgets needed to change account password.
  * Content should be created and added only on page creation.
  * All informations in widgets and texts which depend on language
  * should be only updated after page creation.
- * This page should also validate data and handle
- * recovery steps (password generation, change in db and send mail with pass).
+ * This page should also validate data and handle change steps (change in db).
  *
  ***********************************************/
 
-class PassRecoveryPage : public WContainerWidget
+class PassChangePage : public WContainerWidget
 {
 public:
-    PassRecoveryPage(SessionInfo * sess, WContainerWidget * parent = 0);
-    ~PassRecoveryPage();
+    PassChangePage(SessionInfo * sess, WContainerWidget * parent = 0);
+    ~PassChangePage();
 
     void refresh();
 private:
@@ -82,26 +82,25 @@ private:
     /// should be true only on page creation
     bool needCreation;
 
-    /// text box for login
-    WLineEdit * txtLogin;
-    /// text box for email
-    WLineEdit * txtEmail;
+    /// text box for passwords
+    WLineEdit * txtPass;
+    WLineEdit * txtPass2;
     /// register button
-    WPushButton * btnRecover;
+    WPushButton * btnChange;
 
     /// labels
-    TextItems textSlots[RECOVERY_TEXT_SLOT_COUNT];
+    TextItems textSlots[PASS_CHANGE_TEXT_SLOT_COUNT];
 
     void UpdateTextWidgets();
-    void CreateRecoveryPage();
+    void CreatePassChangePage();
 
-    void ClearLogin();
-    void ClearEmail();
-    void Recover();
+    void ClearPass();
+    void ClearPass2();
+    void Change();
 };
 
 
-#endif // PASSRECOVERY_H_INCLUDED
+#endif // PASSCHANGE_H_INCLUDED
 
 /********************************************//**
  * \}
