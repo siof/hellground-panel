@@ -232,12 +232,16 @@ int Database::ExecuteQuery(std::string query, bool escape)
 
 std::string Database::EscapeString(std::string str)
 {
-    char * tmpString;
-    tmpString = new char[str.size()];
+    char * tmp;
+    tmp = new char[str.size()];
 
-    mysql_real_escape_string(connection, tmpString, str.c_str(), str.size());
+    mysql_real_escape_string(connection, tmp, str.c_str(), str.size());
 
-    return std::string(tmpString);
+    std::string tmpString = tmp;
+
+    delete [] tmp;
+
+    return tmpString;
 }
 
 std::string Database::EscapeString(WString str)
