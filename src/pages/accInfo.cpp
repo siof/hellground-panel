@@ -241,6 +241,7 @@ void AccountInfoPage::UpdateAccountInfo()
     charDb = NULL;
     delete realmDb;
     realmDb = NULL;
+    tmpRow = NULL;
 }
 
 /********************************************//**
@@ -496,6 +497,8 @@ WString AccountInfoPage::GetEmail()
         hiddenMail += hiddenDomain;
 
         tmpStr = WString::fromUTF8(hiddenMail);
+
+        delete [] domain;
     }
     else
         tmpStr = session->email;

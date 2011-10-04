@@ -272,6 +272,7 @@ void HGMenu::LogMeIn()
         std::string tmpErr = db->GetError();
         SetError(ERROR_SLOT_DB, tmpErr);
         ShowError();
+        delete db;
         return;
     }
 
