@@ -16,6 +16,18 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/********************************************//**
+ * \addtogroup Pages
+ * \{
+ *
+ * \addtogroup Account Informations
+ * \{
+ *
+ * \file accInfo.cpp
+ * This file contains code needed to show player account informations.
+ *
+ ***********************************************/
+
 #include "register.h"
 #include "../database.h"
 
@@ -29,6 +41,14 @@ RegisterPage::~RegisterPage()
 {
 
 }
+
+/********************************************//**
+ * \brief Overloads WContainerWidget::refresh() for automatic content change.
+ *
+ * This function can create new or update existing content.
+ * In most situations this is used for content update ;)
+ *
+ ***********************************************/
 
 void RegisterPage::refresh()
 {
@@ -44,21 +64,38 @@ void RegisterPage::refresh()
     WContainerWidget::refresh();
 }
 
+/********************************************//**
+ * \brief Update text widgets.
+ *
+ * All text label widgets in all slots will be updated,
+ * so if player will change language then automagically
+ * labels should change too ;)
+ *
+ ***********************************************/
+
 void RegisterPage::UpdateTextWidgets()
 {
     for (int i = 0; i < REG_TEXT_SLOT_COUNT; ++i)
         textSlots[i].UpdateLabel(session);
 
-    chRules->setText(session->GetText(TXT_LBL_REGISTER_RULES_ACCEPT));
+    chRules->setText(session->GetText(TXT_LBL_REG_RULES_ACCEPT));
     btnRegister->setText(session->GetText(TXT_BTN_REGISTER));
 }
+
+/********************************************//**
+ * \brief Create register page and it's widgets.
+ *
+ * Create widgets for each slot (and additional not sloted widgets) and fills labels with text.
+ * This should be done only once for player.
+ *
+ ***********************************************/
 
 void RegisterPage::CreateRegisterPage()
 {
     clear();
     needCreation = false;
 
-    textSlots[REG_TEXT_MAIN].SetLabel(session, TXT_LBL_REGISTER_MAIN);
+    textSlots[REG_TEXT_MAIN].SetLabel(session, TXT_LBL_REG_MAIN);
     addWidget(textSlots[REG_TEXT_MAIN].GetLabel());
     addWidget(new WBreak());
     addWidget(new WBreak());
@@ -82,12 +119,12 @@ void RegisterPage::CreateRegisterPage()
     addWidget(txtEmail);
     addWidget(new WBreak());
 
-    textSlots[REG_TEXT_RULES].SetLabel(session, TXT_LBL_REGISTER_RULES);
+    textSlots[REG_TEXT_RULES].SetLabel(session, TXT_LBL_REG_RULES);
     addWidget(textSlots[REG_TEXT_RULES].GetLabel());
     addWidget(new WBreak());
 
 //    textSlots[REG_TEXT_RULES_ACCEPT].SetLabel(session, TXT_LBL_REGISTER_RULES_ACCEPT);
-    chRules = new WCheckBox(session->GetText(TXT_LBL_REGISTER_RULES_ACCEPT));
+    chRules = new WCheckBox(session->GetText(TXT_LBL_REG_RULES_ACCEPT));
 //    addWidget(textSlots[REG_TEXT_RULES_ACCEPT].GetLabel());
     addWidget(chRules);
     addWidget(new WBreak());
@@ -103,32 +140,72 @@ void RegisterPage::CreateRegisterPage()
     btnRegister->clicked().connect(this, &RegisterPage::Register);
 }
 
+/********************************************//**
+ * \brief Clear login.
+ *
+ *  Clears login text box.
+ *
+ ***********************************************/
+
 void RegisterPage::ClearLogin()
 {
     txtLogin->setText(WString(""));
 }
+
+/********************************************//**
+ * \brief Clear email.
+ *
+ * Clears email text box.
+ *
+ ***********************************************/
 
 void RegisterPage::ClearEmail()
 {
     txtEmail->setText(WString(""));
 }
 
+/********************************************//**
+ * \brief Check change.
+ *
+ * Enables/disables register button depends on accepting rules.
+ *
+ ***********************************************/
+
 void RegisterPage::CheckChange()
 {
     btnRegister->setEnabled(chRules->isChecked());
 }
 
+/********************************************//**
+ * \brief Registers account
+ *
+ * Function to validate and register new account
+ * with randomly generated password if submitted data are valid.
+ *
+ ***********************************************/
+
 void RegisterPage::Register()
 {
     if (!chRules->isChecked())
     {
-
+        textSlots[REG_TEXT_INFO].SetLabel(session, TXT_LBL_REG_RULES_NOT_ACCEPTED);
         return;
     }
 
+    Database * db = new Database(SERVER_DB_DATA, SQL_REALMDB);
     WString login, mail, pass;
 
-    login = txtLogin->text();
+    login = db->EscapeString(txtLogin->text());
+
+    // check if account already exists
+    db->SetPQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str());
+    if (db->ExecuteQuery())
+    {
+        ClearLogin();
+        textSlots[REG_TEXT_INFO].SetLabel(session, TXT_LBL_REG_ACC_EXISTS);
+        return;
+    }
+
     mail = txtEmail->text();
 
     pass = "";
@@ -138,27 +215,43 @@ void RegisterPage::Register()
     std::string tmpStr;
 
     for (int i = 0; i < passLen; ++i)
-        tmpStr += (char)(irand(PASSWORD_ANSI_START, PASSWORD_ANSI_END));
+        tmpStr += (char)(irand(PASSWORD_ASCII_START, PASSWORD_ASCII_END));
 
-    pass = WString::fromUTF8(tmpStr);
+    pass = db->EscapeString(WString::fromUTF8(tmpStr));
 
     WString from, msg;
     from = MAIL_FROM;
 
-    Database * db = new Database(SERVER_DB_DATA, SQL_REALMDB);
-
-    login = db->EscapeString(login);
-    pass = db->EscapeString(pass);
-
     // check should be moved to other place but here will be usefull for SendMail tests ;)
     #ifdef REGISTRATION_ENABLED
-    db->SetPQuery("INSERT INTO account (username, email,sha_pass_hash) VALUES ('%s', '%s', SHA('%s:%s'))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
+    db->SetPQuery("INSERT INTO account (username, email, sha_pass_hash) VALUES ('%s', '%s', SHA1(UPPER('%s:%s')))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
     db->ExecuteQuery();
     #endif
 
-    msg = "test msg :D passs jest taki se:" + pass;
+    if (session->HasText(TXT_REGISTRATION_MAIL))
+        msg = session->GetText(TXT_REGISTRATION_MAIL);
+    else
+        msg = "Registration Mail\n\n Your password for login %s is: %s";
 
-    SendMail(from, mail, msg);
+    // set buffer size (format string size + 16 chars for login + 16 chars for pass + some to be safe)
+    char * buffer = new char[msg.toUTF8().size() + 40];
+
+    sprintf(buffer, msg.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
+
+    msg = buffer;
+
+    SendMail(from, mail, session->GetText(TXT_REGISTRATION_SUBJECT), msg);
 
     delete db;
+
+    ClearLogin();
+    ClearEmail();
+    chRules->setChecked(false);
+    CheckChange();
 }
+
+/********************************************//**
+ * \}
+ * \}
+ *
+ ***********************************************/

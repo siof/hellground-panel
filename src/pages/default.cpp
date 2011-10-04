@@ -16,7 +16,27 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/********************************************//**
+ * \addtogroup Pages
+ * \{
+ *
+ * \addtogroup Default page
+ * \{
+ *
+ * \file default.cpp
+ * This file contains code needed to show default (home/start) page.
+ *
+ ***********************************************/
+
 #include "default.h"
+
+/********************************************//**
+ * \brief Creates new DefaultPage object.
+ *
+ * \param sess      Contains current session informations.
+ * \param parent    Parent container type object in which this container should be placed.
+ *
+ ***********************************************/
 
 DefaultPage::DefaultPage(SessionInfo * sess, WContainerWidget * parent)
 : WContainerWidget(parent)
@@ -24,6 +44,14 @@ DefaultPage::DefaultPage(SessionInfo * sess, WContainerWidget * parent)
     session = sess;
     ShowText();
 }
+
+/********************************************//**
+ * \brief Overloads WContainerWidget::refresh() for automatic content change.
+ *
+ * This function can delete old and create new content.
+ * In most situations this is used for content update or language change ;)
+ *
+ ***********************************************/
 
 void DefaultPage::refresh()
 {
@@ -34,6 +62,13 @@ void DefaultPage::refresh()
 
     WContainerWidget::refresh();
 }
+
+/********************************************//**
+ * \brief Shows content of default page
+ *
+ * This function deletes old and creates new content depends on actual language.
+ *
+ ***********************************************/
 
 void DefaultPage::ShowText()
 {

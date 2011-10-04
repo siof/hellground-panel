@@ -45,9 +45,9 @@ AccountInfoSlotItem::~AccountInfoSlotItem()
 }
 
 /********************************************//**
- * \brief Sets new text label widget (and deletes old one)
+ * \brief Sets new text label widget (and deletes old one).
  *
- * \param lbl   text label widget
+ * \param lbl   Text label widget.
  *
  ***********************************************/
 
@@ -60,9 +60,9 @@ void AccountInfoSlotItem::SetLabel(WText * lbl)
 }
 
 /********************************************//**
- * \brief Sets new informations widget (and deletes old one)
+ * \brief Sets new informations widget (and deletes old one).
  *
- * \param wid   informations widget
+ * \param wid   Widget with informations.
  *
  ***********************************************/
 
@@ -75,12 +75,12 @@ void AccountInfoSlotItem::SetWidget(WWidget * wid)
 }
 
 /********************************************//**
- * \brief Sets all informations in one time
+ * \brief Sets all informations in one time.
  *
- * \param txt   text label widget
- * \param wid   informations widget
- * \param br    break count
- * \param txtId text id for text label widget
+ * \param txt   Text label widget.
+ * \param wid   Widget with informations.
+ * \param br    Count of breaks/new lines after this item.
+ * \param txtId Text id for text label widget.
  *
  ***********************************************/
 
@@ -95,7 +95,7 @@ void AccountInfoSlotItem::SetAll(WText * txt, WWidget * wid, int br, uint32 txtI
 /********************************************//**
  * \brief Updates text label widget depends on language.
  *
- * \param sess  session informations
+ * \param sess  Current session informations.
  *
  ***********************************************/
 
@@ -129,7 +129,7 @@ AccountInfoPage::~AccountInfoPage()
 }
 
 /********************************************//**
- * \brief Overloads WContainerWidget::refresh() for automatic content change
+ * \brief Overloads WContainerWidget::refresh() for automatic content change.
  *
  * This function can create new or update existing content.
  * In most situations this is used for content update ;)
@@ -153,7 +153,7 @@ void AccountInfoPage::refresh()
 }
 
 /********************************************//**
- * \brief Updatex text widgets
+ * \brief Update text widgets.
  *
  * All text label widgets in all slots will be updated,
  * so if player will change language then automagically
@@ -168,7 +168,7 @@ void AccountInfoPage::UpdateTextWidgets()
 }
 
 /********************************************//**
- * \brief Update Account Informations widgets
+ * \brief Update Account Informations widgets.
  *
  * Only informations update. There is no need to delete old and create new widgets.
  *
@@ -244,7 +244,7 @@ void AccountInfoPage::UpdateAccountInfo()
 }
 
 /********************************************//**
- * \brief Create informations widgets
+ * \brief Create informations widgets.
  *
  * Create widgets for each slot and fills them with informations.
  * This should be done only once for player.
@@ -408,4 +408,3 @@ void AccountInfoPage::CreateAccountInfo()
  * \}
  *
  ***********************************************/
-

@@ -66,6 +66,8 @@ INSERT INTO LangTexts VALUES
 (155, "Zakładając konto w pełni akceptujesz <a href=\"http://wow.gamefreedom.pl/regulamin-serwera/\">regulamin serwera</a>", "You read <a href=\"http://gamefreedom.pl/showthread.php?t=8454\">Server Rules</a> and you accept them?"),
 (156, "Tak", "Yes"),
 (157, "<h3>HellGround - Rejestracja</h3>", "<h3>HellGround - Register</h3>"),
+(158, "Aby założyć konto musisz zaakceptować regulamin serwera.", "You must accept server rules to register new account."),
+(159, "Konto istnieje. Prosze wybrać inny login.", "Account already exists. Please try another login."),
 (160, "Login", "Login"),
 (161, "Zbanowany od", "Banned from"),
 (162, "Zbanowany do", "Banned till"),
@@ -101,5 +103,10 @@ INSERT INTO LangTexts VALUES
 (238, "Tak", "Yes"),
 (239, "Nie", "No"),
 (240, "Aktualne IP jest zbanowane: ", "Current IP is banned: "),
-(241, "Mail rejestracyjny. Login: %s pass: %s", "Registration mail. Login: %s pass: %s"),
+(241, "Mail rejestracyjny.
+
+Login: %s pass: %s", "Registration mail.
+
+ Login: %s pass: %s"),
+(241, "HellGround Server - Rejestracja konta", "Hellground Server - Account registration"),
 (350, "Błędny login lub hasło", "Wrong login or password");

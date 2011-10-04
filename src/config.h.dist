@@ -53,10 +53,10 @@
 #define SQL_WORLDDB     "worlddb"           /**< world database name */
 #define SQL_PANELDB     "paneldb"           /**< panel database name */
 
-#define PASSWORD_ANSI_START 33              /**< ANSI id for first character which can be used to password generation */
-#define PASSWORD_ANSI_END   126             /**< ANSI id for last character which can be used to password generation */
-#define PASSWORD_LENGTH_MIN 8               /**< Minimum password length to generate */
-#define PASSWORD_LENGTH_MAX 12              /**< Maximum password length to generate */
+#define PASSWORD_ASCII_START    33          /**< ASCII id for first character which can be used to password generation */
+#define PASSWORD_ASCII_END      126         /**< ASCII id for last character which can be used to password generation */
+#define PASSWORD_LENGTH_MIN     8           /**< Minimum password length to generate */
+#define PASSWORD_LENGTH_MAX     12          /**< Maximum password length to generate */
 
 #define MAIL_FROM   "kontakt@gamefreedom.pl"    /**< email addres for "from" clause */
 

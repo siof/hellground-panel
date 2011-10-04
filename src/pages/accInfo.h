@@ -16,6 +16,23 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/********************************************//**
+ * \addtogroup Pages
+ * \{
+ *
+ * \addtogroup Account Informations
+ * Account informations contains code to represent player
+ * account information page.
+ * Account informations consists of mostly 2 files:
+ * - accInfo.h
+ * - accInfo.cpp
+ * \{
+ *
+ * \file accInfo.h
+ * This file contains th headers needed to show player account informations.
+ *
+ ***********************************************/
+
 #ifndef ACCINFO_H_INCLUDED
 #define ACCINFO_H_INCLUDED
 
@@ -117,3 +134,8 @@ private:
 };
 
 #endif // ACCINFO_H_INCLUDED
+
+/********************************************//**
+ * \}
+ * \}
+ ***********************************************/
