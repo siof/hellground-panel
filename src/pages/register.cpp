@@ -236,7 +236,7 @@ void RegisterPage::Register()
     // set buffer size (format string size + 16 chars for login + 16 chars for pass + some to be safe)
     char * buffer = new char[msg.toUTF8().size() + 40];
 
-    sprintf(buffer, msg.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
+    sprintf(buffer, msg.toUTF8().c_str(), login.toUTF8().c_str(), tmpStr.c_str());
 
     msg = buffer;
 
