@@ -249,6 +249,8 @@ void RegisterPage::Register()
     ClearEmail();
     chRules->setChecked(false);
     CheckChange();
+
+    textSlots[REG_TEXT_INFO].SetLabel(session, TXT_REGISTRATION_COMPLETE);
 }
 
 /********************************************//**
