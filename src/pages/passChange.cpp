@@ -206,6 +206,8 @@ void PassChangePage::Change()
 
     ClearPass();
     ClearPass2();
+
+    textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_PASS_CHANGE_COMPLETE);
 }
 
 /********************************************//**

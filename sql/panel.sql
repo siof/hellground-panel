@@ -119,6 +119,9 @@ Recovery date: %s
 Recovery session IP: %s
 New pass: %s"),
 (244, "HellGround Server - Odzyskiwanie hasła", "Hellground Server - Password recovery"),
+(245, "Rejstracja zakończona sukcesem. Hasło zostało wysłane na podany adres email.", "Registration complete. Password was sent to given email address."),
+(246, "Przywracanie hasła zakończone sukcesem. Nowe hasło zostało wysłane na email.", "Password recovery complete. New password was sent on account email address."),
+(247, "Zmiana hasła zakończona sukcesem.", "Password change successfull."),
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),
 (352, "Podane hasła muszą być takie same", "Typed passwords must be the same"),

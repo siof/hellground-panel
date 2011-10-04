@@ -229,6 +229,8 @@ void PassRecoveryPage::Recover()
 
     ClearLogin();
     ClearEmail();
+
+    textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_RECOVERY_COMPLETE);
 }
 
 /********************************************//**
