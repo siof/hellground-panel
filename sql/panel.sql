@@ -119,4 +119,8 @@ Recovery date: %s
 Recovery session IP: %s
 New pass: %s"),
 (244, "HellGround Server - Odzyskiwanie hasła", "Hellground Server - Password recovery"),
-(350, "Błędny login lub hasło", "Wrong login or password");
+(350, "Błędny login lub hasło", "Wrong login or password"),
+(351, "Błędny login lub email", "Wrong login or email"),
+(352, "Podane hasła muszą być takie same", "Typed passwords must be the same"),
+(353, "Podane hasło jest zbyt krótkie", "Typed password is to short"),
+(354, "Podane hasło jest zbyt długie", "Typed password is to long");

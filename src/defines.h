@@ -384,6 +384,9 @@ enum Texts
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
+    TXT_ERROR_PASSWORDS_MISMATCH    = 352,  /**< Error info: typed passwords must be the same */
+    TXT_ERROR_PASSWORD_TO_SHORT     = 353,  /**< Error info: password to short */
+    TXT_ERROR_PASSWORD_TO_LONG      = 354,  /**< Error info: password to long */
 };
 
 /********************************************//**
