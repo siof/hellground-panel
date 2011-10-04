@@ -472,7 +472,28 @@ WString AccountInfoPage::GetEmail()
         for (i = visible; i < hidden; ++i)
             hiddenMail += EMAIL_HIDE_CHAR;
 
-        hiddenMail += domain;
+        std::string hiddenDomain;
+
+        #ifdef HIDE_EMAIL_DOMAIN
+
+        int dotPlace = 0, showChars = 1 + (j > 4 ? 2 : 1);
+
+        for (i = 0; i < j; ++i)
+        {
+            if (domain[i] == '.')
+                dotPlace = i;
+
+            if (i < showChars || (dotPlace && i >= dotPlace))
+                hiddenDomain += domain[i];
+            else
+                hiddenDomain += EMAIL_HIDE_CHAR;
+        }
+
+        #else
+        hiddenDomain = domain;
+        #endif
+
+        hiddenMail += hiddenDomain;
 
         tmpStr = WString::fromUTF8(hiddenMail);
     }
