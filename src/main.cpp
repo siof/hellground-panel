@@ -29,13 +29,13 @@
 
 using namespace Wt;
 
-void SendMail(WString& from, WString& to, WString& msg)
+void SendMail(WString& from, WString& to, WString& sub, WString& msg)
 {
     jwsmtp::mailer mail;
 
     mail.addrecipient(to.toUTF8().c_str());
     mail.setsender(from.toUTF8().c_str());
-    mail.setsubject("TEMAT");
+    mail.setsubject(sub.toUTF8().c_str());
     mail.setmessage(msg.toUTF8().c_str());
 
     mail.setserver(MAIL_HOST);

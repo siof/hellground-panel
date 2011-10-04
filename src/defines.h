@@ -185,6 +185,13 @@ struct SessionInfo
 
         return itr->second.GetText(language);
     }
+
+    bool HasText(uint32 id)
+    {
+        std::map<uint32, Text>::iterator itr = langTexts.find(id);
+
+        return itr != langTexts.end();
+    }
 };
 
 /********************************************//**
@@ -326,9 +333,11 @@ enum Texts
     TXT_LBL_INSTANCE_CLOSED         = 151,  /**< Instance is closed label (min lvl > 70) */
 
     /** Registration */
-    TXT_LBL_REGISTER_RULES          = 155,  /**< Label with info that user must accept server rules (for registration) */
-    TXT_LBL_REGISTER_RULES_ACCEPT   = 156,  /**< Accept server rules checkbox text */
-    TXT_LBL_REGISTER_MAIN           = 157,  /**< Account registration page title */
+    TXT_LBL_REG_RULES               = 155,  /**< Label with info that user must accept server rules (for registration) */
+    TXT_LBL_REG_RULES_ACCEPT        = 156,  /**< Accept server rules checkbox text */
+    TXT_LBL_REG_MAIN                = 157,  /**< Account registration page title */
+    TXT_LBL_REG_RULES_NOT_ACCEPTED  = 158,  /**< Rules not accepted but button clicked */
+    TXT_LBL_REG_ACC_EXISTS          = 159,  /**< There are already account with that login */
 
     /** Ban informations */
     TXT_LBL_BAN_LOGIN               = 160,  /**< Banned account login label */
@@ -369,8 +378,9 @@ enum Texts
     TXT_IS_OFFLINE                  = 239,  /**< Account is offline label */
     TXT_CURRENT_IP_BAN              = 240,  /**< Current ip ban label */
     TXT_REGISTRATION_MAIL           = 241,  /**< Email text for registration mails */
+    TXT_REGISTRATION_SUBJECT        = 242,  /**< Email subject for registration mails */
 
-    TXT_ERROR_WRONG_LOGIN_DATA      = 350   /**< Error info: wrong login or password */
+    TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
 };
 
 /********************************************//**
@@ -384,7 +394,7 @@ enum Texts
  *
  ***********************************************/
 
-void SendMail(WString& from, WString& to, WString& msg);
+void SendMail(WString& from, WString& to, WString& sub, WString& msg);
 
 /********************************************//**
  * \brief Returns expansion name.
