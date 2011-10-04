@@ -311,6 +311,10 @@ void AccountInfoPage::CreateAccountInfo()
         tmpWidget = new WText(GetLocale(tmpRow->fields[5].GetInt()));
         accInfoSlots[ACCINFO_SLOT_CLIENT_VERSION].SetAll(tmpTxt, tmpWidget, 1, TXT_LBL_ACC_CLIENT_VERSION);
 
+        tmpTxt = new WText(session->GetText(TXT_LBL_ACC_MAIL));
+        tmpWidget = new WText(GetEmail());
+        accInfoSlots[ACCINFO_SLOT_EMAIL].SetAll(tmpTxt, tmpWidget, 1, TXT_LBL_ACC_MAIL);
+
         //accVotePoints;
 
         //accMultiAcc;
@@ -401,6 +405,81 @@ void AccountInfoPage::CreateAccountInfo()
     charDb = NULL;
     delete realmDb;
     realmDb = NULL;
+}
+
+/********************************************//**
+ * \brief Return account email
+ *
+ * \return Email address
+ *
+ * This function returns account email address which is stored in session.
+ * Email can be full or partially hidden depends on config settings.
+ * If there will be error then email will be empty string.
+ *
+ ***********************************************/
+
+WString AccountInfoPage::GetEmail()
+{
+    int visible = 0;
+    WString tmpStr;
+
+    #ifdef SHOW_EMAIL_CHARACTERS_COUNT
+    visible = SHOW_EMAIL_CHARACTERS_COUNT;
+    #endif
+
+    if (visible)
+    {
+        std::string tmpEmail = session->email.toUTF8();
+        int count = tmpEmail.size();
+        char * domain;
+        int atPlace = 0, i, j, hidden = 0;
+
+        for (i = 0; i < count; ++i)
+        {
+            if (tmpEmail[i] == '@')
+            {
+                atPlace = i;
+                break;
+            }
+        }
+
+        if (!atPlace || atPlace >= count)
+            return tmpStr;
+
+        if (visible > atPlace)
+            visible = atPlace;
+
+        domain = new char[count - atPlace];
+        j = 0;
+
+        for (i = atPlace; i < count; ++i, ++j)
+            domain[j] = tmpEmail[i];
+
+        std::string hiddenMail;
+
+        for (i = 0; i < visible; ++i)
+            hiddenMail += tmpEmail[i];
+
+        #ifdef EMAIL_HIDE_CHAR_COUNT
+        hidden = EMAIL_HIDE_CHAR_COUNT;
+        #endif
+
+        if (hidden <= 0)
+            hidden = atPlace;
+        else
+            hidden += visible;
+
+        for (i = visible; i < hidden; ++i)
+            hiddenMail += EMAIL_HIDE_CHAR;
+
+        hiddenMail += domain;
+
+        tmpStr = WString::fromUTF8(hiddenMail);
+    }
+    else
+        tmpStr = session->email;
+
+    return tmpStr;
 }
 
 /********************************************//**

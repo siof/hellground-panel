@@ -20,11 +20,11 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Account Informations
+ * \addtogroup Registration
  * \{
  *
- * \file accInfo.cpp
- * This file contains code needed to show player account informations.
+ * \file register.cpp
+ * This file contains code needed to handle player registration.
  *
  ***********************************************/
 
@@ -242,6 +242,7 @@ void RegisterPage::Register()
 
     SendMail(from, mail, session->GetText(TXT_REGISTRATION_SUBJECT), msg);
 
+    delete [] buffer;
     delete db;
 
     ClearLogin();

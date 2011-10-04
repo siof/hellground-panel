@@ -22,7 +22,7 @@
  *
  * \addtogroup Registration
  * Registration page contains code to handle player registration.
- * Account informations consists of mostly 2 files:
+ * Registration consists of mostly 2 files:
  * - register.h
  * - register.cpp
  * \{
