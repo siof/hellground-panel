@@ -69,6 +69,7 @@
 #define SHOW_EMAIL_CHARACTERS_COUNT 2   /**< how many email address characters should be visible in information page (0 - show all) */
 #define EMAIL_HIDE_CHAR             '*' /**< character which should be displayed in hidden place */
 #define EMAIL_HIDE_CHAR_COUNT       4   /**< how many EMAIL_HIDE_CHAR characters should be displayed (0 - same count as hidden email characters) */
+#define HIDE_EMAIL_DOMAIN               /**< if defined then domain will be also hidden */
 
 #endif // CONFIG_H_INCLUDED
 
