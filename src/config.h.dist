@@ -72,6 +72,8 @@
 #define EMAIL_HIDE_CHAR_COUNT       4   /**< how many EMAIL_HIDE_CHAR characters should be displayed (0 - same count as hidden email characters) */
 #define HIDE_EMAIL_DOMAIN               /**< if defined then domain will be also hidden */
 
+#define REALM_NAME  "HellGround"    /**< Realm name. */
+
 #endif // CONFIG_H_INCLUDED
 
 /**< \} */

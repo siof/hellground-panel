@@ -35,10 +35,10 @@ BasicTextItem::BasicTextItem(WString &lbl)
 
 BasicTextItem::~BasicTextItem()
 {
-    if (label)
-        delete label;
+//    if (label)
+//        delete label;
 
-    label = NULL;
+//    label = NULL;
 }
 
 void BasicTextItem::UpdateLabel(SessionInfo * sess, uint32 txtId)
@@ -130,10 +130,7 @@ void BasicTextItem::SetText(const char* lbl)
 
 PageSlotItem::~PageSlotItem()
 {
-    if (widget)
-        delete widget;
 
-    widget = NULL;
 }
 
 /********************************************//**

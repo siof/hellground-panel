@@ -42,8 +42,6 @@
 /********************************************//**
  * \brief Slots for password recovery page
  *
- * Also determines order on page.
- *
  ***********************************************/
 
 enum RecoveryTextSlots
