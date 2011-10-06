@@ -37,7 +37,7 @@
 #define PASSRECOVERY_H_INCLUDED
 
 #include "../defines.h"
-#include "../textItems.h"
+#include "../slotItems.h"
 
 /********************************************//**
  * \brief Slots for password recovery page
@@ -90,7 +90,7 @@ private:
     WPushButton * btnRecover;
 
     /// labels
-    TextItems textSlots[RECOVERY_TEXT_SLOT_COUNT];
+    BasicTextItem textSlots[RECOVERY_TEXT_SLOT_COUNT];
 
     void UpdateTextWidgets();
     void CreateRecoveryPage();

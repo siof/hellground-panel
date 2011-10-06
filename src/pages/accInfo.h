@@ -37,6 +37,7 @@
 #define ACCINFO_H_INCLUDED
 
 #include "../defines.h"
+#include "../slotItems.h"
 
 /********************************************//**
  * \brief Slots for Account Informations page
@@ -67,43 +68,6 @@ enum AccountInfoSlot
 };
 
 /********************************************//**
- * \brief Contains text label and single information widget.
- *
- * Each slot item can contain text label and widget which should be displayed on page.
- * Class can also update text labels depends on actual language but
- * this needs support from db and session informations.
- * Break count tells how much new lines should be added after information widget.
- * Text label and information widget are in the same line (no new lines beetwean them).
- *
- ***********************************************/
-
-class AccountInfoSlotItem
-{
-public:
-    AccountInfoSlotItem() : textId(0), breaks(0), label(NULL), widget(NULL) {}
-    AccountInfoSlotItem(WText * lbl, WWidget * wid) : textId(0), breaks(0), label(lbl), widget(wid) {}
-    ~AccountInfoSlotItem();
-
-    void UpdateLabel(SessionInfo * sess);
-
-    void SetLabel(WText * lbl);
-    void SetWidget(WWidget * wid);
-    void SetBreakCount(int br) { breaks = br; }
-    void SetTextId(uint32 txtId) { textId = txtId; }
-
-    void SetAll(WText * txt, WWidget * wid, int br, uint32 txtId);
-
-    WText * GetLabel() { return label; }
-    WWidget * GetWidget() { return widget; }
-    int GetBreakCount() { return breaks; }
-private:
-    uint32 textId;
-    int breaks;
-    WText * label;
-    WWidget * widget;
-};
-
-/********************************************//**
  * \brief A class to represents Account Informations page
  *
  * This class is container for other widgets with account informations.
@@ -127,7 +91,7 @@ private:
     bool needInfoCreation;
 
     /// contains account info slots so we can update them in easy way ;)
-    AccountInfoSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];
+    PageSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];
 
     void UpdateTextWidgets();
     void CreateAccountInfo();
