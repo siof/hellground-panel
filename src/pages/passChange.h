@@ -37,7 +37,7 @@
 #define PASSCHANGE_H_INCLUDED
 
 #include "../defines.h"
-#include "../textItems.h"
+#include "../slotItems.h"
 
 /********************************************//**
  * \brief Slots for password change page
@@ -89,7 +89,7 @@ private:
     WPushButton * btnChange;
 
     /// labels
-    TextItems textSlots[PASS_CHANGE_TEXT_SLOT_COUNT];
+    BasicTextItem textSlots[PASS_CHANGE_TEXT_SLOT_COUNT];
 
     void UpdateTextWidgets();
     void CreatePassChangePage();

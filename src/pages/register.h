@@ -36,7 +36,7 @@
 #define REGISTER_H_INCLUDED
 
 #include "../defines.h"
-#include "../textItems.h"
+#include "../slotItems.h"
 #include <WCheckBox>
 
 /********************************************//**
@@ -93,7 +93,7 @@ private:
     WCheckBox * chRules;
 
     /// labels
-    TextItems textSlots[REG_TEXT_SLOT_COUNT];
+    BasicTextItem textSlots[REG_TEXT_SLOT_COUNT];
 
     void UpdateTextWidgets();
     void CreateRegisterPage();

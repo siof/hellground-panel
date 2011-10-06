@@ -350,6 +350,19 @@ enum Texts
     TXT_LBL_BAN_YES                 = 167,  /**< Account is banned label */
     TXT_LBL_BAN_NO                  = 168,  /**< Account isn't banned label */
 
+    /** Server status */
+    TXT_LBL_STATUS_REALM            = 185,  /**< Realm label. */
+    TXT_LBL_STATUS_STATE            = 186,  /**< Realm state label. */
+    TXT_LBL_STATUS_ONLINE           = 187,  /**< Online players count label. */
+    TXT_LBL_STATUS_MAXONLINE        = 188,  /**< Max online players count label. */
+    TXT_LBL_STATUS_FACTIONS         = 189,  /**<  */
+    TXT_LBL_STATUS_UPTIME           = 190,  /**< Realm uptime label. */
+    TXT_LBL_STATUS_REV              = 191,  /**< Realm revision label. */
+    TXT_LBL_STATUS_DIFF             = 192,  /**< Realm diff label. */
+    TXT_LBL_STATUS_AVGDIFF          = 193,  /**< Realm avarage diff label. */
+    TXT_LBL_STATUS_INFO             = 194,  /**< Realm additional informations label. */
+    TXT_LBL_STATUS_MAIN             = 195,  /**< Server status page title. */
+
     /** Button labels */
     TXT_BTN_PASS_CHANGE             = 200,  /**< Password change button label */
     TXT_BTN_PASS_CLEAR              = 201,  /**< Password clear button label */
