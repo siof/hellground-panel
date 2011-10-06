@@ -42,8 +42,6 @@
 /********************************************//**
  * \brief Slots for Registration page
  *
- * Also determines order on page.
- *
  ***********************************************/
 
 enum RegistrationTextSlots

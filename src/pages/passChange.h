@@ -42,8 +42,6 @@
 /********************************************//**
  * \brief Slots for password change page
  *
- * Also determines order on page.
- *
  ***********************************************/
 
 enum PassChangeTextSlots

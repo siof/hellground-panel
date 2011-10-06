@@ -355,7 +355,7 @@ enum Texts
     TXT_LBL_STATUS_STATE            = 186,  /**< Realm state label. */
     TXT_LBL_STATUS_ONLINE           = 187,  /**< Online players count label. */
     TXT_LBL_STATUS_MAXONLINE        = 188,  /**< Max online players count label. */
-    TXT_LBL_STATUS_FACTIONS         = 189,  /**<  */
+    TXT_LBL_STATUS_FACTIONS_FMT     = 189,  /**< Format for displaing online horde and ally % */
     TXT_LBL_STATUS_UPTIME           = 190,  /**< Realm uptime label. */
     TXT_LBL_STATUS_REV              = 191,  /**< Realm revision label. */
     TXT_LBL_STATUS_DIFF             = 192,  /**< Realm diff label. */
@@ -397,6 +397,9 @@ enum Texts
     TXT_REGISTRATION_COMPLETE       = 245,  /**< Information that registration was successfull */
     TXT_RECOVERY_COMPLETE           = 246,  /**< Information that password recovery was successfull */
     TXT_PASS_CHANGE_COMPLETE        = 247,  /**< Information that password change was successfull */
+    TXT_ONLINE                      = 248,  /**< guess ... */
+    TXT_OFFLINE                     = 249,  /**< guess ... */
+    TXT_UPTIME_FMT                  = 250,  /**< format for server uptime time */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
