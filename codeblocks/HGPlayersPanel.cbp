@@ -16,6 +16,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="`curl-config --libs`" />
 					<Add directory="/usr/lib" />
 				</Linker>
 				<ExtraCommands>
@@ -39,6 +40,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="`curl-config --libs`" />
 					<Add directory="/usr/lib" />
 				</Linker>
 				<ExtraCommands>
@@ -94,8 +96,8 @@
 		<Unit filename="../src/pages/register.h" />
 		<Unit filename="../src/pages/serverStatus.cpp" />
 		<Unit filename="../src/pages/serverStatus.h" />
-		<Unit filename="../src/textItems.cpp" />
-		<Unit filename="../src/textItems.h" />
+		<Unit filename="../src/slotItems.cpp" />
+		<Unit filename="../src/slotItems.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

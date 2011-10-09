@@ -74,6 +74,8 @@
 
 #define REALM_NAME  "HellGround"    /**< Realm name. */
 
+#define STATUS_SOURCE   ""      /**< Http address to parse */
+
 #endif // CONFIG_H_INCLUDED
 
 /**< \} */
