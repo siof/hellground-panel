@@ -89,7 +89,7 @@ INSERT INTO LangTexts VALUES
 (194, "Jak zagrać ? <a href=\"http://wow.gamefreedom.pl/jak-zagrac\" target=\"_blank\"><font color=\"#ffdf81\">Opis</font></a>", "Haw to play ? <a href=\"http://en.hellground.pl/how-to-play\" target=\"_blank\"><font color=\"#ffdf81\">Description</font></a>"),
 (195, "<h3>Status serwerów</h3>
 Aktualizacja co 60 sekund.", "<h3>Servers status</h3>
-Refreshes evry 60 seconds."),
+Refreshes every 60 seconds."),
 (200, "Zmień", "Change"),
 (201, "Wyczyść", "Clear"),
 (202, "Wyślij", "Send"),
