@@ -36,7 +36,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\Downloads\boost_1_47_0\boost_1_47_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Downloads\boost_1_47_0\boost_1_47_0\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -80,8 +83,11 @@
     <ClCompile Include="..\..\..\src\pages\accInfo.cpp" />
     <ClCompile Include="..\..\..\src\pages\default.cpp" />
     <ClCompile Include="..\..\..\src\pages\error.cpp" />
+    <ClCompile Include="..\..\..\src\pages\passChange.cpp" />
+    <ClCompile Include="..\..\..\src\pages\passRecovery.cpp" />
     <ClCompile Include="..\..\..\src\pages\register.cpp" />
-    <ClCompile Include="..\..\..\src\textItems.cpp" />
+    <ClCompile Include="..\..\..\src\pages\serverStatus.cpp" />
+    <ClCompile Include="..\..\..\src\slotItems.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\database.h" />
@@ -90,8 +96,11 @@
     <ClInclude Include="..\..\..\src\pages\accInfo.h" />
     <ClInclude Include="..\..\..\src\pages\default.h" />
     <ClInclude Include="..\..\..\src\pages\error.h" />
+    <ClInclude Include="..\..\..\src\pages\passChange.h" />
+    <ClInclude Include="..\..\..\src\pages\passRecovery.h" />
     <ClInclude Include="..\..\..\src\pages\register.h" />
-    <ClInclude Include="..\..\..\src\textItems.h" />
+    <ClInclude Include="..\..\..\src\pages\serverStatus.h" />
+    <ClInclude Include="..\..\..\src\slotItems.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\favicon.ico" />
