@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT `ticket_history` (
+CREATE TABLE IF NOT EXISTS `ticket_history` (
   `guid` int(10) NOT NULL AUTO_INCREMENT,
   `playerGuid` int(11) unsigned NOT NULL DEFAULT '0',
   `name` varchar(15) NOT NULL,

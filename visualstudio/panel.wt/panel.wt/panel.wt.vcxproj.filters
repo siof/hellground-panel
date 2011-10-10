@@ -13,56 +13,52 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\database.cpp">
+    <ClCompile Include="..\..\..\src\database.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\main.cpp">
+    <ClCompile Include="..\..\..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\menu.cpp">
+    <ClCompile Include="..\..\..\src\menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\pages\accInfo.cpp">
-      <Filter>Source Files\pages</Filter>
+    <ClCompile Include="..\..\..\src\pages\accInfo.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\pages\default.cpp">
-      <Filter>Source Files\pages</Filter>
+    <ClCompile Include="..\..\..\src\pages\default.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\pages\error.cpp">
-      <Filter>Source Files\pages</Filter>
+    <ClCompile Include="..\..\..\src\pages\error.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\pages\register.cpp">
-      <Filter>Source Files\pages</Filter>
+    <ClCompile Include="..\..\..\src\pages\register.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\textItems.cpp">
+    <ClCompile Include="..\..\..\src\slotItems.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\pages\serverStatus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\pages\passChange.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\pages\passRecovery.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\database.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\menu.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\pages\accInfo.h">
-      <Filter>Source Files\pages</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\pages\default.h">
-      <Filter>Source Files\pages</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\pages\error.h">
-      <Filter>Source Files\pages</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\defines.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\pages\register.h">
-      <Filter>Source Files\pages</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\textItems.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\..\src\database.h" />
+    <ClInclude Include="..\..\..\src\defines.h" />
+    <ClInclude Include="..\..\..\src\menu.h" />
+    <ClInclude Include="..\..\..\src\pages\accInfo.h" />
+    <ClInclude Include="..\..\..\src\pages\default.h" />
+    <ClInclude Include="..\..\..\src\pages\error.h" />
+    <ClInclude Include="..\..\..\src\pages\register.h" />
+    <ClInclude Include="..\..\..\src\slotItems.h" />
+    <ClInclude Include="..\..\..\src\pages\serverStatus.h" />
+    <ClInclude Include="..\..\..\src\pages\passChange.h" />
+    <ClInclude Include="..\..\..\src\pages\passRecovery.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\LICENCE">
