@@ -17,7 +17,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="`curl-config --libs`" />
-					<Add directory="/usr/lib" />
+					<Add library="wthttp" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="cp -r ../img ./Debug/" />
@@ -41,7 +41,50 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="`curl-config --libs`" />
-					<Add directory="/usr/lib" />
+					<Add library="wthttp" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="cp -r ../img ./Release/" />
+					<Add after="cp -r ../css ./Release/" />
+					<Add after="cp ../favicon.ico ./Release/" />
+					<Mode after="always" />
+				</ExtraCommands>
+			</Target>
+			<Target title="Debug fcgi">
+				<Option output="DebugFcgi/panel.wt" prefix_auto="1" extension_auto="0" />
+				<Option object_output="DebugFcgi/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="`curl-config --libs`" />
+					<Add library="wtfcgi" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="cp -r ../img ./Debug/" />
+					<Add after="cp -r ../css ./Debug/" />
+					<Add after="cp ../favicon.ico ./Debug/" />
+					<Mode after="always" />
+				</ExtraCommands>
+			</Target>
+			<Target title="Release fcgi">
+				<Option output="ReleaseFcgi/panel.wt" prefix_auto="1" extension_auto="0" />
+				<Option object_output="ReleaseFcgi/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="--docroot . --http-address 0.0.0.0 --http-port 8080" />
+				<Compiler>
+					<Add option="-fomit-frame-pointer" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-Os" />
+					<Add option="-O3" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="`curl-config --libs`" />
+					<Add library="wtfcgi" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="cp -r ../img ./Release/" />
@@ -63,12 +106,16 @@
 			<Add directory="/usr/local/wt/include" />
 			<Add directory="/usr/local/wt" />
 			<Add directory="/usr/local/include/jwsmtp-1.32" />
+			<Add directory="/usr/local/include" />
+			<Add directory="/usr/local/include/wt" />
+			<Add directory="/usr/local/include/Wt" />
 		</Compiler>
 		<Linker>
 			<Add library="wt" />
-			<Add library="wthttp" />
 			<Add library="mysqlclient" />
 			<Add library="jwsmtp" />
+			<Add directory="/usr/lib" />
+			<Add directory="/usr/local/lib" />
 		</Linker>
 		<Unit filename="../LICENCE" />
 		<Unit filename="../LICENCE_PL" />

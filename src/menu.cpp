@@ -224,7 +224,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menuSlots[MENU_SLOT_SERVER_STATUS] = new HGMenuOption(MENU_SLOT_SERVER_STATUS);
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess));
-
+    menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_PLAYER, TXT_MENU_SERVER_STATUS, menuSlots[MENU_SLOT_SERVER_STATUS]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
 
     menuSlots[MENU_SLOT_ERROR] = new HGMenuOption(MENU_SLOT_ERROR);
@@ -238,6 +238,8 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menu->itemSelected().connect(this, &HGMenu::RefreshActiveMenuWidget);
     addWidget(menu);
+
+    anim.setEffects(WAnimation::Fade);
 }
 
 HGMenu::~HGMenu()
@@ -324,9 +326,9 @@ void HGMenu::LogMeIn()
                 login->setText("");
                 pass->setText("");
 
-                login->setHidden(true);
-                pass->setHidden(true);
-                btnLog->setHidden(true);
+                login->setHidden(true, anim);
+                pass->setHidden(true, anim);
+                btnLog->setHidden(true, anim);
                 login->setDisabled(true);
                 pass->setDisabled(true);
                 btnLog->setDisabled(true);

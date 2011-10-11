@@ -22,6 +22,7 @@
 #include <WMenu>
 #include <WMenuItem>
 #include <WStackedWidget>
+#include <WAnimation>
 
 #include "defines.h"
 #include "pages/error.h"
@@ -74,6 +75,8 @@ private:
     WPushButton * enLang;
 
     HGMenuOption * menuSlots[MENU_SLOT_COUNT];
+
+    WAnimation anim;
 
     void LogMeIn();
     void SetPlLang();
