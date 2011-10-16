@@ -241,6 +241,7 @@ WApplication *createApplication(const WEnvironment& env)
 {
     // You could read information from the environment to decide
     // whether the user has permission to start a new application
+
     return new PlayersPanel(env);
 }
 

@@ -83,7 +83,7 @@ private:
     void SetEngLang();
     void RefreshMenuWidgets();
     void RefreshActiveMenuWidget();
-    void ShowMenuOptions();
+    void ShowMenuOptions(bool addLogin = false);
     void UpdateMenuOptions();
     void ClearLogin();
     void ClearPass();

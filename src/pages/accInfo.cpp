@@ -66,12 +66,16 @@ void AccountInfoPage::refresh()
     if (isHidden() || isDisabled())
         return;
 
-    if (needInfoCreation)
-        CreateAccountInfo();
-    else
+    // only logged in players can visit this page so there is no need to create/update it in other cases
+    if (session->accLvl > LVL_NOT_LOGGED)
     {
-        UpdateTextWidgets();
-        UpdateAccountInfo();
+        if (needInfoCreation)
+            CreateAccountInfo();
+        else
+        {
+            UpdateTextWidgets();
+            UpdateAccountInfo();
+        }
     }
 
     WContainerWidget::refresh();

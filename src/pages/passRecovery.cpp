@@ -56,10 +56,14 @@ void PassRecoveryPage::refresh()
     printf("PassRecoveryPage::refresh()");
     #endif
 
-    if (needCreation)
-        CreateRecoveryPage();
-    else
-        UpdateTextWidgets();
+    // pass recovery page should be visible only for not logged yet players so there is no need to update/create it in other cases
+    if (session->accLvl == LVL_NOT_LOGGED)
+    {
+        if (needCreation)
+            CreateRecoveryPage();
+        else
+            UpdateTextWidgets();
+    }
 
     WContainerWidget::refresh();
 }

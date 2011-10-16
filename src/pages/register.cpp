@@ -56,10 +56,14 @@ void RegisterPage::refresh()
     printf("RegisterPage::refresh()");
     #endif
 
-    if (needCreation)
-        CreateRegisterPage();
-    else
-        UpdateTextWidgets();
+    // registration page should be only for not logged yet players so there is no need to update it in other cases
+    if (session->accLvl == LVL_NOT_LOGGED)
+    {
+        if (needCreation)
+            CreateRegisterPage();
+        else
+            UpdateTextWidgets();
+    }
 
     WContainerWidget::refresh();
 }
