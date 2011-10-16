@@ -97,7 +97,7 @@ enum AccountLevel
     LVL_NOT_LOGGED  = -1,   /**< not logged yet or new player */
     LVL_PLAYER      = 0,    /**< logged normal player with no special rights */
     LVL_GM_TRIAL    = 1,    /**< Game Master level 1 (Trial/Moderator) */
-    LVL_GM_HELPER   = 2,    /**< Game Master level 2 (Helper) */
+    LVL_GM_HELPER   = 2,    /**< Game Master level 2 (Game Master Helper) */
     LVL_GM_HEAD     = 3,    /**< Game Master level 3 (Head/Root Game Master) */
     LVL_ADM         = 4     /**< Server Administrator */
 };
@@ -191,6 +191,20 @@ struct SessionInfo
         std::map<uint32, Text>::iterator itr = langTexts.find(id);
 
         return itr != langTexts.end();
+    }
+
+    void Clear()
+    {
+        login = "";
+        pass = "";
+        email = "";
+        joinDate = "";
+        lastIp = "";
+
+        accid = 0;
+        accLvl = LVL_NOT_LOGGED;
+        locked = false;
+        expansion = 0;
     }
 };
 

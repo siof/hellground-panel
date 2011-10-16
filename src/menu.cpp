@@ -226,7 +226,6 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess));
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_PLAYER, TXT_MENU_SERVER_STATUS, menuSlots[MENU_SLOT_SERVER_STATUS]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
-
     menuSlots[MENU_SLOT_ERROR] = new HGMenuOption(MENU_SLOT_ERROR);
     //menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_ERROR, new ErrorPage(session));
     menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, TXT_MENU_ERROR, new WMenuItem(sess->GetText(TXT_MENU_ERROR), new ErrorPage(session)));
@@ -240,6 +239,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     addWidget(menu);
 
     anim.setEffects(WAnimation::Fade);
+    anim.setDuration(1000);
 }
 
 HGMenu::~HGMenu()
@@ -378,7 +378,7 @@ void HGMenu::SetEngLang()
     refresh();
 }
 
-void HGMenu::ShowMenuOptions()
+void HGMenu::ShowMenuOptions(bool addLogin)
 {
     if (!menuSlots)
         return;
@@ -396,6 +396,13 @@ void HGMenu::ShowMenuOptions()
     }
 
     HGMenuOption * tmpOption = NULL;
+
+    if (addLogin)
+    {
+        addWidget(login);
+        addWidget(pass);
+        addWidget(btnLog);
+    }
 
     for (int i = 0; i < MENU_SLOT_COUNT; ++i)
         if (tmpOption = menuSlots[i])
@@ -416,6 +423,10 @@ void HGMenu::ShowMenuOptions()
 
         if (btnLog)
             btnLog->setText(session->GetText(TXT_BTN_LOGIN));
+
+        login->setHidden(false, anim);
+        pass->setHidden(false, anim);
+        pass->setHidden(false, anim);
     }
 }
 

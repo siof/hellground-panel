@@ -56,10 +56,14 @@ void PassChangePage::refresh()
     printf("PassChangePage::refresh()");
     #endif
 
-    if (needCreation)
-        CreatePassChangePage();
-    else
-        UpdateTextWidgets();
+    // pass change page should be visible only for logged players so there is no need to create/update in other cases
+    if (session->accLvl > LVL_NOT_LOGGED)
+    {
+        if (needCreation)
+            CreatePassChangePage();
+        else
+            UpdateTextWidgets();
+    }
 
     WContainerWidget::refresh();
 }

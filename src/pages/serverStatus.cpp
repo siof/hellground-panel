@@ -167,7 +167,7 @@ void ServerStatusPage::UpdateLabels()
  *
  ***********************************************/
 
-size_t writebuffer( char *ptr, size_t size, size_t nmemb, char * userdata)
+size_t writebuffer( char *ptr, size_t /*size*/, size_t /*nmemb*/, char * userdata)
 {
     strcpy(userdata, ptr);
 
