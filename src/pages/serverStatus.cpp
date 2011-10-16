@@ -190,6 +190,7 @@ void ServerStatusPage::UpdateStatus()
         curl_easy_setopt(curl, CURLOPT_URL, STATUS_SOURCE);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writebuffer);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, buffer);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);    // max 10 seconds for status download
 
         results = curl_easy_perform(curl);
 
