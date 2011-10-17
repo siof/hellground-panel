@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Default page
+ * \addtogroup Default Default page
  * \{
  *
  * \file default.h

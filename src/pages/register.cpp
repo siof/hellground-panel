@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Registration
+ * \addtogroup Accounts Account Management
  * \{
  *
  * \file register.cpp
@@ -30,11 +30,17 @@
 
 #include "register.h"
 #include "../database.h"
+#include <WRegExpValidator>
 
 RegisterPage::RegisterPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess), needCreation(true)
 {
     setContentAlignment(AlignCenter|AlignTop);
+
+    txtLogin = NULL;
+    txtEmail = NULL;
+    btnRegister = NULL;
+    chRules = NULL;
 }
 
 RegisterPage::~RegisterPage()
@@ -113,12 +119,18 @@ void RegisterPage::CreateRegisterPage()
 
     textSlots[REG_TEXT_LOGIN].SetLabel(session, TXT_LBL_ACC_LOGIN);
     txtLogin = new WLineEdit();
+    WRegExpValidator * validator = new WRegExpValidator("[a-zA-Z._]{8,16}");
+    txtLogin->setValidator(validator);
+
     addWidget(textSlots[REG_TEXT_LOGIN].GetLabel());
     addWidget(txtLogin);
     addWidget(new WBreak());
 
     textSlots[REG_TEXT_EMAIL].SetLabel(session, TXT_LBL_ACC_MAIL);
     txtEmail = new WLineEdit();
+    validator = new WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
+    txtEmail->setValidator(validator);
+
     addWidget(textSlots[REG_TEXT_EMAIL].GetLabel());
     addWidget(txtEmail);
     addWidget(new WBreak());
@@ -135,7 +147,10 @@ void RegisterPage::CreateRegisterPage()
     addWidget(new WBreak());
 
     btnRegister = new WPushButton(session->GetText(TXT_BTN_REGISTER));
-    btnRegister->setEnabled(false);
+
+    if (wApp->environment().javaScript())
+        btnRegister->setDisabled(true);
+
     addWidget(btnRegister);
 
     txtLogin->focussed().connect(this, &RegisterPage::ClearLogin);
@@ -190,6 +205,14 @@ void RegisterPage::CheckChange()
 
 void RegisterPage::Register()
 {
+    bool validLogin = txtLogin->validate() == WValidator::Valid;
+    bool validEmail = txtEmail->validate() == WValidator::Valid;
+    if (!validLogin || !validEmail)
+    {
+        textSlots[REG_TEXT_INFO].SetLabel(session, TXT_ERROR_NOT_VALID_DATA);
+        return;
+    }
+
     if (!chRules->isChecked())
     {
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_LBL_REG_RULES_NOT_ACCEPTED);
@@ -207,6 +230,8 @@ void RegisterPage::Register()
     {
         ClearLogin();
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_LBL_REG_ACC_EXISTS);
+        chRules->setChecked(false);
+        CheckChange();
         return;
     }
 
@@ -226,11 +251,16 @@ void RegisterPage::Register()
     WString from, msg;
     from = MAIL_FROM;
 
-    // check should be moved to other place but here will be usefull for SendMail tests ;)
-    #ifdef REGISTRATION_ENABLED
     db->SetPQuery("INSERT INTO account (username, email, sha_pass_hash) VALUES ('%s', '%s', SHA1(UPPER('%s:%s')))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
-    db->ExecuteQuery();
-    #endif
+
+    if (db->ExecuteQuery() == -1)
+    {
+        textSlots[REG_TEXT_INFO].SetLabel(session, TXT_REGISTRATION_ERROR);
+        chRules->setChecked(false);
+        CheckChange();
+        wApp->log("error") << "Registration Database Fail! login: " << login << " email: " << mail << " . Error: " << db->GetError();
+        return;
+    }
 
     if (session->HasText(TXT_REGISTRATION_MAIL))
         msg = session->GetText(TXT_REGISTRATION_MAIL);

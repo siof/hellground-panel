@@ -148,7 +148,8 @@ void PageSlotItem::SetLabel(WText * lbl)
 /********************************************//**
  * \brief Sets new text label widget (and deletes old one).
  *
- * \param lbl   Text label widget.
+ * \param sess   Current session informations.
+ * \param txtId  Text id from DB which should be shown.
  *
  ***********************************************/
 

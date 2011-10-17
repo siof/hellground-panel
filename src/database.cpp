@@ -94,7 +94,7 @@ AccountLevel DatabaseField::GetAccountLevel()
 /// DatabaseRow
 DatabaseRow::DatabaseRow(MYSQL_ROW row, int count)
 {
-    #ifdef DEBUG
+    #ifdef DEBUG_DATABASE
     printf("Call DatabaseRow::DatabaseRow(MYSQL_ROW row, int count = %i)\n", count);
     #endif
     this->count = count;
@@ -102,7 +102,7 @@ DatabaseRow::DatabaseRow(MYSQL_ROW row, int count)
     for (int i = 0; i < count; ++i)
     {
         fields[i].value = WString::fromUTF8(row[i] ? row[i] : "");
-        #ifdef DEBUG
+        #ifdef DEBUG_DATABASE
         std::cout << i << " : " << (row[i] ? row[i] : "") << std::endl;
         #endif
     }
@@ -174,18 +174,18 @@ void Database::EscapeQuery()
 
 int Database::ExecuteQuery()
 {
-    #ifdef DEBUG
+    #ifdef DEBUG_DATABASE
     printf("\nCall int Database::ExecuteQuery() : actualQuery: %s", actualQuery.c_str());
     #endif
 
     Clear();
-    #ifdef DEBUG
+    #ifdef DEBUG_DATABASE
     printf("\n\nExecuteQuery(): test1\n");
     #endif
     if (mysql_query(connection, actualQuery.c_str()))
         return -1;
 
-    #ifdef DEBUG
+    #ifdef DEBUG_DATABASE
     printf("\n\nExecuteQuery(): test2\n");
     #endif
     MYSQL_RES * res;
@@ -195,26 +195,26 @@ int Database::ExecuteQuery()
         unsigned int count = mysql_field_count(connection);
         MYSQL_ROW row;
 
-        #ifdef DEBUG
+        #ifdef DEBUG_DATABASE
         printf("\n\nExecuteQuery(): test4 : count: %i\n", count);
         int i = 0;
         #endif
         while (row = mysql_fetch_row(res))
         {
             AddRow(row, count);
-            #ifdef DEBUG
+            #ifdef DEBUG_DATABASE
             i++;
             #endif
         }
 
-        #ifdef DEBUG
+        #ifdef DEBUG_DATABASE
         printf("\n\nExecuteQuery(): test5 : i: %i\n", i);
         #endif
 
         mysql_free_result(res);
     }
 
-    #ifdef DEBUG
+    #ifdef DEBUG_DATABASE
     printf("\n\nExecuteQuery(): test6: rows.size(): %i\n", (int)rows.size());
     #endif
 
@@ -281,7 +281,7 @@ DatabaseRow * Database::GetRow(int index)
 
 DatabaseRow * Database::GetRow()
 {
-    if (!rows.size())
+    if (rows.empty())
         return NULL;
 
     return rows.front();

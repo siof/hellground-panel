@@ -33,6 +33,7 @@
 #define SHOW_DATABASE_ERRORS    /**< Comment if you don't want to show database errors on error page */
 
 //#define DEBUG /**< Uncomment to show some debug informations */
+//#define DEBUG_DATABASE /**< Uncomment to show some database debug informations (moved to separate option to reduce unneeded debug spam ;) ) */
 
 #define SITE_TITLE  "HellGround Player's Panel" /**< Players panel site title (should be replaced with text from DB) */
 
@@ -59,6 +60,9 @@
 #define PASSWORD_LENGTH_MIN     8           /**< Minimum password length */
 #define PASSWORD_LENGTH_MAX     16          /**< Maximum password length */
 
+#define LOGIN_LENGTH_MIN        8           /**< Minimum login length */
+#define LOGIN_LENGTH_MAX        16          /**< Maximum login length */
+
 #define MAIL_FROM   "kontakt@gamefreedom.pl"    /**< email addres for "from" clause */
 
 #define MAIL_HOST  "localhost"  /**< host for emails */
@@ -74,7 +78,7 @@
 
 #define REALM_NAME  "HellGround"    /**< Realm name. */
 
-#define STATUS_SOURCE   ""      /**< Http address to parse */
+#define STATUS_SOURCE   ""      /**< Http address with status to parse */
 
 #endif // CONFIG_H_INCLUDED
 

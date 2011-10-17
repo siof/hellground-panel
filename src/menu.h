@@ -63,6 +63,7 @@ public:
     bool SetError(ErrorSlots error, uint32 textId = 0, ErrorPage * err = NULL);
 private:
     WContainerWidget * container;       // contains menu + additional items added on menu side
+    WContainerWidget * loginContainer;  // contains login forms
     WStackedWidget * menuContents;      // container where menu items will be shown after click
     WMenu * menu;
     WLineEdit * login;

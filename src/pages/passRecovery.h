@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Password recovery
+ * \addtogroup Passwords Management
  * Password recovery page contains code to handle
  * player password recovery.
  * Password recovery consists of mostly 2 files:

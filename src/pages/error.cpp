@@ -71,6 +71,10 @@ void ErrorPageSlot::SetText(SessionInfo * sess, uint32 id)
 
     textId = id;
     textIdBased = true;
+
+    #ifdef DEBUG
+    printf("\nErrorPageSlot::SetText(): textId %u, textIdBased %i\n", textId, textIdBased);
+    #endif
 }
 
 WText * ErrorPageSlot::CreateText(SessionInfo * sess)
@@ -94,6 +98,8 @@ WText * ErrorPageSlot::CreateText(SessionInfo * sess)
     }
     else if (!str.empty())
         text = new WText(str);
+    else
+        text = new WText("");
 
     #ifdef DEBUG
     printf("    text: %i, textIdBased: %i, textId: %u, str: %s, textmsg: %s\n", text ? 1 : 0, textIdBased, textId, str.toUTF8().c_str(), text ? text->text().toUTF8().c_str() : "");
@@ -115,7 +121,7 @@ void ErrorPageSlot::DeleteText()
 void ErrorPageSlot::UpdateText(SessionInfo * sess)
 {
     #ifdef DEBUG
-    printf("\nErrorPageSlot::UpdateText(sess: %i): text %i\n", sess ? 1 : 0, text ? 1 : 0);
+    printf("\nErrorPageSlot::UpdateText(sess: %i): text %i, textId %i, textIdBased: %i\n", sess ? 1 : 0, text ? 1 : 0, textId, textIdBased);
     #endif
     if (!sess || !text)
         return;
@@ -133,6 +139,8 @@ ErrorPage::ErrorPage(SessionInfo * sess, WContainerWidget * parent)
     #ifdef DEBUG
     printf("\nErrorPage::ErrorPage(sess: %i)\n", sess ? 1 : 0);
     #endif
+
+    CreateErrors();
 }
 
 void ErrorPage::refresh()
@@ -141,16 +149,17 @@ void ErrorPage::refresh()
     printf("\nErrorPage::refresh()\n");
     #endif
 
-    if (created)
-        UpdateErrors();
-    else
-        CreateErrors();
+    UpdateErrors();
 
     WContainerWidget::refresh();
 }
 
 void ErrorPage::SetErrorMsg(ErrorSlots slot, uint32 txtId)
 {
+    #ifdef DEBUG
+    printf("\nErrorPage::SetErrorMsg(ErrorSlots slot = %i, uint32 txtId = %u)\n", slot, txtId);
+    #endif
+
     #ifndef SHOW_DATABASE_ERRORS
     if (slot == ERROR_SLOT_DB)
         return;

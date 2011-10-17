@@ -98,6 +98,7 @@ Refreshes every 60 seconds."),
 (205, "Teleportuj", "Teleport"),
 (206, "Zbanowane konta", "Accounts banned"),
 (207, "Zbanowane IP", "IP banned"),
+(208, "Wyloguj", "Logout"),
 (225, "Panel gracza - HellGround", "HellGround Players Panel"),
 (226, "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.
 © 2006-2011 Panel created by HellGround.pl ", "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.
@@ -138,8 +139,11 @@ New pass: %s"),
 (248, "Online", "Online"),
 (249, "Offline", "Offline"),
 (250, "%i dni %i godzin %i minut %i sekund", "%i days %i hours %i minuts %i seconds"),
+(251, "Na pewno chcesz sie wylogować ?", "Are you sure you want to logout ?"),
+(252, "Wystąpił błąd podczas rejestracji. Spróbuj ponownie.", "There was an error in registration. Try again."),
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),
 (352, "Podane hasła muszą być takie same", "Typed passwords must be the same"),
 (353, "Podane hasło jest zbyt krótkie", "Typed password is to short"),
-(354, "Podane hasło jest zbyt długie", "Typed password is to long");
+(354, "Podane hasło jest zbyt długie", "Typed password is to long"),
+(355, "Błąd validacji! Podano niepoprawne dane.", "Validation error! Wrong input data.");

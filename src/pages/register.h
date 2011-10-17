@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Registration
+ * \addtogroup Accounts Account Management
  * Registration page contains code to handle player registration.
  * Registration consists of mostly 2 files:
  * - register.h

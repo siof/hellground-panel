@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Account Informations
+ * \addtogroup Accounts Account Management
  * Account informations contains code to represent player
  * account information page.
  * Account informations consists of mostly 2 files:
@@ -96,6 +96,7 @@ private:
     void UpdateTextWidgets();
     void CreateAccountInfo();
     void UpdateAccountInfo();
+    void ClearAccountInfo();
 
     WString GetEmail();
 };

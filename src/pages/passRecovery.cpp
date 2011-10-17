@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Password recovery
+ * \addtogroup Passwords Management
  * \{
  *
  * \file passRecovery.cpp
@@ -30,11 +30,16 @@
 
 #include "passRecovery.h"
 #include "../database.h"
+#include <WRegExpValidator>
 
 PassRecoveryPage::PassRecoveryPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess), needCreation(true)
 {
     setContentAlignment(AlignCenter|AlignTop);
+
+    txtLogin = NULL;
+    txtEmail = NULL;
+    btnRecover = NULL;
 }
 
 PassRecoveryPage::~PassRecoveryPage()
@@ -112,12 +117,19 @@ void PassRecoveryPage::CreateRecoveryPage()
 
     textSlots[RECOVERY_TEXT_LOGIN].SetLabel(session, TXT_LBL_ACC_LOGIN);
     txtLogin = new WLineEdit();
+
+    WRegExpValidator * validator = new WRegExpValidator("[a-zA-Z._]{8,16}");
+    txtLogin->setValidator(validator);
+
     addWidget(textSlots[RECOVERY_TEXT_LOGIN].GetLabel());
     addWidget(txtLogin);
     addWidget(new WBreak());
 
     textSlots[RECOVERY_TEXT_EMAIL].SetLabel(session, TXT_LBL_PASS_MAIL);
     txtEmail = new WLineEdit();
+    validator = new WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
+    txtEmail->setValidator(validator);
+
     addWidget(textSlots[RECOVERY_TEXT_EMAIL].GetLabel());
     addWidget(txtEmail);
     addWidget(new WBreak());
@@ -165,6 +177,14 @@ void PassRecoveryPage::ClearEmail()
 
 void PassRecoveryPage::Recover()
 {
+    bool validLogin = txtLogin->validate() == WValidator::Valid;
+    bool validEmail = txtEmail->validate() == WValidator::Valid;
+    if (!validLogin || !validEmail)
+    {
+        textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_NOT_VALID_DATA);
+        return;
+    }
+
     Database * db = new Database(SERVER_DB_DATA, SQL_REALMDB);
     WString login, mail, pass;
 

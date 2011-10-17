@@ -17,12 +17,15 @@
 */
 
 #include "menu.h"
+
 #include "pages/default.h"
 #include "pages/accInfo.h"
 #include "pages/register.h"
 #include "pages/passRecovery.h"
 #include "pages/passChange.h"
 #include "pages/serverStatus.h"
+#include "pages/logout.h"
+
 #include "database.h"
 
 HGMenuOption::HGMenuOption(MenuOptions menuOption, WObject * parent):
@@ -180,6 +183,8 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     tmpCont = NULL;
 
+    loginContainer = new WContainerWidget(this);
+
     login = new WLineEdit();
     login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
     login->setEchoMode(WLineEdit::Normal);
@@ -197,12 +202,12 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     for (int i = 0; i < 3; i++)
         breakTab[i] = new WBreak();
 
-    addWidget(login);
-    addWidget(breakTab[0]);
-    addWidget(pass);
-    addWidget(breakTab[1]);
-    addWidget(btnLog);
-    addWidget(breakTab[2]);
+    loginContainer->addWidget(login);
+    loginContainer->addWidget(breakTab[0]);
+    loginContainer->addWidget(pass);
+    loginContainer->addWidget(breakTab[1]);
+    loginContainer->addWidget(btnLog);
+    loginContainer->addWidget(breakTab[2]);
 
     menu = new WMenu(menuContents, Wt::Vertical, this);
     menu->setRenderAsList(false);
@@ -226,9 +231,12 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess));
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_PLAYER, TXT_MENU_SERVER_STATUS, menuSlots[MENU_SLOT_SERVER_STATUS]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
+    menuSlots[MENU_SLOT_LOGIN] = new HGMenuOption(MENU_SLOT_LOGIN);
+    menuSlots[MENU_SLOT_LOGIN]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_LOGOUT, new LogoutPage(session));
+
     menuSlots[MENU_SLOT_ERROR] = new HGMenuOption(MENU_SLOT_ERROR);
-    //menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_ERROR, new ErrorPage(session));
-    menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, TXT_MENU_ERROR, new WMenuItem(sess->GetText(TXT_MENU_ERROR), new ErrorPage(session)));
+    menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_ERROR, new ErrorPage(session));
+    //menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, TXT_MENU_ERROR, new WMenuItem(sess->GetText(TXT_MENU_ERROR), new ErrorPage(session)));
     menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_PLAYER, TXT_MENU_ERROR, menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_NOT_LOGGED));
     menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->hide();
     menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->disable();
@@ -239,7 +247,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     addWidget(menu);
 
     anim.setEffects(WAnimation::Fade);
-    anim.setDuration(1000);
+    anim.setDuration(5000);
 }
 
 HGMenu::~HGMenu()
@@ -332,17 +340,7 @@ void HGMenu::LogMeIn()
                 login->setDisabled(true);
                 pass->setDisabled(true);
                 btnLog->setDisabled(true);
-
-                removeWidget(login);
-                removeWidget(pass);
-                removeWidget(btnLog);
-
-                for (int i = 0; i < 3; ++i)
-                {
-                    breakTab[i]->setHidden(true);
-                    breakTab[i]->setDisabled(true);
-                    removeWidget(breakTab[i]);
-                }
+                loginContainer->setHidden(true);
 
                 ShowMenuOptions();
                 refresh();
@@ -397,13 +395,6 @@ void HGMenu::ShowMenuOptions(bool addLogin)
 
     HGMenuOption * tmpOption = NULL;
 
-    if (addLogin)
-    {
-        addWidget(login);
-        addWidget(pass);
-        addWidget(btnLog);
-    }
-
     for (int i = 0; i < MENU_SLOT_COUNT; ++i)
         if (tmpOption = menuSlots[i])
             if (tmp = tmpOption->GetMenuItemForLevel(session->accLvl))
@@ -424,9 +415,16 @@ void HGMenu::ShowMenuOptions(bool addLogin)
         if (btnLog)
             btnLog->setText(session->GetText(TXT_BTN_LOGIN));
 
-        login->setHidden(false, anim);
-        pass->setHidden(false, anim);
-        pass->setHidden(false, anim);
+        if (addLogin)
+        {
+            loginContainer->setHidden(false);
+            login->setHidden(false, anim);
+            pass->setHidden(false, anim);
+            btnLog->setHidden(false, anim);
+            login->setDisabled(false);
+            pass->setDisabled(false);
+            btnLog->setDisabled(false);
+        }
     }
 }
 
@@ -451,8 +449,21 @@ void HGMenu::UpdateMenuOptions()
 
 void HGMenu::refresh()
 {
-    UpdateMenuOptions();
-    RefreshActiveMenuWidget();
+    #ifdef DEBUG
+    printf("\nHGMenu::refresh()\n");
+    #endif
+
+    if (session->accLvl != LVL_LOGGED_OUT)
+    {
+        UpdateMenuOptions();
+        RefreshActiveMenuWidget();
+    }
+    else
+    {
+        session->accLvl = LVL_NOT_LOGGED;
+        menu->select(0);
+        ShowMenuOptions(true);
+    }
 
     WContainerWidget::refresh();
 }
