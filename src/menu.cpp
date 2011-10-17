@@ -26,6 +26,8 @@
 #include "pages/serverStatus.h"
 #include "pages/logout.h"
 
+#include <WRegExpValidator>
+
 #include "database.h"
 
 HGMenuOption::HGMenuOption(MenuOptions menuOption, WObject * parent):
@@ -189,11 +191,15 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
     login->setEchoMode(WLineEdit::Normal);
     login->focussed().connect(this, &HGMenu::ClearLogin);
+    WRegExpValidator * validator = new WRegExpValidator("[a-zA-Z._]{8,16}");
+    login->setValidator(validator);
 
     pass = new WLineEdit();
     pass->setText(WString("pass"));
     pass->setEchoMode(WLineEdit::Password);
     pass->focussed().connect(this, &HGMenu::ClearPass);
+//    validator = new WRegExpValidator("[a-zA-Z0-9._!@#$%^&*]{8,16}");
+//    pass->setValidator(validator);
 
     btnLog = new WPushButton(session->GetText(TXT_BTN_LOGIN));
     btnLog->clicked().connect(this, &HGMenu::LogMeIn);
@@ -278,6 +284,15 @@ void HGMenu::RefreshActiveMenuWidget()
 
 void HGMenu::LogMeIn()
 {
+    bool validLogin = login->validate() == WValidator::Valid;
+//    bool validPass = pass->validate() == WValidator::Valid;
+
+    if (!validLogin)// || !validPass)
+    {
+        ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_NOT_VALID_DATA);
+        return;
+    }
+
     Database * db = new Database();
     if (!db->Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
