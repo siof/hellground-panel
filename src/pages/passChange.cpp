@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Password change
+ * \addtogroup Passwords Passwords Management
  * \{
  *
  * \file passChange.cpp
@@ -35,6 +35,9 @@ PassChangePage::PassChangePage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess), needCreation(true)
 {
     setContentAlignment(AlignCenter|AlignTop);
+    txtPass = NULL;
+    txtPass2 = NULL;
+    btnChange = NULL;
 }
 
 PassChangePage::~PassChangePage()

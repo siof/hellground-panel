@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Server Status Page
+ * \addtogroup ServerStatusPage Server status page
  * \{
  *
  * \file serverStatus.h

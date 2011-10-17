@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Server status page
+ * \addtogroup ServerStatusPage Server status page
  * \{
  *
  * \file serverStatus.cpp

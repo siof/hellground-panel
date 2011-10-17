@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Password change
+ * \addtogroup Passwords Management
  * Password change page contains code to handle
  * player password change.
  * Password change consists of mostly 2 files:

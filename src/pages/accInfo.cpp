@@ -20,7 +20,7 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Account Informations
+ * \addtogroup Accounts Account Management
  * \{
  *
  * \file accInfo.cpp
@@ -45,7 +45,7 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
 {
     session = sess;
     setContentAlignment(AlignCenter|AlignTop);
-    needInfoCreation = true;    /**< we should create content for new page */
+    needInfoCreation = true;    /// we should create content for new page
 }
 
 AccountInfoPage::~AccountInfoPage()
@@ -77,6 +77,8 @@ void AccountInfoPage::refresh()
             UpdateAccountInfo();
         }
     }
+    else
+        ClearAccountInfo();
 
     WContainerWidget::refresh();
 }
@@ -415,6 +417,24 @@ WString AccountInfoPage::GetEmail()
         tmpStr = session->email;
 
     return tmpStr;
+}
+
+/********************************************//**
+ * \brief Clears informations in widgets.
+ *
+ * Clears informations in widgets when current account level is too low.
+ *
+ ***********************************************/
+
+void AccountInfoPage::ClearAccountInfo()
+{
+    #ifdef DEBUG
+    printf("\nAccountInfoPage::ClearAccountInfo()\n");
+    #endif
+    WWidget * tmpWid;
+    for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
+        if (tmpWid = accInfoSlots[i].GetWidget())
+            ((WText*)tmpWid)->setText("");
 }
 
 /********************************************//**

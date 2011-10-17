@@ -20,59 +20,53 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Default Default page
+ * \addtogroup Logout Logout page
  * \{
  *
- * \file default.cpp
- * This file contains code needed to show default (home/start) page.
+ * \file logout.h
+ * This file contains headers needed to show and handle logout page.
  *
  ***********************************************/
 
-#include "default.h"
+#ifndef LOGOUT_H_INCLUDED
+#define LOGOUT_H_INCLUDED
+
+#include "../defines.h"
 
 /********************************************//**
- * \brief Creates new DefaultPage object.
+ * \brief A class to represent Logout page.
  *
- * \param sess      Contains current session informations.
- * \param parent    Parent container type object in which this container should be placed.
+ * This class is container for widgets for
+ * logout page. Text depends on language and
+ * is stored in DB.
  *
  ***********************************************/
 
-DefaultPage::DefaultPage(SessionInfo * sess, WContainerWidget * parent)
-: WContainerWidget(parent)
+class LogoutPage : public WContainerWidget
 {
-    session = sess;
-    ShowText();
-}
+public:
+    LogoutPage(SessionInfo * sess, WContainerWidget * parent = 0);
+    ~LogoutPage() { clear(); }
+
+    void refresh();
+private:
+    /// pointer to object with current session informations
+    SessionInfo * session;
+    /// should be true only once per player
+    bool needCreation;
+
+    WText * info;
+    WPushButton * btn;
+
+    void CreateLogoutPage();
+    void UpdateLogoutPage();
+
+    void Logout();
+};
+
+#endif // LOGOUT_H_INCLUDED
 
 /********************************************//**
- * \brief Overloads WContainerWidget::refresh() for automatic content change.
- *
- * This function can delete old and create new content.
- * In most situations this is used for content update or language change ;)
- *
+ * \}
+ * \}
  ***********************************************/
-
-void DefaultPage::refresh()
-{
-    if (isHidden() || isDisabled())
-        return;
-
-    ShowText();
-
-    WContainerWidget::refresh();
-}
-
-/********************************************//**
- * \brief Shows content of default page
- *
- * This function deletes old and creates new content depends on actual language.
- *
- ***********************************************/
-
-void DefaultPage::ShowText()
-{
-    clear();
-
-    addWidget(new WText(session->GetText(TXT_SERVER_INFO), this));
-}

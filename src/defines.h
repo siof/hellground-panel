@@ -17,8 +17,6 @@
 */
 
 /********************************************//**
- * \addtogroup
- * \{
  *
  * \file defines.h
  * This file contains:
@@ -37,6 +35,9 @@
 #include "config.h"
 
 // standard includes for most files
+#include <WApplication>
+#include <WEnvironment>
+#include <WLogger>
 #include <WString>
 #include <WBreak>
 #include <WContainerWidget>
@@ -94,6 +95,7 @@ enum Lang
 
 enum AccountLevel
 {
+    LVL_LOGGED_OUT  = -2,   /**< recently logged out player */
     LVL_NOT_LOGGED  = -1,   /**< not logged yet or new player */
     LVL_PLAYER      = 0,    /**< logged normal player with no special rights */
     LVL_GM_TRIAL    = 1,    /**< Game Master level 1 (Trial/Moderator) */
@@ -140,17 +142,9 @@ struct SessionInfo
     /********************************************//**
      * \brief Creates new SessionInfo object.
      *
-     * \param login         Login used to log on account.
-     * \param accid         Players account id. Is 0 if player isn't logged in.
-     * \param pass          Password used to log on account.
-     * \param email         Email used to register account.
-     * \param language      Language which should be used to show informations in panel.
-     * \param acclvl        Security level for this account.
-     * \param textMissing   Text which should be show when panel can't retrieve text to show in panel in some cases.
-     *
      ***********************************************/
 
-    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), textMissing("Error ! Text missing !") {}
+    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), textMissing("Error ! Text missing !") {}
     ~SessionInfo() {}
 
     WString login;          /**< Login used to log on account. */
@@ -186,12 +180,28 @@ struct SessionInfo
         return itr->second.GetText(language);
     }
 
+    /********************************************//**
+     * \brief Checks if there is text based on given ID.
+     *
+     * \param id    Text id which should be returned.
+     * \return information that text exists or not.
+     *
+     ***********************************************/
+
     bool HasText(uint32 id)
     {
         std::map<uint32, Text>::iterator itr = langTexts.find(id);
 
         return itr != langTexts.end();
     }
+
+    /********************************************//**
+     * \brief Clears session informations.
+     *
+     * Function to clear informations in session object.
+     * Should be called only in logout case.
+     *
+     ***********************************************/
 
     void Clear()
     {
@@ -202,7 +212,7 @@ struct SessionInfo
         lastIp = "";
 
         accid = 0;
-        accLvl = LVL_NOT_LOGGED;
+        accLvl = LVL_LOGGED_OUT;
         locked = false;
         expansion = 0;
     }
@@ -386,6 +396,7 @@ enum Texts
     TXT_BTN_TELEPORT                = 205,  /**< Character teleport button label */
     TXT_BTN_BANNED_ACC              = 206,  /**< Show banned account button label */
     TXT_BTN_BANNED_IP               = 207,  /**< Show banned ips button label */
+    TXT_BTN_LOGOUT                  = 208,  /**< Log out from panel button label */
 
     /** Other */
     TXT_SITE_TITLE                  = 225,  /**< Players panel site title */
@@ -414,12 +425,15 @@ enum Texts
     TXT_ONLINE                      = 248,  /**< guess ... */
     TXT_OFFLINE                     = 249,  /**< guess ... */
     TXT_UPTIME_FMT                  = 250,  /**< format for server uptime time */
+    TXT_LOGOUT_INFO                 = 251,  /**< info to show on logout page */
+    TXT_REGISTRATION_ERROR          = 252,  /**< Information that there was an error in registration. */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
     TXT_ERROR_PASSWORDS_MISMATCH    = 352,  /**< Error info: typed passwords must be the same */
     TXT_ERROR_PASSWORD_TO_SHORT     = 353,  /**< Error info: password to short */
     TXT_ERROR_PASSWORD_TO_LONG      = 354,  /**< Error info: password to long */
+    TXT_ERROR_NOT_VALID_DATA        = 355,  /**< Error info: Validate error: wrong data */
 };
 
 /********************************************//**
@@ -468,5 +482,3 @@ int irand(int min, int max);
 #define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
 
 #endif // DEFINES_H_INCLUDED
-
-/**< \} */
