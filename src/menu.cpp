@@ -190,7 +190,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
     login->setEchoMode(WLineEdit::Normal);
     login->focussed().connect(this, &HGMenu::ClearLogin);
-    WRegExpValidator * validator = new WRegExpValidator("[a-zA-Z._]{8,16}");
+    WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
     login->setValidator(validator);
 
     pass = new WLineEdit();

@@ -117,7 +117,7 @@ void PassRecoveryPage::CreateRecoveryPage()
     textSlots[RECOVERY_TEXT_LOGIN].SetLabel(session, TXT_LBL_ACC_LOGIN);
     txtLogin = new WLineEdit();
 
-    WRegExpValidator * validator = new WRegExpValidator("[a-zA-Z._]{8,16}");
+    WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
     txtLogin->setValidator(validator);
 
     addWidget(textSlots[RECOVERY_TEXT_LOGIN].GetLabel());
