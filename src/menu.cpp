@@ -508,7 +508,7 @@ bool HGMenu::SetError(ErrorSlots error, std::string &msg, ErrorPage * err)
         if (!tmpItem)
             return false;
 
-        ErrorPage * tmpError = (ErrorPage *)tmpItem->contents();
+        ErrorPage * tmpError = (ErrorPage*)tmpItem->contents();
 
         if (!tmpError)
             return false;
@@ -532,7 +532,7 @@ bool HGMenu::SetError(ErrorSlots error, uint32 textId, ErrorPage * err)
         if (!tmpItem)
             return false;
 
-        ErrorPage * tmpError = (ErrorPage *)tmpItem->contents();
+        ErrorPage * tmpError = (ErrorPage*)tmpItem->contents();
 
         if (!tmpError)
             return false;
@@ -553,7 +553,7 @@ void HGMenu::ShowError(ErrorSlots error, std::string &msg)
     if (!tmpItem)
         return;
 
-    ErrorPage * tmpError = (ErrorPage *)tmpItem->contents();
+    ErrorPage * tmpError = (ErrorPage*)tmpItem->contents();
     if (!tmpError)
         return;
 
@@ -573,7 +573,7 @@ void HGMenu::ShowError(ErrorSlots error, uint32 textId)
     if (!tmpItem)
         return;
 
-    ErrorPage * tmpError = (ErrorPage *)tmpItem->contents();
+    ErrorPage * tmpError = (ErrorPage*)tmpItem->contents();
     if (!tmpError)
         return;
 
@@ -593,7 +593,7 @@ void HGMenu::ShowError()
     if (!tmpItem)
         return;
 
-    ErrorPage * tmpError = (ErrorPage*)(tmpItem->itemWidget());
+    ErrorPage * tmpError = (ErrorPage*)tmpItem->contents();
 
     if (!tmpError)
         return;
