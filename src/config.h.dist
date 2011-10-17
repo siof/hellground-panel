@@ -59,8 +59,7 @@
 #define PASSWORD_LENGTH_MIN     8           /**< Minimum password length */
 #define PASSWORD_LENGTH_MAX     16          /**< Maximum password length */
 
-#define LOGIN_LENGTH_MIN        8           /**< Minimum login length */
-#define LOGIN_LENGTH_MAX        16          /**< Maximum login length */
+#define LOGIN_VALIDATOR         "[a-zA-Z._]{6,16}"  /**< regex to valid login, in {} should be min and max login length */
 
 #define MAIL_FROM   "kontakt@gamefreedom.pl"    /**< email addres for "from" clause */
 
