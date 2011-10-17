@@ -40,6 +40,7 @@
 					<Add option="-s" />
 					<Add option="`curl-config --libs`" />
 					<Add library="wthttp" />
+					<Add library="../../../../../usr/lib/libboost_signals.so" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="cp -r ../img ./Release/" />
@@ -142,7 +143,6 @@
 		<Unit filename="../src/pages/register.h" />
 		<Unit filename="../src/pages/serverStatus.cpp" />
 		<Unit filename="../src/pages/serverStatus.h" />
-		<Unit filename="../src/pages/teleport.cpp" />
 		<Unit filename="../src/pages/teleport.h" />
 		<Unit filename="../src/slotItems.cpp" />
 		<Unit filename="../src/slotItems.h" />
