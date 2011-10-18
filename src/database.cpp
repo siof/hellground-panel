@@ -76,18 +76,15 @@ AccountLevel DatabaseField::GetAccountLevel()
     switch (tmp)
     {
         case LVL_PLAYER:
-            return LVL_PLAYER;
         case LVL_GM_TRIAL:
-            return LVL_GM_TRIAL;
         case LVL_GM_HELPER:
-            return LVL_GM_HELPER;
         case LVL_GM_HEAD:
-            return LVL_GM_HEAD;
         case LVL_ADM:
-            return LVL_ADM;
-    }
+            return tmp;
+        default:
+            return LVL_PLAYER;
 
-    return LVL_PLAYER;
+    }
 }
 
 /// DatabaseRow
