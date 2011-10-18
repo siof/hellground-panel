@@ -95,13 +95,7 @@ DatabaseRow::DatabaseRow(MYSQL_ROW row, int count)
     this->count = count;
     fields = new DatabaseField[count];
     for (int i = 0; i < count; ++i)
-    {
         fields[i].value = WString::fromUTF8(row[i] ? row[i] : "");
-        // move to console(DEBUG_DB
-        //#ifdef DEBUG_DATABASE
-        //std::cout << i << " : " << (row[i] ? row[i] : "") << std::endl;
-        //#endif
-    }
 }
 
 DatabaseRow::~DatabaseRow()
@@ -188,7 +182,7 @@ int Database::ExecuteQuery()
         unsigned int count = mysql_field_count(connection);
         MYSQL_ROW row;
 
-        console(DEBUG_DB, "\n\nExecuteQuery(): test4 : count: %i\n", count);
+        console(DEBUG_DB, "\n\nExecuteQuery(): test3 : count: %i\n", count);
         int i = 0;
 
         while (row = mysql_fetch_row(res))
@@ -197,12 +191,12 @@ int Database::ExecuteQuery()
             i++;
         }
 
-        console(DEBUG_DB, "\n\nExecuteQuery(): test5 : i: %i\n", i);
+        console(DEBUG_DB, "\n\nExecuteQuery(): test4 : i: %i\n", i);
 
         mysql_free_result(res);
     }
 
-    console(DEBUG_DB, "\n\nExecuteQuery(): test6: rows.size(): %i\n", (int)rows.size());
+    console(DEBUG_DB, "\n\nExecuteQuery(): test5: rows.size(): %i\n", (int)rows.size());
 
     return rows.size();
 }
@@ -240,6 +234,11 @@ const char * Database::GetError()
     return mysql_error(connection);
 }
 
+unsigned int Database::GetErrNo()
+{
+    return mysql_errno(connection);
+}
+
 void Database::Clear()
 {
     for (std::list<DatabaseRow*>::iterator itr = rows.begin(); itr != rows.end(); ++itr)
@@ -254,9 +253,9 @@ void Database::AddRow(MYSQL_ROW row, int count)
         rows.push_back(new DatabaseRow(row, count));
 }
 
-DatabaseRow * Database::GetRow(int index)
+DatabaseRow * Database::GetRow(uint32 index)
 {
-    if (uint32(index) >= rows.size())
+    if (index >= rows.size())
         return NULL;
 
     std::list<DatabaseRow*>::iterator itr = rows.begin();

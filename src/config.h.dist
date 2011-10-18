@@ -58,7 +58,7 @@
 #define PASSWORD_LENGTH_MIN     8           /**< Minimum password length */
 #define PASSWORD_LENGTH_MAX     16          /**< Maximum password length */
 
-#define LOGIN_VALIDATOR         "[a-zA-Z._]{6,16}"  /**< regex to valid login, in {} should be min and max login length */
+#define LOGIN_VALIDATOR         "[a-zA-Z0-9_]{6,16}"    /**< regex to valid login, in {} should be min and max login length */
 
 #define MAIL_FROM   "kontakt@gamefreedom.pl"    /**< email addres for "from" clause */
 
@@ -76,6 +76,21 @@
 #define REALM_NAME  "HellGround"    /**< Realm name. */
 
 #define STATUS_SOURCE   ""      /**< Http address with status to parse */
+
+const float RaceLocs[10][5] =   /**< Table with locations for races for character teleport option */
+{
+//   map    zone    pos X       pos Y       pos Z
+    {0,     12,     -8949.95,   -132.493,   83.5312},   // 1
+    {1,     14,     -618.518,   -4251.67,   38.718},    // 2
+    {0,     1,      -6240.32,   331.033,    382.758},   // 3
+    {1,     141,    10311.3,    832.463,    1326.41},   // 4
+    {0,     85,     1676.71,    1678.31,    121.67},    // 5
+    {1,     215,    -2917.58,   -257.98,    52.9968},   // 6
+    {0,     1,      -6240.32,   331.033,    382.758},   // 7
+    {1,     14,     -618.518,   -4251.67,   38.718},    // 8
+    {530,   3431,   10349.6,    -6357.29,   33.4026},   // 10
+    {530,   3526,   -3961.64,   -13931.2,   100.615}    // 11
+};
 
 #endif // CONFIG_H_INCLUDED
 

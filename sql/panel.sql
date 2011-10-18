@@ -26,15 +26,18 @@ INSERT INTO LangTexts VALUES
 (15, "Informacje o mute", "Mute info"),
 (16, "Lista mute", "Mute list"),
 (17, "ERROR", "ERROR"),
+
 (50, "Panel GM", "GM Panel"),
 (51, "Tickety", "Tickets"),
 (52, "Sprawdź online", "Online check"),
 (53, "Sprawdź frakcje", "Faction check"),
+
 (75, "Nick: ", "Nick: "),
 (76, "Poziom: ", "Level: "),
 (77, "Klasa: ", "Class: "),
 (78, "Całkowity czas gry: ", "Total played time: "),
 (79, "Czas gry aktualnego poziomu: ", "This level played time: "),
+
 (100, "Postacie na koncie: ", "Characters on account: "),
 (101, "Data założenia konta: ", "Account create date: "),
 (102, "Ostatnie logowanie: ", "Last login: "),
@@ -54,6 +57,7 @@ INSERT INTO LangTexts VALUES
 (116, "Założona", "Locked"),
 (117, "Zdjęta", "Unlocked"),
 (118, "IP jest zbanowane: ", "IP is banned: "),
+
 (130, "Zmiana hasła", "Change password"),
 (131, "Stare hasło", "Old pass"),
 (132, "Nowe hasło", "New pass"),
@@ -61,13 +65,16 @@ INSERT INTO LangTexts VALUES
 (134, "Odzyskiwanie hasła", "Regain password"),
 (135, "Email", "Email"),
 (136, "Numer GG", "GG number"),
+
 (150, "Otwarta", "Opened"),
 (151, "Zamknięta", "Closed"),
+
 (155, "Zakładając konto w pełni akceptujesz <a href=\"http://wow.gamefreedom.pl/regulamin-serwera/\">regulamin serwera</a>", "You read <a href=\"http://gamefreedom.pl/showthread.php?t=8454\">Server Rules</a> and you accept them?"),
 (156, "Tak", "Yes"),
 (157, "<h3>HellGround - Rejestracja</h3>", "<h3>HellGround - Register</h3>"),
 (158, "Aby założyć konto musisz zaakceptować regulamin serwera.", "You must accept server rules to register new account."),
 (159, "Konto istnieje. Prosze wybrać inny login.", "Account already exists. Please try another login."),
+
 (160, "Login", "Login"),
 (161, "Zbanowany od", "Banned from"),
 (162, "Zbanowany do", "Banned till"),
@@ -77,6 +84,7 @@ INSERT INTO LangTexts VALUES
 (166, "Nieaktywny", "Not active"),
 (167, "Tak", "Yes"),
 (168, "Nie", "No"),
+
 (185, "Nazwa realmu: ", "Realm name: "),
 (186, "Stan realmu: ", "Realm state: "),
 (187, "Graczy online: ", "Players online: "),
@@ -90,6 +98,7 @@ INSERT INTO LangTexts VALUES
 (195, "<h3>Status serwerów</h3>
 Aktualizacja co 60 sekund.", "<h3>Servers status</h3>
 Refreshes every 60 seconds."),
+
 (200, "Zmień", "Change"),
 (201, "Wyczyść", "Clear"),
 (202, "Wyślij", "Send"),
@@ -99,6 +108,7 @@ Refreshes every 60 seconds."),
 (206, "Zbanowane konta", "Accounts banned"),
 (207, "Zbanowane IP", "IP banned"),
 (208, "Wyloguj", "Logout"),
+
 (225, "Panel gracza - HellGround", "HellGround Players Panel"),
 (226, "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.
 © 2006-2011 Panel created by HellGround.pl ", "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.
@@ -141,9 +151,15 @@ New pass: %s"),
 (250, "%i dni %i godzin %i minut %i sekund", "%i days %i hours %i minuts %i seconds"),
 (251, "Na pewno chcesz sie wylogować ?", "Are you sure you want to logout ?"),
 (252, "Wystąpił błąd podczas rejestracji. Spróbuj ponownie.", "There was an error in registration. Try again."),
+(253, "Teleportacja postaci zakończona powodzeniem.", "Character teleportation successfull."),
+
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),
 (352, "Podane hasła muszą być takie same", "Typed passwords must be the same"),
 (353, "Podane hasło jest zbyt krótkie", "Typed password is to short"),
 (354, "Podane hasło jest zbyt długie", "Typed password is to long"),
-(355, "Błąd validacji! Podano niepoprawne dane.", "Validation error! Wrong input data.");
+(355, "Błąd validacji! Podano niepoprawne dane.", "Validation error! Wrong input data."),
+(356, "Postać musi być OFFLINE aby móc użyć opcji teleportacji.", "Character must be OFFLINE to use teleport option."),
+(357, "Postać nie została znaleziona !", "Character not found !"),
+
+(501, "DB Error: Błąd połączenia z bazą danych.", "DB Error: Can't connect to database.");

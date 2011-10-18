@@ -72,10 +72,11 @@ public:
     int ExecuteQuery(); // execute setted query and returns row count
     int ExecuteQuery(std::string query, bool escape = true);    // execute given query and return row count
     const char * GetError();    // get mysql error
+    unsigned int GetErrNo();  // get mysql error number
     void AddRow(MYSQL_ROW row, int count);  // add new row
     void Clear();   // clear (+ delete from memory) result
     int GetRowsCount() { return rows.size(); }  // return rows count
-    DatabaseRow * GetRow(int index);    // returns row from given index
+    DatabaseRow * GetRow(uint32 index);    // returns row from given index
     DatabaseRow * GetRow();             // returns first row
     std::list<DatabaseRow*> GetRows();  // returns all rows
     std::string GetQuery() { return actualQuery; }
