@@ -87,6 +87,23 @@ void console(DebugFlags flag, char const* text, ...)
     }
 }
 
+void GetTeleportPosition(int race, Location & loc)
+{
+    if (race < 0 || race > 11 || race == 9)
+        return;
+
+    int mod = 1;
+
+    if (race > 8)
+        ++mod;
+
+    loc.mapId = RaceLocs[race - mod][0];
+    loc.zone = RaceLocs[race - mod][1];
+    loc.posX = RaceLocs[race - mod][2];
+    loc.posY = RaceLocs[race - mod][3];
+    loc.posY = RaceLocs[race - mod][4];
+}
+
 class PlayersPanel : public WApplication
 {
 public:
@@ -219,6 +236,7 @@ PlayersPanel::~PlayersPanel()
 
 void PlayersPanel::LoadLangTexts()
 {
+    console(DEBUG_CODE, "Call void PlayersPanel::LoadLangTexts()");
 
     if (Database * tmpDb = new Database(PANEL_DB_DATA, SQL_PANELDB))
     {
@@ -234,7 +252,7 @@ void PlayersPanel::LoadLangTexts()
 
                 if (row)
                 {
-                    Text tmpText(row->fields[0].GetUInt32());
+                    LangText tmpText(row->fields[0].GetUInt32());
 
                     for (int i = 0; i < LANG_COUNT; ++i)
                         tmpText.texts[i] = row->fields[i+1].GetWString();
@@ -249,6 +267,7 @@ void PlayersPanel::LoadLangTexts()
 
 WApplication *createApplication(const WEnvironment& env)
 {
+    console(DEBUG_CODE, "Call WApplication *createApplication(const WEnvironment& env)");
     // You could read information from the environment to decide
     // whether the user has permission to start a new application
 

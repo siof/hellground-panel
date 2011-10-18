@@ -24,6 +24,7 @@
 #include "pages/passChange.h"
 #include "pages/serverStatus.h"
 #include "pages/logout.h"
+#include "pages/teleport.h"
 
 #include <WRegExpValidator>
 
@@ -235,6 +236,9 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     menuSlots[MENU_SLOT_SERVER_STATUS] = new HGMenuOption(MENU_SLOT_SERVER_STATUS);
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess));
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_PLAYER, TXT_MENU_SERVER_STATUS, menuSlots[MENU_SLOT_SERVER_STATUS]->GetMenuItemForLevel(LVL_NOT_LOGGED));
+
+    menuSlots[MENU_SLOT_TELEPORT] = new HGMenuOption(MENU_SLOT_TELEPORT);
+    menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session));
 
     menuSlots[MENU_SLOT_LOGIN] = new HGMenuOption(MENU_SLOT_LOGIN);
     menuSlots[MENU_SLOT_LOGIN]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_LOGOUT, new LogoutPage(session));

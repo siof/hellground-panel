@@ -113,11 +113,11 @@ enum AccountLevel
  *
  ***********************************************/
 
-struct Text
+struct LangText
 {
-    Text() : textId(0) {}
-    Text(uint32 id) : textId(id) {}
-    ~Text() {}
+    LangText() : textId(0) {}
+    LangText(uint32 id) : textId(id) {}
+    ~LangText() {}
 
     WString& GetText(Lang lang)
     {
@@ -155,7 +155,7 @@ struct SessionInfo
     WString sessionIp;      /**< Ip for current panel session. */
     Lang language;          /**< Chosen language which should be used to show informations in panel. */
     AccountLevel accLvl;    /**< Security level for this account(player, gm etc). Which content should be shown depends on this variable (For example: Player can't use GM section. Not logged player can't view account informations.). */
-    std::map<uint32 ,Text> langTexts;   /**< Map with texts depend for supported languages loaded from database */
+    std::map<uint32 ,LangText> langTexts;   /**< Map with texts depend for supported languages loaded from database */
     bool locked;            /**< IP lock */
     int expansion;          /**< Expansion enabled for this account. */
 
@@ -171,7 +171,7 @@ struct SessionInfo
 
     WString& GetText(uint32 id)
     {
-        std::map<uint32, Text>::iterator itr = langTexts.find(id);
+        std::map<uint32, LangText>::iterator itr = langTexts.find(id);
 
         if (itr == langTexts.end())
             return textMissing;
@@ -189,7 +189,7 @@ struct SessionInfo
 
     bool HasText(uint32 id)
     {
-        std::map<uint32, Text>::iterator itr = langTexts.find(id);
+        std::map<uint32, LangText>::iterator itr = langTexts.find(id);
 
         return itr != langTexts.end();
     }
@@ -426,6 +426,7 @@ enum Texts
     TXT_UPTIME_FMT                  = 250,  /**< format for server uptime time */
     TXT_LOGOUT_INFO                 = 251,  /**< info to show on logout page */
     TXT_REGISTRATION_ERROR          = 252,  /**< Information that there was an error in registration. */
+    TXT_TELEPORT_SUCCESSFULL        = 253,  /**< Information that character teleportation was successfull */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
@@ -433,6 +434,12 @@ enum Texts
     TXT_ERROR_PASSWORD_TO_SHORT     = 353,  /**< Error info: password to short */
     TXT_ERROR_PASSWORD_TO_LONG      = 354,  /**< Error info: password to long */
     TXT_ERROR_NOT_VALID_DATA        = 355,  /**< Error info: Validate error: wrong data */
+    TXT_ERROR_CANT_TELEPORT_ONLINE  = 356,  /**< Error info: Only offline characters can be teleported */
+    TXT_ERROR_CHARACTER_NOT_FOUND   = 357,  /**< Error info: character not found */
+
+    TXT_DBERROR_CANT_CONNECT        = 501,  /**< DB Error info: can't connect to database */
+    TXT_DBERROR_QUERY_EMPTY         = 502,  /**< DB Error info: result empty */
+    TXT_DBERROR_QUERY_ERROR
 };
 
 /********************************************//**
@@ -447,7 +454,7 @@ enum Texts
  *
  ***********************************************/
 
-void SendMail(WString& from, WString& to, WString& sub, WString& msg);
+extern void SendMail(WString& from, WString& to, WString& sub, WString& msg);
 
 /********************************************//**
  * \brief Returns expansion name.
@@ -461,7 +468,7 @@ void SendMail(WString& from, WString& to, WString& sub, WString& msg);
  *
  ***********************************************/
 
-WString GetExpansionName(SessionInfo * sess, int index);
+extern WString GetExpansionName(SessionInfo * sess, int index);
 
 /********************************************//**
  * \brief Return client locale name.
@@ -473,20 +480,69 @@ WString GetExpansionName(SessionInfo * sess, int index);
  *
  ***********************************************/
 
-WString GetLocale(int index);
+extern WString GetLocale(int index);
 
-int irand(int min, int max);
+/********************************************//**
+ * \brief Simple random function.
+ *
+ * \param min   minimum value
+ * \param max   maximum value
+ * \return randomized value beatween min and max
+ *
+ ***********************************************/
+
+extern int irand(int min, int max);
 
 #define SERVER_DB_DATA  SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_PORT
 #define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
 
+/********************************************//**
+ * \brief Debug flags for console debug.
+ ***********************************************/
+
 enum DebugFlags
 {
     DEBUG_NONE = 0x00,
-    DEBUG_DB   = 0x01,
-    DEBUG_CODE = 0x02
+    DEBUG_DB   = 0x01,  /**< Debug flag for standard database debug informations */
+    DEBUG_CODE = 0x02   /**< Debug flag for standard code debug infornations */
 };
 
-extern void console(DebugFlags, char const*, ...);
+/********************************************//**
+ * \brief Writes debug info to console
+ *
+ * \param flag  Debug flags for which debug should be printed to console.
+ * \param text  Text format which should be printed to console.
+ *
+ * This function checks flags defined in config and decides
+ * if debug should be printed to standard output or not.
+ * If yes then function fills format with additional data and
+ * sends to std out.
+ *
+ ***********************************************/
+
+extern void console(DebugFlags flag, char const* text, ...);
+
+/********************************************//**
+ * \brief Represents simple character location.
+ ***********************************************/
+
+struct Location
+{
+    uint32 mapId;   /**< Map id */
+    uint32 zone;    /**< Zone on map */
+    uint32 posX;    /**< X Position */
+    uint32 posY;    /**< Y Position */
+    uint32 posZ;    /**< Z Position */
+};
+
+/********************************************//**
+ * \brief Sets teleport position depends on race.
+ *
+ * \param race  Character race.
+ * \param loc   Variable in which location will be stored.
+ *
+ ***********************************************/
+
+extern void GetTeleportPosition(int race, Location & loc);
 
 #endif // DEFINES_H_INCLUDED
