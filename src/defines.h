@@ -480,4 +480,13 @@ int irand(int min, int max);
 #define SERVER_DB_DATA  SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_PORT
 #define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
 
+enum DebugFlags
+{
+    DEBUG_NONE = 0x00,
+    DEBUG_DB   = 0x01,
+    DEBUG_CODE = 0x02
+};
+
+extern void console(DebugFlags, char const*, ...);
+
 #endif // DEFINES_H_INCLUDED

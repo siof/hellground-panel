@@ -18,6 +18,8 @@
 #include <WMenu>
 #include <WStackedWidget>
 
+#include <stdarg.h>
+
 #include "defines.h"
 #include "menu.h"
 #include "database.h"
@@ -72,6 +74,17 @@ WString GetLocale(int index)
 int irand(int min, int max)
 {
     return rand()%(max - min) + min;
+}
+
+void console(DebugFlags flag, char const* text, ...)
+{
+    if (DebugFlags(DEBUG_OPTIONS) & flag)
+    {
+        va_list args;
+        va_start(args, text);
+        vprintf(text, args);
+        va_end(args);
+    }
 }
 
 class PlayersPanel : public WApplication

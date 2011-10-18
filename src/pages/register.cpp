@@ -57,9 +57,7 @@ RegisterPage::~RegisterPage()
 
 void RegisterPage::refresh()
 {
-    #ifdef DEBUG
-    printf("RegisterPage::refresh()");
-    #endif
+    console(DEBUG_CODE, "RegisterPage::refresh()");
 
     // registration page should be only for not logged yet players so there is no need to update it in other cases
     if (session->accLvl == LVL_NOT_LOGGED)

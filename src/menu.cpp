@@ -463,9 +463,7 @@ void HGMenu::UpdateMenuOptions()
 
 void HGMenu::refresh()
 {
-    #ifdef DEBUG
-    printf("\nHGMenu::refresh()\n");
-    #endif
+    console(DEBUG_CODE, "\nHGMenu::refresh()\n");
 
     if (session->accLvl != LVL_LOGGED_OUT)
     {
@@ -497,9 +495,8 @@ void HGMenu::ClearPass()
 
 bool HGMenu::SetError(ErrorSlots error, std::string &msg, ErrorPage * err)
 {
-    #ifdef DEBUG
-    printf("\nHGMenu::SetError(ErrorSlots error = %i, std::string &msg = %s, ErrorPage * err = %i) overload: 1\n", error, msg.c_str(), err ? 1 : 0);
-    #endif
+    console(DEBUG_CODE, "\nHGMenu::SetError(ErrorSlots error = %i, std::string &msg = %s, ErrorPage * err = %i) overload: 1\n", error, msg.c_str(), err ? 1 : 0);
+
     ErrorPage * tmpError = err;
     if (!tmpError)
     {
@@ -521,9 +518,8 @@ bool HGMenu::SetError(ErrorSlots error, std::string &msg, ErrorPage * err)
 
 bool HGMenu::SetError(ErrorSlots error, uint32 textId, ErrorPage * err)
 {
-    #ifdef DEBUG
-    printf("\nHGMenu::SetError(ErrorSlots error = %i, uint32 textId = %u, ErrorPage * err = %i) overload: 2\n", error, textId, err ? 1 : 0);
-    #endif
+    console(DEBUG_CODE, "\nHGMenu::SetError(ErrorSlots error = %i, uint32 textId = %u, ErrorPage * err = %i) overload: 2\n", error, textId, err ? 1 : 0);
+
     ErrorPage * tmpError = err;
     if (!tmpError)
     {
@@ -545,11 +541,9 @@ bool HGMenu::SetError(ErrorSlots error, uint32 textId, ErrorPage * err)
 
 void HGMenu::ShowError(ErrorSlots error, std::string &msg)
 {
-    #ifdef DEBUG
-    printf("\nHGMenu::ShowError(ErrorSlots error = %i, std::string &msg = %s) overload: 1\n", error, msg.c_str());
-    #endif
-    WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
+    console(DEBUG_CODE, "\nHGMenu::ShowError(ErrorSlots error = %i, std::string &msg = %s) overload: 1\n", error, msg.c_str());
 
+    WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
     if (!tmpItem)
         return;
 
@@ -565,11 +559,9 @@ void HGMenu::ShowError(ErrorSlots error, std::string &msg)
 
 void HGMenu::ShowError(ErrorSlots error, uint32 textId)
 {
-    #ifdef DEBUG
-    printf("\nHGMenu::ShowError(ErrorSlots error = %i, uint32 textId = %u) overload: 2\n", error, textId);
-    #endif
-    WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
+    console(DEBUG_CODE, "\nHGMenu::ShowError(ErrorSlots error = %i, uint32 textId = %u) overload: 2\n", error, textId);
 
+    WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
     if (!tmpItem)
         return;
 
@@ -585,17 +577,10 @@ void HGMenu::ShowError(ErrorSlots error, uint32 textId)
 
 void HGMenu::ShowError()
 {
-    #ifdef DEBUG
-    printf("\nHGMenu::ShowError() overload: 3\n");
-    #endif
+    console(DEBUG_CODE, "\nHGMenu::ShowError() overload: 3\n");
+
     WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
-
     if (!tmpItem)
-        return;
-
-    ErrorPage * tmpError = (ErrorPage*)tmpItem->contents();
-
-    if (!tmpError)
         return;
 
     menu->select(tmpItem);

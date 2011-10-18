@@ -184,9 +184,8 @@ void AccountInfoPage::UpdateAccountInfo()
 
 void AccountInfoPage::CreateAccountInfo()
 {
-    #ifdef DEBUG
-    printf("\nCall void AccountInfoPage::CreateAccountInfo()\n");
-    #endif
+    console(DEBUG_CODE, "\nCall void AccountInfoPage::CreateAccountInfo()\n");
+
     clear();
 
     Database * realmDb = new Database(SERVER_DB_DATA, SQL_REALMDB);
@@ -198,9 +197,8 @@ void AccountInfoPage::CreateAccountInfo()
     // there should be only one record in db
     if (realmDb->ExecuteQuery() > 0)
     {
-        #ifdef DEBUG
-        printf("\nCreateAccountInfo(): Account founded\n");
-        #endif
+        console(DEBUG_CODE, "\nCreateAccountInfo(): Account founded\n");
+
         needInfoCreation = false;
         tmpRow = realmDb->GetRow();
 
@@ -272,9 +270,7 @@ void AccountInfoPage::CreateAccountInfo()
 
         int tmpCount;
 
-        #ifdef DEBUG
-        printf("\nCreateAccountInfo(): ACC_INFO_SLOT_COUNT: %i\n", ACCINFO_SLOT_COUNT);
-        #endif
+        console(DEBUG_CODE, "\nCreateAccountInfo(): ACC_INFO_SLOT_COUNT: %i\n", ACCINFO_SLOT_COUNT);
 
         // add widgets to page
         for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
@@ -289,9 +285,8 @@ void AccountInfoPage::CreateAccountInfo()
 
             tmpCount = accInfoSlots[i].GetBreakCount();
 
-            #ifdef DEBUG
-            printf("\nCreateAccountInfo(): i: %i, tmpCount: %i\n", i, tmpCount);
-            #endif
+            console(DEBUG_CODE, "\nCreateAccountInfo(): i: %i, tmpCount: %i\n", i, tmpCount);
+
             for (int j = 0; j < tmpCount; ++j)
                 addWidget(new WBreak());
         }
@@ -427,9 +422,8 @@ WString AccountInfoPage::GetEmail()
 
 void AccountInfoPage::ClearAccountInfo()
 {
-    #ifdef DEBUG
-    printf("\nAccountInfoPage::ClearAccountInfo()\n");
-    #endif
+    console(DEBUG_CODE, "\nAccountInfoPage::ClearAccountInfo()\n");
+
     WWidget * tmpWid;
     for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
         if (tmpWid = accInfoSlots[i].GetWidget())
