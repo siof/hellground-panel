@@ -31,8 +31,7 @@
 
 #define SHOW_DATABASE_ERRORS    /**< Comment if you don't want to show database errors on error page */
 
-//#define DEBUG /**< Uncomment to show some debug informations */
-//#define DEBUG_DATABASE /**< Uncomment to show some database debug informations (moved to separate option to reduce unneeded debug spam ;) ) */
+#define DEBUG_OPTIONS DEBUG_NONE /*| DEBUG_DB*/ /**< Add enums to show some debug informations for now(DEBUG_NONE, DEBUG_DB, DEBUG_CODE)*/
 
 #define SITE_TITLE  "HellGround Player's Panel" /**< Players panel site title (should be replaced with text from DB) */
 

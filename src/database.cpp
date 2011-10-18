@@ -93,17 +93,17 @@ AccountLevel DatabaseField::GetAccountLevel()
 /// DatabaseRow
 DatabaseRow::DatabaseRow(MYSQL_ROW row, int count)
 {
-    #ifdef DEBUG_DATABASE
-    printf("Call DatabaseRow::DatabaseRow(MYSQL_ROW row, int count = %i)\n", count);
-    #endif
+    console(DEBUG_DB, "Call DatabaseRow::DatabaseRow(MYSQL_ROW row, int count = %i)\n", count);
+
     this->count = count;
     fields = new DatabaseField[count];
     for (int i = 0; i < count; ++i)
     {
         fields[i].value = WString::fromUTF8(row[i] ? row[i] : "");
-        #ifdef DEBUG_DATABASE
-        std::cout << i << " : " << (row[i] ? row[i] : "") << std::endl;
-        #endif
+        // move to console(DEBUG_DB
+        //#ifdef DEBUG_DATABASE
+        //std::cout << i << " : " << (row[i] ? row[i] : "") << std::endl;
+        //#endif
     }
 }
 
@@ -173,20 +173,17 @@ void Database::EscapeQuery()
 
 int Database::ExecuteQuery()
 {
-    #ifdef DEBUG_DATABASE
-    printf("\nCall int Database::ExecuteQuery() : actualQuery: %s", actualQuery.c_str());
-    #endif
+    console(DEBUG_DB, "\nCall int Database::ExecuteQuery() : actualQuery: %s", actualQuery.c_str());
 
     Clear();
-    #ifdef DEBUG_DATABASE
-    printf("\n\nExecuteQuery(): test1\n");
-    #endif
+
+    console(DEBUG_DB, "\n\nExecuteQuery(): test1\n");
+
     if (mysql_query(connection, actualQuery.c_str()))
         return -1;
 
-    #ifdef DEBUG_DATABASE
-    printf("\n\nExecuteQuery(): test2\n");
-    #endif
+    console(DEBUG_DB, "\n\nExecuteQuery(): test2\n");
+
     MYSQL_RES * res;
 
     if (res = mysql_store_result(connection))
@@ -194,28 +191,21 @@ int Database::ExecuteQuery()
         unsigned int count = mysql_field_count(connection);
         MYSQL_ROW row;
 
-        #ifdef DEBUG_DATABASE
-        printf("\n\nExecuteQuery(): test4 : count: %i\n", count);
+        console(DEBUG_DB, "\n\nExecuteQuery(): test4 : count: %i\n", count);
         int i = 0;
-        #endif
+
         while (row = mysql_fetch_row(res))
         {
             AddRow(row, count);
-            #ifdef DEBUG_DATABASE
             i++;
-            #endif
         }
 
-        #ifdef DEBUG_DATABASE
-        printf("\n\nExecuteQuery(): test5 : i: %i\n", i);
-        #endif
+        console(DEBUG_DB, "\n\nExecuteQuery(): test5 : i: %i\n", i);
 
         mysql_free_result(res);
     }
 
-    #ifdef DEBUG_DATABASE
-    printf("\n\nExecuteQuery(): test6: rows.size(): %i\n", (int)rows.size());
-    #endif
+    console(DEBUG_DB, "\n\nExecuteQuery(): test6: rows.size(): %i\n", (int)rows.size());
 
     return rows.size();
 }

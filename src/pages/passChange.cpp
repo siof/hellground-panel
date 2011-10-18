@@ -54,9 +54,7 @@ PassChangePage::~PassChangePage()
 
 void PassChangePage::refresh()
 {
-    #ifdef DEBUG
-    printf("PassChangePage::refresh()");
-    #endif
+    console(DEBUG_CODE, "PassChangePage::refresh()");
 
     // pass change page should be visible only for logged players so there is no need to create/update in other cases
     if (session->accLvl > LVL_NOT_LOGGED)

@@ -27,9 +27,8 @@ ErrorPageSlot::~ErrorPageSlot()
 
 void ErrorPageSlot::SetText(WText * txt, uint32 id)
 {
-    #ifdef DEBUG
-    printf("\nErrorPageSlot::SetText(WText * txt = %i, uint32 id = %u)\n", txt ? 1 : 0, id);
-    #endif
+    console(DEBUG_CODE, "\nErrorPageSlot::SetText(WText * txt = %i, uint32 id = %u)\n", txt ? 1 : 0, id);
+
     DeleteText();
 
     text = txt;
@@ -39,9 +38,8 @@ void ErrorPageSlot::SetText(WText * txt, uint32 id)
 
 void ErrorPageSlot::SetText(WText * txt, WString &strn)
 {
-    #ifdef DEBUG
-    printf("\nErrorPageSlot::SetText(WText * txt = %i, WString &strn = %s)\n", txt ? 1 : 0, strn.toUTF8().c_str());
-    #endif
+    console(DEBUG_CODE, "\nErrorPageSlot::SetText(WText * txt = %i, WString &strn = %s)\n", txt ? 1 : 0, strn.toUTF8().c_str());
+
     DeleteText();
 
     text = txt;
@@ -52,34 +50,29 @@ void ErrorPageSlot::SetText(WText * txt, WString &strn)
 
 void ErrorPageSlot::SetText(WString &strn)
 {
-    #ifdef DEBUG
-    printf("\nErrorPageSlot::SetText(WString &strn = %s)\n", strn.toUTF8().c_str());
-    #endif
+    console(DEBUG_CODE, "\nErrorPageSlot::SetText(WString &strn = %s)\n", strn.toUTF8().c_str());
+
     str = strn;
     textIdBased = false;
 }
 
 void ErrorPageSlot::SetText(SessionInfo * sess, uint32 id)
 {
-    #ifdef DEBUG
-    printf("\nErrorPageSlot::SetText(sess: %i, uint32 id = %u)\n", sess ? 1 : 0, id);
-    #endif
+    console(DEBUG_CODE, "\nErrorPageSlot::SetText(sess: %i, uint32 id = %u)\n", sess ? 1 : 0, id);
+
     if (!sess)
         return;
 
     textId = id;
     textIdBased = true;
 
-    #ifdef DEBUG
-    printf("\nErrorPageSlot::SetText(): textId %u, textIdBased %i\n", textId, textIdBased);
-    #endif
+    console(DEBUG_CODE, "\nErrorPageSlot::SetText(): textId %u, textIdBased %i\n", textId, textIdBased);
 }
 
 WText * ErrorPageSlot::CreateText(SessionInfo * sess)
 {
-    #ifdef DEBUG
-    printf("\nErrorPageSlot::CreateText(sess: %i)\n", sess ? 1 : 0);
-    #endif
+    console(DEBUG_CODE, "\nErrorPageSlot::CreateText(sess: %i)\n", sess ? 1 : 0);
+
     if (!sess)
         return NULL;
 
@@ -99,17 +92,14 @@ WText * ErrorPageSlot::CreateText(SessionInfo * sess)
     else
         text = new WText("");
 
-    #ifdef DEBUG
-    printf("    text: %i, textIdBased: %i, textId: %u, str: %s, textmsg: %s\n", text ? 1 : 0, textIdBased, textId, str.toUTF8().c_str(), text ? text->text().toUTF8().c_str() : "");
-    #endif
+    console(DEBUG_CODE, "    text: %i, textIdBased: %i, textId: %u, str: %s, textmsg: %s\n", text ? 1 : 0, textIdBased, textId, str.toUTF8().c_str(), text ? text->text().toUTF8().c_str() : "");
     return text;
 }
 
 void ErrorPageSlot::DeleteText()
 {
-    #ifdef DEBUG
-    printf("\nErrorPageSlot::DeleteText(): text %i\n", text ? 1 : 0);
-    #endif
+    console(DEBUG_CODE, "\nErrorPageSlot::DeleteText(): text %i\n", text ? 1 : 0);
+
     if (text)
         delete text;
 
@@ -118,9 +108,8 @@ void ErrorPageSlot::DeleteText()
 
 void ErrorPageSlot::UpdateText(SessionInfo * sess)
 {
-    #ifdef DEBUG
-    printf("\nErrorPageSlot::UpdateText(sess: %i): text %i, textId %i, textIdBased: %i\n", sess ? 1 : 0, text ? 1 : 0, textId, textIdBased);
-    #endif
+    console(DEBUG_CODE, "\nErrorPageSlot::UpdateText(sess: %i): text %i, textId %i, textIdBased: %i\n", sess ? 1 : 0, text ? 1 : 0, textId, textIdBased);
+
     if (!sess || !text)
         return;
 
@@ -134,18 +123,14 @@ void ErrorPageSlot::UpdateText(SessionInfo * sess)
 ErrorPage::ErrorPage(SessionInfo * sess, WContainerWidget * parent)
 : WContainerWidget(parent), session(sess), created(false)
 {
-    #ifdef DEBUG
-    printf("\nErrorPage::ErrorPage(sess: %i)\n", sess ? 1 : 0);
-    #endif
+    console(DEBUG_CODE, "\nErrorPage::ErrorPage(sess: %i)\n", sess ? 1 : 0);
 
     CreateErrors();
 }
 
 void ErrorPage::refresh()
 {
-    #ifdef DEBUG
-    printf("\nErrorPage::refresh()\n");
-    #endif
+    console(DEBUG_CODE, "\nErrorPage::refresh()\n");
 
     UpdateErrors();
     WContainerWidget::refresh();
@@ -153,9 +138,7 @@ void ErrorPage::refresh()
 
 void ErrorPage::SetErrorMsg(ErrorSlots slot, uint32 txtId)
 {
-    #ifdef DEBUG
-    printf("\nErrorPage::SetErrorMsg(ErrorSlots slot = %i, uint32 txtId = %u) overload: 1\n", slot, txtId);
-    #endif
+    console(DEBUG_CODE, "\nErrorPage::SetErrorMsg(ErrorSlots slot = %i, uint32 txtId = %u) overload: 1\n", slot, txtId);
 
     #ifndef SHOW_DATABASE_ERRORS
     if (slot == ERROR_SLOT_DB)

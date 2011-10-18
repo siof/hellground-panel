@@ -56,9 +56,7 @@ PassRecoveryPage::~PassRecoveryPage()
 
 void PassRecoveryPage::refresh()
 {
-    #ifdef DEBUG
-    printf("PassRecoveryPage::refresh()");
-    #endif
+    console(DEBUG_CODE, "PassRecoveryPage::refresh()");
 
     // pass recovery page should be visible only for not logged yet players so there is no need to update/create it in other cases
     if (session->accLvl == LVL_NOT_LOGGED)

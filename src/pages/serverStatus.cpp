@@ -135,9 +135,8 @@ void ServerStatusPage::CreateStatusPage()
 
         tmpCount = statusSlots[i].GetBreakCount();
 
-        #ifdef DEBUG
-        printf("\nCreateStatusPage(): i: %i, tmpCount: %i\n", i, tmpCount);
-        #endif
+        console(DEBUG_CODE, "\nCreateStatusPage(): i: %i, tmpCount: %i\n", i, tmpCount);
+
         for (int j = 0; j < tmpCount; ++j)
             addWidget(new WBreak());
     }

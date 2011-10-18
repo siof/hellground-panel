@@ -56,9 +56,8 @@ LogoutPage::LogoutPage(SessionInfo * sess, WContainerWidget * parent)
 
 void LogoutPage::refresh()
 {
-    #ifdef DEBUG
-    printf("\nLogoutPage::refresh()\n");
-    #endif
+    console(DEBUG_CODE, "\nLogoutPage::refresh()\n");
+
     if (isHidden() || isDisabled())
         return;
 
@@ -82,9 +81,8 @@ void LogoutPage::refresh()
 
 void LogoutPage::CreateLogoutPage()
 {
-    #ifdef DEBUG
-    printf("\nLogoutPage::CreateLogoutPage()\n");
-    #endif
+    console(DEBUG_CODE, "\nLogoutPage::CreateLogoutPage()\n");
+
     clear();
 
     info = new WText(session->GetText(TXT_LOGOUT_INFO));
@@ -110,9 +108,8 @@ void LogoutPage::CreateLogoutPage()
 
 void LogoutPage::UpdateLogoutPage()
 {
-    #ifdef DEBUG
-    printf("\nLogoutPage::UpdateLogoutPage()\n");
-    #endif
+    console(DEBUG_CODE, "\nLogoutPage::UpdateLogoutPage()\n");
+
     info->setText(session->GetText(TXT_LOGOUT_INFO));
     btn->setText(session->GetText(TXT_BTN_LOGOUT));
 }
@@ -126,9 +123,8 @@ void LogoutPage::UpdateLogoutPage()
 
 void LogoutPage::Logout()
 {
-    #ifdef DEBUG
-    printf("\nLogoutPage::Logout()\n");
-    #endif
+    console(DEBUG_CODE, "\nLogoutPage::Logout()\n");
+
     session->Clear();
 
     wApp->root()->refresh();
