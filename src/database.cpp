@@ -80,7 +80,7 @@ AccountLevel DatabaseField::GetAccountLevel()
         case LVL_GM_HELPER:
         case LVL_GM_HEAD:
         case LVL_ADM:
-            return tmp;
+            return AccountLevel(tmp);
         default:
             return LVL_PLAYER;
 
