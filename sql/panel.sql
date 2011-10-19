@@ -162,4 +162,6 @@ New pass: %s"),
 (356, "Postać musi być OFFLINE aby móc użyć opcji teleportacji.", "Character must be OFFLINE to use teleport option."),
 (357, "Postać nie została znaleziona !", "Character not found !"),
 
-(501, "DB Error: Błąd połączenia z bazą danych.", "DB Error: Can't connect to database.");
+(501, "DB Error: Błąd połączenia z bazą danych.", "DB Error: Can't connect to database."),
+(502, "DB Error: Zapytanie zwróciło pusty wynik.", "DB Error: Query result was empty."),
+(503, "DB Error: Wystąpił błąd w zapytaniu.", "DB Error: Database query error.");
