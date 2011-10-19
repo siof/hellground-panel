@@ -530,9 +530,9 @@ struct Location
 {
     uint32 mapId;   /**< Map id */
     uint32 zone;    /**< Zone on map */
-    uint32 posX;    /**< X Position */
-    uint32 posY;    /**< Y Position */
-    uint32 posZ;    /**< Z Position */
+    float posX;     /**< X Position */
+    float posY;     /**< Y Position */
+    float posZ;     /**< Z Position */
 };
 
 /********************************************//**

@@ -10,6 +10,9 @@ include_directories(
     /usr/local/wt
     /usr/local/include/jwsmtp
     /usr/local/include/jwsmtp-1.32
+    /usr/local/include
+    /usr/local/include/wt
+    /usr/local/include/Wt
 )
 
 add_executable(panel.wt ${PANEL_SRCS})
