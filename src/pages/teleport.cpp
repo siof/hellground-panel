@@ -193,7 +193,11 @@ void TeleportPage::Teleport()
                     db->SetPQuery("UPDATE characters SET map = %u, position_x = %f, position_y = %f, position_z = %f WHERE guid = %u", loc.mapId, loc.posX, loc.posY, loc.posZ, guids[index]);
 
                     if (db->ExecuteQuery() != -1)
+                    {
+                        db->SetPQuery("REPLACE INTO character_spell_cooldown VALUES (%u, 8690, 0, unix_timestamp()+3600)", guids[index]);
+                        db->ExecuteQuery();
                         teleportStatus = TXT_TELEPORT_SUCCESSFULL;
+                    }
                     else
                     {
                         wApp->log("error") << "DB QUERY Error. Number: [" << db->GetErrNo() << "] Message: " << db->GetError();
