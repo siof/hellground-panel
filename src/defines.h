@@ -439,7 +439,7 @@ enum Texts
 
     TXT_DBERROR_CANT_CONNECT        = 501,  /**< DB Error info: can't connect to database */
     TXT_DBERROR_QUERY_EMPTY         = 502,  /**< DB Error info: result empty */
-    TXT_DBERROR_QUERY_ERROR
+    TXT_DBERROR_QUERY_ERROR         = 503,  /**< DB Error info: query error */
 };
 
 /********************************************//**
