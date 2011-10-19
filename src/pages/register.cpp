@@ -223,7 +223,7 @@ void RegisterPage::Register()
 
     // check if account already exists
     db->SetPQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str());
-    if (db->ExecuteQuery())
+    if (db->ExecuteQuery() > RETURN_EMPTY)
     {
         ClearLogin();
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_LBL_REG_ACC_EXISTS);

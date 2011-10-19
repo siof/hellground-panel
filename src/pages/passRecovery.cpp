@@ -189,12 +189,17 @@ void PassRecoveryPage::Recover()
 
     // check if account already exists
     db->SetPQuery("SELECT id, email, NOW() FROM account WHERE username = '%s'", login.toUTF8().c_str());
-    if (db->ExecuteQuery() < 1)
+
+    switch (db->ExecuteQuery())
     {
-        ClearLogin();
-        ClearEmail();
-        textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_RECOVERY_DATA);
-        return;
+        case RETURN_ERROR:
+        case RETURN_EMPTY:
+            ClearLogin();
+            ClearEmail();
+            textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_RECOVERY_DATA);
+            return;
+        default:
+            break;
     }
 
     uint32 accId = db->GetRow()->fields[0].GetUInt32();

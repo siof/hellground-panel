@@ -545,6 +545,10 @@ struct Location
 
 extern void GetTeleportPosition(int race, Location & loc);
 
-#define RETURN_ERROR -1
+enum MysqlReturn
+{
+    RETURN_ERROR = -1,
+    RETURN_EMPTY = 0
+};
 
 #endif // DEFINES_H_INCLUDED

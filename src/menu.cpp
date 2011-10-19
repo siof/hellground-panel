@@ -319,14 +319,14 @@ void HGMenu::LogMeIn()
     // execute will return 0 if result will be empty and -1 if there will be DB error.
     switch (executeResult)
     {
-        case -1:
+        case RETURN_ERROR:
         {
             // if there was database error
             std::string tmpErr = db->GetError();
             ShowError(ERROR_SLOT_DB, tmpErr);
             break;
         }
-        case 0:
+        case RETURN_EMPTY:
         {
             //if wrong data
             ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);

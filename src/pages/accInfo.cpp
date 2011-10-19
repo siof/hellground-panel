@@ -113,7 +113,7 @@ void AccountInfoPage::UpdateAccountInfo()
     realmDb->SetPQuery("SELECT id, last_ip, last_login, online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
 
     // there should be only one record in db
-    if (realmDb->ExecuteQuery() > 0)
+    if (realmDb->ExecuteQuery() > RETURN_EMPTY)
     {
         tmpRow = realmDb->GetRow();
 
@@ -147,21 +147,21 @@ void AccountInfoPage::UpdateAccountInfo()
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_ACC_BAN].GetWidget();
         realmDb->SetPQuery("SELECT banreason FROM account_banned WHERE active = 1 AND id = '%u'", session->accid);
-        if (realmDb->ExecuteQuery())
+        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_YES) + ": " + realmDb->GetRow()->fields[0].GetWString());
         else
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_LAST_IP_BAN].GetWidget();
         realmDb->SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->lastIp.toUTF8().c_str());
-        if (realmDb->ExecuteQuery())
+        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_YES));
         else
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_CURR_IP_BAN].GetWidget();
         realmDb->SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
-        if (realmDb->ExecuteQuery())
+        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_YES));
         else
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
@@ -195,7 +195,7 @@ void AccountInfoPage::CreateAccountInfo()
     realmDb->SetPQuery("SELECT id, last_ip, last_login, online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
 
     // there should be only one record in db
-    if (realmDb->ExecuteQuery() > 0)
+    if (realmDb->ExecuteQuery() > RETURN_EMPTY)
     {
         console(DEBUG_CODE, "\nCreateAccountInfo(): Account founded\n");
 
@@ -238,7 +238,7 @@ void AccountInfoPage::CreateAccountInfo()
         //accMultiAcc;
 
         realmDb->SetPQuery("SELECT banreason FROM account_banned WHERE active = 1 AND id = '%u'", session->accid);
-        if (realmDb->ExecuteQuery())
+        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_YES) + ": " + realmDb->GetRow()->fields[0].GetWString());
         else
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_NO));
@@ -247,7 +247,7 @@ void AccountInfoPage::CreateAccountInfo()
 
 
         realmDb->SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->lastIp.toUTF8().c_str());
-        if (realmDb->ExecuteQuery())
+        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_YES));
         else
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_NO));
@@ -256,7 +256,7 @@ void AccountInfoPage::CreateAccountInfo()
 
 
         realmDb->SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
-        if (realmDb->ExecuteQuery())
+        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_YES));
         else
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_NO));

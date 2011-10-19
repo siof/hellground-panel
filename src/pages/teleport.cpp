@@ -123,7 +123,7 @@ void TeleportPage::LoadCharacters()
     {
         db->SetPQuery("SELECT guid, name FROM characters WHERE account = %u", session->accid);
 
-        if (db->ExecuteQuery())
+        if (db->ExecuteQuery() > RETURN_EMPTY)
         {
             std::list<DatabaseRow*> rows = db->GetRows();
             DatabaseRow * tmpRow;
@@ -176,11 +176,11 @@ void TeleportPage::Teleport()
 
         switch (db->ExecuteQuery())
         {
-            case -1:
+            case RETURN_ERROR:
                 wApp->log("error") << "DB QUERY Error. Number: [" << db->GetErrNo() << "] Message: " << db->GetError();
                 teleportStatus = TXT_DBERROR_QUERY_ERROR;
                 break;
-            case 0:
+            case RETURN_EMPTY:
                 teleportStatus = TXT_ERROR_CHARACTER_NOT_FOUND;
                 break;
             default:
