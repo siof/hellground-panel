@@ -545,4 +545,6 @@ struct Location
 
 extern void GetTeleportPosition(int race, Location & loc);
 
+#define RETURN_ERROR -1
+
 #endif // DEFINES_H_INCLUDED

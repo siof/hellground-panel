@@ -136,7 +136,7 @@ bool Database::SetPQuery(const char *format, ...)
     int res = VSNPRINTF(szQuery, MAX_QUERY_LEN, format, ap);
     va_end(ap);
 
-    if (res == -1)
+    if (res == RETURN_ERROR)
         return false;
 
     SetQuery(szQuery);
@@ -171,7 +171,7 @@ int Database::ExecuteQuery()
     console(DEBUG_DB, "\n\nExecuteQuery(): test1\n");
 
     if (mysql_query(connection, actualQuery.c_str()))
-        return -1;
+        return RETURN_ERROR;
 
     console(DEBUG_DB, "\n\nExecuteQuery(): test2\n");
 

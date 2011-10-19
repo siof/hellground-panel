@@ -250,7 +250,7 @@ void RegisterPage::Register()
 
     db->SetPQuery("INSERT INTO account (username, email, sha_pass_hash) VALUES ('%s', '%s', SHA1(UPPER('%s:%s')))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
 
-    if (db->ExecuteQuery() == -1)
+    if (db->ExecuteQuery() == RETURN_ERROR)
     {
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_REGISTRATION_ERROR);
         chRules->setChecked(false);
