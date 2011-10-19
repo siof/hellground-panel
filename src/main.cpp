@@ -101,7 +101,7 @@ void GetTeleportPosition(int race, Location & loc)
     loc.zone = RaceLocs[race - mod][1];
     loc.posX = RaceLocs[race - mod][2];
     loc.posY = RaceLocs[race - mod][3];
-    loc.posY = RaceLocs[race - mod][4];
+    loc.posZ = RaceLocs[race - mod][4];
 }
 
 class PlayersPanel : public WApplication
