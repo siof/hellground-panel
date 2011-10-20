@@ -102,7 +102,7 @@ enum BanInfoSlot
 };
 
 /********************************************//**
- * \brief Slots for Ban informations.
+ * \brief Slots for Mute informations.
  *
  * It's only for simple text update on lang change.
  *
@@ -118,6 +118,7 @@ enum MuteInfoSlot
 
     ACCMUTEINFO_SLOT_COUNT
 };
+
 
 /********************************************//**
  * \brief A class to represents Account Informations page
