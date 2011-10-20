@@ -176,21 +176,29 @@ void PassRecoveryPage::Recover()
 {
     bool validLogin = txtLogin->validate() == WValidator::Valid;
     bool validEmail = txtEmail->validate() == WValidator::Valid;
+
     if (!validLogin || !validEmail)
     {
         textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_NOT_VALID_DATA);
         return;
     }
 
-    Database * db = new Database(SERVER_DB_DATA, SQL_REALMDB);
+    Database db;
+
+    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        return;
+    }
+
     WString login, mail, pass;
 
-    login = db->EscapeString(txtLogin->text());
+    login = db.EscapeString(txtLogin->text());
 
     // check if account already exists
-    db->SetPQuery("SELECT id, email, NOW() FROM account WHERE username = '%s'", login.toUTF8().c_str());
+    db.SetPQuery("SELECT id, email, NOW() FROM account WHERE username = '%s'", login.toUTF8().c_str());
 
-    switch (db->ExecuteQuery())
+    switch (db.ExecuteQuery())
     {
         case RETURN_ERROR:
         case RETURN_EMPTY:
@@ -202,9 +210,9 @@ void PassRecoveryPage::Recover()
             break;
     }
 
-    uint32 accId = db->GetRow()->fields[0].GetUInt32();
-    WString dbMail = db->GetRow()->fields[1].GetWString();
-    std::string dbDate = db->GetRow()->fields[2].GetString();
+    uint32 accId = db.GetRow()->fields[0].GetUInt32();
+    WString dbMail = db.GetRow()->fields[1].GetWString();
+    std::string dbDate = db.GetRow()->fields[2].GetString();
 
     mail = txtEmail->text();
 
@@ -225,14 +233,19 @@ void PassRecoveryPage::Recover()
     for (int i = 0; i < passLen; ++i)
         tmpStr += (char)(irand(PASSWORD_ASCII_START, PASSWORD_ASCII_END));
 
-    pass = db->EscapeString(WString::fromUTF8(tmpStr));
+    pass = db.EscapeString(WString::fromUTF8(tmpStr));
 
     WString from, msg;
     from = MAIL_FROM;
 
     // check should be moved to other place but here will be usefull for SendMail tests ;)
-    db->SetPQuery("UPDATE account SET sha_pass_hash = SHA1(UPPER('%s:%s')) WHERE id = %i;", login.toUTF8().c_str(), pass.toUTF8().c_str(), accId);
-    db->ExecuteQuery();
+    db.SetPQuery("UPDATE account SET sha_pass_hash = SHA1(UPPER('%s:%s')), sessionkey = '', s = '', v = '', locked = '0' WHERE id = '%i';", login.toUTF8().c_str(), pass.toUTF8().c_str(), accId);
+
+    if (db.ExecuteQuery() == RETURN_ERROR)
+    {
+        textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        return;
+    }
 
     if (session->HasText(TXT_RECOVERY_MAIL))
         msg = session->GetText(TXT_RECOVERY_MAIL);
@@ -251,7 +264,6 @@ void PassRecoveryPage::Recover()
     SendMail(from, mail, session->GetText(TXT_RECOVERY_SUBJECT), msg);
 
     delete [] buffer;
-    delete db;
 
     ClearLogin();
     ClearEmail();

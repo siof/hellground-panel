@@ -106,18 +106,26 @@ void AccountInfoPage::UpdateTextWidgets()
 
 void AccountInfoPage::UpdateAccountInfo()
 {
-    Database * realmDb = new Database(SERVER_DB_DATA, SQL_REALMDB);
-    Database * charDb = new Database(SERVER_DB_DATA, SQL_CHARDB);
+    Database realmDb;
+    if (!realmDb.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        accInfoSlots[ACCINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        return;
+    }
+
     DatabaseRow * tmpRow;
                     //          0     1         2         3        4        5       6
-    realmDb->SetPQuery("SELECT id, last_ip, last_login, online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
+    realmDb.SetPQuery("SELECT id, last_ip, last_login, online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
 
     // there should be only one record in db
-    if (realmDb->ExecuteQuery() > RETURN_EMPTY)
+    if (realmDb.ExecuteQuery() > RETURN_EMPTY)
     {
-        tmpRow = realmDb->GetRow();
+        tmpRow = realmDb.GetRow();
 
         WWidget * tmpWidget = NULL;
+
+        accInfoSlots[ACCINFO_SLOT_ADDINFO].GetLabel()->setText("");
+        accInfoSlots[ACCINFO_SLOT_ADDINFO].SetTextId(0);
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_TYPE].GetWidget();
         ((WText*)tmpWidget)->setText(GetExpansionName(session, tmpRow->fields[4].GetInt()));
@@ -129,7 +137,7 @@ void AccountInfoPage::UpdateAccountInfo()
         ((WText*)tmpWidget)->setText(tmpRow->fields[1].GetWString());
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_IP_LOCK].GetWidget();
-        ((WText*)tmpWidget)->setText(tmpRow->fields[6].GetBool() ? session->GetText(TXT_LBL_ACC_IP_LOCK_ON) : session->GetText(TXT_LBL_ACC_IP_LOCK_OFF));
+        ((WPushButton*)tmpWidget)->setText(tmpRow->fields[6].GetBool() ? session->GetText(TXT_LBL_ACC_IP_LOCK_ON) : session->GetText(TXT_LBL_ACC_IP_LOCK_OFF));
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_ONLINE].GetWidget();
         ((WText*)tmpWidget)->setText(tmpRow->fields[3].GetBool() ? session->GetText(TXT_IS_ONLINE) : session->GetText(TXT_IS_OFFLINE));
@@ -146,31 +154,32 @@ void AccountInfoPage::UpdateAccountInfo()
 */
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_ACC_BAN].GetWidget();
-        realmDb->SetPQuery("SELECT banreason FROM account_banned WHERE active = 1 AND id = '%u'", session->accid);
-        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
-            ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_YES) + ": " + realmDb->GetRow()->fields[0].GetWString());
+        realmDb.SetPQuery("SELECT banreason FROM account_banned WHERE active = 1 AND id = '%u'", session->accid);
+        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
+            ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_YES) + ": " + realmDb.GetRow()->fields[0].GetWString());
         else
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_LAST_IP_BAN].GetWidget();
-        realmDb->SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->lastIp.toUTF8().c_str());
-        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
+        realmDb.SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->lastIp.toUTF8().c_str());
+        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_YES));
         else
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_CURR_IP_BAN].GetWidget();
-        realmDb->SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
-        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
+        realmDb.SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
+        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_YES));
         else
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
     }
+    else
+    {
+        wApp->log("error") << "DB Error: errno: [" << realmDb.GetErrNo() << "] error: " << realmDb.GetError() << " | query: " << realmDb.GetQuery();
+        accInfoSlots[ACCINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+    }
 
-    delete charDb;
-    charDb = NULL;
-    delete realmDb;
-    realmDb = NULL;
     tmpRow = NULL;
 }
 
@@ -188,23 +197,36 @@ void AccountInfoPage::CreateAccountInfo()
 
     clear();
 
-    Database * realmDb = new Database(SERVER_DB_DATA, SQL_REALMDB);
-    Database * charDb = new Database(SERVER_DB_DATA, SQL_CHARDB);
+    Database realmDb;
+
+    if (!realmDb.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        // this should be replaced with something better ...
+        HGMenu * tmpMenu = (HGMenu*)(parent()->parent());
+
+        if (tmpMenu)
+            tmpMenu->ShowError(ERROR_SLOT_ADDITIONAL, TXT_DBERROR_CANT_CONNECT);
+
+        return;
+    }
+
     DatabaseRow * tmpRow;
-                    //          0     1         2         3        4        5       6
-    realmDb->SetPQuery("SELECT id, last_ip, last_login, online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
+                    //         0     1         2         3        4        5       6
+    realmDb.SetPQuery("SELECT id, last_ip, last_login, online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
 
     // there should be only one record in db
-    if (realmDb->ExecuteQuery() > RETURN_EMPTY)
+    if (realmDb.ExecuteQuery() > RETURN_EMPTY)
     {
         console(DEBUG_CODE, "\nCreateAccountInfo(): Account founded\n");
 
         needInfoCreation = false;
-        tmpRow = realmDb->GetRow();
+        tmpRow = realmDb.GetRow();
 
         WWidget * tmpWidget = NULL;
 
-        accInfoSlots[ACCINFO_SLOT_INFO].SetAll(session, TXT_LBL_ACC_INFO, NULL, 3);
+        accInfoSlots[ACCINFO_SLOT_INFO].SetAll(session, TXT_LBL_ACC_INFO, NULL, 2);
+        accInfoSlots[ACCINFO_SLOT_ADDINFO].SetLabel(new WText(""));
+        accInfoSlots[ACCINFO_SLOT_ADDINFO].SetBreakCount(2);
 
         tmpWidget = new WText(GetExpansionName(session, tmpRow->fields[4].GetInt()));
         accInfoSlots[ACCINFO_SLOT_TYPE].SetAll(session, TXT_LBL_ACC_EXPANSION, tmpWidget, 2);
@@ -221,8 +243,9 @@ void AccountInfoPage::CreateAccountInfo()
         tmpWidget = new WText(tmpRow->fields[1].GetWString());
         accInfoSlots[ACCINFO_SLOT_LAST_LOGGED_IP].SetAll(session, TXT_LBL_ACC_LAST_IP, tmpWidget, 1);
 
-        tmpWidget = new WText(tmpRow->fields[6].GetBool() ? session->GetText(TXT_LBL_ACC_IP_LOCK_ON) : session->GetText(TXT_LBL_ACC_IP_LOCK_OFF));
+        tmpWidget = new WPushButton(tmpRow->fields[6].GetBool() ? session->GetText(TXT_LBL_ACC_IP_LOCK_ON) : session->GetText(TXT_LBL_ACC_IP_LOCK_OFF));
         accInfoSlots[ACCINFO_SLOT_IP_LOCK].SetAll(session, TXT_LBL_ACC_IP_LOCK, tmpWidget, 1);
+        ((WPushButton*)tmpWidget)->clicked().connect(this, &AccountInfoPage::ChangeIPLock);
 
         tmpWidget = new WText(tmpRow->fields[3].GetBool() ? session->GetText(TXT_IS_ONLINE) : session->GetText(TXT_IS_OFFLINE));
         accInfoSlots[ACCINFO_SLOT_ONLINE].SetAll(session, TXT_LBL_ACC_ONLINE, tmpWidget, 1);
@@ -237,17 +260,17 @@ void AccountInfoPage::CreateAccountInfo()
 
         //accMultiAcc;
 
-        realmDb->SetPQuery("SELECT banreason FROM account_banned WHERE active = 1 AND id = '%u'", session->accid);
-        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
-            tmpWidget = new WText(session->GetText(TXT_LBL_BAN_YES) + ": " + realmDb->GetRow()->fields[0].GetWString());
+        realmDb.SetPQuery("SELECT banreason FROM account_banned WHERE active = 1 AND id = '%u'", session->accid);
+        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
+            tmpWidget = new WText(session->GetText(TXT_LBL_BAN_YES) + ": " + realmDb.GetRow()->fields[0].GetWString());
         else
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_NO));
 
         accInfoSlots[ACCINFO_SLOT_ACC_BAN].SetAll(session, TXT_LBL_ACC_BAN, tmpWidget, 1);
 
 
-        realmDb->SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->lastIp.toUTF8().c_str());
-        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
+        realmDb.SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->lastIp.toUTF8().c_str());
+        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_YES));
         else
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_NO));
@@ -255,8 +278,8 @@ void AccountInfoPage::CreateAccountInfo()
         accInfoSlots[ACCINFO_SLOT_LAST_IP_BAN].SetAll(session, TXT_LBL_ACC_IP_BAN, tmpWidget, 1);
 
 
-        realmDb->SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
-        if (realmDb->ExecuteQuery() > RETURN_EMPTY)
+        realmDb.SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
+        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_YES));
         else
             tmpWidget = new WText(session->GetText(TXT_LBL_BAN_NO));
@@ -296,23 +319,11 @@ void AccountInfoPage::CreateAccountInfo()
         // this should be replaced with something better ...
         HGMenu * tmpMenu = (HGMenu*)(parent()->parent());
 
-        std::string dbError = realmDb->GetError();
-
-        delete charDb;
-        charDb = NULL;
-        delete realmDb;
-        realmDb = NULL;
+        std::string dbError = realmDb.GetError();
 
         if (tmpMenu)
             tmpMenu->ShowError(ERROR_SLOT_DB, dbError);
-
-        return;
     }
-
-    delete charDb;
-    charDb = NULL;
-    delete realmDb;
-    realmDb = NULL;
 }
 
 /********************************************//**
@@ -428,6 +439,35 @@ void AccountInfoPage::ClearAccountInfo()
     for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
         if (tmpWid = accInfoSlots[i].GetWidget())
             ((WText*)tmpWid)->setText("");
+}
+
+/********************************************//**
+ * \brief Changes IP Lock for account
+ *
+ * Function to change current IP lock state in session and DB.
+ *
+ ***********************************************/
+
+void AccountInfoPage::ChangeIPLock()
+{
+    Database db;
+    if (db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        session->locked = !session->locked;
+        db.SetPQuery("UPDATE account SET locked = '%i' WHERE id = %u", session->locked, session->accid);
+        if (db.ExecuteQuery() != RETURN_ERROR)
+        {
+            ((WPushButton*)accInfoSlots[ACCINFO_SLOT_IP_LOCK].GetWidget())->setText(session->locked ? session->GetText(TXT_LBL_ACC_IP_LOCK_ON) : session->GetText(TXT_LBL_ACC_IP_LOCK_OFF));
+            accInfoSlots[ACCINFO_SLOT_ADDINFO].GetLabel()->setText(session->locked ? session->GetText(TXT_IP_LOCK_ON) : session->GetText(TXT_IP_LOCK_OFF));
+        }
+        else
+        {
+            session->locked = !session->locked;
+            accInfoSlots[ACCINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        }
+    }
+    else
+       accInfoSlots[ACCINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
 }
 
 /********************************************//**

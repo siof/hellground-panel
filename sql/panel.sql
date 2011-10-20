@@ -161,6 +161,11 @@ New pass: %s"),
 (355, "Błąd validacji! Podano niepoprawne dane.", "Validation error! Wrong input data."),
 (356, "Postać musi być OFFLINE aby móc użyć opcji teleportacji.", "Character must be OFFLINE to use teleport option."),
 (357, "Postać nie została znaleziona !", "Character not found !"),
+(358, "Konto posiada włączoną blokadę IP oraz Twój aktualny IP nie pasuje do IP konta.
+
+Jeśli to konto jest Twoje użyj opcji odzyskiwania hasła w celu zresetowania hasła i blokady IP.", "Account where you tried to login has IP lock on and your current IP doesn't match to account IP.
+
+If it's your account please use password recovery option to reset password and IP lock."),
 
 (501, "DB Error: Błąd połączenia z bazą danych.", "DB Error: Can't connect to database."),
 (502, "DB Error: Zapytanie zwróciło pusty wynik.", "DB Error: Query result was empty."),

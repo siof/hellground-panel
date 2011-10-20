@@ -59,7 +59,6 @@ class Database
 {
 public:
     Database();
-    Database(std::string host, std::string login, std::string pass, unsigned int port, std::string db);
     ~Database();
 
     void SetQuery(std::string query);   // set query to execute

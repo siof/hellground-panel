@@ -198,20 +198,26 @@ void PassChangePage::Change()
     }
 
     std::string tmpLogin;
-    Database * db = new Database(SERVER_DB_DATA, SQL_REALMDB);
-    tmpPass = db->EscapeString(tmpPass);
-    tmpLogin = db->EscapeString(session->login);
+    Database db;
 
-    // check should be moved to other place but here will be usefull for SendMail tests ;)
-    db->SetPQuery("UPDATE account SET sha_pass_hash = SHA1(UPPER('%s:%s')) WHERE id = %i;", tmpLogin.c_str(), tmpPass.c_str(), session->accid);
-    db->ExecuteQuery();
+    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        return;
+    }
 
-    delete db;
+    tmpPass = db.EscapeString(tmpPass);
+    tmpLogin = db.EscapeString(session->login);
+
+    db.SetPQuery("UPDATE account SET sha_pass_hash = SHA1(UPPER('%s:%s')), sessionkey = '', s = '', v = '' WHERE id = %i;", tmpLogin.c_str(), tmpPass.c_str(), session->accid);
+
+    if (db.ExecuteQuery() == RETURN_ERROR)
+        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+    else
+        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_PASS_CHANGE_COMPLETE);
 
     ClearPass();
     ClearPass2();
-
-    textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_PASS_CHANGE_COMPLETE);
 }
 
 /********************************************//**

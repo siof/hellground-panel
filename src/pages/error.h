@@ -36,6 +36,14 @@ public:
     void UpdateText(SessionInfo * sess);
 
     WText * GetText() { return text; }
+
+    void Clear()
+    {
+        DeleteText();
+        textId = 0;
+        str = "";
+        textIdBased = false;
+    }
 private:
     WText * text;
     uint32 textId;
@@ -52,6 +60,7 @@ public:
     void refresh();     // overload WWidget::refresh() for automatic content change ;) this should be done for all pages
     void SetErrorMsg(ErrorSlots slot, uint32 txtId);
     void SetErrorMsg(ErrorSlots slot, WString &str);
+    void ClearSlots();
 private:
     void CreateErrors();
     void UpdateErrors();
