@@ -94,11 +94,29 @@ enum BanInfoSlot
 {
     ACCBANINFO_SLOT_BANDATE   = 0,      /**< Account ban date */
     ACCBANINFO_SLOT_UNBANDATE,          /**< Account unban date (or text for permanent bans) */
-    ACCBANINFO_SLOT_BANNEDBY,           /**< GM Name who banned accoun */
+    ACCBANINFO_SLOT_BANNEDBY,           /**< GM Name who banned account */
     ACCBANINFO_SLOT_BANREASON,          /**< Account ban reason */
     ACCBANINFO_SLOT_ACTIVE,             /**< Info if ban is still active */
 
     ACCBANINFO_SLOT_COUNT
+};
+
+/********************************************//**
+ * \brief Slots for Ban informations.
+ *
+ * It's only for simple text update on lang change.
+ *
+ ***********************************************/
+
+enum MuteInfoSlot
+{
+    ACCMUTEINFO_SLOT_MUTEDATE   = 0,    /**< Account mute date */
+    ACCMUTEINFO_SLOT_UNMUTEDATE,        /**< Account unmute date */
+    ACCMUTEINFO_SLOT_MUTEDBY,           /**< GM Name who muted account */
+    ACCMUTEINFO_SLOT_MUTEREASON,        /**< Account mute reason */
+    ACCMUTEINFO_SLOT_ACTIVE,            /**< Info if mute is still active */
+
+    ACCMUTEINFO_SLOT_COUNT
 };
 
 /********************************************//**
@@ -130,6 +148,8 @@ private:
     PageSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];
     /// contains headers for ban info table
     BasicTextItem banInfoSlots[ACCBANINFO_SLOT_COUNT];
+    /// contains headers for mute info table
+    BasicTextItem muteInfoSlots[ACCMUTEINFO_SLOT_COUNT];
 
     void UpdateTextWidgets();
     void UpdateInformations();
@@ -138,6 +158,8 @@ private:
     void UpdateAccountInfo(bool first = false);
 
     WTable * CreateBanInfo();
+
+    WTable * CreateMuteInfo();
 
     void ClearPage();
 
