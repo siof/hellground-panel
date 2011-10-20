@@ -37,7 +37,9 @@
 
 #include "../defines.h"
 #include "../slotItems.h"
+
 #include <WTabWidget>
+#include <WTable>
 
 /********************************************//**
  * \brief Slots for Basic page informations.
@@ -82,6 +84,24 @@ enum AccountInfoSlot
 };
 
 /********************************************//**
+ * \brief Slots for Ban informations.
+ *
+ * It's only for simple text update on lang change.
+ *
+ ***********************************************/
+
+enum BanInfoSlot
+{
+    ACCBANINFO_SLOT_BANDATE   = 0,      /**< Account ban date */
+    ACCBANINFO_SLOT_UNBANDATE,          /**< Account unban date (or text for permanent bans) */
+    ACCBANINFO_SLOT_BANNEDBY,           /**< GM Name who banned accoun */
+    ACCBANINFO_SLOT_BANREASON,          /**< Account ban reason */
+    ACCBANINFO_SLOT_ACTIVE,             /**< Info if ban is still active */
+
+    ACCBANINFO_SLOT_COUNT
+};
+
+/********************************************//**
  * \brief A class to represents Account Informations page
  *
  * This class is container for other widgets with account informations.
@@ -106,15 +126,18 @@ private:
 
     /// contains global page info slots like page title or additional info like errors
     BasicTextItem pageInfoSlots[ACCPAGEINFO_SLOT_COUNT];
-
     /// contains account info slots so we can update them in easy way ;)
     PageSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];
+    /// contains headers for ban info table
+    BasicTextItem banInfoSlots[ACCBANINFO_SLOT_COUNT];
 
     void UpdateTextWidgets();
     void UpdateInformations();
 
     WContainerWidget * CreateAccountInfo();
     void UpdateAccountInfo(bool first = false);
+
+    WTable * CreateBanInfo();
 
     void ClearPage();
 
