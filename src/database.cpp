@@ -110,12 +110,6 @@ Database::Database()
     connection = mysql_init(NULL);
 }
 
-Database::Database(std::string host, std::string login, std::string pass, unsigned int port, std::string db)
-{
-    connection = mysql_init(NULL);
-    Connect(host, login, pass, port, db);
-}
-
 Database::~Database()
 {
     Clear();

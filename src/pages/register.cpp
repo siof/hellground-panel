@@ -216,14 +216,21 @@ void RegisterPage::Register()
         return;
     }
 
-    Database * db = new Database(SERVER_DB_DATA, SQL_REALMDB);
+    Database db;
+
+    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        textSlots[REG_TEXT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        return;
+    }
+
     WString login, mail, pass;
 
-    login = db->EscapeString(txtLogin->text());
+    login = db.EscapeString(txtLogin->text());
 
     // check if account already exists
-    db->SetPQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str());
-    if (db->ExecuteQuery() > RETURN_EMPTY)
+    db.SetPQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str());
+    if (db.ExecuteQuery() > RETURN_EMPTY)
     {
         ClearLogin();
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_LBL_REG_ACC_EXISTS);
@@ -243,19 +250,19 @@ void RegisterPage::Register()
     for (int i = 0; i < passLen; ++i)
         tmpStr += (char)(irand(PASSWORD_ASCII_START, PASSWORD_ASCII_END));
 
-    pass = db->EscapeString(WString::fromUTF8(tmpStr));
+    pass = db.EscapeString(WString::fromUTF8(tmpStr));
 
     WString from, msg;
     from = MAIL_FROM;
 
-    db->SetPQuery("INSERT INTO account (username, email, sha_pass_hash) VALUES ('%s', '%s', SHA1(UPPER('%s:%s')))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
+    db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash) VALUES ('%s', '%s', SHA1(UPPER('%s:%s')))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
 
-    if (db->ExecuteQuery() == RETURN_ERROR)
+    if (db.ExecuteQuery() == RETURN_ERROR)
     {
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_REGISTRATION_ERROR);
         chRules->setChecked(false);
         CheckChange();
-        wApp->log("error") << "Registration Database Fail! login: " << login << " email: " << mail << " . Error: " << db->GetError();
+        wApp->log("error") << "Registration Database Fail! login: " << login << " email: " << mail << " . Error: " << db.GetError();
         return;
     }
 
@@ -274,7 +281,6 @@ void RegisterPage::Register()
     SendMail(from, mail, session->GetText(TXT_REGISTRATION_SUBJECT), msg);
 
     delete [] buffer;
-    delete db;
 
     ClearLogin();
     ClearEmail();

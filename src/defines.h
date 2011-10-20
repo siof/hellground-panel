@@ -436,6 +436,7 @@ enum Texts
     TXT_ERROR_NOT_VALID_DATA        = 355,  /**< Error info: Validate error: wrong data */
     TXT_ERROR_CANT_TELEPORT_ONLINE  = 356,  /**< Error info: Only offline characters can be teleported */
     TXT_ERROR_CHARACTER_NOT_FOUND   = 357,  /**< Error info: character not found */
+    TXT_ERROR_IP_MISMATCH           = 358,  /**< Error info: IP lock on and IP is not matching */
 
     TXT_DBERROR_CANT_CONNECT        = 501,  /**< DB Error info: can't connect to database */
     TXT_DBERROR_QUERY_EMPTY         = 502,  /**< DB Error info: result empty */

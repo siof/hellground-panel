@@ -158,6 +158,12 @@ void ErrorPage::SetErrorMsg(ErrorSlots slot, WString &str)
     errors[slot].SetText(str);
 }
 
+void ErrorPage::ClearSlots()
+{
+    for (int i = 0; i < ERROR_SLOT_COUNT; ++i)
+        errors[i].Clear();
+}
+
 void ErrorPage::UpdateErrors()
 {
     for (int i = 0; i < ERROR_SLOT_COUNT; ++i)

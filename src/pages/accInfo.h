@@ -48,6 +48,7 @@
 enum AccountInfoSlot
 {
     ACCINFO_SLOT_INFO   = 0,        /**< Page title text. */
+    ACCINFO_SLOT_ADDINFO,           /**< Additional info slot */
     ACCINFO_SLOT_TYPE,              /**< Text with account expansion name. */
     ACCINFO_SLOT_CURRENT_IP,        /**< Current (panel session) ip. */
     ACCINFO_SLOT_CREATE_DATE,       /**< Account create time. */
@@ -96,6 +97,7 @@ private:
     void CreateAccountInfo();
     void UpdateAccountInfo();
     void ClearAccountInfo();
+    void ChangeIPLock();
 
     WString GetEmail();
 };

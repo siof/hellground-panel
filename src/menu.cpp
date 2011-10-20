@@ -296,35 +296,33 @@ void HGMenu::LogMeIn()
         return;
     }
 
-    Database * db = new Database();
-    if (!db->Connect(SERVER_DB_DATA, SQL_REALMDB))
+    Database db;
+    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
         SetError(ERROR_SLOT_BASE, TXT_MENU_ERROR);
-        std::string tmpErr = db->GetError();
+        std::string tmpErr = db.GetError();
         SetError(ERROR_SLOT_DB, tmpErr);
         ShowError();
-        delete db;
         return;
     }
 
     // simple login check ... should be replaced with something better
 
-    std::string escapedLogin = db->EscapeString(login->text());
-    std::string escapedPass = db->EscapeString(pass->text());
+    std::string escapedLogin = db.EscapeString(login->text());
+    std::string escapedPass = db.EscapeString(pass->text());
 
                 //           0            1         2     3       4       5         6       7         8
-    db->SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion FROM account WHERE username = '%s' AND sha_pass_hash = SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedLogin.c_str(), escapedPass.c_str());
-    int executeResult = db->ExecuteQuery();
+    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion FROM account WHERE username = '%s' AND sha_pass_hash = SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedLogin.c_str(), escapedPass.c_str());
 
     // execute will return 0 if result will be empty and -1 if there will be DB error.
-    switch (executeResult)
+    switch (db.ExecuteQuery())
     {
         case RETURN_ERROR:
         {
             // if there was database error
-            std::string tmpErr = db->GetError();
+            std::string tmpErr = db.GetError();
             ShowError(ERROR_SLOT_DB, tmpErr);
-            break;
+            return;
         }
         case RETURN_EMPTY:
         {
@@ -332,54 +330,56 @@ void HGMenu::LogMeIn()
             ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
             ClearLogin();
             ClearPass();
-            break;
+            return;
         }
         default:
         {
-            DatabaseRow * row = db->GetRow(0);
-            if (row)
-            {
-                session->login = row->fields[0].GetWString();
-                session->pass = row->fields[1].GetWString();
-                session->accid = row->fields[2].GetUInt64();
-                session->accLvl = row->fields[3].GetAccountLevel();
-                session->email = row->fields[4].GetWString();
-                session->joinDate = row->fields[5].GetWString();
-                session->lastIp = row->fields[6].GetWString();
-                session->locked = row->fields[7].GetBool();
-                session->expansion = row->fields[8].GetInt();
-
-                login->setText("");
-                pass->setText("");
-
-                login->setHidden(true, anim);
-                pass->setHidden(true, anim);
-                btnLog->setHidden(true, anim);
-                login->setDisabled(true);
-                pass->setDisabled(true);
-                btnLog->setDisabled(true);
-                loginContainer->setHidden(true);
-
-                ShowMenuOptions();
-                refresh();
-
-                WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER);
-                if (tmpItem)
-                    tmpItem->hide();
-
-                menu->select(0);
-                RefreshActiveMenuWidget();
-            }
-            else
+            DatabaseRow * row = db.GetRow();
+            if (!row)
             {
                 std::string tmpErr = "ERROR: Row not found!";
                 ShowError(ERROR_SLOT_BASE, tmpErr);
+                return;
             }
+
+            if (row->fields[7].GetBool() && row->fields[6].GetWString() != session->sessionIp)
+            {
+                ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_IP_MISMATCH);
+                return;
+            }
+
+            session->login = row->fields[0].GetWString();
+            session->pass = row->fields[1].GetWString();
+            session->accid = row->fields[2].GetUInt64();
+            session->accLvl = row->fields[3].GetAccountLevel();
+            session->email = row->fields[4].GetWString();
+            session->joinDate = row->fields[5].GetWString();
+            session->lastIp = row->fields[6].GetWString();
+            session->locked = row->fields[7].GetBool();
+            session->expansion = row->fields[8].GetInt();
+
+            login->setText("");
+            pass->setText("");
+
+            login->setHidden(true, anim);
+            pass->setHidden(true, anim);
+            btnLog->setHidden(true, anim);
+            login->setDisabled(true);
+            pass->setDisabled(true);
+            btnLog->setDisabled(true);
+            loginContainer->setHidden(true);
+
+            ShowMenuOptions();
+            refresh();
+
+            WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER);
+            if (tmpItem)
+                tmpItem->hide();
+
+            menu->select(0);
+            RefreshActiveMenuWidget();
         }
     }
-
-    delete db;
-    db = NULL;
 }
 
 void HGMenu::SetPlLang()
@@ -495,7 +495,6 @@ void HGMenu::ClearPass()
     if (pass)
         pass->setText("");
 }
-
 
 bool HGMenu::SetError(ErrorSlots error, std::string &msg, ErrorPage * err)
 {

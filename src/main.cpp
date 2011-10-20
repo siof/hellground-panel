@@ -238,13 +238,14 @@ void PlayersPanel::LoadLangTexts()
 {
     console(DEBUG_CODE, "Call void PlayersPanel::LoadLangTexts()");
 
-    if (Database * tmpDb = new Database(PANEL_DB_DATA, SQL_PANELDB))
+    Database tmpDb;
+    if (tmpDb.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        tmpDb->SetQuery("SELECT id, lang_0, lang_1 FROM LangTexts");
+        tmpDb.SetQuery("SELECT id, lang_0, lang_1 FROM LangTexts");
 
-        if (tmpDb->ExecuteQuery() > 0)
+        if (tmpDb.ExecuteQuery() > RETURN_EMPTY)
         {
-            std::list<DatabaseRow*> tmpList = tmpDb->GetRows();
+            std::list<DatabaseRow*> tmpList = tmpDb.GetRows();
 
             for (std::list<DatabaseRow*>::const_iterator itr = tmpList.begin(); itr != tmpList.end(); ++itr)
             {
@@ -261,7 +262,6 @@ void PlayersPanel::LoadLangTexts()
                 }
             }
         }
-        delete tmpDb;
     }
 }
 
