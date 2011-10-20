@@ -57,7 +57,7 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
     addWidget(tabs);
 
     tabs->addTab(CreateAccountInfo(), sess->GetText(TXT_LBL_ACC_TAB_INFO), WTabWidget::PreLoading);
-    tabs->addTab(new WText("ban test"), sess->GetText(TXT_LBL_ACC_TAB_BAN), WTabWidget::PreLoading);
+    tabs->addTab(CreateBanInfo(), sess->GetText(TXT_LBL_ACC_TAB_BAN), WTabWidget::PreLoading);
     tabs->addTab(new WText("mute test"), sess->GetText(TXT_LBL_ACC_TAB_MUTE), WTabWidget::PreLoading);
     tabs->addTab(new WText("ticket test"), sess->GetText(TXT_LBL_ACC_TAB_TICKET), WTabWidget::PreLoading);
 }
@@ -107,17 +107,22 @@ void AccountInfoPage::UpdateTextWidgets()
     for (i = 0; i < ACCPAGEINFO_SLOT_COUNT; ++i)
         pageInfoSlots[i].UpdateLabel(session);
 
+    int count = tabs->count();
+
+    for (i = 0; i < count; ++i)
+        tabs->setTabText(i, session->GetText(TXT_LBL_ACC_TAB_INFO + i));
+
     switch (tabs->currentIndex())
     {
         case 0:
             for (i = 0; i < ACCINFO_SLOT_COUNT; ++i)
                 accInfoSlots[i].UpdateLabel(session);
             break;
-/*        case 1:
-            for (i = 0; i < BANINFO_SLOT_COUNT; ++i)
+        case 1:
+            for (i = 0; i < ACCBANINFO_SLOT_COUNT; ++i)
                 banInfoSlots[i].UpdateLabel(session);
             break;
-        case 2:
+/*        case 2:
             for (i = 0; i < MUTEINFO_SLOT_COUNT; ++i)
                 muteInfoSlots[i].UpdateLabel(session);
             break;
@@ -144,10 +149,7 @@ void AccountInfoPage::UpdateInformations()
         case 0:
             UpdateAccountInfo();
             break;
-/*        case 1:
-            UpdateBanInfo();
-            break;
-        case 2:
+/*        case 2:
             UpdateMuteInfo();
             break;
         case 3:
@@ -168,6 +170,20 @@ void AccountInfoPage::UpdateInformations()
 void AccountInfoPage::UpdateAccountInfo(bool first)
 {
     WWidget * tmpWidget = NULL;
+
+    if (first)
+    {
+        tmpWidget = accInfoSlots[ACCINFO_SLOT_CURRENT_IP].GetWidget();
+        ((WText*)tmpWidget)->setText(session->sessionIp);
+
+        tmpWidget = accInfoSlots[ACCINFO_SLOT_CREATE_DATE].GetWidget();
+        ((WText*)tmpWidget)->setText(session->joinDate);
+
+        tmpWidget = accInfoSlots[ACCINFO_SLOT_EMAIL].GetWidget();
+        ((WText*)tmpWidget)->setText(GetEmail());
+        return;
+    }
+
     Database realmDb;
 
     if (!realmDb.Connect(SERVER_DB_DATA, SQL_REALMDB))
@@ -183,18 +199,6 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
     // there should be only one record in db
     if (realmDb.ExecuteQuery() > RETURN_EMPTY)
     {
-        if (first)
-        {
-            tmpWidget = accInfoSlots[ACCINFO_SLOT_CURRENT_IP].GetWidget();
-            ((WText*)tmpWidget)->setText(session->sessionIp);
-
-            tmpWidget = accInfoSlots[ACCINFO_SLOT_EMAIL].GetWidget();
-            ((WText*)tmpWidget)->setText(GetEmail());
-
-            tmpWidget = accInfoSlots[ACCINFO_SLOT_EMAIL].GetWidget();
-            ((WText*)tmpWidget)->setText(GetEmail());
-        }
-
         tmpRow = realmDb.GetRow();
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_TYPE].GetWidget();
@@ -318,6 +322,8 @@ WContainerWidget * AccountInfoPage::CreateAccountInfo()
         for (int j = 0; j < tmpCount; ++j)
             basicInfo->addWidget(new WBreak());
     }
+
+    UpdateAccountInfo(true);
 
     return basicInfo;
 }
@@ -464,6 +470,66 @@ void AccountInfoPage::ChangeIPLock()
     }
     else
        pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+}
+
+/********************************************//**
+ * \brief Creates ban informations
+ *
+ * All bans (also expired) on account will be listed.
+ * I think there is no need to update this informations...
+ *
+ ***********************************************/
+
+WTable * AccountInfoPage::CreateBanInfo()
+{
+    WTable * banInfo = new WTable();
+
+    banInfo->setHeaderCount(1);
+
+    banInfoSlots[ACCBANINFO_SLOT_BANDATE].SetLabel(session, TXT_LBL_BAN_FROM);
+    banInfoSlots[ACCBANINFO_SLOT_UNBANDATE].SetLabel(session, TXT_LBL_BAN_TO);
+    banInfoSlots[ACCBANINFO_SLOT_BANNEDBY].SetLabel(session, TXT_LBL_BAN_BY);
+    banInfoSlots[ACCBANINFO_SLOT_BANREASON].SetLabel(session, TXT_LBL_BAN_REASON);
+    banInfoSlots[ACCBANINFO_SLOT_ACTIVE].SetLabel(session, TXT_LBL_BAN_ACTIVE);
+
+    int i;
+    for (i = 0; i < ACCBANINFO_SLOT_COUNT; ++i)
+        banInfo->elementAt(0, i)->addWidget(banInfoSlots[i].GetLabel());
+
+    Database realmDB;
+
+    if (!realmDB.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        return banInfo;
+    }
+
+    realmDB.SetPQuery("SELECT FROM_UNIXTIME(bandate), FROM_UNIXTIME(unbandate), bannedby, banreason, active FROM account_banned WHERE id = %i ORDER BY active DESC, bandate DESC", session->accid);
+
+    int count = realmDB.ExecuteQuery();
+
+    switch (count)
+    {
+        case RETURN_ERROR:
+            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            break;
+        case RETURN_EMPTY:
+            break;
+        default:
+            {
+                i = 1;
+                int j;
+                std::list<DatabaseRow*> rows = realmDB.GetRows();
+                DatabaseRow * tmpRow;
+
+                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+                    for (j = 0; j < 5; ++j)
+                        banInfo->elementAt(i, j)->addWidget(new WText((*itr)->fields[j].GetWString()));
+            }
+            break;
+    }
+
+    return banInfo;
 }
 
 /********************************************//**
