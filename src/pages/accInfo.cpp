@@ -44,7 +44,22 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
 {
     session = sess;
     setContentAlignment(AlignCenter|AlignTop);
-    needInfoCreation = true;    /// we should create content for new page
+
+    pageInfoSlots[ACCPAGEINFO_SLOT_INFO].SetLabel(new WText("", this), TXT_LBL_ACC_INFO);
+    addWidget(new WBreak());
+    addWidget(new WBreak());
+
+    pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(new WText("", this));
+    addWidget(new WBreak());
+    addWidget(new WBreak());
+
+    tabs = new WTabWidget();
+    addWidget(tabs);
+
+    tabs->addTab(CreateAccountInfo(), sess->GetText(TXT_LBL_ACC_TAB_INFO), WTabWidget::PreLoading);
+    tabs->addTab(new WText("ban test"), sess->GetText(TXT_LBL_ACC_TAB_BAN), WTabWidget::PreLoading);
+    tabs->addTab(new WText("mute test"), sess->GetText(TXT_LBL_ACC_TAB_MUTE), WTabWidget::PreLoading);
+    tabs->addTab(new WText("ticket test"), sess->GetText(TXT_LBL_ACC_TAB_TICKET), WTabWidget::PreLoading);
 }
 
 AccountInfoPage::~AccountInfoPage()
@@ -68,16 +83,11 @@ void AccountInfoPage::refresh()
     // only logged in players can visit this page so there is no need to create/update it in other cases
     if (session->accLvl > LVL_NOT_LOGGED)
     {
-        if (needInfoCreation)
-            CreateAccountInfo();
-        else
-        {
-            UpdateTextWidgets();
-            UpdateAccountInfo();
-        }
+        UpdateTextWidgets();
+        UpdateInformations();
     }
     else
-        ClearAccountInfo();
+        ClearPage();
 
     WContainerWidget::refresh();
 }
@@ -85,31 +95,84 @@ void AccountInfoPage::refresh()
 /********************************************//**
  * \brief Update text widgets.
  *
- * All text label widgets in all slots will be updated,
- * so if player will change language then automagically
- * labels should change too ;)
+ * All text label widgets in all slots from current tab
+ * will be updated, so if player will change language
+ * then automagically labels should change too ;)
  *
  ***********************************************/
 
 void AccountInfoPage::UpdateTextWidgets()
 {
-    for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
-        accInfoSlots[i].UpdateLabel(session);
+    int i;
+    for (i = 0; i < ACCPAGEINFO_SLOT_COUNT; ++i)
+        pageInfoSlots[i].UpdateLabel(session);
+
+    switch (tabs->currentIndex())
+    {
+        case 0:
+            for (i = 0; i < ACCINFO_SLOT_COUNT; ++i)
+                accInfoSlots[i].UpdateLabel(session);
+            break;
+/*        case 1:
+            for (i = 0; i < BANINFO_SLOT_COUNT; ++i)
+                banInfoSlots[i].UpdateLabel(session);
+            break;
+        case 2:
+            for (i = 0; i < MUTEINFO_SLOT_COUNT; ++i)
+                muteInfoSlots[i].UpdateLabel(session);
+            break;
+        case 3:
+            for (i = 0; i < TICKETINFO_SLOT_COUNT; ++i)
+                ticketInfoSlots[i].UpdateLabel(session);
+            break;*/
+        default:
+            break;
+    }
 }
 
 /********************************************//**
- * \brief Update Account Informations widgets.
+ * \brief Update informations.
+ *
+ * Informations from current selected tab will be updated.
+ *
+ ***********************************************/
+
+void AccountInfoPage::UpdateInformations()
+{
+    switch (tabs->currentIndex())
+    {
+        case 0:
+            UpdateAccountInfo();
+            break;
+/*        case 1:
+            UpdateBanInfo();
+            break;
+        case 2:
+            UpdateMuteInfo();
+            break;
+        case 3:
+            UpdateTicketInfo();
+            break;*/
+        default:
+            break;
+    }
+}
+
+/********************************************//**
+ * \brief Update Basic Account Informations widgets.
  *
  * Only informations update. There is no need to delete old and create new widgets.
  *
  ***********************************************/
 
-void AccountInfoPage::UpdateAccountInfo()
+void AccountInfoPage::UpdateAccountInfo(bool first)
 {
+    WWidget * tmpWidget = NULL;
     Database realmDb;
+
     if (!realmDb.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        accInfoSlots[ACCINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
         return;
     }
 
@@ -120,12 +183,19 @@ void AccountInfoPage::UpdateAccountInfo()
     // there should be only one record in db
     if (realmDb.ExecuteQuery() > RETURN_EMPTY)
     {
+        if (first)
+        {
+            tmpWidget = accInfoSlots[ACCINFO_SLOT_CURRENT_IP].GetWidget();
+            ((WText*)tmpWidget)->setText(session->sessionIp);
+
+            tmpWidget = accInfoSlots[ACCINFO_SLOT_EMAIL].GetWidget();
+            ((WText*)tmpWidget)->setText(GetEmail());
+
+            tmpWidget = accInfoSlots[ACCINFO_SLOT_EMAIL].GetWidget();
+            ((WText*)tmpWidget)->setText(GetEmail());
+        }
+
         tmpRow = realmDb.GetRow();
-
-        WWidget * tmpWidget = NULL;
-
-        accInfoSlots[ACCINFO_SLOT_ADDINFO].GetLabel()->setText("");
-        accInfoSlots[ACCINFO_SLOT_ADDINFO].SetTextId(0);
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_TYPE].GetWidget();
         ((WText*)tmpWidget)->setText(GetExpansionName(session, tmpRow->fields[4].GetInt()));
@@ -177,7 +247,7 @@ void AccountInfoPage::UpdateAccountInfo()
     else
     {
         wApp->log("error") << "DB Error: errno: [" << realmDb.GetErrNo() << "] error: " << realmDb.GetError() << " | query: " << realmDb.GetQuery();
-        accInfoSlots[ACCINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
     }
 
     tmpRow = NULL;
@@ -191,139 +261,65 @@ void AccountInfoPage::UpdateAccountInfo()
  *
  ***********************************************/
 
-void AccountInfoPage::CreateAccountInfo()
+WContainerWidget * AccountInfoPage::CreateAccountInfo()
 {
-    console(DEBUG_CODE, "\nCall void AccountInfoPage::CreateAccountInfo()\n");
+    console(DEBUG_CODE, "\nCall WContainerWidget * AccountInfoPage::CreateAccountInfo()\n");
+    WContainerWidget * basicInfo = new WContainerWidget();
 
-    clear();
+    accInfoSlots[ACCINFO_SLOT_TYPE].SetAll(session, TXT_LBL_ACC_EXPANSION, new WText(""), 2);
 
-    Database realmDb;
+    accInfoSlots[ACCINFO_SLOT_CURRENT_IP].SetAll(session, TXT_CURRENT_IP, new WText(""), 2);
 
-    if (!realmDb.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    accInfoSlots[ACCINFO_SLOT_CREATE_DATE].SetAll(session, TXT_LBL_ACC_CREATE_DATE, new WText(""), 1);
+
+    accInfoSlots[ACCINFO_SLOT_LAST_LOGIN_DATE].SetAll(session, TXT_LBL_ACC_LAST_LOGIN, new WText(""), 1);
+
+    accInfoSlots[ACCINFO_SLOT_LAST_LOGGED_IP].SetAll(session, TXT_LBL_ACC_LAST_IP, new WText(""), 1);
+
+    accInfoSlots[ACCINFO_SLOT_IP_LOCK].SetAll(session, TXT_LBL_ACC_IP_LOCK, new WPushButton("IP lock"), 1);
+    ((WPushButton*)accInfoSlots[ACCINFO_SLOT_IP_LOCK].GetWidget())->clicked().connect(this, &AccountInfoPage::ChangeIPLock);
+
+    accInfoSlots[ACCINFO_SLOT_ONLINE].SetAll(session, TXT_LBL_ACC_ONLINE, new WText(""), 1);
+
+    accInfoSlots[ACCINFO_SLOT_CLIENT_VERSION].SetAll(session, TXT_LBL_ACC_CLIENT_VERSION, new WText(""), 1);
+
+    accInfoSlots[ACCINFO_SLOT_EMAIL].SetAll(session, TXT_LBL_ACC_MAIL, new WText(""), 1);
+
+    //accVotePoints;
+
+    //accMultiAcc;
+
+    accInfoSlots[ACCINFO_SLOT_ACC_BAN].SetAll(session, TXT_LBL_ACC_BAN, new WText(""), 1);
+
+    accInfoSlots[ACCINFO_SLOT_LAST_IP_BAN].SetAll(session, TXT_LBL_ACC_IP_BAN, new WText(""), 1);
+
+    accInfoSlots[ACCINFO_SLOT_CURR_IP_BAN].SetAll(session, TXT_CURRENT_IP_BAN, new WText(""), 1);
+
+    int tmpCount;
+
+    console(DEBUG_CODE, "\nCreateAccountInfo(): ACC_INFO_SLOT_COUNT: %i\n", ACCINFO_SLOT_COUNT);
+
+    WWidget * tmpWidget;
+    // add widgets to page
+    for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
     {
-        // this should be replaced with something better ...
-        HGMenu * tmpMenu = (HGMenu*)(parent()->parent());
+        tmpWidget = accInfoSlots[i].GetLabel();
+        if (tmpWidget)
+            basicInfo->addWidget(tmpWidget);
 
-        if (tmpMenu)
-            tmpMenu->ShowError(ERROR_SLOT_ADDITIONAL, TXT_DBERROR_CANT_CONNECT);
+        tmpWidget = accInfoSlots[i].GetWidget();
+        if (tmpWidget)
+            basicInfo->addWidget(tmpWidget);
 
-        return;
+        tmpCount = accInfoSlots[i].GetBreakCount();
+
+        console(DEBUG_CODE, "\nCreateAccountInfo(): i: %i, tmpCount: %i\n", i, tmpCount);
+
+        for (int j = 0; j < tmpCount; ++j)
+            basicInfo->addWidget(new WBreak());
     }
 
-    DatabaseRow * tmpRow;
-                    //         0     1         2         3        4        5       6
-    realmDb.SetPQuery("SELECT id, last_ip, last_login, online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
-
-    // there should be only one record in db
-    if (realmDb.ExecuteQuery() > RETURN_EMPTY)
-    {
-        console(DEBUG_CODE, "\nCreateAccountInfo(): Account founded\n");
-
-        needInfoCreation = false;
-        tmpRow = realmDb.GetRow();
-
-        WWidget * tmpWidget = NULL;
-
-        accInfoSlots[ACCINFO_SLOT_INFO].SetAll(session, TXT_LBL_ACC_INFO, NULL, 2);
-        accInfoSlots[ACCINFO_SLOT_ADDINFO].SetLabel(new WText(""));
-        accInfoSlots[ACCINFO_SLOT_ADDINFO].SetBreakCount(2);
-
-        tmpWidget = new WText(GetExpansionName(session, tmpRow->fields[4].GetInt()));
-        accInfoSlots[ACCINFO_SLOT_TYPE].SetAll(session, TXT_LBL_ACC_EXPANSION, tmpWidget, 2);
-
-        tmpWidget = new WText(session->sessionIp);
-        accInfoSlots[ACCINFO_SLOT_CURRENT_IP].SetAll(session, TXT_CURRENT_IP, tmpWidget, 2);
-
-        tmpWidget = new WText(session->joinDate);
-        accInfoSlots[ACCINFO_SLOT_CREATE_DATE].SetAll(session, TXT_LBL_ACC_CREATE_DATE, tmpWidget, 1);
-
-        tmpWidget = new WText(tmpRow->fields[2].GetWString());
-        accInfoSlots[ACCINFO_SLOT_LAST_LOGIN_DATE].SetAll(session, TXT_LBL_ACC_LAST_LOGIN, tmpWidget, 1);
-
-        tmpWidget = new WText(tmpRow->fields[1].GetWString());
-        accInfoSlots[ACCINFO_SLOT_LAST_LOGGED_IP].SetAll(session, TXT_LBL_ACC_LAST_IP, tmpWidget, 1);
-
-        tmpWidget = new WPushButton(tmpRow->fields[6].GetBool() ? session->GetText(TXT_LBL_ACC_IP_LOCK_ON) : session->GetText(TXT_LBL_ACC_IP_LOCK_OFF));
-        accInfoSlots[ACCINFO_SLOT_IP_LOCK].SetAll(session, TXT_LBL_ACC_IP_LOCK, tmpWidget, 1);
-        ((WPushButton*)tmpWidget)->clicked().connect(this, &AccountInfoPage::ChangeIPLock);
-
-        tmpWidget = new WText(tmpRow->fields[3].GetBool() ? session->GetText(TXT_IS_ONLINE) : session->GetText(TXT_IS_OFFLINE));
-        accInfoSlots[ACCINFO_SLOT_ONLINE].SetAll(session, TXT_LBL_ACC_ONLINE, tmpWidget, 1);
-
-        tmpWidget = new WText(GetLocale(tmpRow->fields[5].GetInt()));
-        accInfoSlots[ACCINFO_SLOT_CLIENT_VERSION].SetAll(session, TXT_LBL_ACC_CLIENT_VERSION, tmpWidget, 1);
-
-        tmpWidget = new WText(GetEmail());
-        accInfoSlots[ACCINFO_SLOT_EMAIL].SetAll(session, TXT_LBL_ACC_MAIL, tmpWidget, 1);
-
-        //accVotePoints;
-
-        //accMultiAcc;
-
-        realmDb.SetPQuery("SELECT banreason FROM account_banned WHERE active = 1 AND id = '%u'", session->accid);
-        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
-            tmpWidget = new WText(session->GetText(TXT_LBL_BAN_YES) + ": " + realmDb.GetRow()->fields[0].GetWString());
-        else
-            tmpWidget = new WText(session->GetText(TXT_LBL_BAN_NO));
-
-        accInfoSlots[ACCINFO_SLOT_ACC_BAN].SetAll(session, TXT_LBL_ACC_BAN, tmpWidget, 1);
-
-
-        realmDb.SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->lastIp.toUTF8().c_str());
-        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
-            tmpWidget = new WText(session->GetText(TXT_LBL_BAN_YES));
-        else
-            tmpWidget = new WText(session->GetText(TXT_LBL_BAN_NO));
-
-        accInfoSlots[ACCINFO_SLOT_LAST_IP_BAN].SetAll(session, TXT_LBL_ACC_IP_BAN, tmpWidget, 1);
-
-
-        realmDb.SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
-        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
-            tmpWidget = new WText(session->GetText(TXT_LBL_BAN_YES));
-        else
-            tmpWidget = new WText(session->GetText(TXT_LBL_BAN_NO));
-
-        accInfoSlots[ACCINFO_SLOT_CURR_IP_BAN].SetAll(session, TXT_CURRENT_IP_BAN, tmpWidget, 1);
-
-//        accCharacters;
-//        charName;
-//        charClass;
-
-
-        int tmpCount;
-
-        console(DEBUG_CODE, "\nCreateAccountInfo(): ACC_INFO_SLOT_COUNT: %i\n", ACCINFO_SLOT_COUNT);
-
-        // add widgets to page
-        for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
-        {
-            tmpWidget = accInfoSlots[i].GetLabel();
-            if (tmpWidget)
-                addWidget(tmpWidget);
-
-            tmpWidget = accInfoSlots[i].GetWidget();
-            if (tmpWidget)
-                addWidget(tmpWidget);
-
-            tmpCount = accInfoSlots[i].GetBreakCount();
-
-            console(DEBUG_CODE, "\nCreateAccountInfo(): i: %i, tmpCount: %i\n", i, tmpCount);
-
-            for (int j = 0; j < tmpCount; ++j)
-                addWidget(new WBreak());
-        }
-    }
-    else
-    {
-        // this should be replaced with something better ...
-        HGMenu * tmpMenu = (HGMenu*)(parent()->parent());
-
-        std::string dbError = realmDb.GetError();
-
-        if (tmpMenu)
-            tmpMenu->ShowError(ERROR_SLOT_DB, dbError);
-    }
+    return basicInfo;
 }
 
 /********************************************//**
@@ -431,9 +427,9 @@ WString AccountInfoPage::GetEmail()
  *
  ***********************************************/
 
-void AccountInfoPage::ClearAccountInfo()
+void AccountInfoPage::ClearPage()
 {
-    console(DEBUG_CODE, "\nAccountInfoPage::ClearAccountInfo()\n");
+    console(DEBUG_CODE, "\nAccountInfoPage::ClearPage()\n");
 
     WWidget * tmpWid;
     for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
@@ -458,16 +454,16 @@ void AccountInfoPage::ChangeIPLock()
         if (db.ExecuteQuery() != RETURN_ERROR)
         {
             ((WPushButton*)accInfoSlots[ACCINFO_SLOT_IP_LOCK].GetWidget())->setText(session->locked ? session->GetText(TXT_LBL_ACC_IP_LOCK_ON) : session->GetText(TXT_LBL_ACC_IP_LOCK_OFF));
-            accInfoSlots[ACCINFO_SLOT_ADDINFO].GetLabel()->setText(session->locked ? session->GetText(TXT_IP_LOCK_ON) : session->GetText(TXT_IP_LOCK_OFF));
+            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].GetLabel()->setText(session->locked ? session->GetText(TXT_IP_LOCK_ON) : session->GetText(TXT_IP_LOCK_OFF));
         }
         else
         {
             session->locked = !session->locked;
-            accInfoSlots[ACCINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
         }
     }
     else
-       accInfoSlots[ACCINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+       pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
 }
 
 /********************************************//**

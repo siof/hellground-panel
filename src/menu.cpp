@@ -378,6 +378,8 @@ void HGMenu::LogMeIn()
 
             menu->select(0);
             RefreshActiveMenuWidget();
+
+            break;
         }
     }
 }
