@@ -149,10 +149,7 @@ void AccountInfoPage::UpdateInformations()
         case 0:
             UpdateAccountInfo();
             break;
-/*        case 2:
-            UpdateMuteInfo();
-            break;
-        case 3:
+/*        case 3:
             UpdateTicketInfo();
             break;*/
         default:
@@ -552,15 +549,15 @@ WTable * AccountInfoPage::CreateMuteInfo()
 
     muteInfo->setHeaderCount(1);
 
-    banInfoSlots[ACCMUTEINFO_SLOT_MUTEDATE].SetLabel(session, TXT_LBL_MUTE_FROM);
-    banInfoSlots[ACCMUTEINFO_SLOT_UNMUTEDATE].SetLabel(session, TXT_LBL_MUTE_TO);
-    banInfoSlots[ACCMUTEINFO_SLOT_MUTEDBY].SetLabel(session, TXT_LBL_MUTE_BY);
-    banInfoSlots[ACCMUTEINFO_SLOT_MUTEREASON].SetLabel(session, TXT_LBL_MUTE_REASON);
-    banInfoSlots[ACCMUTEINFO_SLOT_ACTIVE].SetLabel("");
+    muteInfoSlots[ACCMUTEINFO_SLOT_MUTEDATE].SetLabel(session, TXT_LBL_MUTE_FROM);
+    muteInfoSlots[ACCMUTEINFO_SLOT_UNMUTEDATE].SetLabel(session, TXT_LBL_MUTE_TO);
+    muteInfoSlots[ACCMUTEINFO_SLOT_MUTEDBY].SetLabel(session, TXT_LBL_MUTE_BY);
+    muteInfoSlots[ACCMUTEINFO_SLOT_MUTEREASON].SetLabel(session, TXT_LBL_MUTE_REASON);
+    muteInfoSlots[ACCMUTEINFO_SLOT_ACTIVE].SetLabel("");
 
     int i;
     for (i = 0; i < ACCMUTEINFO_SLOT_COUNT; ++i)
-        muteInfo->elementAt(0, i)->addWidget(banInfoSlots[i].GetLabel());
+        muteInfo->elementAt(0, i)->addWidget(muteInfoSlots[i].GetLabel());
 
     Database realmDB;
 

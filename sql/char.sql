@@ -21,7 +21,7 @@ delimiter ;
 
 DROP TRIGGER IF EXISTS ticket_upd_check;
 delimiter |
-CREATE TRIGGER ticket_upd_check BEFORE UPDATE ON account
+CREATE TRIGGER ticket_upd_check BEFORE UPDATE ON gm_tickets
   FOR EACH ROW BEGIN
     UPDATE ticket_history
     SET message = NEW.message, name = NEW.name, timestamp = NEW.timestamp, closed = NEW.closed, comment = NEW.comment
