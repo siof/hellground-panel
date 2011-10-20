@@ -37,9 +37,25 @@
 
 #include "../defines.h"
 #include "../slotItems.h"
+#include <WTabWidget>
 
 /********************************************//**
- * \brief Slots for Account Informations page
+ * \brief Slots for Basic page informations.
+ *
+ * Also determines order on page.
+ *
+ ***********************************************/
+
+enum PageInfoSlot
+{
+    ACCPAGEINFO_SLOT_INFO   = 0,    /**< Page title text. */
+    ACCPAGEINFO_SLOT_ADDINFO,       /**< Additional info slot */
+
+    ACCPAGEINFO_SLOT_COUNT
+};
+
+/********************************************//**
+ * \brief Slots for Basic Account Informations
  *
  * Also determines order on page.
  *
@@ -47,9 +63,7 @@
 
 enum AccountInfoSlot
 {
-    ACCINFO_SLOT_INFO   = 0,        /**< Page title text. */
-    ACCINFO_SLOT_ADDINFO,           /**< Additional info slot */
-    ACCINFO_SLOT_TYPE,              /**< Text with account expansion name. */
+    ACCINFO_SLOT_TYPE = 0,          /**< Text with account expansion name. */
     ACCINFO_SLOT_CURRENT_IP,        /**< Current (panel session) ip. */
     ACCINFO_SLOT_CREATE_DATE,       /**< Account create time. */
     ACCINFO_SLOT_LAST_LOGIN_DATE,   /**< Last login date. */
@@ -87,16 +101,23 @@ public:
 private:
     /// panel session informations
     SessionInfo * session;
-    /// should be true only on page creation
-    bool needInfoCreation;
+    /// tab widget to group specific account informations
+    WTabWidget * tabs;
+
+    /// contains global page info slots like page title or additional info like errors
+    BasicTextItem pageInfoSlots[ACCPAGEINFO_SLOT_COUNT];
 
     /// contains account info slots so we can update them in easy way ;)
     PageSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];
 
     void UpdateTextWidgets();
-    void CreateAccountInfo();
-    void UpdateAccountInfo();
-    void ClearAccountInfo();
+    void UpdateInformations();
+
+    WContainerWidget * CreateAccountInfo();
+    void UpdateAccountInfo(bool first = false);
+
+    void ClearPage();
+
     void ChangeIPLock();
 
     WString GetEmail();

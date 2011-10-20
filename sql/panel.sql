@@ -57,6 +57,10 @@ INSERT INTO LangTexts VALUES
 (116, "Założona", "Locked"),
 (117, "Zdjęta", "Unlocked"),
 (118, "IP jest zbanowane: ", "IP is banned: "),
+(119, "Ogólne Informacje", "Basic Informations"),
+(120, "Bany", "Bans"),
+(121, "Mute", "Mute"),
+(122, "Tickety", "Tickets"),
 
 (130, "Zmiana hasła", "Change password"),
 (131, "Stare hasło", "Old pass"),

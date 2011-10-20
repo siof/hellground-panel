@@ -341,6 +341,10 @@ enum Texts
     TXT_LBL_ACC_IP_LOCK_ON          = 116,  /**< Account ip lock is currently on label */
     TXT_LBL_ACC_IP_LOCK_OFF         = 117,  /**< Account ip lock is currently off label */
     TXT_LBL_ACC_IP_BAN              = 118,  /**< Account ip ban label */
+    TXT_LBL_ACC_TAB_INFO            = 119,  /**< Account basic information tab label */
+    TXT_LBL_ACC_TAB_BAN             = 120,  /**< Account ban information tab label */
+    TXT_LBL_ACC_TAB_MUTE            = 121,  /**< Account mute information tab label */
+    TXT_LBL_ACC_TAB_TICKET          = 122,  /**< Account ticket information tab label */
 
     /** Password modifications */
     TXT_LBL_PASS_CHANGE             = 130,  /**< Password change page title */
