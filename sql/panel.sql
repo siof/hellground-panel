@@ -89,6 +89,15 @@ INSERT INTO LangTexts VALUES
 (167, "Tak", "Yes"),
 (168, "Nie", "No"),
 
+(170, "Zmutowany od", "Muted from"),
+(171, "Zmutowany do", "Muted till"),
+(172, "Zmutowany przez", "Muted by"),
+(173, "Powód", "Reason"),
+(174, "Aktywny", "Active"),
+(175, "Nieaktywny", "Not active"),
+(176, "Tak", "Yes"),
+(177, "Nie", "No"),
+
 (185, "Nazwa realmu: ", "Realm name: "),
 (186, "Stan realmu: ", "Realm state: "),
 (187, "Graczy online: ", "Players online: "),

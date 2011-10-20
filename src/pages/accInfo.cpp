@@ -58,7 +58,7 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
 
     tabs->addTab(CreateAccountInfo(), sess->GetText(TXT_LBL_ACC_TAB_INFO), WTabWidget::PreLoading);
     tabs->addTab(CreateBanInfo(), sess->GetText(TXT_LBL_ACC_TAB_BAN), WTabWidget::PreLoading);
-    tabs->addTab(new WText("mute test"), sess->GetText(TXT_LBL_ACC_TAB_MUTE), WTabWidget::PreLoading);
+    tabs->addTab(CreateMuteInfo(), sess->GetText(TXT_LBL_ACC_TAB_MUTE), WTabWidget::PreLoading);
     tabs->addTab(new WText("ticket test"), sess->GetText(TXT_LBL_ACC_TAB_TICKET), WTabWidget::PreLoading);
 }
 
@@ -122,11 +122,11 @@ void AccountInfoPage::UpdateTextWidgets()
             for (i = 0; i < ACCBANINFO_SLOT_COUNT; ++i)
                 banInfoSlots[i].UpdateLabel(session);
             break;
-/*        case 2:
-            for (i = 0; i < MUTEINFO_SLOT_COUNT; ++i)
+        case 2:
+            for (i = 0; i < ACCMUTEINFO_SLOT_COUNT; ++i)
                 muteInfoSlots[i].UpdateLabel(session);
             break;
-        case 3:
+/*        case 3:
             for (i = 0; i < TICKETINFO_SLOT_COUNT; ++i)
                 ticketInfoSlots[i].UpdateLabel(session);
             break;*/
@@ -490,7 +490,7 @@ WTable * AccountInfoPage::CreateBanInfo()
     banInfoSlots[ACCBANINFO_SLOT_UNBANDATE].SetLabel(session, TXT_LBL_BAN_TO);
     banInfoSlots[ACCBANINFO_SLOT_BANNEDBY].SetLabel(session, TXT_LBL_BAN_BY);
     banInfoSlots[ACCBANINFO_SLOT_BANREASON].SetLabel(session, TXT_LBL_BAN_REASON);
-    banInfoSlots[ACCBANINFO_SLOT_ACTIVE].SetLabel(session, TXT_LBL_BAN_ACTIVE);
+    banInfoSlots[ACCBANINFO_SLOT_ACTIVE].SetLabel("");
 
     int i;
     for (i = 0; i < ACCBANINFO_SLOT_COUNT; ++i)
@@ -519,17 +519,89 @@ WTable * AccountInfoPage::CreateBanInfo()
             {
                 i = 1;
                 int j;
+                bool active;
                 std::list<DatabaseRow*> rows = realmDB.GetRows();
                 DatabaseRow * tmpRow;
 
                 for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
-                    for (j = 0; j < 5; ++j)
+                {
+                    for (j = 0; j < 4; ++j)
                         banInfo->elementAt(i, j)->addWidget(new WText((*itr)->fields[j].GetWString()));
+
+                    active = tmpRow->fields[4].GetBool();
+                    banInfo->elementAt(i, 4)->addWidget(new WText(session->GetText(active ? TXT_LBL_BAN_ACTIVE : TXT_LBL_BAN_NOT_ACTIVE)));
+                }
             }
             break;
     }
 
     return banInfo;
+}
+
+/********************************************//**
+ * \brief Creates account mute informations
+ *
+ * All mute (also expired) on account will be listed.
+ * I think there is no need to update this informations...
+ *
+ ***********************************************/
+
+WTable * AccountInfoPage::CreateMuteInfo()
+{
+    WTable * muteInfo = new WTable();
+
+    muteInfo->setHeaderCount(1);
+
+    banInfoSlots[ACCMUTEINFO_SLOT_MUTEDATE].SetLabel(session, TXT_LBL_MUTE_FROM);
+    banInfoSlots[ACCMUTEINFO_SLOT_UNMUTEDATE].SetLabel(session, TXT_LBL_MUTE_TO);
+    banInfoSlots[ACCMUTEINFO_SLOT_MUTEDBY].SetLabel(session, TXT_LBL_MUTE_BY);
+    banInfoSlots[ACCMUTEINFO_SLOT_MUTEREASON].SetLabel(session, TXT_LBL_MUTE_REASON);
+    banInfoSlots[ACCMUTEINFO_SLOT_ACTIVE].SetLabel("");
+
+    int i;
+    for (i = 0; i < ACCMUTEINFO_SLOT_COUNT; ++i)
+        muteInfo->elementAt(0, i)->addWidget(banInfoSlots[i].GetLabel());
+
+    Database realmDB;
+
+    if (!realmDB.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        return muteInfo;
+    }
+
+    realmDB.SetPQuery("SELECT FROM_UNIXTIME(mutedate), FROM_UNIXTIME(unmutedate), mutedby, mutereason, active FROM account_mute WHERE id = %i ORDER BY active DESC, mutedate DESC", session->accid);
+
+    int count = realmDB.ExecuteQuery();
+
+    switch (count)
+    {
+        case RETURN_ERROR:
+            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            break;
+        case RETURN_EMPTY:
+            break;
+        default:
+            {
+                i = 1;
+                int j;
+                bool active;
+                std::list<DatabaseRow*> rows = realmDB.GetRows();
+                DatabaseRow * tmpRow;
+
+                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+                {
+                    for (j = 0; j < 4; ++j)
+                        muteInfo->elementAt(i, j)->addWidget(new WText((*itr)->fields[j].GetWString()));
+
+                    active = tmpRow->fields[4].GetBool();
+                    muteInfo->elementAt(i, 4)->addWidget(new WText(session->GetText(active ? TXT_LBL_MUTE_ACTIVE : TXT_LBL_MUTE_NOT_ACTIVE)));
+                }
+            }
+            break;
+    }
+
+    return muteInfo;
 }
 
 /********************************************//**
