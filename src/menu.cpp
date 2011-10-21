@@ -81,14 +81,14 @@ void HGMenuOption::AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * m
     menuItem = NULL;
 }
 
-void HGMenuOption::AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item)
+void HGMenuOption::AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || !sess || !item)
         return;
 
     RemoveMenuItem(accLvl);
 
-    items[accLvl+1] = new WMenuItem(sess->GetText(textId), item, WMenuItem::PreLoading);
+    items[accLvl+1] = new WMenuItem(sess->GetText(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading);
     textIds[accLvl+1] = textId;
     item = NULL;
 }
@@ -227,7 +227,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menuSlots[MENU_SLOT_ACCOUNT] = new HGMenuOption(MENU_SLOT_ACCOUNT);
     menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess));
-    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess));
+    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess), false);
 
     menuSlots[MENU_SLOT_PASSWORD] = new HGMenuOption(MENU_SLOT_PASSWORD);
     menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess));

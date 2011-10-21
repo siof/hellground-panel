@@ -262,7 +262,6 @@ void RegisterPage::Register()
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_REGISTRATION_ERROR);
         chRules->setChecked(false);
         CheckChange();
-        wApp->log("error") << "Registration Database Fail! login: " << login << " email: " << mail << " . Error: " << db.GetError();
         return;
     }
 
