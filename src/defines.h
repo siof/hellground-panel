@@ -441,6 +441,8 @@ enum Texts
     TXT_LOGOUT_INFO                 = 251,  /**< info to show on logout page */
     TXT_REGISTRATION_ERROR          = 252,  /**< Information that there was an error in registration. */
     TXT_TELEPORT_SUCCESSFULL        = 253,  /**< Information that character teleportation was successfull */
+    TXT_NEVER_BANNED                = 254,  /**< Information that player wasn't banned */
+    TXT_NEVER_MUTED                 = 255,  /**< Information that player wasn't muted */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */

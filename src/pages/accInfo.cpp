@@ -178,6 +178,7 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_EMAIL].GetWidget();
         ((WText*)tmpWidget)->setText(GetEmail());
+
         return;
     }
 
@@ -501,7 +502,7 @@ WTable * AccountInfoPage::CreateBanInfo()
         return banInfo;
     }
 
-    realmDB.SetPQuery("SELECT FROM_UNIXTIME(bandate), FROM_UNIXTIME(unbandate), bannedby, banreason, active FROM account_banned WHERE id = %i ORDER BY active DESC, bandate DESC", session->accid);
+    realmDB.SetPQuery("SELECT FROM_UNIXTIME(bandate), FROM_UNIXTIME(unbandate), bannedby, banreason, active FROM account_banned WHERE id = %u ORDER BY active DESC, bandate DESC", session->accid);
 
     int count = realmDB.ExecuteQuery();
 
@@ -511,6 +512,7 @@ WTable * AccountInfoPage::CreateBanInfo()
             pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
             break;
         case RETURN_EMPTY:
+            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_NEVER_BANNED);
             break;
         default:
             {
@@ -518,14 +520,13 @@ WTable * AccountInfoPage::CreateBanInfo()
                 int j;
                 bool active;
                 std::list<DatabaseRow*> rows = realmDB.GetRows();
-                DatabaseRow * tmpRow;
 
                 for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
                 {
                     for (j = 0; j < 4; ++j)
                         banInfo->elementAt(i, j)->addWidget(new WText((*itr)->fields[j].GetWString()));
 
-                    active = tmpRow->fields[4].GetBool();
+                    active = (*itr)->fields[4].GetBool();
                     banInfo->elementAt(i, 4)->addWidget(new WText(session->GetText(active ? TXT_LBL_BAN_ACTIVE : TXT_LBL_BAN_NOT_ACTIVE)));
                 }
             }
@@ -567,7 +568,7 @@ WTable * AccountInfoPage::CreateMuteInfo()
         return muteInfo;
     }
 
-    realmDB.SetPQuery("SELECT FROM_UNIXTIME(mutedate), FROM_UNIXTIME(unmutedate), mutedby, mutereason, active FROM account_mute WHERE id = %i ORDER BY active DESC, mutedate DESC", session->accid);
+    realmDB.SetPQuery("SELECT FROM_UNIXTIME(mutedate), FROM_UNIXTIME(unmutedate), mutedby, mutereason, active FROM account_mute WHERE id = %u ORDER BY active DESC, mutedate DESC", session->accid);
 
     int count = realmDB.ExecuteQuery();
 
@@ -577,6 +578,7 @@ WTable * AccountInfoPage::CreateMuteInfo()
             pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
             break;
         case RETURN_EMPTY:
+            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_NEVER_MUTED);
             break;
         default:
             {
@@ -584,14 +586,13 @@ WTable * AccountInfoPage::CreateMuteInfo()
                 int j;
                 bool active;
                 std::list<DatabaseRow*> rows = realmDB.GetRows();
-                DatabaseRow * tmpRow;
 
                 for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
                 {
                     for (j = 0; j < 4; ++j)
                         muteInfo->elementAt(i, j)->addWidget(new WText((*itr)->fields[j].GetWString()));
 
-                    active = tmpRow->fields[4].GetBool();
+                    active = (*itr)->fields[4].GetBool();
                     muteInfo->elementAt(i, 4)->addWidget(new WText(session->GetText(active ? TXT_LBL_MUTE_ACTIVE : TXT_LBL_MUTE_NOT_ACTIVE)));
                 }
             }
