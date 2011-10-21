@@ -165,6 +165,8 @@ New pass: %s"),
 (251, "Na pewno chcesz sie wylogować ?", "Are you sure you want to logout ?"),
 (252, "Wystąpił błąd podczas rejestracji. Spróbuj ponownie.", "There was an error in registration. Try again."),
 (253, "Teleportacja postaci zakończona powodzeniem.", "Character teleportation successfull."),
+(254, "Twoje konto nie zostało jeszcze zbanowane.", "Your account was never banned."),
+(255, "Twoje konto nie zostało jeszcze zmutowane.", "Your account was never muted."),
 
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),
