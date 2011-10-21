@@ -53,8 +53,6 @@ TeleportPage::TeleportPage(SessionInfo * sess, WContainerWidget * parent):
     btnTeleport = new WPushButton(sess->GetText(TXT_BTN_TELEPORT));
     btnTeleport->clicked().connect(this, &TeleportPage::Teleport);
     addWidget(btnTeleport);
-
-    LoadCharacters();
 }
 
 TeleportPage::~TeleportPage()
