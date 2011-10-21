@@ -534,7 +534,7 @@ WTable * AccountInfoPage::CreateBanInfo()
             pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
             break;
         case RETURN_EMPTY:
-            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_NEVER_BANNED);
+//            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_NEVER_BANNED);
             break;
         default:
             {
@@ -600,7 +600,7 @@ WTable * AccountInfoPage::CreateMuteInfo()
             pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
             break;
         case RETURN_EMPTY:
-            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_NEVER_MUTED);
+//            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_NEVER_MUTED);
             break;
         default:
             {
