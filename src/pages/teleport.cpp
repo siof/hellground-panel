@@ -177,7 +177,6 @@ void TeleportPage::Teleport()
         switch (db->ExecuteQuery())
         {
             case RETURN_ERROR:
-                wApp->log("error") << "DB QUERY Error. Number: [" << db->GetErrNo() << "] Message: " << db->GetError();
                 teleportStatus = TXT_DBERROR_QUERY_ERROR;
                 break;
             case RETURN_EMPTY:
@@ -199,10 +198,7 @@ void TeleportPage::Teleport()
                         teleportStatus = TXT_TELEPORT_SUCCESSFULL;
                     }
                     else
-                    {
-                        wApp->log("error") << "DB QUERY Error. Number: [" << db->GetErrNo() << "] Message: " << db->GetError();
                         teleportStatus = TXT_DBERROR_QUERY_ERROR;
-                    }
                 }
                 else
                     teleportStatus = TXT_ERROR_CANT_TELEPORT_ONLINE;

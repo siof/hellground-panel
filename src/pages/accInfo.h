@@ -119,6 +119,22 @@ enum MuteInfoSlot
     ACCMUTEINFO_SLOT_COUNT
 };
 
+/********************************************//**
+ * \brief Account info page tab slots
+ *
+ * Indexes of tabs in account info page
+ *
+ ***********************************************/
+
+enum AccInfoTabSlot
+{
+    ACCTAB_SLOT_BASIC   = 0,    /**< Tab with basic account informations */
+    ACCTAB_SLOT_BANS    = 1,    /**< Tab with ban informations */
+    ACCTAB_SLOT_MUTE    = 2,    /**< Tab with mute informations */
+    ACCTAB_SLOT_TICKET  = 3,    /**< Tab with ticket history */
+
+    ACCTAB_SLOT_COUNT
+};
 
 /********************************************//**
  * \brief A class to represents Account Informations page
@@ -142,6 +158,8 @@ private:
     SessionInfo * session;
     /// tab widget to group specific account informations
     WTabWidget * tabs;
+    /// tabs was created or not?
+    bool needCreation;
 
     /// contains global page info slots like page title or additional info like errors
     BasicTextItem pageInfoSlots[ACCPAGEINFO_SLOT_COUNT];

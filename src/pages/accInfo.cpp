@@ -56,10 +56,7 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
     tabs = new WTabWidget();
     addWidget(tabs);
 
-    tabs->addTab(CreateAccountInfo(), sess->GetText(TXT_LBL_ACC_TAB_INFO), WTabWidget::PreLoading);
-    tabs->addTab(CreateBanInfo(), sess->GetText(TXT_LBL_ACC_TAB_BAN), WTabWidget::PreLoading);
-    tabs->addTab(CreateMuteInfo(), sess->GetText(TXT_LBL_ACC_TAB_MUTE), WTabWidget::PreLoading);
-    tabs->addTab(new WText("ticket test"), sess->GetText(TXT_LBL_ACC_TAB_TICKET), WTabWidget::PreLoading);
+    needCreation = true;
 }
 
 AccountInfoPage::~AccountInfoPage()
@@ -83,6 +80,15 @@ void AccountInfoPage::refresh()
     // only logged in players can visit this page so there is no need to create/update it in other cases
     if (session->accLvl > LVL_NOT_LOGGED)
     {
+        if (needCreation)
+        {
+            needCreation = false;
+            tabs->addTab(CreateAccountInfo(), session->GetText(TXT_LBL_ACC_TAB_INFO), WTabWidget::PreLoading);
+            tabs->addTab(CreateBanInfo(), session->GetText(TXT_LBL_ACC_TAB_BAN), WTabWidget::PreLoading);
+            tabs->addTab(CreateMuteInfo(), session->GetText(TXT_LBL_ACC_TAB_MUTE), WTabWidget::PreLoading);
+            tabs->addTab(new WText("ticket test"), session->GetText(TXT_LBL_ACC_TAB_TICKET), WTabWidget::PreLoading);
+        }
+
         UpdateTextWidgets();
         UpdateInformations();
     }
@@ -247,10 +253,7 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
     }
     else
-    {
-        wApp->log("error") << "DB Error: errno: [" << realmDb.GetErrNo() << "] error: " << realmDb.GetError() << " | query: " << realmDb.GetQuery();
         pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
-    }
 
     tmpRow = NULL;
 }
@@ -435,10 +438,29 @@ void AccountInfoPage::ClearPage()
 {
     console(DEBUG_CODE, "\nAccountInfoPage::ClearPage()\n");
 
+    needCreation = true;
+
     WWidget * tmpWid;
-    for (int i = 0; i < ACCINFO_SLOT_COUNT; ++i)
-        if (tmpWid = accInfoSlots[i].GetWidget())
-            ((WText*)tmpWid)->setText("");
+    int i;
+
+    for (i = 0; i < ACCTAB_SLOT_COUNT; ++i)
+    {
+        if (tmpWid = tabs->widget(i))
+        {
+            switch (i)
+            {
+                case ACCTAB_SLOT_BASIC:
+                    ((WContainerWidget*)tmpWid)->clear();
+                    break;
+                case ACCTAB_SLOT_BANS:
+                case ACCTAB_SLOT_MUTE:
+                    ((WTable*)tmpWid)->clear();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }
 
 /********************************************//**
