@@ -267,11 +267,9 @@ void RegisterPage::Register()
     }
 
     if (session->HasText(TXT_REGISTRATION_MAIL))
-        msg = session->GetText(TXT_REGISTRATION_MAIL);
+        msg = GetFormattedString(session->GetText(TXT_REGISTRATION_MAIL).toUTF8().c_str(), login.toUTF8().c_str(), tmpStr.c_str());
     else
-        msg = "Registration Mail\n\n Your password for login %s is: %s";
-
-    msg = GetFormattedString(msg.toUTF8().c_str(), login.toUTF8().c_str(), tmpStr.c_str());
+        msg = GetFormattedString("Registration Mail\n\n Your password for login %s is: %s", login.toUTF8().c_str(), tmpStr.c_str());
 
     SendMail(from, mail, session->GetText(TXT_REGISTRATION_SUBJECT), msg);
 

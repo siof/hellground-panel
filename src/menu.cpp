@@ -317,7 +317,7 @@ void HGMenu::LogMeIn()
     {
         case RETURN_ERROR:
         {
-            AddActivityLogIn(false, &escapedLogin);
+            AddActivityLogIn(false, escapedLogin.c_str());
             // if there was database error
             std::string tmpErr = db.GetError();
             ShowError(ERROR_SLOT_DB, tmpErr);
@@ -325,7 +325,7 @@ void HGMenu::LogMeIn()
         }
         case RETURN_EMPTY:
         {
-            AddActivityLogIn(false, &escapedLogin);
+            AddActivityLogIn(false, escapedLogin.c_str());
             Log(LOG_STRANGE_DATA, "User with IP: %s tried to login with strange data (SHA return empty)! login: %s pass: %s", session->sessionIp.toUTF8().c_str(), escapedLogin.c_str(), escapedPass.c_str());
             //if wrong data
             ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
