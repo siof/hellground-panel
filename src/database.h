@@ -65,11 +65,11 @@ public:
     bool SetPQuery(const char *format, ...);
     bool Connect(std::string host, std::string login, std::string pass, unsigned int port, std::string db); // connects to db
     bool SelectDatabase(std::string db);
-    void EscapeQuery(); // escape actual query
     std::string EscapeString(std::string str);  // escape given string
     std::string EscapeString(WString str);      // escape given string
     int ExecuteQuery(); // execute setted query and returns row count
-    int ExecuteQuery(std::string query, bool escape = true);    // execute given query and return row count
+    int ExecuteQuery(std::string query);        // execute given query and return row count
+    int ExecutePQuery(const char * format, ...);
     const char * GetError();    // get mysql error
     unsigned int GetErrNo();  // get mysql error number
     void AddRow(MYSQL_ROW row, int count);  // add new row
