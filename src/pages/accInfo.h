@@ -128,10 +128,11 @@ enum MuteInfoSlot
 
 enum AccInfoTabSlot
 {
-    ACCTAB_SLOT_BASIC   = 0,    /**< Tab with basic account informations */
-    ACCTAB_SLOT_BANS    = 1,    /**< Tab with ban informations */
-    ACCTAB_SLOT_MUTE    = 2,    /**< Tab with mute informations */
-    ACCTAB_SLOT_TICKET  = 3,    /**< Tab with ticket history */
+    ACCTAB_SLOT_BASIC       = 0,    /**< Tab with basic account informations */
+    ACCTAB_SLOT_BANS        = 1,    /**< Tab with ban informations */
+    ACCTAB_SLOT_MUTE        = 2,    /**< Tab with mute informations */
+    ACCTAB_SLOT_TICKET      = 3,    /**< Tab with ticket history */
+    ACCTAB_SLOT_ACTIVITY    = 4,    /**< Tab with account activity history */
 
     ACCTAB_SLOT_COUNT
 };
@@ -179,6 +180,10 @@ private:
     WTable * CreateBanInfo();
 
     WTable * CreateMuteInfo();
+
+    WTabWidget * activityTabs;
+    std::list<BasicTextItem*> activityInfoSlots;
+    WContainerWidget * CreateActivityInfo();
 
     void ClearPage();
 

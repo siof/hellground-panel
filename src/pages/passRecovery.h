@@ -95,6 +95,9 @@ private:
     void ClearLogin();
     void ClearEmail();
     void Recover();
+
+    void AddActivityPassRecovery(bool success, const char * login = NULL);
+    void AddActivityPassRecovery(uint32 id, bool success);
 };
 
 

@@ -317,6 +317,7 @@ void HGMenu::LogMeIn()
     {
         case RETURN_ERROR:
         {
+            AddActivityLogIn(false, &escapedLogin);
             // if there was database error
             std::string tmpErr = db.GetError();
             ShowError(ERROR_SLOT_DB, tmpErr);
@@ -324,6 +325,8 @@ void HGMenu::LogMeIn()
         }
         case RETURN_EMPTY:
         {
+            AddActivityLogIn(false, &escapedLogin);
+            wApp->log("notice") << "User with IP: " << session->sessionIp << " tried to login with strange data (SHA return empty)! login:" << escapedLogin << " pass: " << escapedPass;
             //if wrong data
             ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
             ClearLogin();
@@ -337,7 +340,7 @@ void HGMenu::LogMeIn()
         }
     }
 
-                //           0            1         2     3       4       5         6       7         8
+               //           0            1         2     3       4       5         6       7         8
     db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion FROM account WHERE username = '%s'", escapedLogin.c_str());
 
     // execute will return 0 if result will be empty and -1 if there will be DB error.
@@ -345,6 +348,7 @@ void HGMenu::LogMeIn()
     {
         case RETURN_ERROR:
         {
+            AddActivityLogIn(false, escapedLogin.c_str());
             // if there was database error
             std::string tmpErr = db.GetError();
             ShowError(ERROR_SLOT_DB, tmpErr);
@@ -352,6 +356,7 @@ void HGMenu::LogMeIn()
         }
         case RETURN_EMPTY:
         {
+            AddActivityLogIn(false, escapedLogin.c_str());
             //if wrong data
             ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
             ClearLogin();
@@ -370,6 +375,7 @@ void HGMenu::LogMeIn()
 
             if (row->fields[1].GetWString() != shapass)
             {
+                AddActivityLogIn(row->fields[2].GetUInt32(), false);
                 //if wrong data
                 ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
                 ClearLogin();
@@ -379,9 +385,12 @@ void HGMenu::LogMeIn()
 
             if (row->fields[7].GetBool() && row->fields[6].GetWString() != session->sessionIp)
             {
+                AddActivityLogIn(row->fields[2].GetUInt32(), false);
                 ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_IP_MISMATCH);
                 return;
             }
+
+            AddActivityLogIn(row->fields[2].GetUInt32(), true);
 
             session->login = row->fields[0].GetWString();
             session->pass = row->fields[1].GetWString();
@@ -625,4 +634,35 @@ void HGMenu::ShowError()
 
     menu->select(tmpItem);
     RefreshActiveMenuWidget();
+}
+
+void HGMenu::AddActivityLogIn(bool success, const char * login)
+{
+    Database db;
+
+    uint32 accId = session->accid;
+
+    if (!accId)
+    {
+        if (!login || !db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+            return;
+
+        if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login) > RETURN_EMPTY)
+            accId = db.GetRow()->fields[0].GetUInt32();
+        else
+            return;
+    }
+
+    AddActivityLogIn(accId, success);
+}
+
+void HGMenu::AddActivityLogIn(uint32 id, bool success)
+{
+    if (!id)
+        return;
+
+    Database db;
+
+    db.Connect(PANEL_DB_DATA, SQL_PANELDB);
+    db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_LOGIN_SUCCESS : TXT_ACT_LOGIN_FAIL);
 }

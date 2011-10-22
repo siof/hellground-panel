@@ -61,6 +61,7 @@ INSERT INTO LangTexts VALUES
 (120, "Bany", "Bans"),
 (121, "Mute", "Mute"),
 (122, "Tickety", "Tickets"),
+(123, "Historia aktywności", "Activity history"),
 
 (130, "Zmiana hasła", "Change password"),
 (131, "Stare hasło", "Old pass"),
@@ -167,6 +168,9 @@ New pass: %s"),
 (253, "Teleportacja postaci zakończona powodzeniem.", "Character teleportation successfull."),
 (254, "Twoje konto nie zostało jeszcze zbanowane.", "Your account was never banned."),
 (255, "Twoje konto nie zostało jeszcze zmutowane.", "Your account was never muted."),
+(256, "Data", "Date"),
+(257, "Adres IP", "IP address"),
+(258, "Aktywność", "Activity"),
 
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),
@@ -184,12 +188,19 @@ If it's your account please use password recovery option to reset password and I
 
 (501, "DB Error: Błąd połączenia z bazą danych.", "DB Error: Can't connect to database."),
 (502, "DB Error: Zapytanie zwróciło pusty wynik.", "DB Error: Query result was empty."),
-(503, "DB Error: Wystąpił błąd w zapytaniu.", "DB Error: Database query error.");
+(503, "DB Error: Wystąpił błąd w zapytaniu.", "DB Error: Database query error."),
 
+(601, "Próba zalogowania na konto zakończona powodzeniem.", "Successfull account login."),
+(602, "Próba zalogowania na konto zakończona niepowodzeniem.", "Someone tried to log in (unsuccessfull)."),
+(603, "Konto zostało zarejestrowane.", "Successfull account registration."),
+(604, "Próba zmiany hasła.", "Someone tried to change password."),
+(605, "Próba odzyskania hasła zakończona powodzeniem.", "Successfull password recovery."),
+(606, "Próba odzyskania hasła zakończona niepowodzeniem.", "Someone tried to recover password (unsuccessfull)."),
+(607, "Próba zmiany ustawień ip locka.", "Someone tried to change ip lock state.");
 
 CREATE TABLE IF NOT EXISTS Activity
 (
-    id bigint unsigned NOT NULL PRIMARY KEY,
+    id bigint unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
     accId bigint(20) unsigned NOT NULL,
     eventDate timestamp NOT NULL,
     ip varchar(30) NOT NULL,
