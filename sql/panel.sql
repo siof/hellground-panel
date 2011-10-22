@@ -26,6 +26,7 @@ INSERT INTO LangTexts VALUES
 (15, "Informacje o mute", "Mute info"),
 (16, "Lista mute", "Mute list"),
 (17, "ERROR", "ERROR"),
+(18, "Licencja", "Licence"),
 
 (50, "Panel GM", "GM Panel"),
 (51, "Tickety", "Tickets"),
@@ -171,6 +172,41 @@ New pass: %s"),
 (256, "Data", "Date"),
 (257, "Adres IP", "IP address"),
 (258, "Aktywność", "Activity"),
+(259, "HG Players Panel - webowy panel dla graczy serwera HellGround
+Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+
+Ten program stanowi wolne oprogramowanie: możesz je rozpowszechniać
+i/lub modyfikować na warunkach GNU Affero Powszechnej Licencji
+Publicznej wydanej przez Free Software Foundation w wersji 3.
+
+Ten program jest rozpowszechniany z nadzieją, że jest przydatny, ale
+BEZ JAKIEJKOLWIEK GWARANCJI, nawet bez domyślnej gwaracji
+PRZYDATNOŚCI HANDLOWEJ ORAZ PRZYDATNOŚCI DO OKREŚLONYCH ZASTOSOWAŃ.
+Przeczytaj GNU Affero Powszechną Licencję Publiczną w celu zapoznania
+się ze szczegółami.
+
+Powinieneś otrzymać kopię GNU Affero Powszechnej Licencji Publiczej
+wraz z programem. Jeżeli nie otrzymałeś jej, zobacz na
+<http://www.gnu.org/licenses/>
+
+email: siof@hellground.pl", "HG Players Panel - web panel for HellGround server Players
+Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3 as
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: siof@hellground.pl"),
+(260, "Repozytorium kodu źródłowego (zawiera także licencję): <a href=\"https://bitbucket.org/siof/hgplayerspanel\">https://bitbucket.org/siof/hgplayerspanel</a>", "Source code repository (also contains licence): <a href=\"https://bitbucket.org/siof/hgplayerspanel\">https://bitbucket.org/siof/hgplayerspanel</a>"),
+(261, "", ""),
 
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),

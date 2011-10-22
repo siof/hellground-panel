@@ -166,6 +166,9 @@ void PassChangePage::ClearPass2()
 
 void PassChangePage::Change()
 {
+    if (session->accLvl < LVL_PLAYER)
+        return;
+
     WString pass, pass2;
 
     pass = txtPass->text();

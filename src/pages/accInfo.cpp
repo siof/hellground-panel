@@ -355,6 +355,9 @@ WString AccountInfoPage::GetEmail()
     int visible = 0;
     WString tmpStr;
 
+    if (session->accLvl < LVL_PLAYER)
+        return tmpStr;
+
     #ifdef SHOW_EMAIL_CHARACTERS_COUNT
     visible = SHOW_EMAIL_CHARACTERS_COUNT;
     #endif
@@ -501,6 +504,9 @@ void AccountInfoPage::ClearPage()
 
 void AccountInfoPage::ChangeIPLock()
 {
+    if (session->accLvl < LVL_PLAYER)
+        return;
+
     Database db;
     if (db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
