@@ -292,7 +292,7 @@ void HGMenu::LogMeIn()
 
     if (!validLogin)// || !validPass)
     {
-        wApp->log("notice") << "User trying to log in with invalid data ! login: " << login->text() << " pass: " << pass->text();
+        log(LOG_INVALID_DATA, "User trying to log in with invalid data ! ip: %s login: %s pass: %s", session->sessionIp.toUTF8().c_str(), login->text().toUTF8().c_str(), pass->text().toUTF8().c_str());
         ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_NOT_VALID_DATA);
         return;
     }
@@ -326,7 +326,7 @@ void HGMenu::LogMeIn()
         case RETURN_EMPTY:
         {
             AddActivityLogIn(false, &escapedLogin);
-            wApp->log("notice") << "User with IP: " << session->sessionIp << " tried to login with strange data (SHA return empty)! login:" << escapedLogin << " pass: " << escapedPass;
+            log(LOG_STRANGE_DATA, "User with IP: %s tried to login with strange data (SHA return empty)! login: %s pass: %s", session->sessionIp.toUTF8().c_str(), escapedLogin.c_str(), escapedPass.c_str());
             //if wrong data
             ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
             ClearLogin();

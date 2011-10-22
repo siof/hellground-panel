@@ -542,9 +542,14 @@ enum DebugFlags
 
 enum LogFlags
 {
-    LOG_NONE        = 0x00,
-    LOG_DB_QUERY    = 0x01,  /**< Log flag for logging all DB queries */
-    LOG_DB_ERRORS   = 0x02   /**< Log flag for logging DB query errors */
+    LOG_NONE            = 0x00,
+    LOG_DB_QUERY        = 0x01,     /**< Log flag for logging all DB queries */
+    LOG_DB_ERRORS       = 0x02,     /**< Log flag for logging DB query errors */
+    LOG_INVALID_DATA    = 0x04,     /**< Log flag for logging validation errors */
+    LOG_STRANGE_DATA    = 0x08,     /**< Log flag for logging errors probably caused by strange data received from user */
+
+    LOG_DB  = LOG_DB_QUERY | LOG_DB_ERRORS,
+    LOG_ALL = LOG_DB | LOG_INVALID_DATA | LOG_STRANGE_DATA,
 };
 
 /********************************************//**
@@ -561,6 +566,21 @@ enum LogFlags
  ***********************************************/
 
 extern void console(DebugFlags flag, char const* text, ...);
+
+/********************************************//**
+ * \brief Handles logging
+ *
+ * \param flag  Log flags for which logging should be done.
+ * \param text  Text format which should be logged.
+ *
+ * This function checks flags defined in config and decides
+ * if logging should be done or not.
+ * If yes then function fills format with additional data and
+ * sends it to log.
+ *
+ ***********************************************/
+
+extern void log(LogFlags flag, char const* text, ...);
 
 /********************************************//**
  * \brief Represents simple character location.

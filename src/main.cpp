@@ -87,6 +87,21 @@ void console(DebugFlags flag, char const* text, ...)
     }
 }
 
+void log(LogFlags flag, char const* text, ...)
+{
+    if (LogFlags(LOG_OPTIONS) & flag)
+    {
+        char buffer[strlen(text) + 250];
+
+        va_list args;
+        va_start(args, text);
+        vsprintf(buffer, text, args);
+        va_end(args);
+
+        wApp->log("notice") << buffer;
+    }
+}
+
 void GetTeleportPosition(int race, Location & loc)
 {
     if (race < 0 || race > 11 || race == 9)

@@ -155,14 +155,11 @@ int Database::ExecuteQuery()
 
     console(DEBUG_DB, "\n\nExecuteQuery(): test1\n");
 
-    if (LOG_OPTIONS & LOG_DB_QUERY)
-        wApp->log("notice") << "DB Query execute: " << actualQuery;
+    log(LOG_DB_QUERY, "DB Query execute: %s", actualQuery.c_str());
 
     if (mysql_query(connection, actualQuery.c_str()))
     {
-        if (LOG_OPTIONS & LOG_DB_ERRORS)
-            wApp->log("error") << "DB Query error ! Error [" << GetErrNo() << "] : " << GetError();
-
+        log(LOG_DB_ERRORS, "DB Query error ! Error [%i]: %s", GetErrNo(), GetError());
         return RETURN_ERROR;
     }
 
