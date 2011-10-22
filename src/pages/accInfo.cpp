@@ -646,7 +646,8 @@ WTable * AccountInfoPage::CreateMuteInfo()
 /********************************************//**
  * \brief Creates account activity informations
  *
- * Last 100 saved activities (100 for panel and 100 for server) on account will be listed.
+ * Lists saved activities for account. Count to list
+ * is provided by config file.
  *
  ***********************************************/
 
@@ -703,7 +704,7 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        db.SetPQuery("SELECT eventDate, ip, textId, text FROM Activity WHERE accId = %u ORDER BY eventDate DESC LIMIT 100", session->accid);
+        db.SetPQuery("SELECT eventDate, ip, textId, text FROM Activity WHERE accId = %u ORDER BY eventDate DESC LIMIT %i", session->accid, ACTIVITY_PANEL_LIMIT);
 
         switch (db.ExecuteQuery())
         {
@@ -743,7 +744,7 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
 
     if (db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        db.SetPQuery("SELECT logindate, ip FROM account_login WHERE id = %u ORDER BY logindate DESC LIMIT 100", session->accid);
+        db.SetPQuery("SELECT logindate, ip FROM account_login WHERE id = %u ORDER BY logindate DESC LIMIT %i", session->accid, ACTIVITY_SERVER_LIMIT);
 
         switch (db.ExecuteQuery())
         {
