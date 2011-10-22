@@ -292,6 +292,7 @@ void HGMenu::LogMeIn()
 
     if (!validLogin)// || !validPass)
     {
+        wApp->log("notice") << "User trying to log in with invalid data ! login: " << login->text() << " pass: " << pass->text();
         ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_NOT_VALID_DATA);
         return;
     }
@@ -312,7 +313,7 @@ void HGMenu::LogMeIn()
     std::string escapedPass = db.EscapeString(pass->text());
     WString shapass;
 
-    switch (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s')", escapedLogin.c_str(), escapedPass.c_str()))
+    switch (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()))
     {
         case RETURN_ERROR:
         {
