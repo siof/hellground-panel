@@ -200,6 +200,9 @@ void PassChangePage::Change()
     std::string tmpLogin;
     Database db;
 
+    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+        db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_PASS_CHANGE);
+
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
@@ -209,7 +212,17 @@ void PassChangePage::Change()
     tmpPass = db.EscapeString(tmpPass);
     tmpLogin = db.EscapeString(session->login);
 
-    db.SetPQuery("UPDATE account SET sha_pass_hash = SHA1(UPPER('%s:%s')), sessionkey = '', s = '', v = '' WHERE id = %i;", tmpLogin.c_str(), tmpPass.c_str(), session->accid);
+    std::string sha;
+
+    if (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", tmpLogin.c_str(), tmpPass.c_str()) > RETURN_EMPTY)
+        sha = db.GetRow()->fields[0].GetString();
+    else
+    {
+        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        return;
+    }
+
+    db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = '', s = '', v = '' WHERE id = '%u'", sha.c_str(), session->accid);
 
     if (db.ExecuteQuery() == RETURN_ERROR)
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);

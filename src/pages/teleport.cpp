@@ -167,12 +167,15 @@ void TeleportPage::Teleport()
 
     uint32 teleportStatus;
 
-    Database * db = new Database();
-    if (db->Connect(SERVER_DB_DATA, SQL_CHARDB))
-    {
-        db->SetPQuery("SELECT online, race FROM characters WHERE guid = %u", guids[index]);
+    Database db;
+    bool success = false;
+    WString name = characters->currentText();
 
-        switch (db->ExecuteQuery())
+    if (db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    {
+        db.SetPQuery("SELECT online, race, name FROM characters WHERE guid = %u", guids[index]);
+
+        switch (db.ExecuteQuery())
         {
             case RETURN_ERROR:
                 teleportStatus = TXT_DBERROR_QUERY_ERROR;
@@ -181,19 +184,20 @@ void TeleportPage::Teleport()
                 teleportStatus = TXT_ERROR_CHARACTER_NOT_FOUND;
                 break;
             default:
-                DatabaseRow * tmpRow = db->GetRow();
+                DatabaseRow * tmpRow = db.GetRow();
+
                 if (tmpRow->fields[0].GetBool() == false)
                 {
                     Location loc;
                     GetTeleportPosition(tmpRow->fields[1].GetInt(), loc);
 
-                    db->SetPQuery("UPDATE characters SET map = '%u', position_x = '%f', position_y = '%f', position_z = '%f' WHERE guid = '%u'", loc.mapId, loc.posX, loc.posY, loc.posZ, guids[index]);
+                    db.SetPQuery("UPDATE characters SET map = '%u', position_x = '%f', position_y = '%f', position_z = '%f' WHERE guid = '%u'", loc.mapId, loc.posX, loc.posY, loc.posZ, guids[index]);
 
-                    if (db->ExecuteQuery() != RETURN_ERROR)
+                    if (db.ExecuteQuery() != RETURN_ERROR)
                     {
-                        db->SetPQuery("REPLACE INTO character_spell_cooldown VALUES (%u, 8690, 0, unix_timestamp()+3600)", guids[index]);
-                        db->ExecuteQuery();
+                        db.ExecutePQuery("REPLACE INTO character_spell_cooldown VALUES (%u, 8690, 0, unix_timestamp()+3600)", guids[index]);
                         teleportStatus = TXT_TELEPORT_SUCCESSFULL;
+                        success = true;
                     }
                     else
                         teleportStatus = TXT_DBERROR_QUERY_ERROR;
@@ -206,9 +210,15 @@ void TeleportPage::Teleport()
     else
         teleportStatus = TXT_DBERROR_CANT_CONNECT;
 
-    delete db;
-
     teleportSlots[TELEPORT_SLOT_STATUS].SetText(session, teleportStatus);
+
+    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    {
+        char buffer[MAX_QUERY_LEN];
+        sprintf(buffer, "Teleport. Character: %s. success: %s", db.EscapeString(name).c_str(), success ? "Yes" : "No");
+
+        db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', 0, '%s')", session->accid, session->sessionIp.toUTF8().c_str(), buffer);
+    }
 }
 
 /********************************************//**

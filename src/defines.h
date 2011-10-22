@@ -345,6 +345,7 @@ enum Texts
     TXT_LBL_ACC_TAB_BAN             = 120,  /**< Account ban information tab label */
     TXT_LBL_ACC_TAB_MUTE            = 121,  /**< Account mute information tab label */
     TXT_LBL_ACC_TAB_TICKET          = 122,  /**< Account ticket information tab label */
+    TXT_LBL_ACC_TAB_ACTIVITY        = 123,  /**< Account activity information tab label */
 
     /** Password modifications */
     TXT_LBL_PASS_CHANGE             = 130,  /**< Password change page title */
@@ -443,6 +444,9 @@ enum Texts
     TXT_TELEPORT_SUCCESSFULL        = 253,  /**< Information that character teleportation was successfull */
     TXT_NEVER_BANNED                = 254,  /**< Information that player wasn't banned */
     TXT_NEVER_MUTED                 = 255,  /**< Information that player wasn't muted */
+    TXT_ACTIVITY_DATE               = 256,  /**< Activity date label */
+    TXT_ACTIVITY_IP                 = 257,  /**< Activity ip label */
+    TXT_ACTIVITY_TEXT               = 258,  /**< Activity text label */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
@@ -457,6 +461,14 @@ enum Texts
     TXT_DBERROR_CANT_CONNECT        = 501,  /**< DB Error info: can't connect to database */
     TXT_DBERROR_QUERY_EMPTY         = 502,  /**< DB Error info: result empty */
     TXT_DBERROR_QUERY_ERROR         = 503,  /**< DB Error info: query error */
+
+    TXT_ACT_LOGIN_SUCCESS           = 601,  /**< Activity log info: Account login successfull */
+    TXT_ACT_LOGIN_FAIL              = 602,  /**< Activity log info: Account login fail */
+    TXT_ACT_REGISTRATION_COMPLETE   = 603,  /**< Activity log info: Account registration complete */
+    TXT_ACT_PASS_CHANGE             = 604,  /**< Activity log info: Someone tried to change password */
+    TXT_ACT_RECOVERY_SUCCESS        = 605,  /**< Activity log info: Password recovery success */
+    TXT_ACT_RECOVERY_FAIL           = 606,  /**< Activity log info: Password recovery fail */
+    TXT_ACT_IP_LOCK                 = 607,  /**< Activity log info: Someone tried to change ip lock state */
 };
 
 /********************************************//**

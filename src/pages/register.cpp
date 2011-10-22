@@ -206,6 +206,7 @@ void RegisterPage::Register()
     bool validEmail = txtEmail->validate() == WValidator::Valid;
     if (!validLogin || !validEmail)
     {
+        wApp->log("notice") << "User trying to register with invalid data ! login: " << txtLogin->text() << " email: " << txtEmail->text();
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_ERROR_NOT_VALID_DATA);
         return;
     }
@@ -287,6 +288,16 @@ void RegisterPage::Register()
     CheckChange();
 
     textSlots[REG_TEXT_INFO].SetLabel(session, TXT_REGISTRATION_COMPLETE);
+
+    uint32 accId;
+
+    if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str()) > RETURN_EMPTY)
+        accId = db.GetRow()->fields[0].GetUInt32();
+    else
+        return;
+
+    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+        db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", accId, session->sessionIp.toUTF8().c_str(), TXT_ACT_REGISTRATION_COMPLETE);
 }
 
 /********************************************//**

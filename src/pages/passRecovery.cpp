@@ -179,6 +179,7 @@ void PassRecoveryPage::Recover()
 
     if (!validLogin || !validEmail)
     {
+        wApp->log("notice") << "User trying to recover password with invalid data ! login: " << txtLogin->text() << " email: " << txtEmail->text();
         textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_NOT_VALID_DATA);
         return;
     }
@@ -202,6 +203,7 @@ void PassRecoveryPage::Recover()
     {
         case RETURN_ERROR:
         case RETURN_EMPTY:
+            AddActivityPassRecovery(false, login.toUTF8().c_str());
             ClearLogin();
             ClearEmail();
             textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_RECOVERY_DATA);
@@ -218,6 +220,7 @@ void PassRecoveryPage::Recover()
 
     if (mail != dbMail)
     {
+        AddActivityPassRecovery(accId, false);
         ClearLogin();
         ClearEmail();
         textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_RECOVERY_DATA);
@@ -243,6 +246,7 @@ void PassRecoveryPage::Recover()
 
     if (db.ExecuteQuery() == RETURN_ERROR)
     {
+        AddActivityPassRecovery(accId, false);
         textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
         return;
     }
@@ -269,6 +273,39 @@ void PassRecoveryPage::Recover()
     ClearEmail();
 
     textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_RECOVERY_COMPLETE);
+
+    AddActivityPassRecovery(accId, true);
+}
+
+void PassRecoveryPage::AddActivityPassRecovery(bool success, const char * login)
+{
+    Database db;
+
+    uint32 accId = session->accid;
+
+    if (!accId)
+    {
+        if (!login || !db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+            return;
+
+        if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login) > RETURN_EMPTY)
+            accId = db.GetRow()->fields[0].GetUInt32();
+        else
+            return;
+    }
+
+    AddActivityPassRecovery(accId, success);
+}
+
+void PassRecoveryPage::AddActivityPassRecovery(uint32 id, bool success)
+{
+    if (!id)
+        return;
+
+    Database db;
+
+    db.Connect(PANEL_DB_DATA, SQL_PANELDB);
+    db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_RECOVERY_SUCCESS : TXT_ACT_RECOVERY_FAIL);
 }
 
 /********************************************//**

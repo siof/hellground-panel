@@ -62,6 +62,11 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
 AccountInfoPage::~AccountInfoPage()
 {
     session = NULL;
+
+    for (std::list<BasicTextItem*>::iterator itr = activityInfoSlots.begin(); itr != activityInfoSlots.end(); ++itr)
+        delete (*itr);
+
+    activityInfoSlots.clear();
 }
 
 /********************************************//**
@@ -87,6 +92,7 @@ void AccountInfoPage::refresh()
             tabs->addTab(CreateBanInfo(), session->GetText(TXT_LBL_ACC_TAB_BAN), WTabWidget::PreLoading);
             tabs->addTab(CreateMuteInfo(), session->GetText(TXT_LBL_ACC_TAB_MUTE), WTabWidget::PreLoading);
             tabs->addTab(new WText("ticket test"), session->GetText(TXT_LBL_ACC_TAB_TICKET), WTabWidget::PreLoading);
+            tabs->addTab(CreateActivityInfo(), session->GetText(TXT_LBL_ACC_TAB_ACTIVITY), WTabWidget::PreLoading);
         }
 
         UpdateTextWidgets();
@@ -136,6 +142,10 @@ void AccountInfoPage::UpdateTextWidgets()
             for (i = 0; i < TICKETINFO_SLOT_COUNT; ++i)
                 ticketInfoSlots[i].UpdateLabel(session);
             break;*/
+        case 4:
+            for (std::list<BasicTextItem*>::const_iterator itr = activityInfoSlots.begin(); itr != activityInfoSlots.end(); ++itr)
+                (*itr)->UpdateLabel(session);
+            break;
         default:
             break;
     }
@@ -450,6 +460,7 @@ void AccountInfoPage::ClearPage()
             switch (i)
             {
                 case ACCTAB_SLOT_BASIC:
+                case ACCTAB_SLOT_ACTIVITY:
                     ((WContainerWidget*)tmpWid)->clear();
                     break;
                 case ACCTAB_SLOT_BANS:
@@ -461,6 +472,11 @@ void AccountInfoPage::ClearPage()
             }
         }
     }
+
+    for (std::list<BasicTextItem*>::iterator itr = activityInfoSlots.begin(); itr != activityInfoSlots.end(); ++itr)
+        delete (*itr);
+
+    activityInfoSlots.clear();
 }
 
 /********************************************//**
@@ -490,6 +506,9 @@ void AccountInfoPage::ChangeIPLock()
     }
     else
        pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+
+    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+        db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_IP_LOCK);
 }
 
 /********************************************//**
@@ -622,6 +641,134 @@ WTable * AccountInfoPage::CreateMuteInfo()
     }
 
     return muteInfo;
+}
+
+/********************************************//**
+ * \brief Creates account activity informations
+ *
+ * Last 100 saved activities (100 for panel and 100 for server) on account will be listed.
+ *
+ ***********************************************/
+
+WContainerWidget * AccountInfoPage::CreateActivityInfo()
+{
+    WContainerWidget * activityInfo = new WContainerWidget();
+
+    activityTabs = new WTabWidget(activityInfo);
+
+    WTable * tabPanel = new WTable(), * tabServer = new WTable();
+
+    activityTabs->addTab(tabPanel, "Panel", WTabWidget::PreLoading);
+    activityTabs->addTab(tabServer, "Server", WTabWidget::PreLoading);
+
+    tabPanel->setHeaderCount(1);
+    tabServer->setHeaderCount(1);
+
+    BasicTextItem * tmpText;
+
+    // prepare table headers
+    tmpText = new BasicTextItem();
+    tmpText->SetLabel(session, TXT_ACTIVITY_DATE);
+
+    tabPanel->elementAt(0, 0)->addWidget(tmpText->GetText());
+    activityInfoSlots.push_back(tmpText);
+
+    tmpText = new BasicTextItem();
+    tmpText->SetLabel(session, TXT_ACTIVITY_IP);
+
+    tabPanel->elementAt(0, 1)->addWidget(tmpText->GetText());
+    activityInfoSlots.push_back(tmpText);
+
+    tmpText = new BasicTextItem();
+    tmpText->SetLabel(session, TXT_ACTIVITY_TEXT);
+
+    tabPanel->elementAt(0, 2)->addWidget(tmpText->GetText());
+    activityInfoSlots.push_back(tmpText);
+
+    tmpText = new BasicTextItem();
+    tmpText->SetLabel(session, TXT_ACTIVITY_DATE);
+
+    tabServer->elementAt(0, 0)->addWidget(tmpText->GetText());
+    activityInfoSlots.push_back(tmpText);
+
+    tmpText = new BasicTextItem();
+    tmpText->SetLabel(session, TXT_ACTIVITY_IP);
+
+    tabServer->elementAt(0, 1)->addWidget(tmpText->GetText());
+    activityInfoSlots.push_back(tmpText);
+
+    // fill tables
+    Database db;
+    int i;
+
+    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    {
+        db.SetPQuery("SELECT eventDate, ip, textId, text FROM Activity WHERE accId = %u ORDER BY eventDate DESC LIMIT 100", session->accid);
+
+        switch (db.ExecuteQuery())
+        {
+            case RETURN_ERROR:
+                pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+                break;
+            case RETURN_EMPTY:
+                break;
+            default:
+            {
+                DatabaseRow * tmpRow;
+                std::list<DatabaseRow*> rows = db.GetRows();
+                i = 1;
+
+                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+                {
+                    tmpRow = *itr;
+
+                    uint32 txtId = tmpRow->fields[2].GetUInt32();
+
+                    tabPanel->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
+                    tabPanel->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
+
+                    if (txtId)
+                    {
+                        tmpText = new BasicTextItem();
+                        tmpText->SetLabel(session, txtId);
+                        activityInfoSlots.push_back(tmpText);
+                        tabPanel->elementAt(i, 2)->addWidget(tmpText->GetText());
+                    }
+                    else
+                        tabPanel->elementAt(i, 2)->addWidget(new WText(tmpRow->fields[3].GetWString()));
+                }
+            }
+        }
+    }
+
+    if (db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        db.SetPQuery("SELECT logindate, ip FROM account_login WHERE id = %u ORDER BY logindate DESC LIMIT 100", session->accid);
+
+        switch (db.ExecuteQuery())
+        {
+            case RETURN_ERROR:
+                pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+                break;
+            case RETURN_EMPTY:
+                break;
+            default:
+            {
+                DatabaseRow * tmpRow;
+                std::list<DatabaseRow*> rows = db.GetRows();
+                i = 1;
+
+                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+                {
+                    tmpRow = *itr;
+                    tabServer->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
+                    tabServer->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
+                }
+            }
+        }
+    }
+
+    return activityInfo;
 }
 
 /********************************************//**

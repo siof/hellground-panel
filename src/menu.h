@@ -87,6 +87,9 @@ private:
     void UpdateMenuOptions();
     void ClearLogin();
     void ClearPass();
+
+    void AddActivityLogIn(bool success, const char * login = NULL);
+    void AddActivityLogIn(uint32 id, bool success);
 };
 
 #endif // MENU_H_INCLUDED
