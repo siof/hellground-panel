@@ -87,7 +87,7 @@ void console(DebugFlags flag, char const* text, ...)
     }
 }
 
-void log(LogFlags flag, char const* text, ...)
+void Log(LogFlags flag, char const* text, ...)
 {
     if (LogFlags(LOG_OPTIONS) & flag)
     {
@@ -117,6 +117,18 @@ void GetTeleportPosition(int race, Location & loc)
     loc.posX = RaceLocs[race - mod][2];
     loc.posY = RaceLocs[race - mod][3];
     loc.posZ = RaceLocs[race - mod][4];
+}
+
+std::string GetFormattedString(const char * format, ...)
+{
+    char buffer[strlen(format) + 1000];
+
+    va_list args;
+    va_start(args, format);
+    vsprintf(buffer, format, args);
+    va_end(args);
+
+    return std::string(buffer);
 }
 
 class PlayersPanel : public WApplication

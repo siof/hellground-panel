@@ -155,11 +155,11 @@ int Database::ExecuteQuery()
 
     console(DEBUG_DB, "\n\nExecuteQuery(): test1\n");
 
-    log(LOG_DB_QUERY, "DB Query execute: %s", actualQuery.c_str());
+    Log(LOG_DB_QUERY, "DB Query execute: %s", actualQuery.c_str());
 
     if (mysql_query(connection, actualQuery.c_str()))
     {
-        log(LOG_DB_ERRORS, "DB Query error ! Error [%i]: %s", GetErrNo(), GetError());
+        Log(LOG_DB_ERRORS, "DB Query error ! Error [%i]: %s", GetErrNo(), GetError());
         return RETURN_ERROR;
     }
 

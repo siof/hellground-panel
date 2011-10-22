@@ -580,7 +580,7 @@ extern void console(DebugFlags flag, char const* text, ...);
  *
  ***********************************************/
 
-extern void log(LogFlags flag, char const* text, ...);
+extern void Log(LogFlags flag, char const* text, ...);
 
 /********************************************//**
  * \brief Represents simple character location.
@@ -610,5 +610,15 @@ enum MysqlReturn
     RETURN_ERROR = -1,
     RETURN_EMPTY = 0
 };
+
+/********************************************//**
+ * \brief Resturns format string filled with data.
+ *
+ * \param format    string format to fill
+ * \return format string with filled with data
+ *
+ ***********************************************/
+
+extern std::string GetFormattedString(const char * format, ...);
 
 #endif // DEFINES_H_INCLUDED
