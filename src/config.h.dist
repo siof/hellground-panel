@@ -97,6 +97,9 @@ const float RaceLocs[10][5] =   /**< Table with locations for races for characte
     {530,   3526,   -3961.64,   -13931.2,   100.615}    // 11   Draenei
 };
 
+#define ACTIVITY_PANEL_LIMIT    100     /**< Max count of panel activities to list */
+#define ACTIVITY_SERVER_LIMIT   100     /**< Max count of server activities to list */
+
 #endif // CONFIG_H_INCLUDED
 
 /**< \} */
