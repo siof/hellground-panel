@@ -185,3 +185,14 @@ If it's your account please use password recovery option to reset password and I
 (501, "DB Error: Błąd połączenia z bazą danych.", "DB Error: Can't connect to database."),
 (502, "DB Error: Zapytanie zwróciło pusty wynik.", "DB Error: Query result was empty."),
 (503, "DB Error: Wystąpił błąd w zapytaniu.", "DB Error: Database query error.");
+
+
+CREATE TABLE IF NOT EXISTS Activity
+(
+    id bigint unsigned NOT NULL PRIMARY KEY,
+    accId bigint(20) unsigned NOT NULL,
+    eventDate timestamp NOT NULL,
+    ip varchar(30) NOT NULL,
+    textId int unsigned NOT NULL DEFAULT 0,
+    text TEXT NOT NULL DEFAULT ''
+) ENGINE = INNODB, CHARACTER SET utf8;

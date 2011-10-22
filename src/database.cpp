@@ -147,15 +147,6 @@ bool Database::SelectDatabase(std::string db)
     return mysql_select_db(connection, db.c_str()) != NULL;
 }
 
-void Database::EscapeQuery()
-{
-    char * tmpTo = new char[actualQuery.size()];
-    mysql_real_escape_string(connection, tmpTo, actualQuery.c_str(), actualQuery.size());
-    actualQuery = tmpTo;
-    delete [] tmpTo;
-    tmpTo = NULL;
-}
-
 int Database::ExecuteQuery()
 {
     console(DEBUG_DB, "\nCall int Database::ExecuteQuery() : actualQuery: %s", actualQuery.c_str());
@@ -200,11 +191,25 @@ int Database::ExecuteQuery()
     return rows.size();
 }
 
-int Database::ExecuteQuery(std::string query, bool escape)
+int Database::ExecuteQuery(std::string query)
 {
     actualQuery = query;
-    if (escape)
-        EscapeQuery();
+
+    return ExecuteQuery();
+}
+
+int Database::ExecutePQuery(const char * format, ...)
+{
+    va_list ap;
+    char szQuery[MAX_QUERY_LEN];
+    va_start(ap, format);
+    int res = VSNPRINTF(szQuery, MAX_QUERY_LEN, format, ap);
+    va_end(ap);
+
+    if (res == RETURN_ERROR)
+        return RETURN_ERROR;
+
+    SetQuery(szQuery);
 
     return ExecuteQuery();
 }

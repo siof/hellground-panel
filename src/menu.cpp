@@ -310,9 +310,34 @@ void HGMenu::LogMeIn()
 
     std::string escapedLogin = db.EscapeString(login->text());
     std::string escapedPass = db.EscapeString(pass->text());
+    WString shapass;
+
+    switch (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s')", escapedLogin.c_str(), escapedPass.c_str()))
+    {
+        case RETURN_ERROR:
+        {
+            // if there was database error
+            std::string tmpErr = db.GetError();
+            ShowError(ERROR_SLOT_DB, tmpErr);
+            return;
+        }
+        case RETURN_EMPTY:
+        {
+            //if wrong data
+            ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
+            ClearLogin();
+            ClearPass();
+            return;
+        }
+        default:
+        {
+            shapass = db.GetRow()->fields[0].GetWString();
+            break;
+        }
+    }
 
                 //           0            1         2     3       4       5         6       7         8
-    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion FROM account WHERE username = '%s' AND sha_pass_hash = SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedLogin.c_str(), escapedPass.c_str());
+    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion FROM account WHERE username = '%s'", escapedLogin.c_str());
 
     // execute will return 0 if result will be empty and -1 if there will be DB error.
     switch (db.ExecuteQuery())
@@ -339,6 +364,15 @@ void HGMenu::LogMeIn()
             {
                 std::string tmpErr = "ERROR: Row not found!";
                 ShowError(ERROR_SLOT_BASE, tmpErr);
+                return;
+            }
+
+            if (row->fields[1].GetWString() != shapass)
+            {
+                //if wrong data
+                ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
+                ClearLogin();
+                ClearPass();
                 return;
             }
 
