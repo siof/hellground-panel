@@ -531,9 +531,20 @@ extern int irand(int min, int max);
 
 enum DebugFlags
 {
-    DEBUG_NONE = 0x00,
-    DEBUG_DB   = 0x01,  /**< Debug flag for standard database debug informations */
-    DEBUG_CODE = 0x02   /**< Debug flag for standard code debug infornations */
+    DEBUG_NONE  = 0x00,
+    DEBUG_DB    = 0x01,  /**< Debug flag for standard database debug informations */
+    DEBUG_CODE  = 0x02   /**< Debug flag for standard code debug infornations */
+};
+
+/********************************************//**
+ * \brief Debug flags for console debug.
+ ***********************************************/
+
+enum LogFlags
+{
+    LOG_NONE        = 0x00,
+    LOG_DB_QUERY    = 0x01,  /**< Log flag for logging all DB queries */
+    LOG_DB_ERRORS   = 0x02   /**< Log flag for logging DB query errors */
 };
 
 /********************************************//**

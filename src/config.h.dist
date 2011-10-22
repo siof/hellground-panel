@@ -13,6 +13,9 @@
 *
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+*    You can copy/rename this file to config.h and edit it to provide app configuration.
+*    Configuration in file config.h shouldn't be share under licence terms.
 */
 
 /********************************************//**
@@ -32,6 +35,8 @@
 #define SHOW_DATABASE_ERRORS    /**< Comment if you don't want to show database errors on error page */
 
 #define DEBUG_OPTIONS DEBUG_NONE /*| DEBUG_DB*/ /**< Add enums to show some debug informations for now(DEBUG_NONE, DEBUG_DB, DEBUG_CODE)*/
+
+#define LOG_OPTIONS     LOG_DB_QUERY | LOG_DB_ERRORS    /**< Add enums to log informations */
 
 #define SITE_TITLE  "HellGround Player's Panel" /**< Players panel site title (should be replaced with text from DB) */
 
