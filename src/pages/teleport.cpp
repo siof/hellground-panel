@@ -214,10 +214,8 @@ void TeleportPage::Teleport()
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        char buffer[MAX_QUERY_LEN];
-        sprintf(buffer, "Teleport. Character: %s. success: %s", db.EscapeString(name).c_str(), success ? "Yes" : "No");
-
-        db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', 0, '%s')", session->accid, session->sessionIp.toUTF8().c_str(), buffer);
+        std::string tmpStr = GetFormattedString("Teleport. Character: %s. success: %s", db.EscapeString(name).c_str(), success ? "Yes" : "No");
+        db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', 0, '%s')", session->accid, session->sessionIp.toUTF8().c_str(), tmpStr.c_str());
     }
 }
 

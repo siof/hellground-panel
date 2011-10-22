@@ -226,29 +226,19 @@ void ServerStatusPage::UpdateStatus()
         m = (tmpUp - d*3600*24 - h*3600)/60;
         s = tmpUp - d*3600*24 - h*3600 - m*60;
 
-        buffer = new char[100];
-
-        sprintf(buffer, session->GetText(TXT_UPTIME_FMT).toUTF8().c_str(), d, h, m, s);
-        std::string uptime = buffer;
-
-        delete [] buffer;
-
-        buffer = new char[100];
-
-        sprintf(buffer, session->GetText(TXT_LBL_STATUS_FACTIONS_FMT).toUTF8().c_str(), horde, ally);
+        std::string uptime = GetFormattedString(session->GetText(TXT_UPTIME_FMT).toUTF8().c_str(), d, h, m, s);
 
         ((WText*)statusSlots[SERVER_STATUS_TEXT_REALM].GetWidget())->setText(REALM_NAME);
         ((WText*)statusSlots[SERVER_STATUS_TEXT_STATE].GetWidget())->setText(session->GetText(tmpUp ? TXT_ONLINE : TXT_OFFLINE));
         ((WText*)statusSlots[SERVER_STATUS_TEXT_ONLINE].GetWidget())->setText(online);
         ((WText*)statusSlots[SERVER_STATUS_TEXT_MAXONLINE].GetWidget())->setText(maxOnline);
-        ((WText*)statusSlots[SERVER_STATUS_TEXT_FACTIONS].GetWidget())->setText(buffer);
+        ((WText*)statusSlots[SERVER_STATUS_TEXT_FACTIONS].GetWidget())->setText(GetFormattedString(session->GetText(TXT_LBL_STATUS_FACTIONS_FMT).toUTF8().c_str(), horde, ally));
         ((WText*)statusSlots[SERVER_STATUS_TEXT_UPTIME].GetWidget())->setText(uptime);
         ((WText*)statusSlots[SERVER_STATUS_TEXT_REVISION].GetWidget())->setText(rev);
         ((WText*)statusSlots[SERVER_STATUS_TEXT_DIFF].GetWidget())->setText(diff);
         ((WText*)statusSlots[SERVER_STATUS_TEXT_AVGDIFF].GetWidget())->setText(avgDiff);
 //        ((WText*)statusSlots[SERVER_STATUS_TEXT_INFO].GetWidget())->setText();
 
-        delete [] buffer;
         curl_easy_cleanup(curl);
     }
 }

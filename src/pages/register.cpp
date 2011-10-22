@@ -206,7 +206,7 @@ void RegisterPage::Register()
     bool validEmail = txtEmail->validate() == WValidator::Valid;
     if (!validLogin || !validEmail)
     {
-        log(LOG_INVALID_DATA, "User trying to register with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
+        Log(LOG_INVALID_DATA, "User trying to register with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_ERROR_NOT_VALID_DATA);
         return;
     }
@@ -271,16 +271,9 @@ void RegisterPage::Register()
     else
         msg = "Registration Mail\n\n Your password for login %s is: %s";
 
-    // set buffer size (format string size + 16 chars for login + 16 chars for pass + some to be safe)
-    char * buffer = new char[msg.toUTF8().size() + 40];
-
-    sprintf(buffer, msg.toUTF8().c_str(), login.toUTF8().c_str(), tmpStr.c_str());
-
-    msg = buffer;
+    msg = GetFormattedString(msg.toUTF8().c_str(), login.toUTF8().c_str(), tmpStr.c_str());
 
     SendMail(from, mail, session->GetText(TXT_REGISTRATION_SUBJECT), msg);
-
-    delete [] buffer;
 
     ClearLogin();
     ClearEmail();

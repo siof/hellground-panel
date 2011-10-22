@@ -179,7 +179,7 @@ void PassRecoveryPage::Recover()
 
     if (!validLogin || !validEmail)
     {
-        log(LOG_INVALID_DATA, "User trying to recover password with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
+        Log(LOG_INVALID_DATA, "User trying to recover password with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
         textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_NOT_VALID_DATA);
         return;
     }
@@ -256,18 +256,9 @@ void PassRecoveryPage::Recover()
     else
         msg = "Password Recovery Mail.\n\nRecovery date: %s \nRecovery session IP: %s \nNew pass: %s";
 
-    // set buffer size
-    std::string tmpMsg = msg.toUTF8();
-    std::string tmpIp = session->sessionIp.toUTF8();
-    char * buffer = new char[tmpMsg.size() + dbDate.size() + tmpIp.size() + passLen + 5];
-
-    sprintf(buffer, tmpMsg.c_str(), dbDate.c_str(), tmpIp.c_str(), tmpStr.c_str());
-
-    msg = buffer;
+    msg = GetFormattedString(msg.toUTF8().c_str(), dbDate.c_str(), session->sessionIp.toUTF8().c_str(), tmpStr.c_str());
 
     SendMail(from, mail, session->GetText(TXT_RECOVERY_SUBJECT), msg);
-
-    delete [] buffer;
 
     ClearLogin();
     ClearEmail();
