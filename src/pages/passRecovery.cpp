@@ -179,7 +179,7 @@ void PassRecoveryPage::Recover()
 
     if (!validLogin || !validEmail)
     {
-        wApp->log("notice") << "User trying to recover password with invalid data ! login: " << txtLogin->text() << " email: " << txtEmail->text();
+        log(LOG_INVALID_DATA, "User trying to recover password with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
         textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_NOT_VALID_DATA);
         return;
     }
