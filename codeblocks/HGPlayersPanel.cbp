@@ -133,6 +133,8 @@
 		<Unit filename="../src/pages/default.h" />
 		<Unit filename="../src/pages/error.cpp" />
 		<Unit filename="../src/pages/error.h" />
+		<Unit filename="../src/pages/licence.cpp" />
+		<Unit filename="../src/pages/licence.h" />
 		<Unit filename="../src/pages/logout.cpp" />
 		<Unit filename="../src/pages/logout.h" />
 		<Unit filename="../src/pages/passChange.cpp" />

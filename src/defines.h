@@ -274,6 +274,8 @@ enum MenuOptions
 
     MENU_SLOT_LOGIN,            /**< login/logout */
 
+    MENU_SLOT_LICENCE,          /**< licence and panel informations */
+
     MENU_SLOT_ERROR,            /**< for errors (shouldn't be visible) */
 
     MENU_SLOT_COUNT             /**< menu slots count */
@@ -307,6 +309,7 @@ enum Texts
     TXT_MENU_MUTEINFO               = 15,   /**< Mute informations menu button */
     TXT_MENU_MUTELIST               = 16,   /**< Mute list menu button */
     TXT_MENU_ERROR                  = 17,   /**< Error page (shouldn't be visible) */
+    TXT_MENU_LICENCE                = 18,   /**< Licence informations page */
 
     TXT_MENU_GM_PANEL               = 50,   /**< Game Masters panel menu button */
     TXT_MENU_GM_TICKETS             = 51,   /**< Game Masters tickets (in panel) menu button*/
@@ -447,6 +450,9 @@ enum Texts
     TXT_ACTIVITY_DATE               = 256,  /**< Activity date label */
     TXT_ACTIVITY_IP                 = 257,  /**< Activity ip label */
     TXT_ACTIVITY_TEXT               = 258,  /**< Activity text label */
+    TXT_LICENCE_INTRO               = 259,  /**< Static licence intro */
+    TXT_LICENCE_REPO                = 260,  /**< Static link to panel repository/source code */
+    TXT_LICENCE_INFO                = 261,  /**< Additional static informations */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */

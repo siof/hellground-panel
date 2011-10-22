@@ -25,6 +25,7 @@
 #include "pages/serverStatus.h"
 #include "pages/logout.h"
 #include "pages/teleport.h"
+#include "pages/licence.h"
 
 #include <WRegExpValidator>
 #include <WLengthValidator>
@@ -243,6 +244,9 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menuSlots[MENU_SLOT_LOGIN] = new HGMenuOption(MENU_SLOT_LOGIN);
     menuSlots[MENU_SLOT_LOGIN]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_LOGOUT, new LogoutPage(session));
+
+    menuSlots[MENU_SLOT_LICENCE] = new HGMenuOption(MENU_SLOT_LICENCE);
+    menuSlots[MENU_SLOT_LICENCE]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_LICENCE, new LicencePage(session));
 
     menuSlots[MENU_SLOT_ERROR] = new HGMenuOption(MENU_SLOT_ERROR);
     menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_ERROR, new ErrorPage(session));

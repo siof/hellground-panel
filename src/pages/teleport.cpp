@@ -157,6 +157,9 @@ void TeleportPage::LoadCharacters()
 
 void TeleportPage::Teleport()
 {
+    if (session->accLvl < LVL_PLAYER)
+        return;
+
     if (characters->count() < 1)
         return;
 
