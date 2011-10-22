@@ -523,6 +523,9 @@ void HGMenu::refresh()
     }
     else
     {
+        // reset account information page
+        menuSlots[MENU_SLOT_ACCOUNT]->GetMenuItemForLevel(LVL_PLAYER)->contents()->refresh();
+
         session->accLvl = LVL_NOT_LOGGED;
         menu->select(0);
         ShowMenuOptions(true);
