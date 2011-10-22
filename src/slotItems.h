@@ -56,6 +56,13 @@ public:
 
     WText * GetLabel() { return label; }
     WText * GetText() { return label; }
+
+    void Clear()
+    {
+        textId = 0;
+        label = NULL;
+    }
+
 private:
     uint32 textId;
     WText * label;
@@ -92,6 +99,13 @@ public:
     WText * GetLabel() { return label.GetLabel(); }
     WWidget * GetWidget() { return widget; }
     int GetBreakCount() { return breaks; }
+
+    void Clear()
+    {
+        breaks = 0;
+        label.Clear();
+        widget = NULL;
+    }
 
 private:
     int breaks;

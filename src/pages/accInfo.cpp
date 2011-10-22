@@ -453,19 +453,23 @@ void AccountInfoPage::ClearPage()
     WWidget * tmpWid;
     int i;
 
-    for (i = 0; i < ACCTAB_SLOT_COUNT; ++i)
+    for (i = ACCTAB_SLOT_COUNT - 1; i >= 0; --i)
     {
         if (tmpWid = tabs->widget(i))
         {
+            tabs->removeTab(tmpWid);
+
             switch (i)
             {
                 case ACCTAB_SLOT_BASIC:
                 case ACCTAB_SLOT_ACTIVITY:
                     ((WContainerWidget*)tmpWid)->clear();
+                    delete tmpWid;
                     break;
                 case ACCTAB_SLOT_BANS:
                 case ACCTAB_SLOT_MUTE:
                     ((WTable*)tmpWid)->clear();
+                    delete tmpWid;
                     break;
                 default:
                     break;
@@ -477,6 +481,15 @@ void AccountInfoPage::ClearPage()
         delete (*itr);
 
     activityInfoSlots.clear();
+
+    for (i = 0; i < ACCINFO_SLOT_COUNT; ++i)
+        accInfoSlots[i].Clear();
+
+    for (i = 0; i < ACCBANINFO_SLOT_COUNT; ++i)
+        banInfoSlots[i].Clear();
+
+    for (i = 0; i < ACCMUTEINFO_SLOT_COUNT; ++i)
+        muteInfoSlots[i].Clear();
 }
 
 /********************************************//**
