@@ -79,7 +79,7 @@ private:
     void Vote(const uint32& id);
 
     /// stores vote state
-    std::map<uint32, bool> voteMap;
+    std::map<uint32, WString> voteMap;
 };
 
 #endif //VOTE_H_INCLUDED
