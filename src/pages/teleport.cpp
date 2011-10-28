@@ -33,6 +33,7 @@
 TeleportPage::TeleportPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess), guids(NULL)
 {
+    console(DEBUG_CODE, "TeleportPage::TeleportPage(SessionInfo * sess = %i, WContainerWidget * parent = %i)", sess != NULL, parent != NULL);
     setContentAlignment(AlignCenter|AlignTop);
 
     teleportSlots[TELEPORT_SLOT_INFO].SetText(sess, TXT_TELEPORT);

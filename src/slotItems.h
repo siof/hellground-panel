@@ -32,7 +32,7 @@
 class BasicTextItem
 {
 public:
-    BasicTextItem() : textId(0), label(NULL) {}
+    BasicTextItem() : textId(0), label(NULL), prevLang(LANG_COUNT) {}
     BasicTextItem(SessionInfo * sess, uint32 txtId);
     BasicTextItem(WString &lbl);
     ~BasicTextItem();
@@ -66,6 +66,7 @@ public:
 private:
     uint32 textId;
     WText * label;
+    Lang prevLang;
 };
 
 /********************************************//**

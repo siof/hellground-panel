@@ -113,7 +113,7 @@ void VotePage::CreateVotePage()
         return;
     }
 
-    db.SetPQuery("SELECT Vote.id, Vote.url, Vote.imgurl, Vote.alttext, Vote.name, AccVote.resetDate FROM AccVote RIGHT OUTER JOIN Vote ON AccVote.voteId = Vote.id WHERE AccVote.acc = '%u' OR AccVote.acc IS NULL", session->accid);
+    db.SetPQuery("SELECT voteId, resetDate FROM AccVote WHERE acc = '%u'", session->accid);
 
     switch (db.ExecuteQuery())
     {
@@ -125,6 +125,29 @@ void VotePage::CreateVotePage()
         {
             std::list<DatabaseRow*> rows = db.GetRows();
             DatabaseRow * tmpRow;
+
+            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+            {
+                tmpRow = *itr;
+
+                voteMap[tmpRow->fields[0].GetUInt32()] = tmpRow->fields[1].GetWString();
+            }
+
+            break;
+        }
+    }
+
+    switch (db.ExecuteQuery("SELECT id, url, imgurl, alttext, name FROM Vote"))
+    {
+        case RETURN_ERROR:
+            infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            break;
+        case RETURN_EMPTY:
+        default:
+        {
+            std::map<uint32, WString>::iterator mapItr;
+            std::list<DatabaseRow*> rows = db.GetRows();
+            DatabaseRow * tmpRow;
             PageSlotItem * tmpItem;
             WAnchor * tmpWidget;
             bool disabled;
@@ -132,8 +155,9 @@ void VotePage::CreateVotePage()
             for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
             {
                 tmpRow = *itr;
+                mapItr = voteMap.find(tmpRow->fields[0].GetUInt32());
 
-                disabled = !tmpRow->fields[5].GetWString().empty();
+                disabled = mapItr != voteMap.end();
 
                 tmpWidget = new WAnchor(WLink(tmpRow->fields[1].GetString()));
                 tmpWidget->setImage(new WImage(WLink(tmpRow->fields[2].GetString()), tmpRow->fields[3].GetWString()));
@@ -145,13 +169,12 @@ void VotePage::CreateVotePage()
                 WString tmpStr = tmpRow->fields[4].GetWString();
 
                 if (disabled)
-                    tmpStr += session->GetText(TXT_SUPPORT_VOTE_NEXT) + tmpRow->fields[5].GetWString();
+                    tmpStr += session->GetText(TXT_SUPPORT_VOTE_NEXT) + mapItr->second;
 
                 tmpItem = new PageSlotItem();
                 tmpItem->SetAll(new WText(tmpStr), tmpWidget, 2);
 
                 votes.push_back(tmpItem);
-                voteMap[tmpRow->fields[0].GetUInt32()] = disabled;
             }
 
             break;
@@ -215,13 +238,14 @@ void VotePage::Vote(const uint32& id)
         tmpAnch->setDisabled(true);
     }
 
-    if (voteMap[id] == true)
+    std::map<uint32, WString>::iterator mapItr = voteMap.find(id);
+    if (mapItr != voteMap.end())
     {
         infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_ERROR_CANT_VOTE_TWICE);
         return;
     }
 
-    voteMap[id] = true;
+    voteMap[id] = "";
 
     Database db;
 

@@ -56,7 +56,7 @@ public:
     ~HGMenuOption();
 
     void AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem);
-    void AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload = true);
+    void AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, const char * path = NULL, bool preload = true);
     void RemoveMenuItem(WMenuItem * menuItem, bool alsoDelete = true);
     void RemoveMenuItem(AccountLevel accLvl, bool alsoDelete = true);
 

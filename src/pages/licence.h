@@ -46,7 +46,7 @@ enum LicenceTextSlot
  * \brief A class to represent licence page.
  *
  * This class is container for widgets contains
- * text for support page. Text depends on language and
+ * text for licence page. Text depends on language and
  * is stored in DB.
  *
  ***********************************************/

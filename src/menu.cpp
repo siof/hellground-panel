@@ -154,7 +154,7 @@ void HGMenuOption::AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * m
     menuItem = NULL;
 }
 
-void HGMenuOption::AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload)
+void HGMenuOption::AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, const char * path, bool preload)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !sess || !item)
         return;
@@ -163,6 +163,8 @@ void HGMenuOption::AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 t
 
     items[accLvl+1] = new WMenuItem(sess->GetText(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading);
     textIds[accLvl+1] = textId;
+//    if (path)
+//        items[accLvl+1]->setPathComponent(path);
     item = NULL;
 }
 
@@ -369,38 +371,40 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menu = new WMenu(menuContents, Wt::Vertical, this);
     menu->setRenderAsList(true);
+//    menu->setInternalPathEnabled("/");
 
     for (int i = 0; i < MENU_SLOT_COUNT; ++i)
         menuSlots[i] = NULL;
 
     menuSlots[MENU_SLOT_HOME] = new HGMenuOption(MENU_SLOT_HOME);
-    menuSlots[MENU_SLOT_HOME]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_HOME, new DefaultPage(sess));
+    menuSlots[MENU_SLOT_HOME]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_HOME, new DefaultPage(sess), "home");
     menuSlots[MENU_SLOT_HOME]->AddMenuItem(LVL_PLAYER, TXT_MENU_HOME, menuSlots[MENU_SLOT_HOME]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
     menuSlots[MENU_SLOT_ACCOUNT] = new HGMenuOption(MENU_SLOT_ACCOUNT);
-    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess));
-    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess), false);
+    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess), "reg");
+    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess), "acc", false);
 
     menuSlots[MENU_SLOT_PASSWORD] = new HGMenuOption(MENU_SLOT_PASSWORD);
-    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess));
-    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_PASS_CHANGE, new PassChangePage(sess));
+    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess), "rec");
+    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_PASS_CHANGE, new PassChangePage(sess), "pass");
 
     menuSlots[MENU_SLOT_TELEPORT] = new HGMenuOption(MENU_SLOT_TELEPORT);
-    menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session));
+    menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session), "tele");
 
     menuSlots[MENU_SLOT_SUPPORT] = new HGMenuOption(MENU_SLOT_SUPPORT);
     menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuItem(LVL_PLAYER, session, TXT_MENU_SUPPORT, new SupportPage(session), menuContents);
     menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuOption(LVL_PLAYER, session, TXT_MENU_VOTE, new VotePage(session), false);
 
     menuSlots[MENU_SLOT_SERVER_STATUS] = new HGMenuOption(MENU_SLOT_SERVER_STATUS);
-    menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess));
+    menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess), "stat");
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_PLAYER, TXT_MENU_SERVER_STATUS, menuSlots[MENU_SLOT_SERVER_STATUS]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
     menuSlots[MENU_SLOT_LOGIN] = new HGMenuOption(MENU_SLOT_LOGIN);
-    menuSlots[MENU_SLOT_LOGIN]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_LOGOUT, new LogoutPage(session));
+    menuSlots[MENU_SLOT_LOGIN]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_LOGOUT, new LogoutPage(session), "log");
 
     menuSlots[MENU_SLOT_LICENCE] = new HGMenuOption(MENU_SLOT_LICENCE);
-    menuSlots[MENU_SLOT_LICENCE]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_LICENCE, new LicencePage(session));
+    menuSlots[MENU_SLOT_LICENCE]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_LICENCE, new LicencePage(session), "licence");
+    menuSlots[MENU_SLOT_LICENCE]->AddMenuItem(LVL_PLAYER, TXT_MENU_LICENCE, menuSlots[MENU_SLOT_LICENCE]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
     menuSlots[MENU_SLOT_ERROR] = new HGMenuOption(MENU_SLOT_ERROR);
     menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_ERROR, new ErrorPage(session));
