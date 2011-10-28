@@ -143,7 +143,7 @@ struct SessionInfo
      *
      ***********************************************/
 
-    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), textMissing("Error ! Text missing !") {}
+    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), vote(0), textMissing("Error ! Text missing !") {}
     ~SessionInfo() {}
 
     WString login;          /**< Login used to log on account. */
@@ -158,6 +158,7 @@ struct SessionInfo
     std::map<uint32 ,LangText> langTexts;   /**< Map with texts depend for supported languages loaded from database */
     bool locked;            /**< IP lock */
     int expansion;          /**< Expansion enabled for this account. */
+    uint32 vote;            /**< Vote points count */
 
     WString textMissing;    /**< "Error ! Text missing !" info. Should be shown when text wasn't found in langTexts. */
 
@@ -214,6 +215,7 @@ struct SessionInfo
         accLvl = LVL_LOGGED_OUT;
         locked = false;
         expansion = 0;
+        vote = 0;
     }
 };
 
@@ -259,13 +261,10 @@ enum MenuOptions
     MENU_SLOT_HOME = 0,         /**< home */
     MENU_SLOT_ACCOUNT,          /**< register/acc info */
     MENU_SLOT_PASSWORD,         /**< pass recovery/pass change */
-    MENU_SLOT_SERVER_STATUS,    /**< server status */
+    MENU_SLOT_TELEPORT,         /**< nothing/teleport */
     MENU_SLOT_SUPPORT,          /**< donate, vote */
     MENU_SLOT_LINKS,            /**< links */
-    MENU_SLOT_TELEPORT,         /**< nothing/teleport */
-    MENU_SLOT_IP_LOCK,          /**< nothing/ip lock */
-    MENU_SLOT_BAN,              /**< nothing/baninfo/banlist */
-    MENU_SLOT_MUTE,             /**< nothing/muteinfo/mutelist */
+    MENU_SLOT_SERVER_STATUS,    /**< server status */
 
     MENU_SLOT_GM_PANEL,         /**< nothing/nothing/panel gm */
     MENU_SLOT_GM_TICKETS,       /**< nothing/nothing/panel gm - tickets */
@@ -310,6 +309,7 @@ enum Texts
     TXT_MENU_MUTELIST               = 16,   /**< Mute list menu button */
     TXT_MENU_ERROR                  = 17,   /**< Error page (shouldn't be visible) */
     TXT_MENU_LICENCE                = 18,   /**< Licence informations page */
+    TXT_MENU_SUPPORT                = 19,   /**< Support main */
 
     TXT_MENU_GM_PANEL               = 50,   /**< Game Masters panel menu button */
     TXT_MENU_GM_TICKETS             = 51,   /**< Game Masters tickets (in panel) menu button*/
@@ -453,6 +453,10 @@ enum Texts
     TXT_LICENCE_INTRO               = 259,  /**< Static licence intro */
     TXT_LICENCE_REPO                = 260,  /**< Static link to panel repository/source code */
     TXT_LICENCE_INFO                = 261,  /**< Additional static informations */
+    TXT_SUPPORT_MAIN                = 262,  /**< Static text for main support page */
+    TXT_SUPPORT_VOTE_INFO           = 263,  /**< Text for vote page title/info */
+    TXT_SUPPORT_VOTE_NEXT           = 264,  /**< Text for next vote time info */
+    TXT_SUPPORT_VOTED               = 265,  /**< Text for successfull vote */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
@@ -463,6 +467,8 @@ enum Texts
     TXT_ERROR_CANT_TELEPORT_ONLINE  = 356,  /**< Error info: Only offline characters can be teleported */
     TXT_ERROR_CHARACTER_NOT_FOUND   = 357,  /**< Error info: character not found */
     TXT_ERROR_IP_MISMATCH           = 358,  /**< Error info: IP lock on and IP is not matching */
+    TXT_ERROR_WRONG_PASSWORD        = 359,  /**< Error info: wrong current password */
+    TXT_ERROR_CANT_VOTE_TWICE       = 360,  /**< Error info: can't vote twice on same page */
 
     TXT_DBERROR_CANT_CONNECT        = 501,  /**< DB Error info: can't connect to database */
     TXT_DBERROR_QUERY_EMPTY         = 502,  /**< DB Error info: result empty */

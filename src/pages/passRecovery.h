@@ -92,12 +92,17 @@ private:
     void UpdateTextWidgets();
     void CreateRecoveryPage();
 
-    void ClearLogin();
-    void ClearEmail();
+    void ClearRecoveryData();
     void Recover();
 
     void AddActivityPassRecovery(bool success, const char * login = NULL);
     void AddActivityPassRecovery(uint32 id, bool success);
+
+    void ClearWLineEdit()
+    {
+        if (WObject::sender())
+            ((WLineEdit*)WObject::sender())->setText("");
+    }
 };
 
 

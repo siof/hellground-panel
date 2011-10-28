@@ -145,8 +145,12 @@
 		<Unit filename="../src/pages/register.h" />
 		<Unit filename="../src/pages/serverStatus.cpp" />
 		<Unit filename="../src/pages/serverStatus.h" />
+		<Unit filename="../src/pages/support.cpp" />
+		<Unit filename="../src/pages/support.h" />
 		<Unit filename="../src/pages/teleport.cpp" />
 		<Unit filename="../src/pages/teleport.h" />
+		<Unit filename="../src/pages/vote.cpp" />
+		<Unit filename="../src/pages/vote.h" />
 		<Unit filename="../src/slotItems.cpp" />
 		<Unit filename="../src/slotItems.h" />
 		<Extensions>

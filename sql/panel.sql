@@ -27,6 +27,7 @@ INSERT INTO LangTexts VALUES
 (16, "Lista mute", "Mute list"),
 (17, "ERROR", "ERROR"),
 (18, "Licencja", "Licence"),
+(19, "Support", "Support"),
 
 (50, "Panel GM", "GM Panel"),
 (51, "Tickety", "Tickets"),
@@ -207,6 +208,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 email: siof@hellground.pl"),
 (260, "Repozytorium kodu źródłowego (zawiera także licencję): <a href=\"https://bitbucket.org/siof/hgplayerspanel\">https://bitbucket.org/siof/hgplayerspanel</a>", "Source code repository (also contains licence): <a href=\"https://bitbucket.org/siof/hgplayerspanel\">https://bitbucket.org/siof/hgplayerspanel</a>"),
 (261, "", ""),
+(262, "Support info TODO", "Support info TODO"),
+(263, "Vote info TODO", "Vote info TODO"),
+(264, " Następne głosowanie: ", " Next vote time: "),
+(265, "Zagłosowano pomyślnie", "Vote successfull"),
 
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),
@@ -221,6 +226,8 @@ email: siof@hellground.pl"),
 Jeśli to konto jest Twoje użyj opcji odzyskiwania hasła w celu zresetowania hasła i blokady IP.", "Account where you tried to login has IP lock on and your current IP doesn't match to account IP.
 
 If it's your account please use password recovery option to reset password and IP lock."),
+(359, "Błędne hasło.", "Wrong password."),
+(360, "Nie możesz jeszcze zagłosować na tą listę.", "You can't vote on that list yet."),
 
 (501, "DB Error: Błąd połączenia z bazą danych.", "DB Error: Can't connect to database."),
 (502, "DB Error: Zapytanie zwróciło pusty wynik.", "DB Error: Query result was empty."),
@@ -243,3 +250,26 @@ CREATE TABLE IF NOT EXISTS Activity
     textId int unsigned NOT NULL DEFAULT 0,
     text TEXT NOT NULL DEFAULT ''
 ) ENGINE = INNODB, CHARACTER SET utf8;
+
+CREATE TABLE IF NOT EXISTS Vote
+(
+    id bigint unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    url TEXT NOT NULL,
+    imgurl TEXT NOT NULL,
+    alttext TEXT NOT NULL DEFAULT '',
+    name varchar(30) NOT NULL
+) ENGINE = INNODB, CHARACTER SET utf8;
+
+CREATE TABLE IF NOT EXISTS AccVote
+(
+    acc bigint(20) unsigned NOT NULL,
+    voteId bigint unsigned NOT NULL,
+    resetDate timestamp NOT NULL,
+    PRIMARY KEY (acc, voteId),
+    FOREIGN KEY (voteId) REFERENCES Vote(id) ON DELETE CASCADE
+) ENGINE = INNODB, CHARACTER SET utf8;
+
+DELETE FROM Vote;
+INSERT INTO Vote VALUES
+('XXX', 'http://www.xtremetop100.com/in.php?site=1132311845', 'http://www.xtremeTop100.com/votenew.jpg', 'XtremeTop100', 'XtremeTop100'),
+('XXX', 'http://www.wowstatus.net/in.php?server=485129', 'http://www.wowstatus.net/includes/images/vote.gif', 'WoWStatus.net', 'WoWStatus.net');

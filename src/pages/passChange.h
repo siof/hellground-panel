@@ -48,6 +48,7 @@ enum PassChangeTextSlots
     PASS_CHANGE_TEXT_MAIN = 0,      /**< Page title/main text shown on top. */
     PASS_CHANGE_TEXT_INFO,          /**< Additional info/change errors. */
     PASS_CHANGE_TEXT_LOGIN,         /**< Account login. */
+    PASS_CHANGE_TEXT_OLDPASS,       /**< Old password. */
     PASS_CHANGE_TEXT_PASS,          /**< New password. */
     PASS_CHANGE_TEXT_PASS2,         /**< New password 2. */
 
@@ -80,6 +81,7 @@ private:
     bool needCreation;
 
     /// text box for passwords
+    WLineEdit * txtPassOld;
     WLineEdit * txtPass;
     WLineEdit * txtPass2;
     /// register button
@@ -92,8 +94,13 @@ private:
     void CreatePassChangePage();
 
     void ClearPass();
-    void ClearPass2();
     void Change();
+
+    void ClearWLineEdit()
+    {
+        if (WObject::sender())
+            ((WLineEdit*)WObject::sender())->setText("");
+    }
 };
 
 

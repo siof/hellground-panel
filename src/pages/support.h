@@ -19,31 +19,28 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Licence Licence and informations page
+ * \addtogroup Support Support project
+ * Support pages contains code to provide possibility
+ * to support project by players such as vote/donate.
+ * Support consists of mostly 4 files:
+ * - support.h
+ * - support.cpp
+ * - vote.h
+ * - vote.cpp
  * \{
  *
- * \file licence.h
- * This file contains headers needed to show informations/licence page.
+ * \file support.h
+ * This file contains th headers needed to provide support possibility.
  *
  ***********************************************/
 
-#ifndef LICENCE_H_INCLUDED
-#define LICENCE_H_INCLUDED
+#ifndef SUPPORT_H_INCLUDED
+#define SUPPORT_H_INCLUDED
 
 #include "../defines.h"
-#include "../slotItems.h"
-
-enum LicenceTextSlot
-{
-    LICENCE_SLOT_INTRO  = 0,
-    LICENCE_SLOT_REPO   = 1,
-    LICENCE_SLOT_INFO   = 2,
-
-    LICENCE_SLOT_COUNT
-};
 
 /********************************************//**
- * \brief A class to represent licence page.
+ * \brief A class to represent Support page.
  *
  * This class is container for widgets contains
  * text for support page. Text depends on language and
@@ -51,29 +48,20 @@ enum LicenceTextSlot
  *
  ***********************************************/
 
-class LicencePage : public WContainerWidget
+class SupportPage : public WContainerWidget
 {
 public:
-    LicencePage(SessionInfo * sess, WContainerWidget * parent = 0);
-    ~LicencePage() { clear(); }
+    SupportPage(SessionInfo * sess, WContainerWidget * parent = 0);
+    ~SupportPage();
 
     void refresh();
 private:
-    /// pointer to object with current session informations
+    /// panel session informations
     SessionInfo * session;
-
+    /// created or not?
     bool needCreation;
 
-    BasicTextItem licenceTextSlots[LICENCE_SLOT_COUNT];
-
-    void ShowText();
-    void UpdateText();
+    WText * info;
 };
 
-#endif // LICENCE_H_INCLUDED
-
-/********************************************//**
- * \}
- * \}
- ***********************************************/
-
+#endif //SUPPORT_H_INCLUDED

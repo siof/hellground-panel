@@ -29,7 +29,6 @@
 
 #include "accInfo.h"
 #include "../database.h"
-#include "../menu.h"
 
 /********************************************//**
  * \brief Creates new AccountInfoPage object.
@@ -233,10 +232,9 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
         tmpWidget = accInfoSlots[ACCINFO_SLOT_CLIENT_VERSION].GetWidget();
         ((WText*)tmpWidget)->setText(GetLocale(tmpRow->fields[5].GetInt()));
 
-/*
         tmpWidget = accInfoSlots[ACCINFO_SLOT_VOTE_POINTS].GetWidget();
-        ((WText*)tmpWidget)->setText();
-
+        ((WText*)tmpWidget)->setText(GetFormattedString("%u", session->vote));
+/*
         tmpWidget = accInfoSlots[ACCINFO_SLOT_MULTIACC].GetWidget();
         ((WText*)tmpWidget)->setText();
 */
@@ -300,7 +298,7 @@ WContainerWidget * AccountInfoPage::CreateAccountInfo()
 
     accInfoSlots[ACCINFO_SLOT_EMAIL].SetAll(session, TXT_LBL_ACC_MAIL, new WText(""), 1);
 
-    //accVotePoints;
+    accInfoSlots[ACCINFO_SLOT_VOTE_POINTS].SetAll(session, TXT_LBL_ACC_VP, new WText(""), 1);
 
     //accMultiAcc;
 

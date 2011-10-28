@@ -100,6 +100,8 @@ const float RaceLocs[10][5] =   /**< Table with locations for races for characte
 #define ACTIVITY_PANEL_LIMIT    100     /**< Max count of panel activities to list */
 #define ACTIVITY_SERVER_LIMIT   100     /**< Max count of server activities to list */
 
+#define VOTE_INTERVAL   12  /**< Vote interval in hours (uint value) */
+
 #endif // CONFIG_H_INCLUDED
 
 /**< \} */

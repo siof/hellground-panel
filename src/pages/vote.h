@@ -19,31 +19,34 @@
  * \addtogroup Pages
  * \{
  *
- * \addtogroup Licence Licence and informations page
+ * \addtogroup Support Support project
  * \{
  *
- * \file licence.h
- * This file contains headers needed to show informations/licence page.
+ * \file vote.h
+ * This file contains th headers needed to provide vote possibility.
  *
  ***********************************************/
 
-#ifndef LICENCE_H_INCLUDED
-#define LICENCE_H_INCLUDED
+#ifndef VOTE_H_INCLUDED
+#define VOTE_H_INCLUDED
 
 #include "../defines.h"
 #include "../slotItems.h"
 
-enum LicenceTextSlot
-{
-    LICENCE_SLOT_INTRO  = 0,
-    LICENCE_SLOT_REPO   = 1,
-    LICENCE_SLOT_INFO   = 2,
+/********************************************//**
+ * \brief Slots for vote page.
+ ***********************************************/
 
-    LICENCE_SLOT_COUNT
+enum VoteSlots
+{
+    VOTE_SLOT_MAIN  = 0,    /**< Main info text/page title */
+    VOTE_SLOT_INFO  = 1,    /**< Slot for additional info setted by vote page while using */
+
+    VOTE_SLOT_COUNT
 };
 
 /********************************************//**
- * \brief A class to represent licence page.
+ * \brief A class to represent Vote page.
  *
  * This class is container for widgets contains
  * text for support page. Text depends on language and
@@ -51,29 +54,32 @@ enum LicenceTextSlot
  *
  ***********************************************/
 
-class LicencePage : public WContainerWidget
+class VotePage : public WContainerWidget
 {
 public:
-    LicencePage(SessionInfo * sess, WContainerWidget * parent = 0);
-    ~LicencePage() { clear(); }
+    VotePage(SessionInfo * sess, WContainerWidget * parent = 0);
+    ~VotePage();
 
     void refresh();
 private:
-    /// pointer to object with current session informations
+    /// panel session informations
     SessionInfo * session;
-
+    /// created or not?
     bool needCreation;
+    /// vote info slots
+    BasicTextItem infoSlots[VOTE_SLOT_COUNT];
+    /// vote slots
+    std::list<PageSlotItem*> votes;
 
-    BasicTextItem licenceTextSlots[LICENCE_SLOT_COUNT];
+    void CreateVotePage();
+    void UpdateVotePage();
+    void ClearPage();
+    void BindVote(EventSignal<WMouseEvent>& signal, const uint32& id);
 
-    void ShowText();
-    void UpdateText();
+    void Vote(const uint32& id);
+
+    /// stores vote state
+    std::map<uint32, bool> voteMap;
 };
 
-#endif // LICENCE_H_INCLUDED
-
-/********************************************//**
- * \}
- * \}
- ***********************************************/
-
+#endif //VOTE_H_INCLUDED
