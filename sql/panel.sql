@@ -181,16 +181,16 @@ i/lub modyfikować na warunkach GNU Affero Powszechnej Licencji
 Publicznej wydanej przez Free Software Foundation w wersji 3.
 
 Ten program jest rozpowszechniany z nadzieją, że jest przydatny, ale
-BEZ JAKIEJKOLWIEK GWARANCJI, nawet bez domyślnej gwaracji
+BEZ JAKIEJKOLWIEK GWARANCJI, nawet bez domyślnej gwarancji
 PRZYDATNOŚCI HANDLOWEJ ORAZ PRZYDATNOŚCI DO OKREŚLONYCH ZASTOSOWAŃ.
 Przeczytaj GNU Affero Powszechną Licencję Publiczną w celu zapoznania
 się ze szczegółami.
 
 Powinieneś otrzymać kopię GNU Affero Powszechnej Licencji Publiczej
 wraz z programem. Jeżeli nie otrzymałeś jej, zobacz na
-<http://www.gnu.org/licenses/>
+< http://www.gnu.org/licenses/ >
 
-email: siof@hellground.pl", "HG Players Panel - web panel for HellGround server Players
+kontakt: siof@hellground.pl", "HG Players Panel - web panel for HellGround server Players
 Copyright (C) 2011 HellGround Team : Siof, lukaasm,
 
 This program is free software: you can redistribute it and/or modify
@@ -203,9 +203,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see < http://www.gnu.org/licenses/ >.
 
-email: siof@hellground.pl"),
+contact: siof@hellground.pl"),
 (260, "Repozytorium kodu źródłowego (zawiera także licencję): <a href=\"https://bitbucket.org/siof/hgplayerspanel\">https://bitbucket.org/siof/hgplayerspanel</a>", "Source code repository (also contains licence): <a href=\"https://bitbucket.org/siof/hgplayerspanel\">https://bitbucket.org/siof/hgplayerspanel</a>"),
 (261, "", ""),
 (262, "Support info TODO", "Support info TODO"),
