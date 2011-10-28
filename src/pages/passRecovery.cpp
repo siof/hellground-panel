@@ -135,33 +135,22 @@ void PassRecoveryPage::CreateRecoveryPage()
     btnRecover = new WPushButton(session->GetText(TXT_BTN_PASS_SEND));
     addWidget(btnRecover);
 
-    txtLogin->focussed().connect(this, &PassRecoveryPage::ClearLogin);
-    txtEmail->focussed().connect(this, &PassRecoveryPage::ClearEmail);
+    txtLogin->focussed().connect(this, &PassRecoveryPage::ClearWLineEdit);
+    txtEmail->focussed().connect(this, &PassRecoveryPage::ClearWLineEdit);
     btnRecover->clicked().connect(this, &PassRecoveryPage::Recover);
 }
 
 /********************************************//**
- * \brief Clear login.
+ * \brief Clear login and email.
  *
- *  Clears login text box.
- *
- ***********************************************/
-
-void PassRecoveryPage::ClearLogin()
-{
-    txtLogin->setText(WString(""));
-}
-
-/********************************************//**
- * \brief Clear email.
- *
- * Clears email text box.
+ *  Clears login and email text boxes.
  *
  ***********************************************/
 
-void PassRecoveryPage::ClearEmail()
+void PassRecoveryPage::ClearRecoveryData()
 {
-    txtEmail->setText(WString(""));
+    txtLogin->setText("");
+    txtEmail->setText("");
 }
 
 /********************************************//**
@@ -204,9 +193,8 @@ void PassRecoveryPage::Recover()
         case RETURN_ERROR:
         case RETURN_EMPTY:
             AddActivityPassRecovery(false, login.toUTF8().c_str());
-            ClearLogin();
-            ClearEmail();
             textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_RECOVERY_DATA);
+            ClearRecoveryData();
             return;
         default:
             break;
@@ -221,9 +209,8 @@ void PassRecoveryPage::Recover()
     if (mail != dbMail)
     {
         AddActivityPassRecovery(accId, false);
-        ClearLogin();
-        ClearEmail();
         textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_RECOVERY_DATA);
+        ClearRecoveryData();
         return;
     }
 
@@ -260,8 +247,7 @@ void PassRecoveryPage::Recover()
 
     SendMail(from, mail, session->GetText(TXT_RECOVERY_SUBJECT), msg);
 
-    ClearLogin();
-    ClearEmail();
+    ClearRecoveryData();
 
     textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_RECOVERY_COMPLETE);
 

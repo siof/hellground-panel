@@ -110,6 +110,13 @@ void PassChangePage::CreatePassChangePage()
     addWidget(new WBreak());
     addWidget(new WBreak());
 
+    textSlots[PASS_CHANGE_TEXT_OLDPASS].SetLabel(session, TXT_LBL_PASS_OLD);
+    txtPassOld = new WLineEdit();
+    txtPassOld->setEchoMode(WLineEdit::Password);
+    addWidget(textSlots[PASS_CHANGE_TEXT_OLDPASS].GetLabel());
+    addWidget(txtPassOld);
+    addWidget(new WBreak());
+
     textSlots[PASS_CHANGE_TEXT_PASS].SetLabel(session, TXT_LBL_PASS_NEW);
     txtPass = new WLineEdit();
     txtPass->setEchoMode(WLineEdit::Password);
@@ -128,8 +135,9 @@ void PassChangePage::CreatePassChangePage()
     btnChange = new WPushButton(session->GetText(TXT_BTN_PASS_CHANGE));
     addWidget(btnChange);
 
-    txtPass->focussed().connect(this, &PassChangePage::ClearPass);
-    txtPass2->focussed().connect(this, &PassChangePage::ClearPass2);
+    txtPass->focussed().connect(this, &PassChangePage::ClearWLineEdit);
+    txtPass2->focussed().connect(this, &PassChangePage::ClearWLineEdit);
+    txtPassOld->focussed().connect(this, &PassChangePage::ClearWLineEdit);
     btnChange->clicked().connect(this, &PassChangePage::Change);
 }
 
@@ -142,19 +150,9 @@ void PassChangePage::CreatePassChangePage()
 
 void PassChangePage::ClearPass()
 {
-    txtPass->setText(WString(""));
-}
-
-/********************************************//**
- * \brief Clear passwords.
- *
- *  Clears passwords text boxes.
- *
- ***********************************************/
-
-void PassChangePage::ClearPass2()
-{
-    txtPass2->setText(WString(""));
+    txtPass->setText("");
+    txtPass2->setText("");
+    txtPassOld->setText("");
 }
 
 /********************************************//**
@@ -169,8 +167,9 @@ void PassChangePage::Change()
     if (session->accLvl < LVL_PLAYER)
         return;
 
-    WString pass, pass2;
+    WString pass, pass2, oldPass;
 
+    oldPass = txtPassOld->text();
     pass = txtPass->text();
     pass2 = txtPass2->text();
 
@@ -180,7 +179,6 @@ void PassChangePage::Change()
     {
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_ERROR_PASSWORD_TO_LONG);
         ClearPass();
-        ClearPass2();
         return;
     }
 
@@ -188,7 +186,6 @@ void PassChangePage::Change()
     {
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_ERROR_PASSWORD_TO_SHORT);
         ClearPass();
-        ClearPass2();
         return;
     }
 
@@ -196,7 +193,6 @@ void PassChangePage::Change()
     {
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_ERROR_PASSWORDS_MISMATCH);
         ClearPass();
-        ClearPass2();
         return;
     }
 
@@ -205,6 +201,13 @@ void PassChangePage::Change()
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
         db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_PASS_CHANGE);
+
+    if (oldPass != session->pass)
+    {
+        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_PASSWORD);
+        ClearPass();
+        return;
+    }
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
@@ -233,7 +236,6 @@ void PassChangePage::Change()
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_PASS_CHANGE_COMPLETE);
 
     ClearPass();
-    ClearPass2();
 }
 
 /********************************************//**

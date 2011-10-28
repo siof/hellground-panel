@@ -26,22 +26,93 @@
 #include "pages/logout.h"
 #include "pages/teleport.h"
 #include "pages/licence.h"
+#include "pages/support.h"
+#include "pages/vote.h"
 
 #include <WRegExpValidator>
 #include <WLengthValidator>
+#include <WSubMenuItem>
 
 #include "database.h"
 
-HGMenuOption::HGMenuOption(MenuOptions menuOption, WObject * parent):
-    itemsParent(parent), menuOption(menuOption)
+HGSubMenu::HGSubMenu(WStackedWidget * target, WSubMenuItem * parent)
+{
+    menu = new WMenu(target, Vertical);
+    menu->setRenderAsList(true);
+    if (parent)
+        parent->setSubMenu(menu);
+}
+
+HGSubMenu::~HGSubMenu()
+{
+    menu = NULL;
+}
+
+void HGSubMenu::AddMenuItem(uint32 textId, WMenuItem * menuItem)
+{
+    if (!textId || !menuItem)
+        return;
+
+    items.push_back(menuItem);
+    textIds.push_back(textId);
+    menu->addItem(menuItem);
+    menuItem = NULL;
+}
+
+void HGSubMenu::AddMenuItem(SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload)
+{
+    if (!textId || !item)
+        return;
+
+    items.push_back(new WMenuItem(sess->GetText(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading));
+    textIds.push_back(textId);
+    menu->addItem(items.back());
+    item = NULL;
+}
+
+const std::list<WMenuItem*> HGSubMenu::GetMenuItems()
+{
+    return items;
+}
+
+WMenu * HGSubMenu::GetMenu()
+{
+    return menu;
+}
+
+void HGSubMenu::UpdateTexts(SessionInfo * sess)
+{
+    if (!sess)
+        return;
+
+    WMenuItem * tmpItem;
+    std::list<uint32>::const_iterator textItr = textIds.begin();
+
+    for (std::list<WMenuItem*>::const_iterator itr = items.begin(); itr != items.end() && textItr != textIds.end();
+         ++itr, ++textItr)
+    {
+        if (tmpItem = *itr)
+            tmpItem->setText(sess->GetText(*textItr));
+    }
+}
+
+void HGSubMenu::Clear()
+{
+
+}
+
+HGMenuOption::HGMenuOption(MenuOptions menuOption):
+    menuOption(menuOption)
 {
     items = new WMenuItem * [ACCOUNT_LEVEL_COUNT];
     textIds = new uint32[ACCOUNT_LEVEL_COUNT];
+    subMenus = new HGSubMenu * [ACCOUNT_LEVEL_COUNT];
 
     for (int i = 0; i < ACCOUNT_LEVEL_COUNT; ++i)
     {
         items[i] = NULL;
         textIds[i] = 0;
+        subMenus[i] = NULL;
     }
 }
 
@@ -73,7 +144,7 @@ HGMenuOption::~HGMenuOption()
 
 void HGMenuOption::AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem)
 {
-    if (accLvl >= ACCOUNT_LEVEL_COUNT || !menuItem)
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !menuItem)
         return;
 
     RemoveMenuItem(accLvl);
@@ -85,7 +156,7 @@ void HGMenuOption::AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * m
 
 void HGMenuOption::AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload)
 {
-    if (accLvl >= ACCOUNT_LEVEL_COUNT || !sess || !item)
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !sess || !item)
         return;
 
     RemoveMenuItem(accLvl);
@@ -119,7 +190,7 @@ void HGMenuOption::RemoveMenuItem(WMenuItem * menuItem, bool alsoDelete)
 
 void HGMenuOption::RemoveMenuItem(AccountLevel accLvl, bool alsoDelete)
 {
-    if (accLvl >= ACCOUNT_LEVEL_COUNT)
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED)
         return;
 
     if (alsoDelete)
@@ -140,12 +211,83 @@ void HGMenuOption::RemoveMenuItem(AccountLevel accLvl, bool alsoDelete)
     textIds[accLvl+1] = 0;
 }
 
+void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuItem * menuItem, WStackedWidget * target)
+{
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !menuItem)
+        return;
+
+    RemoveSubMenuItem(accLvl);
+
+    items[accLvl+1] = menuItem;
+    textIds[accLvl+1] = textId;
+    subMenus[accLvl+1] = new HGSubMenu(target, menuItem);
+    menuItem = NULL;
+}
+
+void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, bool preload)
+{
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !sess || !item)
+        return;
+
+    RemoveSubMenuItem(accLvl);
+
+    items[accLvl+1] = new WSubMenuItem(sess->GetText(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading);
+    textIds[accLvl+1] = textId;
+    subMenus[accLvl+1] = new HGSubMenu(target, (WSubMenuItem*)items[accLvl+1]);
+    item = NULL;
+}
+
+void HGMenuOption::RemoveSubMenuItem(AccountLevel accLvl, bool alsoDelete)
+{
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED)
+        return;
+
+    if (alsoDelete)
+    {
+        WSubMenuItem * tmpI = (WSubMenuItem*)items[accLvl+1];
+
+        if (tmpI)
+        {
+            WMenu * tmpMenu = tmpI->subMenu();
+            delete tmpMenu;
+            tmpMenu = NULL;
+        }
+
+        delete items[accLvl+1];
+    }
+
+    items[accLvl+1] = NULL;
+    textIds[accLvl+1] = 0;
+}
+
+void HGMenuOption::AddSubMenuOption(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem)
+{
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !menuItem)
+        return;
+
+    HGSubMenu * tmpSubMenu = subMenus[accLvl+1];
+
+    if (tmpSubMenu)
+        tmpSubMenu->AddMenuItem(textId, menuItem);
+}
+
+void HGMenuOption::AddSubMenuOption(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload)
+{
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !item)
+        return;
+
+    HGSubMenu * tmpSubMenu = subMenus[accLvl+1];
+
+    if (tmpSubMenu)
+        tmpSubMenu->AddMenuItem(sess, textId, item, preload);
+}
+
 WMenuItem * HGMenuOption::GetMenuItemForLevel(AccountLevel accLvl)
 {
-    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_PLAYER)
+    if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || accLvl < LVL_PLAYER)
         return items[LVL_NOT_LOGGED+1];
 
-    // if menu item for given lvl doesn't exist, check lower logged levels
+    // if menu item for given lvl doesn't exist, check lower levels
     for (int i = accLvl; i > LVL_NOT_LOGGED; --i)
         if (items[i+1])
             return items[i+1];
@@ -158,9 +300,17 @@ void HGMenuOption::UpdateTexts(SessionInfo * sess)
     if (!items || !sess)
         return;
 
+    WMenuItem * tmpItem;
+    HGSubMenu * tmpSubMenu;
+
     for (int i = 0; i < ACCOUNT_LEVEL_COUNT; ++i)
-        if (WMenuItem * tmpItem = items[i])
+    {
+        if (tmpItem = items[i])
             tmpItem->setText(sess->GetText(textIds[i]));
+
+        if (tmpSubMenu = subMenus[i])
+            tmpSubMenu->UpdateTexts(sess);
+    }
 }
 
 
@@ -192,14 +342,14 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     login = new WLineEdit();
     login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
     login->setEchoMode(WLineEdit::Normal);
-    login->focussed().connect(this, &HGMenu::ClearLogin);
+    login->focussed().connect(this, &HGMenu::ClearWLineEdit);
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
     login->setValidator(validator);
 
     pass = new WLineEdit();
     pass->setText(WString("pass"));
     pass->setEchoMode(WLineEdit::Password);
-    pass->focussed().connect(this, &HGMenu::ClearPass);
+    pass->focussed().connect(this, &HGMenu::ClearWLineEdit);
     WLengthValidator * lenValidator = new WLengthValidator(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
     pass->setValidator(lenValidator);
 
@@ -218,7 +368,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     loginContainer->addWidget(breakTab[2]);
 
     menu = new WMenu(menuContents, Wt::Vertical, this);
-    menu->setRenderAsList(false);
+    menu->setRenderAsList(true);
 
     for (int i = 0; i < MENU_SLOT_COUNT; ++i)
         menuSlots[i] = NULL;
@@ -235,12 +385,16 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess));
     menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_PASS_CHANGE, new PassChangePage(sess));
 
+    menuSlots[MENU_SLOT_TELEPORT] = new HGMenuOption(MENU_SLOT_TELEPORT);
+    menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session));
+
+    menuSlots[MENU_SLOT_SUPPORT] = new HGMenuOption(MENU_SLOT_SUPPORT);
+    menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuItem(LVL_PLAYER, session, TXT_MENU_SUPPORT, new SupportPage(session), menuContents);
+    menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuOption(LVL_PLAYER, session, TXT_MENU_VOTE, new VotePage(session), false);
+
     menuSlots[MENU_SLOT_SERVER_STATUS] = new HGMenuOption(MENU_SLOT_SERVER_STATUS);
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess));
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_PLAYER, TXT_MENU_SERVER_STATUS, menuSlots[MENU_SLOT_SERVER_STATUS]->GetMenuItemForLevel(LVL_NOT_LOGGED));
-
-    menuSlots[MENU_SLOT_TELEPORT] = new HGMenuOption(MENU_SLOT_TELEPORT);
-    menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session));
 
     menuSlots[MENU_SLOT_LOGIN] = new HGMenuOption(MENU_SLOT_LOGIN);
     menuSlots[MENU_SLOT_LOGIN]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_LOGOUT, new LogoutPage(session));
@@ -334,8 +488,7 @@ void HGMenu::LogMeIn()
             Log(LOG_STRANGE_DATA, "User with IP: %s tried to login with strange data (SHA return empty)! login: %s pass: %s", session->sessionIp.toUTF8().c_str(), escapedLogin.c_str(), escapedPass.c_str());
             //if wrong data
             ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
-            ClearLogin();
-            ClearPass();
+            ClearLoginData();
             return;
         }
         default:
@@ -345,8 +498,8 @@ void HGMenu::LogMeIn()
         }
     }
 
-               //           0            1         2     3       4       5         6       7         8
-    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion FROM account WHERE username = '%s'", escapedLogin.c_str());
+               //           0            1         2     3       4       5         6       7         8       9
+    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion, vote FROM account WHERE username = '%s'", escapedLogin.c_str());
 
     // execute will return 0 if result will be empty and -1 if there will be DB error.
     switch (db.ExecuteQuery())
@@ -364,8 +517,7 @@ void HGMenu::LogMeIn()
             AddActivityLogIn(false, escapedLogin.c_str());
             //if wrong data
             ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
-            ClearLogin();
-            ClearPass();
+            ClearLoginData();
             return;
         }
         default:
@@ -383,8 +535,7 @@ void HGMenu::LogMeIn()
                 AddActivityLogIn(row->fields[2].GetUInt32(), false);
                 //if wrong data
                 ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_WRONG_LOGIN_DATA);
-                ClearLogin();
-                ClearPass();
+                ClearLoginData();
                 return;
             }
 
@@ -406,6 +557,7 @@ void HGMenu::LogMeIn()
             session->lastIp = row->fields[6].GetWString();
             session->locked = row->fields[7].GetBool();
             session->expansion = row->fields[8].GetInt();
+            session->vote = row->fields[9].GetUInt32();
 
             login->setText("");
             pass->setText("");
@@ -417,6 +569,9 @@ void HGMenu::LogMeIn()
             pass->setDisabled(true);
             btnLog->setDisabled(true);
             loginContainer->setHidden(true);
+
+            if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+                db.ExecutePQuery("DELETE FROM AccVote WHERE acc = '%u' AND resetDate < NOW()", session->accid);
 
             ShowMenuOptions();
             refresh();
@@ -538,14 +693,11 @@ void HGMenu::refresh()
     WContainerWidget::refresh();
 }
 
-void HGMenu::ClearLogin()
+void HGMenu::ClearLoginData()
 {
     if (login)
         login->setText("");
-}
 
-void HGMenu::ClearPass()
-{
     if (pass)
         pass->setText("");
 }

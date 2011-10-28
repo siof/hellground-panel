@@ -95,10 +95,15 @@ private:
     void UpdateTextWidgets();
     void CreateRegisterPage();
 
-    void ClearLogin();
-    void ClearEmail();
+    void ClearRegisterData();
     void CheckChange();
     void Register();
+
+    void ClearWLineEdit()
+    {
+        if (WObject::sender())
+            ((WLineEdit*)WObject::sender())->setText("");
+    }
 };
 
 

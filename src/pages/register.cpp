@@ -150,34 +150,23 @@ void RegisterPage::CreateRegisterPage()
 
     addWidget(btnRegister);
 
-    txtLogin->focussed().connect(this, &RegisterPage::ClearLogin);
-    txtEmail->focussed().connect(this, &RegisterPage::ClearEmail);
+    txtLogin->focussed().connect(this, &RegisterPage::ClearWLineEdit);
+    txtEmail->focussed().connect(this, &RegisterPage::ClearWLineEdit);
     chRules->changed().connect(this, &RegisterPage::CheckChange);
     btnRegister->clicked().connect(this, &RegisterPage::Register);
 }
 
 /********************************************//**
- * \brief Clear login.
+ * \brief Clear login and email.
  *
- *  Clears login text box.
- *
- ***********************************************/
-
-void RegisterPage::ClearLogin()
-{
-    txtLogin->setText(WString(""));
-}
-
-/********************************************//**
- * \brief Clear email.
- *
- * Clears email text box.
+ *  Clears login and email text boxes.
  *
  ***********************************************/
 
-void RegisterPage::ClearEmail()
+void RegisterPage::ClearRegisterData()
 {
-    txtEmail->setText(WString(""));
+    txtLogin->setText("");
+    txtEmail->setText("");
 }
 
 /********************************************//**
@@ -233,7 +222,7 @@ void RegisterPage::Register()
     db.SetPQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str());
     if (db.ExecuteQuery() > RETURN_EMPTY)
     {
-        ClearLogin();
+        ClearRegisterData();
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_LBL_REG_ACC_EXISTS);
         chRules->setChecked(false);
         CheckChange();
@@ -273,8 +262,7 @@ void RegisterPage::Register()
 
     SendMail(from, mail, session->GetText(TXT_REGISTRATION_SUBJECT), msg);
 
-    ClearLogin();
-    ClearEmail();
+    ClearRegisterData();
     chRules->setChecked(false);
     CheckChange();
 

@@ -28,10 +28,31 @@
 
 using namespace Wt;
 
+class HGSubMenu
+{
+public:
+    HGSubMenu(WStackedWidget * target, WSubMenuItem * parent = NULL);
+    ~HGSubMenu();
+
+    void AddMenuItem(uint32 textId, WMenuItem * menuItem);
+    void AddMenuItem(SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload = true);
+
+    const std::list<WMenuItem*> GetMenuItems();
+    WMenu * GetMenu();
+    void UpdateTexts(SessionInfo * sess);
+
+    void Clear();
+
+private:
+    std::list<uint32> textIds;
+    std::list<WMenuItem*> items;
+    WMenu * menu;
+};
+
 class HGMenuOption
 {
 public:
-    HGMenuOption(MenuOptions menuOption, WObject * parent = NULL);
+    HGMenuOption(MenuOptions menuOption);
     ~HGMenuOption();
 
     void AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem);
@@ -39,13 +60,20 @@ public:
     void RemoveMenuItem(WMenuItem * menuItem, bool alsoDelete = true);
     void RemoveMenuItem(AccountLevel accLvl, bool alsoDelete = true);
 
+    void AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuItem * menuItem, WStackedWidget * target);
+    void AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, bool preload = true);
+    void RemoveSubMenuItem(AccountLevel accLvl, bool alsoDelete = true);
+    void AddSubMenuOption(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem);
+    void AddSubMenuOption(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload = true);
+
     WMenuItem * GetMenuItemForLevel(AccountLevel accLvl);
     void UpdateTexts(SessionInfo * sess);
+
 private:
-    WObject * itemsParent;
     uint32 * textIds;
     MenuOptions menuOption;
     WMenuItem ** items;
+    HGSubMenu ** subMenus;
 };
 
 class HGMenu : public WContainerWidget
@@ -85,11 +113,16 @@ private:
     void RefreshActiveMenuWidget();
     void ShowMenuOptions(bool addLogin = false);
     void UpdateMenuOptions();
-    void ClearLogin();
-    void ClearPass();
+    void ClearLoginData();
 
     void AddActivityLogIn(bool success, const char * login = NULL);
     void AddActivityLogIn(uint32 id, bool success);
+
+    void ClearWLineEdit()
+    {
+        if (WObject::sender())
+            ((WLineEdit*)WObject::sender())->setText("");
+    }
 };
 
 #endif // MENU_H_INCLUDED
