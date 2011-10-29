@@ -61,6 +61,7 @@ public:
     {
         textId = 0;
         label = NULL;
+        prevLang = LANG_COUNT;
     }
 
 private:
