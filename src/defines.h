@@ -45,6 +45,8 @@
 #include <WText>
 #include <WImage>
 #include <WTable>
+#include <WStackedWidget>
+#include <WAnimation>
 
 #include <cstdio>
 #include <map>

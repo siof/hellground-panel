@@ -159,6 +159,8 @@ PlayersPanel::PlayersPanel(const WEnvironment& env)
 
     setTitle(session->GetText(TXT_SITE_TITLE));
 
+//    content->setTransitionAnimation(WAnimation(WAnimation::SlideInFromBottom, WAnimation::EaseIn), true);
+
     menu = new HGMenu(content, session);
 
     page->setId("body");

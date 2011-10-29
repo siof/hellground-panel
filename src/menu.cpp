@@ -163,8 +163,8 @@ void HGMenuOption::AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 t
 
     items[accLvl+1] = new WMenuItem(sess->GetText(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading);
     textIds[accLvl+1] = textId;
-//    if (path)
-//        items[accLvl+1]->setPathComponent(path);
+    if (path)
+        items[accLvl+1]->setPathComponent(path);
     item = NULL;
 }
 
@@ -226,7 +226,7 @@ void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuIt
     menuItem = NULL;
 }
 
-void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, bool preload)
+void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, const char * path, bool preload)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !sess || !item)
         return;
@@ -237,6 +237,11 @@ void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint3
     textIds[accLvl+1] = textId;
     subMenus[accLvl+1] = new HGSubMenu(target, (WSubMenuItem*)items[accLvl+1]);
     item = NULL;
+
+    if (path)
+        items[accLvl+1]->setPathComponent(path);
+
+    subMenus[accLvl+1]->GetMenu()->setInternalPathEnabled(items[accLvl+1]->pathComponent());
 }
 
 void HGMenuOption::RemoveSubMenuItem(AccountLevel accLvl, bool alsoDelete)
@@ -371,7 +376,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menu = new WMenu(menuContents, Wt::Vertical, this);
     menu->setRenderAsList(true);
-//    menu->setInternalPathEnabled("/");
+    menu->setInternalPathEnabled("/");
 
     for (int i = 0; i < MENU_SLOT_COUNT; ++i)
         menuSlots[i] = NULL;
@@ -381,22 +386,22 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     menuSlots[MENU_SLOT_HOME]->AddMenuItem(LVL_PLAYER, TXT_MENU_HOME, menuSlots[MENU_SLOT_HOME]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
     menuSlots[MENU_SLOT_ACCOUNT] = new HGMenuOption(MENU_SLOT_ACCOUNT);
-    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess), "reg");
-    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess), "acc", false);
+    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess), "account");
+    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess), "account", false);
 
     menuSlots[MENU_SLOT_PASSWORD] = new HGMenuOption(MENU_SLOT_PASSWORD);
-    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess), "rec");
-    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_PASS_CHANGE, new PassChangePage(sess), "pass");
+    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess), "password");
+    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_PASS_CHANGE, new PassChangePage(sess), "password");
 
     menuSlots[MENU_SLOT_TELEPORT] = new HGMenuOption(MENU_SLOT_TELEPORT);
-    menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session), "tele");
+    menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session), "teleport");
 
     menuSlots[MENU_SLOT_SUPPORT] = new HGMenuOption(MENU_SLOT_SUPPORT);
-    menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuItem(LVL_PLAYER, session, TXT_MENU_SUPPORT, new SupportPage(session), menuContents);
-    menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuOption(LVL_PLAYER, session, TXT_MENU_VOTE, new VotePage(session), false);
+    menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuItem(LVL_PLAYER, session, TXT_MENU_SUPPORT, new SupportPage(session), menuContents, "support");
+    menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuOption(LVL_PLAYER, session, TXT_MENU_VOTE, new VotePage(session));
 
     menuSlots[MENU_SLOT_SERVER_STATUS] = new HGMenuOption(MENU_SLOT_SERVER_STATUS);
-    menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess), "stat");
+    menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess), "status");
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_PLAYER, TXT_MENU_SERVER_STATUS, menuSlots[MENU_SLOT_SERVER_STATUS]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
     menuSlots[MENU_SLOT_LOGIN] = new HGMenuOption(MENU_SLOT_LOGIN);
@@ -417,9 +422,6 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menu->itemSelected().connect(this, &HGMenu::RefreshActiveMenuWidget);
     addWidget(menu);
-
-    anim.setEffects(WAnimation::Fade);
-    anim.setDuration(5000);
 }
 
 HGMenu::~HGMenu()
@@ -566,9 +568,10 @@ void HGMenu::LogMeIn()
             login->setText("");
             pass->setText("");
 
-            login->setHidden(true, anim);
-            pass->setHidden(true, anim);
-            btnLog->setHidden(true, anim);
+            WAnimation fade(WAnimation::Fade, WAnimation::Linear, 250);
+            login->setHidden(true, fade);
+            pass->setHidden(true, fade);
+            btnLog->setHidden(true, fade);
             login->setDisabled(true);
             pass->setDisabled(true);
             btnLog->setDisabled(true);
@@ -646,9 +649,10 @@ void HGMenu::ShowMenuOptions(bool addLogin)
         if (addLogin)
         {
             loginContainer->setHidden(false);
-            login->setHidden(false, anim);
-            pass->setHidden(false, anim);
-            btnLog->setHidden(false, anim);
+            WAnimation fade(WAnimation::Fade, WAnimation::Linear, 250);
+            login->setHidden(false, fade);
+            pass->setHidden(false, fade);
+            btnLog->setHidden(false, fade);
             login->setDisabled(false);
             pass->setDisabled(false);
             btnLog->setDisabled(false);
