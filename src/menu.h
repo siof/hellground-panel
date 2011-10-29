@@ -20,8 +20,6 @@
 
 #include <WMenu>
 #include <WMenuItem>
-#include <WStackedWidget>
-#include <WAnimation>
 
 #include "defines.h"
 #include "pages/error.h"
@@ -61,7 +59,7 @@ public:
     void RemoveMenuItem(AccountLevel accLvl, bool alsoDelete = true);
 
     void AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuItem * menuItem, WStackedWidget * target);
-    void AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, bool preload = true);
+    void AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, const char * path = NULL, bool preload = true);
     void RemoveSubMenuItem(AccountLevel accLvl, bool alsoDelete = true);
     void AddSubMenuOption(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem);
     void AddSubMenuOption(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload = true);
@@ -103,8 +101,6 @@ private:
     WPushButton * enLang;
 
     HGMenuOption * menuSlots[MENU_SLOT_COUNT];
-
-    WAnimation anim;
 
     void LogMeIn();
     void SetPlLang();

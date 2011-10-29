@@ -268,7 +268,7 @@ void VotePage::Vote(const uint32& id)
         return;
     }
 
-    db.SetPQuery("UPDATE account SET vote = '%u' WHERE id = '%u'", ++session->vote);
+    db.SetPQuery("UPDATE account SET vote = '%u' WHERE id = '%u'", ++session->vote, session->accid);
     if (db.ExecuteQuery() == RETURN_ERROR)
     {
         session->vote--;

@@ -53,6 +53,7 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
     addWidget(new WBreak());
 
     tabs = new WTabWidget();
+    tabs->contentsStack()->setTransitionAnimation(WAnimation(WAnimation::SlideInFromRight, WAnimation::EaseIn), true);
     addWidget(tabs);
 
     needCreation = true;
