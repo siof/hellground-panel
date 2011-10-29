@@ -35,10 +35,11 @@
 
 #include "database.h"
 
-HGSubMenu::HGSubMenu(WStackedWidget * target, WSubMenuItem * parent)
+HGSubMenu::HGSubMenu(WStackedWidget * target, HGMenu * hgMenu, WSubMenuItem * parent)
 {
     menu = new WMenu(target, Vertical);
     menu->setRenderAsList(true);
+    menu->itemSelected().connect(hgMenu, &HGMenu::RefreshActiveMenuWidget);
     if (parent)
         parent->setSubMenu(menu);
 }
@@ -213,7 +214,7 @@ void HGMenuOption::RemoveMenuItem(AccountLevel accLvl, bool alsoDelete)
     textIds[accLvl+1] = 0;
 }
 
-void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuItem * menuItem, WStackedWidget * target)
+void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuItem * menuItem, WStackedWidget * target, HGMenu * menu)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !menuItem)
         return;
@@ -222,11 +223,11 @@ void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuIt
 
     items[accLvl+1] = menuItem;
     textIds[accLvl+1] = textId;
-    subMenus[accLvl+1] = new HGSubMenu(target, menuItem);
+    subMenus[accLvl+1] = new HGSubMenu(target, menu, menuItem);
     menuItem = NULL;
 }
 
-void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, const char * path, bool preload)
+void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, HGMenu * menu, const char * path, bool preload)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !sess || !item)
         return;
@@ -235,7 +236,7 @@ void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint3
 
     items[accLvl+1] = new WSubMenuItem(sess->GetText(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading);
     textIds[accLvl+1] = textId;
-    subMenus[accLvl+1] = new HGSubMenu(target, (WSubMenuItem*)items[accLvl+1]);
+    subMenus[accLvl+1] = new HGSubMenu(target, menu, (WSubMenuItem*)items[accLvl+1]);
     item = NULL;
 
     if (path)
@@ -397,7 +398,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session), "teleport");
 
     menuSlots[MENU_SLOT_SUPPORT] = new HGMenuOption(MENU_SLOT_SUPPORT);
-    menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuItem(LVL_PLAYER, session, TXT_MENU_SUPPORT, new SupportPage(session), menuContents, "support");
+    menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuItem(LVL_PLAYER, session, TXT_MENU_SUPPORT, new SupportPage(session), menuContents, this, "support");
     menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuOption(LVL_PLAYER, session, TXT_MENU_VOTE, new VotePage(session));
 
     menuSlots[MENU_SLOT_SERVER_STATUS] = new HGMenuOption(MENU_SLOT_SERVER_STATUS);
@@ -441,7 +442,8 @@ HGMenu::~HGMenu()
 
 void HGMenu::RefreshMenuWidgets()
 {
-    for (int i = 0; i < menuContents->count(); ++i)
+    int count = menuContents->count();
+    for (int i = 0; i < count; ++i)
         menuContents->widget(i)->refresh();
 }
 

@@ -26,10 +26,12 @@
 
 using namespace Wt;
 
+class HGMenu;
+
 class HGSubMenu
 {
 public:
-    HGSubMenu(WStackedWidget * target, WSubMenuItem * parent = NULL);
+    HGSubMenu(WStackedWidget * target, HGMenu * hgMenu, WSubMenuItem * parent = NULL);
     ~HGSubMenu();
 
     void AddMenuItem(uint32 textId, WMenuItem * menuItem);
@@ -58,8 +60,8 @@ public:
     void RemoveMenuItem(WMenuItem * menuItem, bool alsoDelete = true);
     void RemoveMenuItem(AccountLevel accLvl, bool alsoDelete = true);
 
-    void AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuItem * menuItem, WStackedWidget * target);
-    void AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, const char * path = NULL, bool preload = true);
+    void AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuItem * menuItem, WStackedWidget * target, HGMenu * menu);
+    void AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, HGMenu * menu, const char * path = NULL, bool preload = true);
     void RemoveSubMenuItem(AccountLevel accLvl, bool alsoDelete = true);
     void AddSubMenuOption(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem);
     void AddSubMenuOption(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload = true);
@@ -86,6 +88,9 @@ public:
     void ShowError();
     bool SetError(ErrorSlots error, std::string &msg, ErrorPage * err = NULL);
     bool SetError(ErrorSlots error, uint32 textId = 0, ErrorPage * err = NULL);
+
+    void RefreshActiveMenuWidget();
+
 private:
     WContainerWidget * container;       // contains menu + additional items added on menu side
     WContainerWidget * loginContainer;  // contains login forms
@@ -106,7 +111,6 @@ private:
     void SetPlLang();
     void SetEngLang();
     void RefreshMenuWidgets();
-    void RefreshActiveMenuWidget();
     void ShowMenuOptions(bool addLogin = false);
     void UpdateMenuOptions();
     void ClearLoginData();
