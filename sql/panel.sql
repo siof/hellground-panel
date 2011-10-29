@@ -228,6 +228,7 @@ Jeśli to konto jest Twoje użyj opcji odzyskiwania hasła w celu zresetowania h
 If it's your account please use password recovery option to reset password and IP lock."),
 (359, "Błędne hasło.", "Wrong password."),
 (360, "Nie możesz jeszcze zagłosować na tą listę.", "You can't vote on that list yet."),
+(361, "Ta strona wymaga włączonego java script.", "Java script is required for this site."),
 
 (501, "DB Error: Błąd połączenia z bazą danych.", "DB Error: Can't connect to database."),
 (502, "DB Error: Zapytanie zwróciło pusty wynik.", "DB Error: Query result was empty."),
