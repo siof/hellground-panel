@@ -471,6 +471,7 @@ enum Texts
     TXT_ERROR_IP_MISMATCH           = 358,  /**< Error info: IP lock on and IP is not matching */
     TXT_ERROR_WRONG_PASSWORD        = 359,  /**< Error info: wrong current password */
     TXT_ERROR_CANT_VOTE_TWICE       = 360,  /**< Error info: can't vote twice on same page */
+    TXT_ERROR_NEED_JAVA_SCRIPT      = 361,  /**< Error info: java script required */
 
     TXT_DBERROR_CANT_CONNECT        = 501,  /**< DB Error info: can't connect to database */
     TXT_DBERROR_QUERY_EMPTY         = 502,  /**< DB Error info: result empty */

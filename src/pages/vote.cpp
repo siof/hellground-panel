@@ -105,6 +105,12 @@ void VotePage::CreateVotePage()
     addWidget(new WBreak());
     addWidget(new WBreak());
 
+    if (!wApp->environment().javaScript() || !wApp->environment().ajax())
+    {
+        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_ERROR_NEED_JAVA_SCRIPT);
+        return;
+    }
+
     Database db;
 
     if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
