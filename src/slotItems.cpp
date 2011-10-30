@@ -47,7 +47,7 @@ BasicTextItem::~BasicTextItem()
 void BasicTextItem::UpdateLabel(SessionInfo * sess, uint32 txtId)
 {
     console(DEBUG_CODE, "void BasicTextItem::UpdateLabel(SessionInfo * sess = %i, uint32 txtId = %u)\n", sess != NULL, txtId);
-    if (prevLang != sess->language)
+    if (prevLang != sess->language || txtId != textId)
         SetLabel(sess, txtId);
 
     prevLang = sess->language;
@@ -56,7 +56,7 @@ void BasicTextItem::UpdateLabel(SessionInfo * sess, uint32 txtId)
 void BasicTextItem::UpdateText(SessionInfo * sess, uint32 txtId)
 {
     console(DEBUG_CODE, "void BasicTextItem::UpdateText(SessionInfo * sess = %i, uint32 txtId = %u)\n", sess != NULL, txtId);
-    if (prevLang != sess->language)
+    if (prevLang != sess->language || txtId != textId)
         SetLabel(sess, txtId);
 
     prevLang = sess->language;
@@ -90,7 +90,7 @@ void BasicTextItem::SetLabel(WString &lbl)
 void BasicTextItem::SetLabel(SessionInfo * sess, uint32 id)
 {
     console(DEBUG_CODE, "void BasicTextItem::SetLabel(SessionInfo * sess = %i, uint32 id = %u) prevLang = %i, lang = %i\n", sess != NULL, id, prevLang, sess->language);
-    if (!sess || prevLang == sess->language)
+    if (!sess || (prevLang == sess->language && id == textId))
         return;
 
     if (id)

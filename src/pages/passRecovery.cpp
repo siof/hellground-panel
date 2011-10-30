@@ -30,6 +30,7 @@
 #include "passRecovery.h"
 #include "../database.h"
 #include <WRegExpValidator>
+#include <boost/algorithm/string.hpp>
 
 PassRecoveryPage::PassRecoveryPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess), needCreation(true)
@@ -81,6 +82,8 @@ void PassRecoveryPage::refresh()
 
 void PassRecoveryPage::UpdateTextWidgets()
 {
+    ClearRecoveryData();
+
     for (int i = 0; i < RECOVERY_TEXT_SLOT_COUNT; ++i)
         textSlots[i].UpdateLabel(session);
 
@@ -204,7 +207,8 @@ void PassRecoveryPage::Recover()
     WString dbMail = db.GetRow()->fields[1].GetWString();
     std::string dbDate = db.GetRow()->fields[2].GetString();
 
-    mail = txtEmail->text();
+    mail = boost::to_upper_copy(txtEmail->text().toUTF8());
+    dbMail = boost::to_upper_copy(dbMail.toUTF8());
 
     if (mail != dbMail)
     {
@@ -235,6 +239,7 @@ void PassRecoveryPage::Recover()
     {
         AddActivityPassRecovery(accId, false);
         textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        ClearRecoveryData();
         return;
     }
 
