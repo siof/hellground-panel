@@ -207,8 +207,12 @@ void PassRecoveryPage::Recover()
     WString dbMail = db.GetRow()->fields[1].GetWString();
     std::string dbDate = db.GetRow()->fields[2].GetString();
 
+    console(DEBUG_CODE, "void Recover(): dbMail: %s mail: %s\n", txtEmail->text().toUTF8().c_str(), dbMail.toUTF8().c_str());
+
     mail = boost::to_upper_copy(txtEmail->text().toUTF8());
     dbMail = boost::to_upper_copy(dbMail.toUTF8());
+
+    console(DEBUG_CODE, "void Recover(): uppered: dbMail: %s mail: %s\n", mail.toUTF8().c_str(), dbMail.toUTF8().c_str());
 
     if (mail != dbMail)
     {
