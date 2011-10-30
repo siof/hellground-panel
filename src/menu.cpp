@@ -471,6 +471,7 @@ void HGMenu::LogMeIn()
         std::string tmpErr = db.GetError();
         SetError(ERROR_SLOT_DB, tmpErr);
         ShowError();
+        ClearLoginData();
         return;
     }
 
@@ -488,6 +489,7 @@ void HGMenu::LogMeIn()
             // if there was database error
             std::string tmpErr = db.GetError();
             ShowError(ERROR_SLOT_DB, tmpErr);
+            ClearLoginData();
             return;
         }
         case RETURN_EMPTY:
@@ -518,6 +520,7 @@ void HGMenu::LogMeIn()
             // if there was database error
             std::string tmpErr = db.GetError();
             ShowError(ERROR_SLOT_DB, tmpErr);
+            ClearLoginData();
             return;
         }
         case RETURN_EMPTY:
@@ -535,6 +538,7 @@ void HGMenu::LogMeIn()
             {
                 std::string tmpErr = "ERROR: Row not found!";
                 ShowError(ERROR_SLOT_BASE, tmpErr);
+                ClearLoginData();
                 return;
             }
 
@@ -551,6 +555,7 @@ void HGMenu::LogMeIn()
             {
                 AddActivityLogIn(row->fields[2].GetUInt32(), false);
                 ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_IP_MISMATCH);
+                ClearLoginData();
                 return;
             }
 
@@ -595,6 +600,8 @@ void HGMenu::LogMeIn()
             break;
         }
     }
+
+    ClearLoginData();
 }
 
 void HGMenu::SetPlLang()

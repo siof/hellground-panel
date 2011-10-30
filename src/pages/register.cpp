@@ -211,6 +211,7 @@ void RegisterPage::Register()
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        ClearRegisterData();
         return;
     }
 
@@ -245,13 +246,14 @@ void RegisterPage::Register()
     WString from, msg;
     from = MAIL_FROM;
 
-    db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash) VALUES ('%s', '%s', SHA1(UPPER('%s:%s')))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
+    db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash) VALUES (UPPER('%s'), UPPER('%s'), SHA1(UPPER('%s:%s')))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
 
     if (db.ExecuteQuery() == RETURN_ERROR)
     {
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_REGISTRATION_ERROR);
         chRules->setChecked(false);
         CheckChange();
+        ClearRegisterData();
         return;
     }
 
