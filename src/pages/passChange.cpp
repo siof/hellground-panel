@@ -167,9 +167,8 @@ void PassChangePage::Change()
     if (session->accLvl < LVL_PLAYER)
         return;
 
-    WString pass, pass2, oldPass;
+    WString pass, pass2;
 
-    oldPass = txtPassOld->text();
     pass = txtPass->text();
     pass2 = txtPass2->text();
 
@@ -196,14 +195,27 @@ void PassChangePage::Change()
         return;
     }
 
-    std::string tmpLogin;
     Database db;
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
         db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_PASS_CHANGE);
 
-    if (oldPass != session->pass)
+    WString shapass;
+    std::string escapedLogin = db.EscapeString(session->login);
+    std::string escapedPass = db.EscapeString(txtPassOld->text());
+
+    if (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()) > RETURN_EMPTY)
+        shapass = db.GetRow()->fields[0].GetWString();
+    else
     {
+        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        ClearPass();
+        return;
+    }
+
+    if (shapass != session->pass)
+    {
+        console(DEBUG_CODE, "void PassChangePage::Change(): oldPass: %s , shapass: %s , pass: %s\n", txtPassOld->text().toUTF8().c_str(), shapass.toUTF8().c_str(), session->pass.toUTF8().c_str());
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_PASSWORD);
         ClearPass();
         return;
@@ -215,25 +227,15 @@ void PassChangePage::Change()
         return;
     }
 
-    tmpPass = db.EscapeString(tmpPass);
-    tmpLogin = db.EscapeString(session->login);
-
-    std::string sha;
-
-    if (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", tmpLogin.c_str(), tmpPass.c_str()) > RETURN_EMPTY)
-        sha = db.GetRow()->fields[0].GetString();
-    else
-    {
-        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
-        return;
-    }
-
-    db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = '', s = '', v = '' WHERE id = '%u'", sha.c_str(), session->accid);
+    db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = NULL, s = NULL, v = NULL WHERE id = '%u'", shapass.toUTF8().c_str(), session->accid);
 
     if (db.ExecuteQuery() == RETURN_ERROR)
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
     else
+    {
+        session->pass = shapass;
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_PASS_CHANGE_COMPLETE);
+    }
 
     ClearPass();
 }
