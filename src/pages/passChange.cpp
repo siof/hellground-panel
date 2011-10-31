@@ -221,6 +221,17 @@ void PassChangePage::Change()
         return;
     }
 
+    escapedPass = db.EscapeString(pass);
+
+    if (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()) > RETURN_EMPTY)
+        shapass = db.GetRow()->fields[0].GetWString();
+    else
+    {
+        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        ClearPass();
+        return;
+    }
+
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
