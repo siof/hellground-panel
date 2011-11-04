@@ -63,22 +63,31 @@ public:
 
     void SetQuery(std::string query);   // set query to execute
     bool SetPQuery(const char *format, ...);
+
     bool Connect(std::string host, std::string login, std::string pass, unsigned int port, std::string db); // connects to db
+    void Disconnect();
     bool SelectDatabase(std::string db);
+
     std::string EscapeString(std::string str);  // escape given string
     std::string EscapeString(WString str);      // escape given string
+
     int ExecuteQuery(); // execute setted query and returns row count
     int ExecuteQuery(std::string query);        // execute given query and return row count
     int ExecutePQuery(const char * format, ...);
+
     const char * GetError();    // get mysql error
     unsigned int GetErrNo();  // get mysql error number
+
     void AddRow(MYSQL_ROW row, int count);  // add new row
+
     void Clear();   // clear (+ delete from memory) result
+
     int GetRowsCount() { return rows.size(); }  // return rows count
     DatabaseRow * GetRow(uint32 index);    // returns row from given index
     DatabaseRow * GetRow();             // returns first row
     std::list<DatabaseRow*> GetRows();  // returns all rows
     std::string GetQuery() { return actualQuery; }
+
 private:
     MYSQL * connection;             // mysql connection
     std::string actualQuery;        // actual query

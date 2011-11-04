@@ -276,6 +276,8 @@ void PlayersPanel::LoadLangTexts()
         {
             std::list<DatabaseRow*> tmpList = tmpDb.GetRows();
 
+            tmpDb.Disconnect();
+
             for (std::list<DatabaseRow*>::const_iterator itr = tmpList.begin(); itr != tmpList.end(); ++itr)
             {
                 DatabaseRow * row = *itr;

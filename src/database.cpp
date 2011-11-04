@@ -107,14 +107,13 @@ DatabaseRow::~DatabaseRow()
 
 Database::Database()
 {
-    connection = mysql_init(NULL);
+    connection = NULL;
 }
 
 Database::~Database()
 {
+    Disconnect();
     Clear();
-    mysql_close(connection);
-    connection = NULL;
 }
 
 void Database::SetQuery(std::string query)
@@ -139,7 +138,23 @@ bool Database::SetPQuery(const char *format, ...)
 
 bool Database::Connect(std::string host, std::string login, std::string pass, unsigned int port, std::string db)
 {
+    if (connection)
+    {
+        Disconnect();
+        Clear();
+    }
+
+    connection = mysql_init(NULL);
+
     return mysql_real_connect(connection, host.c_str(), login.c_str(), pass.c_str(), db.c_str(), port, NULL, 0) != NULL;
+}
+
+void Database::Disconnect()
+{
+    if (connection)
+        mysql_close(connection);
+
+    connection = NULL;
 }
 
 bool Database::SelectDatabase(std::string db)

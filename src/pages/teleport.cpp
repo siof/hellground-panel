@@ -117,14 +117,16 @@ void TeleportPage::LoadCharacters()
 
     characters->clear();
 
-    Database * db = new Database();
-    if (db->Connect(SERVER_DB_DATA, SQL_CHARDB))
+    Database db;
+    if (db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        db->SetPQuery("SELECT guid, name FROM characters WHERE account = %u", session->accid);
+        db.SetPQuery("SELECT guid, name FROM characters WHERE account = %u", session->accid);
 
-        if (db->ExecuteQuery() > RETURN_EMPTY)
+        if (db.ExecuteQuery() > RETURN_EMPTY)
         {
-            std::list<DatabaseRow*> rows = db->GetRows();
+            std::list<DatabaseRow*> rows = db.GetRows();
+            db.Disconnect();
+
             DatabaseRow * tmpRow;
 
             guids = new uint64[rows.size()];
@@ -140,8 +142,6 @@ void TeleportPage::LoadCharacters()
             }
         }
     }
-
-    delete db;
 }
 
 /********************************************//**
