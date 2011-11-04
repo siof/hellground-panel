@@ -534,6 +534,8 @@ void HGMenu::LogMeIn()
         default:
         {
             DatabaseRow * row = db.GetRow();
+            db.Disconnect();
+
             if (!row)
             {
                 std::string tmpErr = "ERROR: Row not found!";

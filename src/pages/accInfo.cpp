@@ -579,6 +579,7 @@ WTable * AccountInfoPage::CreateBanInfo()
                 int j;
                 bool active;
                 std::list<DatabaseRow*> rows = realmDB.GetRows();
+                realmDB.Disconnect();
 
                 for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
                 {
@@ -645,6 +646,7 @@ WTable * AccountInfoPage::CreateMuteInfo()
                 int j;
                 bool active;
                 std::list<DatabaseRow*> rows = realmDB.GetRows();
+                realmDB.Disconnect();
 
                 for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
                 {
@@ -735,6 +737,7 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
             {
                 DatabaseRow * tmpRow;
                 std::list<DatabaseRow*> rows = db.GetRows();
+                db.Disconnect();
                 i = 1;
 
                 for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
@@ -775,6 +778,7 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
             {
                 DatabaseRow * tmpRow;
                 std::list<DatabaseRow*> rows = db.GetRows();
+                db.Disconnect();
                 i = 1;
 
                 for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
