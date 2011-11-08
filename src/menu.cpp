@@ -97,9 +97,11 @@ void HGSubMenu::UpdateTexts(SessionInfo * sess)
     }
 }
 
-void HGSubMenu::Clear()
+void HGSubMenu::Refresh()
 {
-
+    for (std::list<WMenuItem*>::iterator itr = items.begin(); itr != items.end(); ++itr)
+        if (*itr)
+            (*itr)->contents()->refresh();
 }
 
 HGMenuOption::HGMenuOption(MenuOptions menuOption):
@@ -318,6 +320,20 @@ void HGMenuOption::UpdateTexts(SessionInfo * sess)
 
         if (tmpSubMenu = subMenus[i])
             tmpSubMenu->UpdateTexts(sess);
+    }
+}
+
+void HGMenuOption::Refresh()
+{
+    WMenuItem * tmpItem;
+    HGSubMenu * tmpSubMenu;
+    for (int i = 0; i < ACCOUNT_LEVEL_COUNT; ++i)
+    {
+        if (tmpItem = items[i])
+            tmpItem->contents()->refresh();
+
+        if (tmpSubMenu = subMenus[i])
+            tmpSubMenu->Refresh();
     }
 }
 
@@ -701,8 +717,9 @@ void HGMenu::refresh()
     }
     else
     {
-        // reset account information page
-        menuSlots[MENU_SLOT_ACCOUNT]->GetMenuItemForLevel(LVL_PLAYER)->contents()->refresh();
+        // reset pages that need this
+        menuSlots[MENU_SLOT_ACCOUNT]->Refresh();
+        menuSlots[MENU_SLOT_SUPPORT]->Refresh();
 
         session->accLvl = LVL_NOT_LOGGED;
         menu->select(0);

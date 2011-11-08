@@ -91,6 +91,7 @@ public:
 
     void SetLabel(WText * lbl);
     void SetLabel(SessionInfo * sess, uint32 txtId);
+    void SetLabel(WString & lbl);
     void SetWidget(WWidget * wid);
     void SetBreakCount(int br) { breaks = br; }
     void SetTextId(uint32 txtId) { label.SetTextId(txtId); }

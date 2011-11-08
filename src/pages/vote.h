@@ -46,6 +46,44 @@ enum VoteSlots
 };
 
 /********************************************//**
+ * \brief Class to represent Vote Page Slot Item.
+ ***********************************************/
+
+class VoteSlotItem : public PageSlotItem
+{
+public:
+    VoteSlotItem() : PageSlotItem(), disabled(false), voteId(0), expire(""), voteName("") {}
+    ~VoteSlotItem(){}
+
+    bool IsDisabled() { return disabled; }
+    void SetDisabled(bool disabled) { this->disabled = disabled; }
+
+    uint32 GetVoteId() { return voteId; }
+    void SetVoteId(uint32 id) { voteId = id; }
+
+    WString GetExpire() { return expire; }
+    void SetExpire(const WString & exp) { expire = exp; }
+
+    WString GetName() { return voteName; }
+    void SetName(const WString & name) { voteName = name; }
+
+    void UpdateExpireLabel(SessionInfo * sess)
+    {
+        if (disabled)
+        {
+            WString tmpLbl = voteName + sess->GetText(TXT_SUPPORT_VOTE_NEXT) + expire;
+            SetLabel(tmpLbl);
+        }
+    }
+
+private:
+    bool disabled;
+    uint32 voteId;
+    WString expire;
+    WString voteName;
+};
+
+/********************************************//**
  * \brief A class to represent Vote page.
  *
  * This class is container for widgets contains
@@ -68,8 +106,6 @@ private:
     bool needCreation;
     /// vote info slots
     BasicTextItem infoSlots[VOTE_SLOT_COUNT];
-    /// vote slots
-    std::list<PageSlotItem*> votes;
 
     void CreateVotePage();
     void UpdateVotePage();
@@ -78,8 +114,8 @@ private:
 
     void Vote(const uint32& id);
 
-    /// stores vote state
-    std::map<uint32, WString> voteMap;
+    /// stores vote state and vote 'slot' informations
+    std::map<uint32, VoteSlotItem> voteMap;
 };
 
 #endif //VOTE_H_INCLUDED
