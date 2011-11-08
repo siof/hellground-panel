@@ -676,6 +676,7 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
     WContainerWidget * activityInfo = new WContainerWidget();
 
     activityTabs = new WTabWidget(activityInfo);
+    activityTabs->contentsStack()->setTransitionAnimation(WAnimation(WAnimation::SlideInFromRight, WAnimation::EaseIn), true);
 
     WTable * tabPanel = new WTable(), * tabServer = new WTable();
 
