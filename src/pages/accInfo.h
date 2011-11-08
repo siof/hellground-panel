@@ -96,6 +96,7 @@ enum BanInfoSlot
     ACCBANINFO_SLOT_UNBANDATE,          /**< Account unban date (or text for permanent bans) */
     ACCBANINFO_SLOT_BANNEDBY,           /**< GM Name who banned account */
     ACCBANINFO_SLOT_BANREASON,          /**< Account ban reason */
+    ACCBANINFO_SLOT_PERMANENT,          /**< Info if ban is permanent */
     ACCBANINFO_SLOT_ACTIVE,             /**< Info if ban is still active */
 
     ACCBANINFO_SLOT_COUNT

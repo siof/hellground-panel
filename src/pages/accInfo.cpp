@@ -547,6 +547,7 @@ WTable * AccountInfoPage::CreateBanInfo()
     banInfoSlots[ACCBANINFO_SLOT_UNBANDATE].SetLabel(session, TXT_LBL_BAN_TO);
     banInfoSlots[ACCBANINFO_SLOT_BANNEDBY].SetLabel(session, TXT_LBL_BAN_BY);
     banInfoSlots[ACCBANINFO_SLOT_BANREASON].SetLabel(session, TXT_LBL_BAN_REASON);
+    banInfoSlots[ACCBANINFO_SLOT_PERMANENT].SetLabel(session, TXT_LBL_BAN_PERMANENT);
     banInfoSlots[ACCBANINFO_SLOT_ACTIVE].SetLabel("");
 
     int i;
@@ -578,6 +579,7 @@ WTable * AccountInfoPage::CreateBanInfo()
                 i = 1;
                 int j;
                 bool active;
+                bool perm;
                 std::list<DatabaseRow*> rows = realmDB.GetRows();
                 realmDB.Disconnect();
 
@@ -586,8 +588,11 @@ WTable * AccountInfoPage::CreateBanInfo()
                     for (j = 0; j < 4; ++j)
                         banInfo->elementAt(i, j)->addWidget(new WText((*itr)->fields[j].GetWString()));
 
+                    perm = (*itr)->fields[0].GetWString() == (*itr)->fields[1].GetWString();
+                    banInfo->elementAt(i, 4)->addWidget(new WText(session->GetText(perm ? TXT_LBL_BAN_YES : TXT_LBL_BAN_NO)));
+
                     active = (*itr)->fields[4].GetBool();
-                    banInfo->elementAt(i, 4)->addWidget(new WText(session->GetText(active ? TXT_LBL_BAN_ACTIVE : TXT_LBL_BAN_NOT_ACTIVE)));
+                    banInfo->elementAt(i, 5)->addWidget(new WText(session->GetText(active ? TXT_LBL_BAN_ACTIVE : TXT_LBL_BAN_NOT_ACTIVE)));
                 }
             }
             break;

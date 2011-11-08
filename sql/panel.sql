@@ -91,6 +91,7 @@ INSERT INTO LangTexts VALUES
 (166, "Nieaktywny", "Not active"),
 (167, "Tak", "Yes"),
 (168, "Nie", "No"),
+(169, "Permanentny", "Permanent"),
 
 (170, "Zmutowany od", "Muted from"),
 (171, "Zmutowany do", "Muted till"),

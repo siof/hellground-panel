@@ -382,6 +382,7 @@ enum Texts
     TXT_LBL_BAN_NOT_ACTIVE          = 166,  /**< Ban is inactive label */
     TXT_LBL_BAN_YES                 = 167,  /**< Account is banned label */
     TXT_LBL_BAN_NO                  = 168,  /**< Account isn't banned label */
+    TXT_LBL_BAN_PERMANENT           = 169,  /**< Ban is permanent label */
 
     /** Mute informations */
     TXT_LBL_MUTE_FROM               = 170,  /**< Ban time label */
