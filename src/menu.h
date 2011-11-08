@@ -41,7 +41,7 @@ public:
     WMenu * GetMenu();
     void UpdateTexts(SessionInfo * sess);
 
-    void Clear();
+    void Refresh();
 
 private:
     std::list<uint32> textIds;
@@ -68,6 +68,8 @@ public:
 
     WMenuItem * GetMenuItemForLevel(AccountLevel accLvl);
     void UpdateTexts(SessionInfo * sess);
+
+    void Refresh();
 
 private:
     uint32 * textIds;

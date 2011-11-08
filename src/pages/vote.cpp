@@ -61,8 +61,7 @@ VotePage::~VotePage()
 
 void VotePage::refresh()
 {
-    if (isHidden() || isDisabled())
-        return;
+    console(DEBUG_CODE, "void VotePage::refresh()\n");
 
     // only logged in players can visit this page so there is no need to create/update it in other cases
     if (session->accLvl > LVL_NOT_LOGGED)
@@ -76,6 +75,9 @@ void VotePage::refresh()
         {
             infoSlots[VOTE_SLOT_MAIN].UpdateLabel(session);
             infoSlots[VOTE_SLOT_INFO].UpdateLabel(session);
+
+            for (std::map<uint32, VoteSlotItem>::iterator itr = voteMap.begin(); itr != voteMap.end(); ++itr)
+                itr->second.UpdateExpireLabel(session);
         }
     }
     else
@@ -94,6 +96,7 @@ void VotePage::refresh()
 
 void VotePage::CreateVotePage()
 {
+    console(DEBUG_CODE, "void VotePage::CreateVotePage()\n");
     infoSlots[VOTE_SLOT_MAIN].SetLabel(session, TXT_SUPPORT_VOTE_INFO);
     infoSlots[VOTE_SLOT_INFO].SetLabel("");
 
@@ -131,12 +134,14 @@ void VotePage::CreateVotePage()
         {
             std::list<DatabaseRow*> rows = db.GetRows();
             DatabaseRow * tmpRow;
-
+            uint32 voteId;
             for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
             {
                 tmpRow = *itr;
-
-                voteMap[tmpRow->fields[0].GetUInt32()] = tmpRow->fields[1].GetWString();
+                voteId = tmpRow->fields[0].GetUInt32();
+                voteMap[voteId].SetExpire(tmpRow->fields[1].GetWString());
+                voteMap[voteId].SetDisabled(true);
+                voteMap[voteId].SetVoteId(voteId);
             }
 
             break;
@@ -151,36 +156,31 @@ void VotePage::CreateVotePage()
         case RETURN_EMPTY:
         default:
         {
-            std::map<uint32, WString>::iterator mapItr;
             std::list<DatabaseRow*> rows = db.GetRows();
             DatabaseRow * tmpRow;
-            PageSlotItem * tmpItem;
             WAnchor * tmpWidget;
-            bool disabled;
+            uint32 voteId;
 
             for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
             {
                 tmpRow = *itr;
-                mapItr = voteMap.find(tmpRow->fields[0].GetUInt32());
 
-                disabled = mapItr != voteMap.end();
+                voteId = tmpRow->fields[0].GetUInt32();
 
                 tmpWidget = new WAnchor(WLink(tmpRow->fields[1].GetString()));
                 tmpWidget->setImage(new WImage(WLink(tmpRow->fields[2].GetString()), tmpRow->fields[3].GetWString()));
                 tmpWidget->setTarget(TargetNewWindow);
-                tmpWidget->setDisabled(disabled);
+                tmpWidget->setDisabled(voteMap[voteId].IsDisabled());
 
-                BindVote(tmpWidget->clicked(), tmpRow->fields[0].GetUInt32());
+                BindVote(tmpWidget->clicked(), voteId);
 
+                voteMap[voteId].SetName(tmpRow->fields[4].GetWString());
                 WString tmpStr = tmpRow->fields[4].GetWString();
 
-                if (disabled)
-                    tmpStr += session->GetText(TXT_SUPPORT_VOTE_NEXT) + mapItr->second;
+                if (voteMap[voteId].IsDisabled())
+                    tmpStr += session->GetText(TXT_SUPPORT_VOTE_NEXT) + voteMap[voteId].GetExpire();
 
-                tmpItem = new PageSlotItem();
-                tmpItem->SetAll(new WText(tmpStr), tmpWidget, 2);
-
-                votes.push_back(tmpItem);
+                voteMap[voteId].SetAll(new WText(tmpStr), tmpWidget, 2);
             }
 
             break;
@@ -191,11 +191,11 @@ void VotePage::CreateVotePage()
     WWidget * tmpWidget;
     int breakes;
 
-    for (std::list<PageSlotItem*>::const_iterator itr = votes.begin(); itr != votes.end(); ++itr)
+    for (std::map<uint32, VoteSlotItem>::iterator itr = voteMap.begin(); itr != voteMap.end(); ++itr)
     {
-        tmpText = (*itr)->GetLabel();
-        tmpWidget = (*itr)->GetWidget();
-        breakes = (*itr)->GetBreakCount();
+        tmpText = itr->second.GetLabel();
+        tmpWidget = itr->second.GetWidget();
+        breakes = itr->second.GetBreakCount();
 
         addWidget(tmpText);
         addWidget(new WBreak());
@@ -212,12 +212,10 @@ void VotePage::CreateVotePage()
 
 void VotePage::ClearPage()
 {
+    console(DEBUG_CODE, "void VotePage::ClearPage()\n");
     clear();
 
-    for (std::list<PageSlotItem*>::iterator itr = votes.begin(); itr != votes.end(); ++itr)
-        delete (*itr);
-
-    votes.clear();
+    voteMap.clear();
 
     for (int i = 0; i < VOTE_SLOT_COUNT; ++i)
         infoSlots[i].Clear();
@@ -232,6 +230,7 @@ void VotePage::BindVote(EventSignal<WMouseEvent>& signal, const uint32& id)
 
 void VotePage::Vote(const uint32& id)
 {
+    console(DEBUG_CODE, "void VotePage::Vote(const uint32& id = %u)\n", id);
     if (WObject::sender())
     {
         WAnchor * tmpAnch = ((WAnchor*)WObject::sender());
@@ -244,14 +243,13 @@ void VotePage::Vote(const uint32& id)
         tmpAnch->setDisabled(true);
     }
 
-    std::map<uint32, WString>::iterator mapItr = voteMap.find(id);
-    if (mapItr != voteMap.end())
+    if (voteMap[id].IsDisabled())
     {
         infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_ERROR_CANT_VOTE_TWICE);
         return;
     }
 
-    voteMap[id] = "";
+    voteMap[id].SetDisabled(true);
 
     Database db;
 
@@ -261,7 +259,17 @@ void VotePage::Vote(const uint32& id)
         return;
     }
 
-    db.SetPQuery("INSERT INTO AccVote VALUES ('%u', '%u', NOW() + INTERVAL %u HOUR)", session->accid, id, VOTE_INTERVAL);
+    if (db.ExecutePQuery("SELECT NOW() + INTERVAL %u HOUR", VOTE_INTERVAL) > RETURN_EMPTY)
+    {
+        voteMap[id].SetExpire(db.GetRow()->fields[0].GetWString());
+    }
+    else
+    {
+        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        return;
+    }
+
+    db.SetPQuery("INSERT INTO AccVote VALUES ('%u', '%u', '%s')", session->accid, id, voteMap[id].GetExpire().toUTF8().c_str());
     if (db.ExecuteQuery() == RETURN_ERROR)
     {
         infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
@@ -283,4 +291,5 @@ void VotePage::Vote(const uint32& id)
     }
 
     infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_SUPPORT_VOTED);
+    voteMap[id].UpdateExpireLabel(session);
 }

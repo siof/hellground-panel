@@ -182,6 +182,19 @@ void PageSlotItem::SetLabel(SessionInfo * sess, uint32 txtId)
 }
 
 /********************************************//**
+ * \brief Sets new text to existing label or create new one.
+ *
+ * \param lbl New label text.
+ *
+ ***********************************************/
+
+void PageSlotItem::SetLabel(WString & lbl)
+{
+    console(DEBUG_CODE, "void PageSlotItem::SetLabel(WString & lbl = %s)\n", lbl.toUTF8().c_str());
+    label.SetLabel(lbl);
+}
+
+/********************************************//**
  * \brief Sets new informations widget (and deletes old one).
  *
  * \param wid   Widget with informations.
