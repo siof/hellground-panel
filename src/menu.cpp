@@ -604,7 +604,10 @@ void HGMenu::LogMeIn()
             loginContainer->setHidden(true);
 
             if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+            {
                 db.ExecutePQuery("DELETE FROM AccVote WHERE acc = '%u' AND resetDate < NOW()", session->accid);
+                db.ExecutePQuery("DELETE FROM IPVote WHERE ip = '%s' AND resetDate < NOW()", session->sessionIp.toUTF8().c_str());
+            }
 
             ShowMenuOptions();
             refresh();

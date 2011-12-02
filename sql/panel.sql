@@ -275,6 +275,15 @@ CREATE TABLE IF NOT EXISTS AccVote
     FOREIGN KEY (voteId) REFERENCES Vote(id) ON DELETE CASCADE
 ) ENGINE = INNODB, CHARACTER SET utf8;
 
+CREATE TABLE IF NOT EXISTS IPVote
+(
+    ip Text NOT NULL,
+    voteId bigint unsigned NOT NULL,
+    resetDate timestamp NOT NULL,
+    PRIMARY KEY (ip, voteId),
+    FOREIGN KEY (voteId) REFERENCES Vote(id) ON DELETE CASCADE
+) ENGINE = INNODB, CHARACTER SET utf8;
+
 DELETE FROM Vote;
 INSERT INTO Vote VALUES
 ('1', 'http://www.xtremetop100.com/in.php?site=1132311845', 'http://www.xtremeTop100.com/votenew.jpg', 'XtremeTop100', 'XtremeTop100'),

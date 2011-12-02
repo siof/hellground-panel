@@ -122,6 +122,9 @@ void VotePage::CreateVotePage()
         return;
     }
 
+    db.ExecutePQuery("DELETE FROM AccVote WHERE acc = '%u' AND resetDate < NOW()", session->accid);
+    db.ExecutePQuery("DELETE FROM IPVote WHERE ip = '%s' AND resetDate < NOW()", session->sessionIp.toUTF8().c_str());
+
     db.SetPQuery("SELECT voteId, resetDate FROM AccVote WHERE acc = '%u'", session->accid);
 
     switch (db.ExecuteQuery())
@@ -141,6 +144,37 @@ void VotePage::CreateVotePage()
                 voteId = tmpRow->fields[0].GetUInt32();
                 voteMap[voteId].SetExpire(tmpRow->fields[1].GetWString());
                 voteMap[voteId].SetDisabled(true);
+                voteMap[voteId].SetVoteId(voteId);
+            }
+
+            break;
+        }
+    }
+
+    db.SetPQuery("SELECT voteId, resetDate FROM IPVote WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
+
+    switch (db.ExecuteQuery())
+    {
+        case RETURN_ERROR:
+            infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            break;
+        case RETURN_EMPTY:
+        default:
+        {
+            std::list<DatabaseRow*> rows = db.GetRows();
+            DatabaseRow * tmpRow;
+            uint32 voteId;
+
+            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+            {
+                tmpRow = *itr;
+                voteId = tmpRow->fields[0].GetUInt32();
+                if (!voteMap[voteId].IsDisabled())
+                {
+                    voteMap[voteId].SetExpire(tmpRow->fields[1].GetWString());
+                    voteMap[voteId].SetDisabled(true);
+                }
+
                 voteMap[voteId].SetVoteId(voteId);
             }
 
@@ -270,6 +304,13 @@ void VotePage::Vote(const uint32& id)
     }
 
     db.SetPQuery("INSERT INTO AccVote VALUES ('%u', '%u', '%s')", session->accid, id, voteMap[id].GetExpire().toUTF8().c_str());
+    if (db.ExecuteQuery() == RETURN_ERROR)
+    {
+        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        return;
+    }
+
+    db.SetPQuery("INSERT INTO IPVote VALUES ('%s', '%u', '%s')", session->sessionIp.toUTF8().c_str(), id, voteMap[id].GetExpire().toUTF8().c_str());
     if (db.ExecuteQuery() == RETURN_ERROR)
     {
         infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
