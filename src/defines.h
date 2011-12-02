@@ -145,7 +145,7 @@ struct SessionInfo
      *
      ***********************************************/
 
-    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), vote(0), textMissing("Error ! Text missing !") {}
+    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), vote(0), account_flags(0), textMissing("Error ! Text missing !") {}
     ~SessionInfo() {}
 
     WString login;          /**< Login used to log on account. */
@@ -161,6 +161,7 @@ struct SessionInfo
     bool locked;            /**< IP lock */
     int expansion;          /**< Expansion enabled for this account. */
     uint32 vote;            /**< Vote points count */
+    uint64 account_flags;   /**< Account custom flags (blizz xp rates for example) */
 
     WString textMissing;    /**< "Error ! Text missing !" info. Should be shown when text wasn't found in langTexts. */
 
@@ -351,6 +352,7 @@ enum Texts
     TXT_LBL_ACC_TAB_MUTE            = 121,  /**< Account mute information tab label */
     TXT_LBL_ACC_TAB_TICKET          = 122,  /**< Account ticket information tab label */
     TXT_LBL_ACC_TAB_ACTIVITY        = 123,  /**< Account activity information tab label */
+    TXT_LBL_ACC_XP_RATES            = 124,  /**< Account XP rates. */
 
     /** Password modifications */
     TXT_LBL_PASS_CHANGE             = 130,  /**< Password change page title */
@@ -460,6 +462,8 @@ enum Texts
     TXT_SUPPORT_VOTE_INFO           = 263,  /**< Text for vote page title/info */
     TXT_SUPPORT_VOTE_NEXT           = 264,  /**< Text for next vote time info */
     TXT_SUPPORT_VOTED               = 265,  /**< Text for successfull vote */
+    TXT_XP_RATE_SERVER              = 266,  /**< Text for server default XP rates */
+    TXT_XP_RATE_BLIZZLIKE           = 267,  /**< Text for blizzlike XP rates */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
@@ -485,6 +489,7 @@ enum Texts
     TXT_ACT_RECOVERY_SUCCESS        = 605,  /**< Activity log info: Password recovery success */
     TXT_ACT_RECOVERY_FAIL           = 606,  /**< Activity log info: Password recovery fail */
     TXT_ACT_IP_LOCK                 = 607,  /**< Activity log info: Someone tried to change ip lock state */
+    TXT_ACT_XP_RATES                = 608,  /**< Activity log info: Someone tried to change XP rates for account */
 };
 
 /********************************************//**

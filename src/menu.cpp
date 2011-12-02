@@ -404,11 +404,11 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menuSlots[MENU_SLOT_ACCOUNT] = new HGMenuOption(MENU_SLOT_ACCOUNT);
     menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess), "account");
-    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess), "account", false);
+//    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess), "account", false);
 
     menuSlots[MENU_SLOT_PASSWORD] = new HGMenuOption(MENU_SLOT_PASSWORD);
     menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess), "password");
-    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_PASS_CHANGE, new PassChangePage(sess), "password");
+    menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_PASS_CHANGE, new PassChangePage(sess), "passchange");
 
     menuSlots[MENU_SLOT_TELEPORT] = new HGMenuOption(MENU_SLOT_TELEPORT);
     menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session), "teleport");
@@ -524,8 +524,8 @@ void HGMenu::LogMeIn()
         }
     }
 
-               //           0            1         2     3       4       5         6       7         8       9
-    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion, vote FROM account WHERE username = '%s'", escapedLogin.c_str());
+               //           0            1         2     3       4       5         6       7         8       9         10
+    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion, vote, account_flags FROM account WHERE username = '%s'", escapedLogin.c_str());
 
     // execute will return 0 if result will be empty and -1 if there will be DB error.
     switch (db.ExecuteQuery())
@@ -589,6 +589,7 @@ void HGMenu::LogMeIn()
             session->locked = row->fields[7].GetBool();
             session->expansion = row->fields[8].GetInt();
             session->vote = row->fields[9].GetUInt32();
+            session->account_flags = row->fields[10].GetUInt64();
 
             login->setText("");
             pass->setText("");
@@ -642,7 +643,7 @@ void HGMenu::ShowMenuOptions(bool addLogin)
     WMenuItem * tmp;
 
     std::vector<WMenuItem*>::const_iterator itr = menu->items().begin();
-    while(itr != menu->items().end())
+    while (itr != menu->items().end())
     {
         tmp = *itr;
         //++itr;

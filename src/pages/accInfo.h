@@ -75,6 +75,7 @@ enum AccountInfoSlot
     ACCINFO_SLOT_CLIENT_VERSION,    /**< Players client locale name. */
     ACCINFO_SLOT_EMAIL,             /**< Player account email address. */
     ACCINFO_SLOT_VOTE_POINTS,       /**< Vote points count. */
+    ACCINFO_SLOT_XP_RATE,           /**< Blizz/Server default XP rates. */
     ACCINFO_SLOT_MULTIACC,          /**< Multiacc feature is enabled ? */
     ACCINFO_SLOT_ACC_BAN,           /**< Is account banned ? */
     ACCINFO_SLOT_LAST_IP_BAN,       /**< Is last logged (in game) ip banned ? */
@@ -189,6 +190,7 @@ private:
     void ClearPage();
 
     void ChangeIPLock();
+    void ChangeXPRates();
 
     WString GetEmail();
 };
