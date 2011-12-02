@@ -277,7 +277,7 @@ CREATE TABLE IF NOT EXISTS AccVote
 
 CREATE TABLE IF NOT EXISTS IPVote
 (
-    ip Text NOT NULL,
+    ip varchar(15) NOT NULL,
     voteId bigint unsigned NOT NULL,
     resetDate timestamp NOT NULL,
     PRIMARY KEY (ip, voteId),
