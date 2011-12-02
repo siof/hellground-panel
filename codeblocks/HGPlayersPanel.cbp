@@ -129,6 +129,8 @@
 		<Unit filename="../src/menu.h" />
 		<Unit filename="../src/pages/accInfo.cpp" />
 		<Unit filename="../src/pages/accInfo.h" />
+		<Unit filename="../src/pages/characters.cpp" />
+		<Unit filename="../src/pages/characters.h" />
 		<Unit filename="../src/pages/default.cpp" />
 		<Unit filename="../src/pages/default.h" />
 		<Unit filename="../src/pages/error.cpp" />

@@ -235,6 +235,10 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_VOTE_POINTS].GetWidget();
         ((WText*)tmpWidget)->setText(GetFormattedString("%u", session->vote));
+
+        tmpWidget = accInfoSlots[ACCINFO_SLOT_XP_RATE].GetWidget();
+        ((WPushButton*)tmpWidget)->setText(session->account_flags & 0x0008 ? session->GetText(TXT_XP_RATE_BLIZZLIKE) : session->GetText(TXT_XP_RATE_SERVER));
+
 /*
         tmpWidget = accInfoSlots[ACCINFO_SLOT_MULTIACC].GetWidget();
         ((WText*)tmpWidget)->setText();
@@ -300,6 +304,9 @@ WContainerWidget * AccountInfoPage::CreateAccountInfo()
     accInfoSlots[ACCINFO_SLOT_EMAIL].SetAll(session, TXT_LBL_ACC_MAIL, new WText(""), 1);
 
     accInfoSlots[ACCINFO_SLOT_VOTE_POINTS].SetAll(session, TXT_LBL_ACC_VP, new WText(""), 1);
+
+    accInfoSlots[ACCINFO_SLOT_XP_RATE].SetAll(session, TXT_LBL_ACC_XP_RATES, new WPushButton("XP rates"), 1);
+    ((WPushButton*)accInfoSlots[ACCINFO_SLOT_XP_RATE].GetWidget())->clicked().connect(this, &AccountInfoPage::ChangeXPRates);
 
     //accMultiAcc;
 
@@ -527,6 +534,48 @@ void AccountInfoPage::ChangeIPLock()
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
         db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_IP_LOCK);
+}
+
+/********************************************//**
+ * \brief Changes XP Rates for account
+ *
+ * Function to change current XP rates state in session and DB.
+ *
+ ***********************************************/
+
+void AccountInfoPage::ChangeXPRates()
+{
+    if (session->accLvl < LVL_PLAYER)
+        return;
+
+    Database db;
+    if (db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        uint64 prevflags = session->account_flags;
+        if (session->account_flags & 0x0008)
+        {
+            session->account_flags &= ~0x0008;
+            db.SetPQuery("UPDATE account SET account_flags = account_flags &~ 0x0008 WHERE id = '%u'", session->accid);
+        }
+        else
+        {
+            session->account_flags |= 0x0008;
+            db.SetPQuery("UPDATE account SET account_flags = account_flags | 0x0008 WHERE id = '%u'", session->accid);
+        }
+
+        if (db.ExecuteQuery() != RETURN_ERROR)
+            ((WPushButton*)accInfoSlots[ACCINFO_SLOT_XP_RATE].GetWidget())->setText(session->account_flags & 0x0008 ? session->GetText(TXT_XP_RATE_BLIZZLIKE) : session->GetText(TXT_XP_RATE_SERVER));
+        else
+        {
+            session->account_flags = prevflags;
+            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        }
+    }
+    else
+       pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+
+    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+        db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_XP_RATES);
 }
 
 /********************************************//**

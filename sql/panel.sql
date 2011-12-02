@@ -64,6 +64,7 @@ INSERT INTO LangTexts VALUES
 (121, "Mute", "Mute"),
 (122, "Tickety", "Tickets"),
 (123, "Historia aktywności", "Activity history"),
+(124, "XP rate", "XP rate"),
 
 (130, "Zmiana hasła", "Change password"),
 (131, "Stare hasło", "Old pass"),
@@ -213,6 +214,8 @@ contact: siof@hellground.pl"),
 (263, "Vote info TODO", "Vote info TODO"),
 (264, " Następne głosowanie: ", " Next vote time: "),
 (265, "Zagłosowano pomyślnie", "Vote successfull"),
+(266, "Domyślne serwerowe.", "Server default."),
+(267, "Blizzlike", "Blizzlike"),
 
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),
@@ -241,7 +244,8 @@ If it's your account please use password recovery option to reset password and I
 (604, "Próba zmiany hasła.", "Someone tried to change password."),
 (605, "Próba odzyskania hasła zakończona powodzeniem.", "Successfull password recovery."),
 (606, "Próba odzyskania hasła zakończona niepowodzeniem.", "Someone tried to recover password (unsuccessfull)."),
-(607, "Próba zmiany ustawień ip locka.", "Someone tried to change ip lock state.");
+(607, "Próba zmiany ustawień ip locka.", "Someone tried to change ip lock state."),
+(608, "Próba zmiany ustawień XP rate.", "Someone tried to change XP rates.");
 
 CREATE TABLE IF NOT EXISTS Activity
 (
@@ -273,5 +277,11 @@ CREATE TABLE IF NOT EXISTS AccVote
 
 DELETE FROM Vote;
 INSERT INTO Vote VALUES
-('XXX', 'http://www.xtremetop100.com/in.php?site=1132311845', 'http://www.xtremeTop100.com/votenew.jpg', 'XtremeTop100', 'XtremeTop100'),
-('XXX', 'http://www.wowstatus.net/in.php?server=485129', 'http://www.wowstatus.net/includes/images/vote.gif', 'WoWStatus.net', 'WoWStatus.net');
+('1', 'http://www.xtremetop100.com/in.php?site=1132311845', 'http://www.xtremeTop100.com/votenew.jpg', 'XtremeTop100', 'XtremeTop100'),
+('2', 'http://www.wowstatus.net/in.php?server=485129', 'http://www.wowstatus.net/includes/images/vote.gif', 'WoWStatus.net', 'WoWStatus.net'),
+('3', 'http://wow.top100arena.com/', 'http://www.top100arena.com/hit.asp?id=62921&c=WoW&t=1', 'wow private server', 'top100arena'),
+('4', 'http://www.gamesites200.com/wowprivate/in.php?id=10245', 'http://www.gamesites200.com/wowprivate/vote.gif', 'Vote on the World of Warcraft Private Servers Top 200', 'Game Sites 200'),
+('5', 'http://www.mmorpgtoplist.com/in.php?site=43735', 'http://www.mmorpgtoplist.com/vote.jpg', 'World of Warcraft Server', 'mmorpgtoplist'),
+('6', 'http://www.gtop100.com/in.php?site=66370', 'http://www.gtop100.com/images/votebutton.jpg', 'Top 100 World of Warcraft sites', 'gtop100'),
+('7', 'http://rpgtextowe.topka.pl/?we=nasgothhg', 'http://www.top-rpg.yoyo.pl/152x52ver1.png', 'Toplista-Gier', 'top-rpg'),
+('8', 'http://mmorpg.toplista.pl/?we=nasgothhg', 'http://s207272909.onlinehome.us/tm.gif', 'MMORPG Top50', 'MMORPG Top50');
