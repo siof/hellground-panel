@@ -9,11 +9,11 @@ DELETE FROM LangTexts;
 
 INSERT INTO LangTexts VALUES
 (0, "Strona główna", "Home"),
-(1, "Zaloguj", "Log in"),
-(2, "Wyloguj", "Log out"),
+(1, "Zaloguj się", "Sign In"),
+(2, "Wyloguj się", "Sign out"),
 (3, "Zarejestruj", "Register"),
-(4, "Odzyskaj hasło", "Restore pass"),
-(5, "Zmień hasło", "Pass change"),
+(4, "Odzyskiwanie hasła", "Password recovery"),
+(5, "Zmiana hasła", "Change password"),
 (6, "Informacje o koncie", "Account informations"),
 (7, "Status serwera", "Server status"),
 (8, "Dotacja", "Donate"),
@@ -25,9 +25,9 @@ INSERT INTO LangTexts VALUES
 (14, "Lista banów", "Ban list"),
 (15, "Informacje o mute", "Mute info"),
 (16, "Lista mute", "Mute list"),
-(17, "ERROR", "ERROR"),
+(17, "Błąd", "Error"),
 (18, "Licencja", "Licence"),
-(19, "Support", "Support"),
+(19, "Wsparcie", "Support"),
 
 (50, "Panel GM", "GM Panel"),
 (51, "Tickety", "Tickets"),
@@ -41,8 +41,8 @@ INSERT INTO LangTexts VALUES
 (79, "Czas gry aktualnego poziomu: ", "This level played time: "),
 
 (100, "Postacie na koncie: ", "Characters on account: "),
-(101, "Data założenia konta: ", "Account create date: "),
-(102, "Ostatnie logowanie: ", "Last login: "),
+(101, "Data założenia konta: ", "Account creation date: "),
+(102, "Ostatnio zalogowany: ", "Last time online: "),
 (103, "Ostatnie IP: ", "Last IP: "),
 (104, "Blokada IP: ", "IP lock: "),
 (105, "Zbanowane: ", "Banned: "),
@@ -77,9 +77,9 @@ INSERT INTO LangTexts VALUES
 (150, "Otwarta", "Opened"),
 (151, "Zamknięta", "Closed"),
 
-(155, "Zakładając konto w pełni akceptujesz <a href=\"http://wow.gamefreedom.pl/regulamin-serwera/\">regulamin serwera</a>", "You read <a href=\"http://gamefreedom.pl/showthread.php?t=8454\">Server Rules</a> and you accept them?"),
+(155, "Oświadczam, że zapoznałem się i akceptuję <a href=\"http://wow.hellground.pl/regulamin-serwera/\">Regulamin Serwera</a>", "I have read and I accept <a href=\"http://hellground.pl/showthread.php?t=8454\">Server Rules</a>"),
 (156, "Tak", "Yes"),
-(157, "<h3>HellGround - Rejestracja</h3>", "<h3>HellGround - Register</h3>"),
+(157, "<h3>HellGround - Stwórz Konto</h3>", "<h3>HellGround - Create Account</h3>"),
 (158, "Aby założyć konto musisz zaakceptować regulamin serwera.", "You must accept server rules to register new account."),
 (159, "Konto istnieje. Prosze wybrać inny login.", "Account already exists. Please try another login."),
 
@@ -112,10 +112,10 @@ INSERT INTO LangTexts VALUES
 (191, "Rev: ", "Rev: "),
 (192, "Diff: ", "Diff: "),
 (193, "Średni diff: ", "Avarage diff: "),
-(194, "Jak zagrać ? <a href=\"http://wow.gamefreedom.pl/jak-zagrac\" target=\"_blank\"><font color=\"#ffdf81\">Opis</font></a>", "Haw to play ? <a href=\"http://en.hellground.pl/how-to-play\" target=\"_blank\"><font color=\"#ffdf81\">Description</font></a>"),
+(194, "<a href=\"http://wow.hellground.pl/jak-zagrac\" target=\"_blank\"><font color=\"#ffdf81\">Jak zagrać - opis</font></a>", "<a href=\"http://en.hellground.pl/how-to-play\" target=\"_blank\"><font color=\"#ffdf81\">How to play - info</font></a>"),
 (195, "<h3>Status serwerów</h3>
 Aktualizacja co 60 sekund.", "<h3>Servers status</h3>
-Refreshes every 60 seconds."),
+Updated every 60 seconds.."),
 
 (200, "Zmień", "Change"),
 (201, "Wyczyść", "Clear"),
@@ -131,8 +131,48 @@ Refreshes every 60 seconds."),
 (226, "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.
 © 2006-2011 Panel created by HellGround.pl ", "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.
 © 2006-2011 Panel created by HellGround.pl "),
-(227, "Informacje o serwerze TODO", "Server info TODO"),
-(228, "Teleport postaci TODO", "Character teleport/unstack TODO"),
+(227, "O serwerze:
+ • Serwer działa od: 19 grudnia 2008r.
+Sprzęt:
+ • Procesor Intel Bi Xeon E5504 8x 2.00+ GHz, 2×4 MB L2 – QPI 2×4.8 GT/sec 45nm
+ • RAM 24 GB DDR3
+ • HDD Intel SSD X25-M 2x 80 GB, SATA 2 2x 1500 GB
+ • Łącze 1 Gbps
+Dla nowych graczy:
+ • Rejestracja: <font color=”#00FF00”>Otwarta</font>
+ • realmlist: set realmlist logon.hellground.pl
+ • Patch: The Burning Crusade (TBC 2.4.3)
+ • Emulator: TrinityCore + własne fixy
+ • Rates xp: opcjonalnie x1 - x2
+ • Rates xp quest: opcjonalnie x1 - x2
+ • Rates drop: x1
+ • Typ: PvP/PvE
+ • Vmapy/LoS: Tak (<a href=\"http://wow.hellground.pl/vmaps-hellground/\">Spis</a>)
+ • Główny kanał rozmów PL: /join world
+ • Główny kanał rozmów ENG: /join engworld
+ • Kanał handlu: /join handel", "About:
+ • Server online since: 19 december 2008r.
+Hardware:
+ • Procesor Intel Bi Xeon E5504 8x 2.00+ GHz, 2×4 MB L2 – QPI 2×4.8 GT/sec 45nm
+ • RAM 24 GB DDR3
+ • HDD Intel SSD X25-M 2x 80 GB, SATA 2 2x 1500 GB
+ • Net speed: 1 Gbps
+For new players:
+ • Registration: <font color=”#00FF00”>Available</font>
+ • realmlist: set realmlist logon.hellground.pl
+ • Patch: The Burning Crusade (TBC 2.4.3)
+ • Emulator: TrinityCore + own fixes
+ • Rates xp: optional x1 - x2
+ • Rates xp quest: optional x1 - x2
+ • Rates drop: x1
+ • Type: PvP/PvE
+ • Vmaps/LoS: Yes (<a href=\"http://wowen.hellground.pl/vmaps-hellground/\">List</a>)
+ • Main talk channel (lang: PL): /join world
+ • Main talk channel (lang: ENG): /join engworld
+ • Trade channel: /join handel"),
+(228, "Teleport przeniesie wybraną postać do lokacji startowej danej rasy. Teleportacji używać możesz w dowolnym momencie, jednak każde użycie powoduje godzinny cooldown na Heartstone’a postaci. Twoja postać nie może być zalogowana w momencie używania teleportu.
+Wybierz postać, którą chcesz teleportować:", "Teleport will move chosen character to its race starting point. You can use teleportation ** any time, but every usage sets one hour cooldown on your character’s Heartstone. Your character must be offline during teleportation.
+Choose a character you want to teleport:"),
 (229, "Blokada włączona", "IP Lock ON"),
 (230, "Blokada wyłączona", "IP Lock OFF"),
 (231, "Bany TODO", "Bans TODO"),
@@ -145,21 +185,39 @@ Refreshes every 60 seconds."),
 (238, "Tak", "Yes"),
 (239, "Nie", "No"),
 (240, "Aktualne IP jest zbanowane: ", "Current IP is banned: "),
-(241, "Mail rejestracyjny.
+(241, "Hellground.pl
 
-Login: %s pass: %s", "Registration mail.
+Dziękujemy za utworzenie konta na naszym serwerze.
+<b>Login Twojego konta:</b> %s
+<b>Hasło do Twojego konta</b>: %s
 
- Login: %s pass: %s"),
+Zachowaj tą wiadomość na wypadek utraty loginu lub hasła – administracja nie przypomni go.
+
+Logowanie do panelu gracza: http://panelbeta.hellground.pl.
+Jak zagrać: http://wow.hellground.pl/jak-zagrac/
+
+Życzymy miłej gry, ekipa Hellground.pl", "Hellground.pl
+
+Thank you for creating an account on our server.
+<b>Your account’s login:</b> %s
+<b>Your account’s password:</b> %s
+
+Please, save this message in case of losing your login or password – GMT will not remind it to you.
+
+Player’s panel: http://panelbeta.hellground.pl.
+How to play: http://wowen.hellground.pl/how-to-play/
+
+Enjoy your game, Hellground.pl GMT"),
 (242, "HellGround Server - Rejestracja konta", "Hellground Server - Account registration"),
-(243, "Mail odzyskiwania hasła.
-
-Data odzyskiwania: %s
-IP sesji odzyskiwania: %s
-Nowe hasło: %s", "Password Recovery Mail.
-
-Recovery date: %s
-Recovery session IP: %s
-New pass: %s"),
+(243, "Hellground.pl
+Witaj. Otrzymujesz tą wiadomość, ponieważ dnia %s ktoś z adresu IP: %s próbował uzyskać nowe hasło do Twojego konta.
+Twoje nowe hasło to: %s.
+W celu zmiany hasła zaloguj się na http://panelbeta.hellground.pl/ wykorzystując nowe dane z tej wiadomości.
+Pozdrawiamy, ekipa Hellground.pl", "Hellground.pl
+Hello. You received this message, because on %s someone from IP address: %s tried to get a new password to your account.
+Your new password: %s.
+To change your password, sing in on http://panelbeta.hellground.pl/ using new data from this message.
+Best wishes, Hellground.pl GMT"),
 (244, "HellGround Server - Odzyskiwanie hasła", "Hellground Server - Password recovery"),
 (245, "Rejstracja zakończona sukcesem. Hasło zostało wysłane na podany adres email.", "Registration complete. Password was sent to given email address."),
 (246, "Przywracanie hasła zakończone sukcesem. Nowe hasło zostało wysłane na email.", "Password recovery complete. New password was sent on account email address."),
@@ -168,7 +226,7 @@ New pass: %s"),
 (249, "Offline", "Offline"),
 (250, "%i dni %i godzin %i minut %i sekund", "%i days %i hours %i minuts %i seconds"),
 (251, "Na pewno chcesz sie wylogować ?", "Are you sure you want to logout ?"),
-(252, "Wystąpił błąd podczas rejestracji. Spróbuj ponownie.", "There was an error in registration. Try again."),
+(252, "Wystąpił błąd podczas rejestracji. Spróbuj ponownie.", "An error occured during registration. Please try again."),
 (253, "Teleportacja postaci zakończona powodzeniem.", "Character teleportation successfull."),
 (254, "Twoje konto nie zostało jeszcze zbanowane.", "Your account was never banned."),
 (255, "Twoje konto nie zostało jeszcze zmutowane.", "Your account was never muted."),
@@ -210,8 +268,16 @@ along with this program.  If not, see < http://www.gnu.org/licenses/ >.
 contact: siof@hellground.pl"),
 (260, "Repozytorium kodu źródłowego (zawiera także licencję): <a href=\"https://bitbucket.org/siof/hgplayerspanel\">https://bitbucket.org/siof/hgplayerspanel</a>", "Source code repository (also contains licence): <a href=\"https://bitbucket.org/siof/hgplayerspanel\">https://bitbucket.org/siof/hgplayerspanel</a>"),
 (261, "", ""),
-(262, "Support info TODO", "Support info TODO"),
-(263, "Vote info TODO", "Vote info TODO"),
+(262, "Pomóż rozwijać serwer Hellground poprzez dotacje oraz głosowanie na toplistach:
+<a href=\"http://wow.hellground.pl/dotacja/\">Dotacja</a>
+<a href=\"http://panelbeta.hellground.pl/panel.wt/support/vote-event\">Vote event</a>", "Help expanding Hellground server through donations and voting:
+<a href=\"http://wowen.hellground.pl/donate-hellground/\">Donate</a>
+<a href=\"http://panelbeta.hellground.pl/panel.wt/support/vote-event\">Vote event</a>"),
+(263, "Vote Event
+Zapraszamy do głosowania na serwer Hellground na toplistach gier. Na każdej liście można głosować co 12 godzin. Zapoznaj się również z zasadami eventu - <a href=\"http://wow.hellground.pl/zasady-voteevent/\">LINK</a>.
+Listy:", "Vote Event
+We invite you to vote on Hellground Server on game toplists. You can vote on every list every 12 hours. Also, please read vote event rules - <a href=\"http://wowen.hellground.pl/rules-voteevent/\">LINK</a>.
+Toplists:"),
 (264, " Następne głosowanie: ", " Next vote time: "),
 (265, "Zagłosowano pomyślnie", "Vote successfull"),
 (266, "Domyślne serwerowe.", "Server default."),
@@ -220,10 +286,10 @@ contact: siof@hellground.pl"),
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),
 (352, "Podane hasła muszą być takie same", "Typed passwords must be the same"),
-(353, "Podane hasło jest zbyt krótkie", "Typed password is to short"),
-(354, "Podane hasło jest zbyt długie", "Typed password is to long"),
-(355, "Błąd validacji! Podano niepoprawne dane.", "Validation error! Wrong input data."),
-(356, "Postać musi być OFFLINE aby móc użyć opcji teleportacji.", "Character must be OFFLINE to use teleport option."),
+(353, "Podane hasło jest zbyt krótkie", "Typed password is too short"),
+(354, "Podane hasło jest zbyt długie", "Typed password is too long"),
+(355, "Błąd wprowadzonych danych.", "Wrong input data."),
+(356, "Postać musi być wylogowana, aby użyć teleportacji.", "Character must be OFFLINE to use teleport option."),
 (357, "Postać nie została znaleziona !", "Character not found !"),
 (358, "Konto posiada włączoną blokadę IP oraz Twój aktualny IP nie pasuje do IP konta.
 
@@ -239,11 +305,11 @@ If it's your account please use password recovery option to reset password and I
 (503, "DB Error: Wystąpił błąd w zapytaniu.", "DB Error: Database query error."),
 
 (601, "Próba zalogowania na konto zakończona powodzeniem.", "Successfull account login."),
-(602, "Próba zalogowania na konto zakończona niepowodzeniem.", "Someone tried to log in (unsuccessfull)."),
+(602, "Próba zalogowania na konto zakończona niepowodzeniem.", "Unsuccessful account login."),
 (603, "Konto zostało zarejestrowane.", "Successfull account registration."),
 (604, "Próba zmiany hasła.", "Someone tried to change password."),
 (605, "Próba odzyskania hasła zakończona powodzeniem.", "Successfull password recovery."),
-(606, "Próba odzyskania hasła zakończona niepowodzeniem.", "Someone tried to recover password (unsuccessfull)."),
+(606, "Próba odzyskania hasła zakończona niepowodzeniem.", "Unsuccessful password recovery."),
 (607, "Próba zmiany ustawień ip locka.", "Someone tried to change ip lock state."),
 (608, "Próba zmiany ustawień XP rate.", "Someone tried to change XP rates.");
 
