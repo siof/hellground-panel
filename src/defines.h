@@ -393,8 +393,8 @@ enum Texts
     TXT_LBL_MUTE_REASON             = 173,  /**< Ban reason label */
     TXT_LBL_MUTE_ACTIVE             = 174,  /**< Ban is active label */
     TXT_LBL_MUTE_NOT_ACTIVE         = 175,  /**< Ban is inactive label */
-    TXT_LBL_MUTE_YES                = 176,  /**< Account is banned label */
-    TXT_LBL_MUTE_NO                 = 177,  /**< Account isn't banned label */
+    TXT_LBL_MUTE_YES                = 176,  /**< Account is muted label */
+    TXT_LBL_MUTE_NO                 = 177,  /**< Account isn't muted label */
 
     /** Server status */
     TXT_LBL_STATUS_REALM            = 185,  /**< Realm label. */
