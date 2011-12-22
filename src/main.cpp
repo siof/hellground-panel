@@ -307,5 +307,6 @@ WApplication *createApplication(const WEnvironment& env)
 
 int main(int argc, char **argv)
 {
+    srand(time(NULL));
     return WRun(argc, argv, &createApplication);
 }
