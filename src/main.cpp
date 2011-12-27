@@ -272,7 +272,7 @@ void PlayersPanel::LoadLangTexts()
     {
         tmpDb.SetQuery("SELECT id, lang_0, lang_1 FROM LangTexts");
 
-        if (tmpDb.ExecuteQuery() > RETURN_EMPTY)
+        if (tmpDb.ExecuteQuery() > DB_RESULT_EMPTY)
         {
             std::list<DatabaseRow*> tmpList = tmpDb.GetRows();
 

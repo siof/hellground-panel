@@ -204,7 +204,7 @@ void PassChangePage::Change()
     std::string escapedLogin = db.EscapeString(session->login);
     std::string escapedPass = db.EscapeString(txtPassOld->text());
 
-    if (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()) > RETURN_EMPTY)
+    if (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()) > DB_RESULT_EMPTY)
         shapass = db.GetRow()->fields[0].GetWString();
     else
     {
@@ -223,7 +223,7 @@ void PassChangePage::Change()
 
     escapedPass = db.EscapeString(pass);
 
-    if (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()) > RETURN_EMPTY)
+    if (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()) > DB_RESULT_EMPTY)
         shapass = db.GetRow()->fields[0].GetWString();
     else
     {
@@ -240,7 +240,7 @@ void PassChangePage::Change()
 
     db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = NULL, s = NULL, v = NULL WHERE id = '%u'", shapass.toUTF8().c_str(), session->accid);
 
-    if (db.ExecuteQuery() == RETURN_ERROR)
+    if (db.ExecuteQuery() == DB_RESULT_ERROR)
         textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
     else
     {

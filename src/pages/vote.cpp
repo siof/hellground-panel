@@ -129,10 +129,10 @@ void VotePage::CreateVotePage()
 
     switch (db.ExecuteQuery())
     {
-        case RETURN_ERROR:
+        case DB_RESULT_ERROR:
             infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
             break;
-        case RETURN_EMPTY:
+        case DB_RESULT_EMPTY:
         default:
         {
             std::list<DatabaseRow*> rows = db.GetRows();
@@ -155,10 +155,10 @@ void VotePage::CreateVotePage()
 
     switch (db.ExecuteQuery())
     {
-        case RETURN_ERROR:
+        case DB_RESULT_ERROR:
             infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
             break;
-        case RETURN_EMPTY:
+        case DB_RESULT_EMPTY:
         default:
         {
             std::list<DatabaseRow*> rows = db.GetRows();
@@ -184,10 +184,10 @@ void VotePage::CreateVotePage()
 
     switch (db.ExecuteQuery("SELECT id, url, imgurl, alttext, name FROM Vote"))
     {
-        case RETURN_ERROR:
+        case DB_RESULT_ERROR:
             infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
             break;
-        case RETURN_EMPTY:
+        case DB_RESULT_EMPTY:
         default:
         {
             std::list<DatabaseRow*> rows = db.GetRows();
@@ -293,7 +293,7 @@ void VotePage::Vote(const uint32& id)
         return;
     }
 
-    if (db.ExecutePQuery("SELECT NOW() + INTERVAL %u HOUR", VOTE_INTERVAL) > RETURN_EMPTY)
+    if (db.ExecutePQuery("SELECT NOW() + INTERVAL %u HOUR", VOTE_INTERVAL) > DB_RESULT_EMPTY)
     {
         voteMap[id].SetExpire(db.GetRow()->fields[0].GetWString());
     }
@@ -304,14 +304,14 @@ void VotePage::Vote(const uint32& id)
     }
 
     db.SetPQuery("INSERT INTO AccVote VALUES ('%u', '%u', '%s')", session->accid, id, voteMap[id].GetExpire().toUTF8().c_str());
-    if (db.ExecuteQuery() == RETURN_ERROR)
+    if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
         return;
     }
 
     db.SetPQuery("INSERT INTO IPVote VALUES ('%s', '%u', '%s')", session->sessionIp.toUTF8().c_str(), id, voteMap[id].GetExpire().toUTF8().c_str());
-    if (db.ExecuteQuery() == RETURN_ERROR)
+    if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
         return;
@@ -324,7 +324,7 @@ void VotePage::Vote(const uint32& id)
     }
 
     db.SetPQuery("UPDATE account SET vote = '%u' WHERE id = '%u'", ++session->vote, session->accid);
-    if (db.ExecuteQuery() == RETURN_ERROR)
+    if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         session->vote--;
         infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);

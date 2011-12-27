@@ -211,7 +211,7 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
     realmDb.SetPQuery("SELECT id, last_ip, last_login, online, expansion, locale, locked FROM account WHERE id = '%u'", session->accid);
 
     // there should be only one record in db
-    if (realmDb.ExecuteQuery() > RETURN_EMPTY)
+    if (realmDb.ExecuteQuery() > DB_RESULT_EMPTY)
     {
         tmpRow = realmDb.GetRow();
 
@@ -246,21 +246,21 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_ACC_BAN].GetWidget();
         realmDb.SetPQuery("SELECT banreason FROM account_banned WHERE active = 1 AND id = '%u'", session->accid);
-        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
+        if (realmDb.ExecuteQuery() > DB_RESULT_EMPTY)
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_YES) + ": " + realmDb.GetRow()->fields[0].GetWString());
         else
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_LAST_IP_BAN].GetWidget();
         realmDb.SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->lastIp.toUTF8().c_str());
-        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
+        if (realmDb.ExecuteQuery() > DB_RESULT_EMPTY)
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_YES));
         else
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
 
         tmpWidget = accInfoSlots[ACCINFO_SLOT_CURR_IP_BAN].GetWidget();
         realmDb.SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
-        if (realmDb.ExecuteQuery() > RETURN_EMPTY)
+        if (realmDb.ExecuteQuery() > DB_RESULT_EMPTY)
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_YES));
         else
             ((WText*)tmpWidget)->setText(session->GetText(TXT_LBL_BAN_NO));
@@ -518,7 +518,7 @@ void AccountInfoPage::ChangeIPLock()
     {
         session->locked = !session->locked;
         db.SetPQuery("UPDATE account SET locked = '%i' WHERE id = %u", session->locked, session->accid);
-        if (db.ExecuteQuery() != RETURN_ERROR)
+        if (db.ExecuteQuery() != DB_RESULT_ERROR)
         {
             ((WPushButton*)accInfoSlots[ACCINFO_SLOT_IP_LOCK].GetWidget())->setText(session->locked ? session->GetText(TXT_LBL_ACC_IP_LOCK_ON) : session->GetText(TXT_LBL_ACC_IP_LOCK_OFF));
             pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].GetLabel()->setText(session->locked ? session->GetText(TXT_IP_LOCK_ON) : session->GetText(TXT_IP_LOCK_OFF));
@@ -563,7 +563,7 @@ void AccountInfoPage::ChangeXPRates()
             db.SetPQuery("UPDATE account SET account_flags = account_flags | 0x0008 WHERE id = '%u'", session->accid);
         }
 
-        if (db.ExecuteQuery() != RETURN_ERROR)
+        if (db.ExecuteQuery() != DB_RESULT_ERROR)
             ((WPushButton*)accInfoSlots[ACCINFO_SLOT_XP_RATE].GetWidget())->setText(session->account_flags & 0x0008 ? session->GetText(TXT_XP_RATE_BLIZZLIKE) : session->GetText(TXT_XP_RATE_SERVER));
         else
         {
@@ -617,10 +617,10 @@ WTable * AccountInfoPage::CreateBanInfo()
 
     switch (count)
     {
-        case RETURN_ERROR:
+        case DB_RESULT_ERROR:
             pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
             break;
-        case RETURN_EMPTY:
+        case DB_RESULT_EMPTY:
 //            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_NEVER_BANNED);
             break;
         default:
@@ -688,10 +688,10 @@ WTable * AccountInfoPage::CreateMuteInfo()
 
     switch (count)
     {
-        case RETURN_ERROR:
+        case DB_RESULT_ERROR:
             pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
             break;
-        case RETURN_EMPTY:
+        case DB_RESULT_EMPTY:
 //            pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_NEVER_MUTED);
             break;
         default:
@@ -783,10 +783,10 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
 
         switch (db.ExecuteQuery())
         {
-            case RETURN_ERROR:
+            case DB_RESULT_ERROR:
                 pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
                 break;
-            case RETURN_EMPTY:
+            case DB_RESULT_EMPTY:
                 break;
             default:
             {
@@ -824,10 +824,10 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
 
         switch (db.ExecuteQuery())
         {
-            case RETURN_ERROR:
+            case DB_RESULT_ERROR:
                 pageInfoSlots[ACCPAGEINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
                 break;
-            case RETURN_EMPTY:
+            case DB_RESULT_EMPTY:
                 break;
             default:
             {

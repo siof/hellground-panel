@@ -129,7 +129,7 @@ bool Database::SetPQuery(const char *format, ...)
     int res = VSNPRINTF(szQuery, MAX_QUERY_LEN, format, ap);
     va_end(ap);
 
-    if (res == RETURN_ERROR)
+    if (res == DB_RESULT_ERROR)
         return false;
 
     SetQuery(szQuery);
@@ -175,7 +175,7 @@ int Database::ExecuteQuery()
     if (mysql_query(connection, actualQuery.c_str()))
     {
         Log(LOG_DB_ERRORS, "DB Query error ! Error [%i]: %s", GetErrNo(), GetError());
-        return RETURN_ERROR;
+        return DB_RESULT_ERROR;
     }
 
     console(DEBUG_DB, "\n\nExecuteQuery(): test2\n");
@@ -221,8 +221,8 @@ int Database::ExecutePQuery(const char * format, ...)
     int res = VSNPRINTF(szQuery, MAX_QUERY_LEN, format, ap);
     va_end(ap);
 
-    if (res == RETURN_ERROR)
-        return RETURN_ERROR;
+    if (res == DB_RESULT_ERROR)
+        return DB_RESULT_ERROR;
 
     SetQuery(szQuery);
 

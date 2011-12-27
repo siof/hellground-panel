@@ -122,7 +122,7 @@ void TeleportPage::LoadCharacters()
     {
         db.SetPQuery("SELECT guid, name FROM characters WHERE account = %u", session->accid);
 
-        if (db.ExecuteQuery() > RETURN_EMPTY)
+        if (db.ExecuteQuery() > DB_RESULT_EMPTY)
         {
             std::list<DatabaseRow*> rows = db.GetRows();
             db.Disconnect();
@@ -181,10 +181,10 @@ void TeleportPage::Teleport()
 
         switch (db.ExecuteQuery())
         {
-            case RETURN_ERROR:
+            case DB_RESULT_ERROR:
                 teleportStatus = TXT_DBERROR_QUERY_ERROR;
                 break;
-            case RETURN_EMPTY:
+            case DB_RESULT_EMPTY:
                 teleportStatus = TXT_ERROR_CHARACTER_NOT_FOUND;
                 break;
             default:
@@ -200,7 +200,7 @@ void TeleportPage::Teleport()
                                  "WHERE guid = '%u'",
                                  loc.mapId, loc.posX, loc.posY, loc.posZ, guids[index]);
 
-                    if (db.ExecuteQuery() != RETURN_ERROR)
+                    if (db.ExecuteQuery() != DB_RESULT_ERROR)
                     {
                         db.ExecutePQuery("REPLACE INTO character_spell_cooldown VALUES (%u, 8690, 0, unix_timestamp()+3600)", guids[index]);
                         teleportStatus = TXT_TELEPORT_SUCCESSFULL;

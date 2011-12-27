@@ -73,5 +73,5 @@ void DefaultPage::ShowText()
 {
     clear();
 
-    addWidget(new WText(session->GetText(TXT_SERVER_INFO), this));
+    new WText(session->GetText(TXT_SERVER_INFO), this);
 }
