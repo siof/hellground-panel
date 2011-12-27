@@ -264,6 +264,7 @@ enum MenuOptions
     MENU_SLOT_HOME = 0,         /**< home */
     MENU_SLOT_ACCOUNT,          /**< register/acc info */
     MENU_SLOT_PASSWORD,         /**< pass recovery/pass change */
+    MENU_SLOT_CHARACTERS,       /**< nothing/character informations */
     MENU_SLOT_TELEPORT,         /**< nothing/teleport */
     MENU_SLOT_SUPPORT,          /**< donate, vote */
     MENU_SLOT_LINKS,            /**< links */
@@ -313,6 +314,7 @@ enum Texts
     TXT_MENU_ERROR                  = 17,   /**< Error page (shouldn't be visible) */
     TXT_MENU_LICENCE                = 18,   /**< Licence informations page */
     TXT_MENU_SUPPORT                = 19,   /**< Support main */
+    TXT_MENU_CHARACTERS             = 20,   /**< Character information menu button */
 
     TXT_MENU_GM_PANEL               = 50,   /**< Game Masters panel menu button */
     TXT_MENU_GM_TICKETS             = 51,   /**< Game Masters tickets (in panel) menu button*/

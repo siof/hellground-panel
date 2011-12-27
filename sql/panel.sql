@@ -142,7 +142,7 @@ Sprzęt:
 </ul><br/>
 Dla nowych graczy:<br/>
 <ul>
-    <li>Rejestracja: <font color=\"#00FF00\">Otwarta</font> </li>
+    <li>Rejestracja: <a href=\"#/register\"><font color=\"#00FF00\">Otwarta</font></a></li>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
     <li>Emulator: TrinityCore + własne fixy</li>
@@ -167,7 +167,7 @@ Hardware:<br/>
 </ul><br/>
 For new players:<br/>
 <ul>
-    <li>Registration: <font color=\"#00FF00\">Available</font></li>
+    <li>Registration: <a href=\"#/register\"><font color=\"#00FF00\">Available</font></a></li>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
     <li>Emulator: TrinityCore + own fixes</li>
@@ -289,9 +289,9 @@ contact: siof@hellground.pl"),
 (261, "", ""),
 (262, "Pomóż rozwijać serwer Hellground poprzez dotacje oraz głosowanie na toplistach:<br/>
 <a href=\"http://wow.hellground.pl/dotacja/\">Dotacja</a><br/>
-<a href=\"http://panelbeta.hellground.pl/panel.wt/support/vote-event\">Vote event</a>", "Help expanding Hellground server through donations and voting:<br/>
+<a href=\"#/support/vote-event\">Vote event</a>", "Help expanding Hellground server through donations and voting:<br/>
 <a href=\"http://wowen.hellground.pl/donate-hellground/\">Donate</a><br/>
-<a href=\"http://panelbeta.hellground.pl/panel.wt/support/vote-event\">Vote event</a>"),
+<a href=\"#/support/vote-event\">Vote event</a>"),
 (263, "<h3>Vote Event</h3><br/><br/>
 Zapraszamy do głosowania na serwer Hellground na toplistach gier. Na każdej liście można głosować co <b>12</b> godzin. <br/>
 Zapoznaj się również z zasadami eventu - <a href=\"http://wow.hellground.pl/zasady-voteevent/\">http://wow.hellground.pl/zasady-voteevent/</a>.<br/><br/>

@@ -38,10 +38,14 @@
  ***********************************************/
 
 DefaultPage::DefaultPage(SessionInfo * sess, WContainerWidget * parent)
-: WContainerWidget(parent)
+: WContainerWidget(parent), session(sess)
 {
-    session = sess;
-    ShowText();
+    needCreation = true;
+}
+
+DefaultPage::~DefaultPage()
+{
+    session = NULL;
 }
 
 /********************************************//**
@@ -57,21 +61,19 @@ void DefaultPage::refresh()
     if (isHidden() || isDisabled())
         return;
 
-    ShowText();
+    if (needCreation)
+    {
+        needCreation = false;
+        text = new WText(session->GetText(TXT_SERVER_INFO), this);
+        text->setInternalPathEncoding(true);
+    }
+    else
+        text->setText(session->GetText(TXT_SERVER_INFO));
 
     WContainerWidget::refresh();
 }
 
 /********************************************//**
- * \brief Shows content of default page
- *
- * This function deletes old and creates new content depends on actual language.
- *
+ * \}
+ * \}
  ***********************************************/
-
-void DefaultPage::ShowText()
-{
-    clear();
-
-    new WText(session->GetText(TXT_SERVER_INFO), this);
-}
