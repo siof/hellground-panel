@@ -28,6 +28,7 @@ INSERT INTO LangTexts VALUES
 (17, "Błąd", "Error"),
 (18, "Licencja", "Licence"),
 (19, "Wsparcie", "Support"),
+(20, "Postacie", "Characters"),
 
 (50, "Panel GM", "GM Panel"),
 (51, "Tickety", "Tickets"),
@@ -128,7 +129,7 @@ INSERT INTO LangTexts VALUES
 
 (225, "Panel gracza - HellGround", "HellGround Players Panel"),
 (226, "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.<br/>© 2006-2011 Panel created by HellGround.pl ", "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.<br/>© 2006-2011 Panel created by HellGround.pl "),
-(227, "O serwerze:<br/>
+(227, "<h3>O serwerze:</h3><br/>
 <ul>
     <li>Serwer działa od: 19 grudnia 2008r.</li>
 </ul><br/>
@@ -141,7 +142,7 @@ Sprzęt:
 </ul><br/>
 Dla nowych graczy:<br/>
 <ul>
-    <li>Rejestracja: <font color=”#00FF00”>Otwarta</font> </li>
+    <li>Rejestracja: <font color=\"#00FF00\">Otwarta</font> </li>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
     <li>Emulator: TrinityCore + własne fixy</li>
@@ -150,9 +151,10 @@ Dla nowych graczy:<br/>
     <li>Rates drop: x1</li>
     <li>Typ: PvP/PvE</li>
     <li>Vmapy/LoS: Tak ( <a href=\"http://wow.hellground.pl/vmaps-hellground/\">Spis</a> )</li>
-    <li>Główny kanał rozmów PL: /join world</li>
-    <li>Główny kanał rozmów ENG: /join engworld</li>
-    <li>Kanał handlu: /join handel", "About:
+    <li>Główny kanał rozmów PL: join world</li>
+    <li>Główny kanał rozmów ENG: join engworld</li>
+    <li>Kanał handlu: join handel</li>
+</ul>", "<h3>About:</h3>
 <ul>
     <li>Server online since: 19 december 2008r.</li>
 </ul><br/>
@@ -162,10 +164,10 @@ Hardware:<br/>
     <li>RAM 24 GB DDR3</li>
     <li>HDD Intel SSD X25-M 2x 80 GB, SATA 2 2x 1500 GB</li>
     <li>Net speed: 1 Gbps</li>
-<ul/><br/>
+</ul><br/>
 For new players:<br/>
 <ul>
-    <li>Registration: <font color=”#00FF00”>Available</font></li>
+    <li>Registration: <font color=\"#00FF00\">Available</font></li>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
     <li>Emulator: TrinityCore + own fixes</li>
@@ -174,9 +176,9 @@ For new players:<br/>
     <li>Rates drop: x1</li>
     <li>Type: PvP/PvE</li>
     <li>Vmaps/LoS: Yes (<a href=\"http://wowen.hellground.pl/vmaps-hellground/\">List</a>)</li>
-    <li>Main talk channel (lang: PL): /join world</li>
-    <li>Main talk channel (lang: ENG): /join engworld</li>
-    <li>Trade channel: /join handel</li>
+    <li>Main talk channel (lang: PL): join world</li>
+    <li>Main talk channel (lang: ENG): join engworld</li>
+    <li>Trade channel: join handel</li>
  </ul>"),
 (228, "Teleport przeniesie wybraną postać do lokacji startowej <b>danej</b> rasy. Teleportacji używać możesz w dowolnym momencie, jednak każde użycie powoduje godzinny cooldown na Heartstone’a postaci. Twoja postać nie może być zalogowana w momencie używania teleportu.<br/>
 Wybierz postać, którą chcesz teleportować:", "Teleport will move chosen character to its race starting point. You can use teleportation ** any time, but every usage sets one hour cooldown on your character’s Heartstone. Your character must be offline during teleportation.<br/>
@@ -290,8 +292,8 @@ contact: siof@hellground.pl"),
 <a href=\"http://panelbeta.hellground.pl/panel.wt/support/vote-event\">Vote event</a>", "Help expanding Hellground server through donations and voting:<br/>
 <a href=\"http://wowen.hellground.pl/donate-hellground/\">Donate</a><br/>
 <a href=\"http://panelbeta.hellground.pl/panel.wt/support/vote-event\">Vote event</a>"),
-(263, "<h3>Vote Event<h3><br/><br/>
-Zapraszamy do głosowania na serwer Hellground na toplistach gier. Na każdej liście można głosować co <b>12</b> godzin. <br>
+(263, "<h3>Vote Event</h3><br/><br/>
+Zapraszamy do głosowania na serwer Hellground na toplistach gier. Na każdej liście można głosować co <b>12</b> godzin. <br/>
 Zapoznaj się również z zasadami eventu - <a href=\"http://wow.hellground.pl/zasady-voteevent/\">http://wow.hellground.pl/zasady-voteevent/</a>.<br/><br/>
 Listy:<br/>", "<h3>Vote Event</h3><br/><br/>
 We invite you to vote on Hellground Server on game toplists. You can vote on every list every <b>12</b> hours. <br/>
