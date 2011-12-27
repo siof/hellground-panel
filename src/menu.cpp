@@ -499,7 +499,7 @@ void HGMenu::LogMeIn()
 
     switch (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()))
     {
-        case RETURN_ERROR:
+        case DB_RESULT_ERROR:
         {
             AddActivityLogIn(false, escapedLogin.c_str());
             // if there was database error
@@ -508,7 +508,7 @@ void HGMenu::LogMeIn()
             ClearLoginData();
             return;
         }
-        case RETURN_EMPTY:
+        case DB_RESULT_EMPTY:
         {
             AddActivityLogIn(false, escapedLogin.c_str());
             Log(LOG_STRANGE_DATA, "User with IP: %s tried to login with strange data (SHA return empty)! login: %s pass: %s", session->sessionIp.toUTF8().c_str(), escapedLogin.c_str(), escapedPass.c_str());
@@ -530,7 +530,7 @@ void HGMenu::LogMeIn()
     // execute will return 0 if result will be empty and -1 if there will be DB error.
     switch (db.ExecuteQuery())
     {
-        case RETURN_ERROR:
+        case DB_RESULT_ERROR:
         {
             AddActivityLogIn(false, escapedLogin.c_str());
             // if there was database error
@@ -539,7 +539,7 @@ void HGMenu::LogMeIn()
             ClearLoginData();
             return;
         }
-        case RETURN_EMPTY:
+        case DB_RESULT_EMPTY:
         {
             AddActivityLogIn(false, escapedLogin.c_str());
             //if wrong data
@@ -847,7 +847,7 @@ void HGMenu::AddActivityLogIn(bool success, const char * login)
         if (!login || !db.Connect(SERVER_DB_DATA, SQL_REALMDB))
             return;
 
-        if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login) > RETURN_EMPTY)
+        if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login) > DB_RESULT_EMPTY)
             accId = db.GetRow()->fields[0].GetUInt32();
         else
             return;

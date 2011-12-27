@@ -326,6 +326,7 @@ enum Texts
     TXT_LBL_CHAR_CLASS              = 77,   /**< Character class label */
     TXT_LBL_CHAR_TOTAL_PLAYED       = 78,   /**< Character total played time label */
     TXT_LBL_CHAR_LVL_PLAYED         = 79,   /**< Character current level played time label*/
+    TXT_LBL_CHAR_LIST               = 80,   /**< Character list/choose label */
 
     /** Account */
     TXT_LBL_ACC_CHARS               = 100,  /**< Account characters label */
@@ -464,6 +465,7 @@ enum Texts
     TXT_SUPPORT_VOTED               = 265,  /**< Text for successfull vote */
     TXT_XP_RATE_SERVER              = 266,  /**< Text for server default XP rates */
     TXT_XP_RATE_BLIZZLIKE           = 267,  /**< Text for blizzlike XP rates */
+    TXT_CHARACTER_PAGE_INFO         = 268,  /**< Text for character page title/info */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
@@ -626,10 +628,10 @@ struct Location
 
 extern void GetTeleportPosition(int race, Location & loc);
 
-enum MysqlReturn
+enum DBResult
 {
-    RETURN_ERROR = -1,
-    RETURN_EMPTY = 0
+    DB_RESULT_ERROR = -1,
+    DB_RESULT_EMPTY = 0
 };
 
 /********************************************//**

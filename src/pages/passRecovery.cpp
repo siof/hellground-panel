@@ -193,8 +193,8 @@ void PassRecoveryPage::Recover()
 
     switch (db.ExecuteQuery())
     {
-        case RETURN_ERROR:
-        case RETURN_EMPTY:
+        case DB_RESULT_ERROR:
+        case DB_RESULT_EMPTY:
             AddActivityPassRecovery(false, login.toUTF8().c_str());
             textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_RECOVERY_DATA);
             ClearRecoveryData();
@@ -239,7 +239,7 @@ void PassRecoveryPage::Recover()
     // check should be moved to other place but here will be usefull for SendMail tests ;)
     db.SetPQuery("UPDATE account SET sha_pass_hash = SHA1(UPPER('%s:%s')), sessionkey = '', s = '', v = '', locked = '0' WHERE id = '%i';", login.toUTF8().c_str(), pass.toUTF8().c_str(), accId);
 
-    if (db.ExecuteQuery() == RETURN_ERROR)
+    if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         AddActivityPassRecovery(accId, false);
         textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
@@ -274,7 +274,7 @@ void PassRecoveryPage::AddActivityPassRecovery(bool success, const char * login)
         if (!login || !db.Connect(SERVER_DB_DATA, SQL_REALMDB))
             return;
 
-        if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login) > RETURN_EMPTY)
+        if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login) > DB_RESULT_EMPTY)
             accId = db.GetRow()->fields[0].GetUInt32();
         else
             return;

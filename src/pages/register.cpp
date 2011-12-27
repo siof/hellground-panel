@@ -221,7 +221,7 @@ void RegisterPage::Register()
 
     // check if account already exists
     db.SetPQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str());
-    if (db.ExecuteQuery() > RETURN_EMPTY)
+    if (db.ExecuteQuery() > DB_RESULT_EMPTY)
     {
         ClearRegisterData();
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_LBL_REG_ACC_EXISTS);
@@ -248,7 +248,7 @@ void RegisterPage::Register()
 
     db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash) VALUES (UPPER('%s'), UPPER('%s'), SHA1(UPPER('%s:%s')))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
 
-    if (db.ExecuteQuery() == RETURN_ERROR)
+    if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         textSlots[REG_TEXT_INFO].SetLabel(session, TXT_REGISTRATION_ERROR);
         chRules->setChecked(false);
@@ -272,7 +272,7 @@ void RegisterPage::Register()
 
     uint32 accId;
 
-    if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str()) > RETURN_EMPTY)
+    if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str()) > DB_RESULT_EMPTY)
         accId = db.GetRow()->fields[0].GetUInt32();
     else
         return;

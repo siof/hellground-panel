@@ -39,6 +39,7 @@ INSERT INTO LangTexts VALUES
 (77, "Klasa: ", "Class: "),
 (78, "Całkowity czas gry: ", "Total played time: "),
 (79, "Czas gry aktualnego poziomu: ", "This level played time: "),
+(80, "Wybierz postać: ", "Choose character: "),
 
 (100, "Postacie na koncie: ", "Characters on account: "),
 (101, "Data założenia konta: ", "Account creation date: "),
@@ -113,9 +114,7 @@ INSERT INTO LangTexts VALUES
 (192, "Diff: ", "Diff: "),
 (193, "Średni diff: ", "Avarage diff: "),
 (194, "<a href=\"http://wow.hellground.pl/jak-zagrac\" target=\"_blank\"><font color=\"#ffdf81\">Jak zagrać - opis</font></a>", "<a href=\"http://en.hellground.pl/how-to-play\" target=\"_blank\"><font color=\"#ffdf81\">How to play - info</font></a>"),
-(195, "<h3>Status serwerów</h3>
-Aktualizacja co 60 sekund.", "<h3>Servers status</h3>
-Updated every 60 seconds.."),
+(195, "<h3>Status serwerów</h3><br/>Aktualizacja co 60 sekund.", "<h3>Servers status</h3><br/>Updated every 60 seconds.."),
 
 (200, "Zmień", "Change"),
 (201, "Wyczyść", "Clear"),
@@ -128,50 +127,59 @@ Updated every 60 seconds.."),
 (208, "Wyloguj", "Logout"),
 
 (225, "Panel gracza - HellGround", "HellGround Players Panel"),
-(226, "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.
-© 2006-2011 Panel created by HellGround.pl ", "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.
-© 2006-2011 Panel created by HellGround.pl "),
-(227, "O serwerze:
- • Serwer działa od: 19 grudnia 2008r.
+(226, "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.<br/>© 2006-2011 Panel created by HellGround.pl ", "Logo World of Warcraft, is a registered trademark Blizzard Entertainment.<br/>© 2006-2011 Panel created by HellGround.pl "),
+(227, "O serwerze:<br/>
+<ul>
+    <li>Serwer działa od: 19 grudnia 2008r.</li>
+</ul><br/>
 Sprzęt:
- • Procesor Intel Bi Xeon E5504 8x 2.00+ GHz, 2×4 MB L2 – QPI 2×4.8 GT/sec 45nm
- • RAM 24 GB DDR3
- • HDD Intel SSD X25-M 2x 80 GB, SATA 2 2x 1500 GB
- • Łącze 1 Gbps
-Dla nowych graczy:
- • Rejestracja: <font color=”#00FF00”>Otwarta</font>
- • realmlist: set realmlist logon.hellground.pl
- • Patch: The Burning Crusade (TBC 2.4.3)
- • Emulator: TrinityCore + własne fixy
- • Rates xp: opcjonalnie x1 - x2
- • Rates xp quest: opcjonalnie x1 - x2
- • Rates drop: x1
- • Typ: PvP/PvE
- • Vmapy/LoS: Tak (<a href=\"http://wow.hellground.pl/vmaps-hellground/\">Spis</a>)
- • Główny kanał rozmów PL: /join world
- • Główny kanał rozmów ENG: /join engworld
- • Kanał handlu: /join handel", "About:
- • Server online since: 19 december 2008r.
-Hardware:
- • Procesor Intel Bi Xeon E5504 8x 2.00+ GHz, 2×4 MB L2 – QPI 2×4.8 GT/sec 45nm
- • RAM 24 GB DDR3
- • HDD Intel SSD X25-M 2x 80 GB, SATA 2 2x 1500 GB
- • Net speed: 1 Gbps
-For new players:
- • Registration: <font color=”#00FF00”>Available</font>
- • realmlist: set realmlist logon.hellground.pl
- • Patch: The Burning Crusade (TBC 2.4.3)
- • Emulator: TrinityCore + own fixes
- • Rates xp: optional x1 - x2
- • Rates xp quest: optional x1 - x2
- • Rates drop: x1
- • Type: PvP/PvE
- • Vmaps/LoS: Yes (<a href=\"http://wowen.hellground.pl/vmaps-hellground/\">List</a>)
- • Main talk channel (lang: PL): /join world
- • Main talk channel (lang: ENG): /join engworld
- • Trade channel: /join handel"),
-(228, "Teleport przeniesie wybraną postać do lokacji startowej danej rasy. Teleportacji używać możesz w dowolnym momencie, jednak każde użycie powoduje godzinny cooldown na Heartstone’a postaci. Twoja postać nie może być zalogowana w momencie używania teleportu.
-Wybierz postać, którą chcesz teleportować:", "Teleport will move chosen character to its race starting point. You can use teleportation ** any time, but every usage sets one hour cooldown on your character’s Heartstone. Your character must be offline during teleportation.
+<ul>
+    <li>Procesor Intel Bi Xeon E5504 8x 2.00+ GHz, 2×4 MB L2 – QPI 2×4.8 GT/sec 45nm</li>
+    <li>RAM 24 GB DDR3</li>
+    <li>HDD Intel SSD X25-M 2x 80 GB, SATA 2 2x 1500 GB</li>
+    <li>Łącze 1 Gbps</li>
+</ul><br/>
+Dla nowych graczy:<br/>
+<ul>
+    <li>Rejestracja: <font color=”#00FF00”>Otwarta</font> </li>
+    <li>realmlist: set realmlist logon.hellground.pl</li>
+    <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
+    <li>Emulator: TrinityCore + własne fixy</li>
+    <li>Rates xp: opcjonalnie x1 - x2</li>
+    <li>Rates xp quest: opcjonalnie x1 - x2</li>
+    <li>Rates drop: x1</li>
+    <li>Typ: PvP/PvE</li>
+    <li>Vmapy/LoS: Tak ( <a href=\"http://wow.hellground.pl/vmaps-hellground/\">Spis</a> )</li>
+    <li>Główny kanał rozmów PL: /join world</li>
+    <li>Główny kanał rozmów ENG: /join engworld</li>
+    <li>Kanał handlu: /join handel", "About:
+<ul>
+    <li>Server online since: 19 december 2008r.</li>
+</ul><br/>
+Hardware:<br/>
+<ul>
+    <li>Procesor Intel Bi Xeon E5504 8x 2.00+ GHz, 2×4 MB L2 – QPI 2×4.8 GT/sec 45nm</li>
+    <li>RAM 24 GB DDR3</li>
+    <li>HDD Intel SSD X25-M 2x 80 GB, SATA 2 2x 1500 GB</li>
+    <li>Net speed: 1 Gbps</li>
+<ul/><br/>
+For new players:<br/>
+<ul>
+    <li>Registration: <font color=”#00FF00”>Available</font></li>
+    <li>realmlist: set realmlist logon.hellground.pl</li>
+    <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
+    <li>Emulator: TrinityCore + own fixes</li>
+    <li>Rates xp: optional x1 - x2</li>
+    <li>Rates xp quest: optional x1 - x2</li>
+    <li>Rates drop: x1</li>
+    <li>Type: PvP/PvE</li>
+    <li>Vmaps/LoS: Yes (<a href=\"http://wowen.hellground.pl/vmaps-hellground/\">List</a>)</li>
+    <li>Main talk channel (lang: PL): /join world</li>
+    <li>Main talk channel (lang: ENG): /join engworld</li>
+    <li>Trade channel: /join handel</li>
+ </ul>"),
+(228, "Teleport przeniesie wybraną postać do lokacji startowej <b>danej</b> rasy. Teleportacji używać możesz w dowolnym momencie, jednak każde użycie powoduje godzinny cooldown na Heartstone’a postaci. Twoja postać nie może być zalogowana w momencie używania teleportu.<br/>
+Wybierz postać, którą chcesz teleportować:", "Teleport will move chosen character to its race starting point. You can use teleportation ** any time, but every usage sets one hour cooldown on your character’s Heartstone. Your character must be offline during teleportation.<br/>
 Choose a character you want to teleport:"),
 (229, "Blokada włączona", "IP Lock ON"),
 (230, "Blokada wyłączona", "IP Lock OFF"),
@@ -210,13 +218,23 @@ How to play: http://wowen.hellground.pl/how-to-play/
 Enjoy your game, Hellground.pl GMT"),
 (242, "HellGround Server - Rejestracja konta", "Hellground Server - Account registration"),
 (243, "Hellground.pl
-Witaj. Otrzymujesz tą wiadomość, ponieważ dnia %s ktoś z adresu IP: %s próbował uzyskać nowe hasło do Twojego konta.
+
+Witaj,
+otrzymujesz tą wiadomość, ponieważ dnia %s ktoś z adresu IP: %s próbował uzyskać nowe hasło do Twojego konta.
+
 Twoje nowe hasło to: %s.
+
 W celu zmiany hasła zaloguj się na http://panelbeta.hellground.pl/ wykorzystując nowe dane z tej wiadomości.
+
 Pozdrawiamy, ekipa Hellground.pl", "Hellground.pl
-Hello. You received this message, because on %s someone from IP address: %s tried to get a new password to your account.
+
+Hello,
+you received this message, because on %s someone from IP address: %s tried to get a new password to your account.
+
 Your new password: %s.
+
 To change your password, sing in on http://panelbeta.hellground.pl/ using new data from this message.
+
 Best wishes, Hellground.pl GMT"),
 (244, "HellGround Server - Odzyskiwanie hasła", "Hellground Server - Password recovery"),
 (245, "Rejstracja zakończona sukcesem. Hasło zostało wysłane na podany adres email.", "Registration complete. Password was sent to given email address."),
@@ -233,55 +251,57 @@ Best wishes, Hellground.pl GMT"),
 (256, "Data", "Date"),
 (257, "Adres IP", "IP address"),
 (258, "Aktywność", "Activity"),
-(259, "HG Players Panel - webowy panel dla graczy serwera HellGround
-Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+(259, "HG Players Panel - webowy panel dla graczy serwera HellGround<br/>
+Copyright (C) 2011 HellGround Team : Siof, lukaasm,<br/><br/>
 
-Ten program stanowi wolne oprogramowanie: możesz je rozpowszechniać
-i/lub modyfikować na warunkach GNU Affero Powszechnej Licencji
-Publicznej wydanej przez Free Software Foundation w wersji 3.
+Ten program stanowi wolne oprogramowanie: możesz je rozpowszechniać<br/>
+i/lub modyfikować na warunkach GNU Affero Powszechnej Licencji<br/>
+Publicznej wydanej przez Free Software Foundation w wersji 3.<br/><br/>
 
-Ten program jest rozpowszechniany z nadzieją, że jest przydatny, ale
-BEZ JAKIEJKOLWIEK GWARANCJI, nawet bez domyślnej gwarancji
-PRZYDATNOŚCI HANDLOWEJ ORAZ PRZYDATNOŚCI DO OKREŚLONYCH ZASTOSOWAŃ.
-Przeczytaj GNU Affero Powszechną Licencję Publiczną w celu zapoznania
-się ze szczegółami.
+Ten program jest rozpowszechniany z nadzieją, że jest przydatny, ale<br/>
+BEZ JAKIEJKOLWIEK GWARANCJI, nawet bez domyślnej gwarancji<br/>
+PRZYDATNOŚCI HANDLOWEJ ORAZ PRZYDATNOŚCI DO OKREŚLONYCH ZASTOSOWAŃ.<br/>
+Przeczytaj GNU Affero Powszechną Licencję Publiczną w celu zapoznania<br/>
+się ze szczegółami.<br/><br/>
 
-Powinieneś otrzymać kopię GNU Affero Powszechnej Licencji Publiczej
-wraz z programem. Jeżeli nie otrzymałeś jej, zobacz na
-< http://www.gnu.org/licenses/ >
+Powinieneś otrzymać kopię GNU Affero Powszechnej Licencji Publiczej<br/>
+wraz z programem. Jeżeli nie otrzymałeś jej, zobacz na <a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>.<br/><br/>
 
-kontakt: siof@hellground.pl", "HG Players Panel - web panel for HellGround server Players
-Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+kontakt: siof@hellground.pl", "HG Players Panel - web panel for HellGround server Players<br/>
+Copyright (C) 2011 HellGround Team : Siof, lukaasm,<br/><br/>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3 as
-published by the Free Software Foundation.
+This program is free software: you can redistribute it and/or modify<br/>
+it under the terms of the GNU Affero General Public License version 3 as<br/>
+published by the Free Software Foundation.<br/><br/>
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+This program is distributed in the hope that it will be useful,<br/>
+but WITHOUT ANY WARRANTY; without even the implied warranty of<br/>
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br/>
+GNU Affero General Public License for more details.<br/><br/>
 
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see < http://www.gnu.org/licenses/ >.
+You should have received a copy of the GNU Affero General Public License<br/>
+along with this program.  If not, see <a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>.<br/><br/>
 
 contact: siof@hellground.pl"),
 (260, "Repozytorium kodu źródłowego (zawiera także licencję): <a href=\"https://bitbucket.org/siof/hgplayerspanel\">https://bitbucket.org/siof/hgplayerspanel</a>", "Source code repository (also contains licence): <a href=\"https://bitbucket.org/siof/hgplayerspanel\">https://bitbucket.org/siof/hgplayerspanel</a>"),
 (261, "", ""),
-(262, "Pomóż rozwijać serwer Hellground poprzez dotacje oraz głosowanie na toplistach:
-<a href=\"http://wow.hellground.pl/dotacja/\">Dotacja</a>
-<a href=\"http://panelbeta.hellground.pl/panel.wt/support/vote-event\">Vote event</a>", "Help expanding Hellground server through donations and voting:
-<a href=\"http://wowen.hellground.pl/donate-hellground/\">Donate</a>
+(262, "Pomóż rozwijać serwer Hellground poprzez dotacje oraz głosowanie na toplistach:<br/>
+<a href=\"http://wow.hellground.pl/dotacja/\">Dotacja</a><br/>
+<a href=\"http://panelbeta.hellground.pl/panel.wt/support/vote-event\">Vote event</a>", "Help expanding Hellground server through donations and voting:<br/>
+<a href=\"http://wowen.hellground.pl/donate-hellground/\">Donate</a><br/>
 <a href=\"http://panelbeta.hellground.pl/panel.wt/support/vote-event\">Vote event</a>"),
-(263, "Vote Event
-Zapraszamy do głosowania na serwer Hellground na toplistach gier. Na każdej liście można głosować co 12 godzin. Zapoznaj się również z zasadami eventu - <a href=\"http://wow.hellground.pl/zasady-voteevent/\">LINK</a>.
-Listy:", "Vote Event
-We invite you to vote on Hellground Server on game toplists. You can vote on every list every 12 hours. Also, please read vote event rules - <a href=\"http://wowen.hellground.pl/rules-voteevent/\">LINK</a>.
-Toplists:"),
+(263, "<h3>Vote Event<h3><br/><br/>
+Zapraszamy do głosowania na serwer Hellground na toplistach gier. Na każdej liście można głosować co <b>12</b> godzin. <br>
+Zapoznaj się również z zasadami eventu - <a href=\"http://wow.hellground.pl/zasady-voteevent/\">http://wow.hellground.pl/zasady-voteevent/</a>.<br/><br/>
+Listy:<br/>", "<h3>Vote Event</h3><br/><br/>
+We invite you to vote on Hellground Server on game toplists. You can vote on every list every <b>12</b> hours. <br/>
+Also, please read vote event rules - <a href=\"http://wowen.hellground.pl/rules-voteevent/\">http://wowen.hellground.pl/rules-voteevent/</a>.<br/><br/>
+Toplists:<br/>"),
 (264, " Następne głosowanie: ", " Next vote time: "),
 (265, "Zagłosowano pomyślnie", "Vote successfull"),
 (266, "Domyślne serwerowe.", "Server default."),
 (267, "Blizzlike", "Blizzlike"),
+(268, "Character page info TODO", "Character page info TODO"),
 
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),
@@ -291,9 +311,9 @@ Toplists:"),
 (355, "Błąd wprowadzonych danych.", "Wrong input data."),
 (356, "Postać musi być wylogowana, aby użyć teleportacji.", "Character must be OFFLINE to use teleport option."),
 (357, "Postać nie została znaleziona !", "Character not found !"),
-(358, "Konto posiada włączoną blokadę IP oraz Twój aktualny IP nie pasuje do IP konta.
+(358, "Konto posiada włączoną blokadę IP oraz Twój aktualny IP nie pasuje do IP konta.<br/><br/>
 
-Jeśli to konto jest Twoje użyj opcji odzyskiwania hasła w celu zresetowania hasła i blokady IP.", "Account where you tried to login has IP lock on and your current IP doesn't match to account IP.
+Jeśli to konto jest Twoje użyj opcji odzyskiwania hasła w celu zresetowania hasła i blokady IP.", "Account where you tried to login has IP lock on and your current IP doesn't match to account IP.<br/><br/>
 
 If it's your account please use password recovery option to reset password and IP lock."),
 (359, "Błędne hasło.", "Wrong password."),
