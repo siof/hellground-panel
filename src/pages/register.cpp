@@ -246,7 +246,7 @@ void RegisterPage::Register()
     WString from, msg;
     from = MAIL_FROM;
 
-    db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash) VALUES (UPPER('%s'), UPPER('%s'), SHA1(UPPER('%s:%s')))", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str());
+    db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash, expansion) VALUES (UPPER('%s'), UPPER('%s'), SHA1(UPPER('%s:%s')), '%i')", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str(), STARTING_EXPANSION);
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
