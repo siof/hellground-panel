@@ -195,7 +195,10 @@ void TeleportPage::Teleport()
                     Location loc;
                     GetTeleportPosition(tmpRow->fields[1].GetInt(), loc);
 
-                    db.SetPQuery("UPDATE characters SET map = '%u', position_x = '%f', position_y = '%f', position_z = '%f' WHERE guid = '%u'", loc.mapId, loc.posX, loc.posY, loc.posZ, guids[index]);
+                    db.SetPQuery("UPDATE characters "
+                                 "SET map = '%u', position_x = '%f', position_y = '%f', position_z = '%f', taxi_path = '0', trans_x = '0.0', trans_y = '0.0', trans_z = '0.0', transguid = '0.0' "
+                                 "WHERE guid = '%u'",
+                                 loc.mapId, loc.posX, loc.posY, loc.posZ, guids[index]);
 
                     if (db.ExecuteQuery() != RETURN_ERROR)
                     {
