@@ -68,6 +68,7 @@ void SupportPage::refresh()
         {
             needCreation = false;
             info = new WText(session->GetText(TXT_SUPPORT_MAIN), this);
+            info->setInternalPathEncoding(true);
         }
         else
             info->setText(session->GetText(TXT_SUPPORT_MAIN));

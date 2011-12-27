@@ -39,7 +39,7 @@ std::string DatabaseField::GetString()
 uint64 DatabaseField::GetUInt64()
 {
     uint64 tmp = 0;
-    SSCANF(value.toUTF8().c_str(), "%u", &tmp);
+    SSCANF(value.toUTF8().c_str(), "%lu", &tmp);
     return tmp;
 }
 

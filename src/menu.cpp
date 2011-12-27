@@ -28,6 +28,7 @@
 #include "pages/licence.h"
 #include "pages/support.h"
 #include "pages/vote.h"
+//#include "pages/characters.h"
 
 #include <WRegExpValidator>
 #include <WLengthValidator>
@@ -393,22 +394,24 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menu = new WMenu(menuContents, Wt::Vertical, this);
     menu->setRenderAsList(true);
-    menu->setInternalPathEnabled("/");
 
     for (int i = 0; i < MENU_SLOT_COUNT; ++i)
         menuSlots[i] = NULL;
 
     menuSlots[MENU_SLOT_HOME] = new HGMenuOption(MENU_SLOT_HOME);
-    menuSlots[MENU_SLOT_HOME]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_HOME, new DefaultPage(sess), "home");
+    menuSlots[MENU_SLOT_HOME]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_HOME, new DefaultPage(sess), "");
     menuSlots[MENU_SLOT_HOME]->AddMenuItem(LVL_PLAYER, TXT_MENU_HOME, menuSlots[MENU_SLOT_HOME]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
     menuSlots[MENU_SLOT_ACCOUNT] = new HGMenuOption(MENU_SLOT_ACCOUNT);
-    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess), "account");
+    menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_REGISTER, new RegisterPage(sess), "register");
     menuSlots[MENU_SLOT_ACCOUNT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_ACC_INFO, new AccountInfoPage(sess), "account", false);
 
     menuSlots[MENU_SLOT_PASSWORD] = new HGMenuOption(MENU_SLOT_PASSWORD);
     menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess), "password");
     menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_PASS_CHANGE, new PassChangePage(sess), "passchange");
+
+//    menuSlots[MENU_SLOT_CHARACTERS] = new HGMenuOption(MENU_SLOT_CHARACTERS);
+//    menuSlots[MENU_SLOT_CHARACTERS]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_CHARACTERS, new CharacterInfoPage(sess), "characters");
 
     menuSlots[MENU_SLOT_TELEPORT] = new HGMenuOption(MENU_SLOT_TELEPORT);
     menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session), "teleport");
@@ -439,6 +442,9 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
 
     menu->itemSelected().connect(this, &HGMenu::RefreshActiveMenuWidget);
     addWidget(menu);
+
+    // must be here to provide internal path functionality
+    menu->setInternalPathEnabled("/");
 }
 
 HGMenu::~HGMenu()
