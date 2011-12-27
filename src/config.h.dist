@@ -102,6 +102,8 @@ const float RaceLocs[10][5] =   /**< Table with locations for races for characte
 
 #define VOTE_INTERVAL   12  /**< Vote interval in hours (uint value) */
 
+#define STARTING_EXPANSION 1    /**< Starting expansion for registration */
+
 #endif // CONFIG_H_INCLUDED
 
 /**< \} */
