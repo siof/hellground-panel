@@ -124,31 +124,22 @@ void AccountInfoPage::UpdateTextWidgets()
     for (i = 0; i < count; ++i)
         tabs->setTabText(i, session->GetText(TXT_LBL_ACC_TAB_INFO + i));
 
-    switch (tabs->currentIndex())
-    {
-        case 0:
-            for (i = 0; i < ACCINFO_SLOT_COUNT; ++i)
-                accInfoSlots[i].UpdateLabel(session);
-            break;
-        case 1:
-            for (i = 0; i < ACCBANINFO_SLOT_COUNT; ++i)
-                banInfoSlots[i].UpdateLabel(session);
-            break;
-        case 2:
-            for (i = 0; i < ACCMUTEINFO_SLOT_COUNT; ++i)
-                muteInfoSlots[i].UpdateLabel(session);
-            break;
-/*        case 3:
-            for (i = 0; i < TICKETINFO_SLOT_COUNT; ++i)
-                ticketInfoSlots[i].UpdateLabel(session);
-            break;*/
-        case 4:
-            for (std::list<BasicTextItem*>::const_iterator itr = activityInfoSlots.begin(); itr != activityInfoSlots.end(); ++itr)
-                (*itr)->UpdateLabel(session);
-            break;
-        default:
-            break;
-    }
+    for (i = 0; i < ACCINFO_SLOT_COUNT; ++i)
+        accInfoSlots[i].UpdateLabel(session);
+
+    for (i = 0; i < ACCBANINFO_SLOT_COUNT; ++i)
+        banInfoSlots[i].UpdateLabel(session);
+
+    for (i = 0; i < ACCMUTEINFO_SLOT_COUNT; ++i)
+        muteInfoSlots[i].UpdateLabel(session);
+
+/*
+    for (i = 0; i < TICKETINFO_SLOT_COUNT; ++i)
+        ticketInfoSlots[i].UpdateLabel(session);
+*/
+    for (std::list<BasicTextItem*>::const_iterator itr = activityInfoSlots.begin(); itr != activityInfoSlots.end(); ++itr)
+        (*itr)->UpdateLabel(session);
+
 }
 
 /********************************************//**

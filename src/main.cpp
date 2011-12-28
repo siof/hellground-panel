@@ -71,6 +71,93 @@ WString GetLocale(int index)
     }
 }
 
+WString GetRaceName(SessionInfo * sess, int index)
+{
+    if (!sess)
+        return WString::fromUTF8("unknown");
+
+    switch (index)
+    {
+        case 1:
+            return sess->GetText(TXT_LBL_RACE_HUMAN);
+        case 2:
+            return sess->GetText(TXT_LBL_RACE_ORC);
+        case 3:
+            return sess->GetText(TXT_LBL_RACE_DWARF);
+        case 4:
+            return sess->GetText(TXT_LBL_RACE_NIGHT_ELF);
+        case 5:
+            return sess->GetText(TXT_LBL_RACE_UNDEAD);
+        case 6:
+            return sess->GetText(TXT_LBL_RACE_TAUREN);
+        case 7:
+            return sess->GetText(TXT_LBL_RACE_GNOME);
+        case 8:
+            return sess->GetText(TXT_LBL_RACE_TROLL);
+        case 10:
+            return sess->GetText(TXT_LBL_RACE_BLOOD_ELF);
+        case 11:
+            return sess->GetText(TXT_LBL_RACE_DRAENEI);
+        default:
+            return sess->GetText(TXT_LBL_UNKNOWN);
+    }
+}
+
+WString GetClassName(SessionInfo * sess, int index)
+{
+    if (!sess)
+        return WString::fromUTF8("unknown");
+
+    switch (index)
+    {
+        case 1:
+            return sess->GetText(TXT_LBL_CLASS_WARRIOR);
+        case 2:
+            return sess->GetText(TXT_LBL_CLASS_PALADIN);
+        case 3:
+            return sess->GetText(TXT_LBL_CLASS_HUNTER);
+        case 4:
+            return sess->GetText(TXT_LBL_CLASS_ROGUE);
+        case 5:
+            return sess->GetText(TXT_LBL_CLASS_PRIEST);
+        case 7:
+            return sess->GetText(TXT_LBL_CLASS_SHAMAN);
+        case 8:
+            return sess->GetText(TXT_LBL_CLASS_MAGE);
+        case 9:
+            return sess->GetText(TXT_LBL_CLASS_WARLOCK);
+        case 11:
+            return sess->GetText(TXT_LBL_CLASS_DRUID);
+        default:
+            return sess->GetText(TXT_LBL_UNKNOWN);
+    }
+}
+
+WString GetQuestStatus(SessionInfo * sess, int index, bool rewarded)
+{
+    if (!sess)
+       return WString::fromUTF8("unknown");
+
+    if (rewarded)
+        return sess->GetText(TXT_LBL_QUEST_STATUS_REWARDED);
+
+    switch (index)
+    {
+        case 0:
+            return sess->GetText(TXT_LBL_QUEST_STATUS_NONE);
+        case 1:
+            return sess->GetText(TXT_LBL_QUEST_STATUS_COMPLETE);
+        case 2:
+            return sess->GetText(TXT_LBL_QUEST_STATUS_UNAVAILABLE);
+        case 3:
+            return sess->GetText(TXT_LBL_QUEST_STATUS_INCOMPLETE);
+        case 4:
+            return sess->GetText(TXT_LBL_QUEST_STATUS_AVAILABLE);
+        default:
+            return sess->GetText(TXT_LBL_UNKNOWN);
+    }
+}
+
 int irand(int min, int max)
 {
     return rand()%(max - min) + min;
@@ -305,8 +392,28 @@ WApplication *createApplication(const WEnvironment& env)
     return new PlayersPanel(env);
 }
 
+std::map<uint32, SpellInfo> spells;
+
 int main(int argc, char **argv)
 {
     srand(time(NULL));
+
+    Database * db = new Database();
+    db->Connect(PANEL_DB_DATA, SQL_PANELDB);
+    db->ExecuteQuery("SELECT entry, name FROM spells", false);
+
+    std::list<DatabaseRow*> rows = db->GetRows();
+
+    uint32 tmpEntry;
+    for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+    {
+        tmpEntry = (*itr)->fields[0].GetUInt32();
+        spells[tmpEntry].entry = tmpEntry;
+        spells[tmpEntry].name = (*itr)->fields[1].GetWString();
+    }
+
+    delete db;
+    db = NULL;
+
     return WRun(argc, argv, &createApplication);
 }

@@ -41,6 +41,14 @@ INSERT INTO LangTexts VALUES
 (78, "Całkowity czas gry: ", "Total played time: "),
 (79, "Czas gry aktualnego poziomu: ", "This level played time: "),
 (80, "Wybierz postać: ", "Choose character: "),
+(81, "Rasa: ", "Race: "),
+(82, "Koszt ostatniego resetu talentów: ", "Last talent reset cost: "),
+(83, "Czas ostatniego resetu talentów: ", "Last talent reset time: "),
+(84, "Postać jest online: ", "Character is online: "),
+(85, "Ogólne informacje", "Basic informations"),
+(86, "Questy", "Quests"),
+(87, "Czary", "Spells"),
+(88, "Ekwipunek", "Inventory"),
 
 (100, "Postacie na koncie: ", "Characters on account: "),
 (101, "Data założenia konta: ", "Account creation date: "),
@@ -142,7 +150,7 @@ Sprzęt:
 </ul><br/>
 Dla nowych graczy:<br/>
 <ul>
-    <li>Rejestracja: <a href=\"#/register\"><font color=\"#00FF00\">Otwarta</font></a></li>
+    <li>Rejestracja: <a href=\"#/account\"><font color=\"#00FF00\">Otwarta</font></a></li>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
     <li>Emulator: TrinityCore + własne fixy</li>
@@ -167,7 +175,7 @@ Hardware:<br/>
 </ul><br/>
 For new players:<br/>
 <ul>
-    <li>Registration: <a href=\"#/register\"><font color=\"#00FF00\">Available</font></a></li>
+    <li>Registration: <a href=\"#/account\"><font color=\"#00FF00\">Available</font></a></li>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
     <li>Emulator: TrinityCore + own fixes</li>
@@ -304,6 +312,9 @@ Toplists:<br/>"),
 (266, "Domyślne serwerowe.", "Server default."),
 (267, "Blizzlike", "Blizzlike"),
 (268, "Character page info TODO", "Character page info TODO"),
+(269, "%u dni %u godzin %u minut", "%u days %u hours %u minutes"),
+(270, "Tak", "Yes"),
+(271, "Nie", "No"),
 
 (350, "Błędny login lub hasło", "Wrong login or password"),
 (351, "Błędny login lub email", "Wrong login or email"),
@@ -333,7 +344,50 @@ If it's your account please use password recovery option to reset password and I
 (605, "Próba odzyskania hasła zakończona powodzeniem.", "Successfull password recovery."),
 (606, "Próba odzyskania hasła zakończona niepowodzeniem.", "Unsuccessful password recovery."),
 (607, "Próba zmiany ustawień ip locka.", "Someone tried to change ip lock state."),
-(608, "Próba zmiany ustawień XP rate.", "Someone tried to change XP rates.");
+(608, "Próba zmiany ustawień XP rate.", "Someone tried to change XP rates."),
+
+(701, "ID zadania", "Quest ID"),
+(702, "Nazwa zadania", "Quest name"),
+(703, "Poziom zadania", "Quest level"),
+(704, "Status wykonania", "Quest status"),
+
+(711, "ID czaru", "Spell ID"),
+(712, "Nazwa czaru", "Spell name"),
+(713, "Aktywny", "Active"),
+(714, "Wyłączony", "Disabled"),
+
+(721, "ID przedmiotu", "Item ID"),
+(722, "Nazwa przedmiotu", "Item name"),
+
+(801, "Człowiek", "Human"),
+(802, "Ork", "Orc"),
+(803, "Krasnolud", "Dwarf"),
+(804, "Nocny elf", "Night elf"),
+(805, "Nieumarły", "Undead"),
+(806, "Tauren", "Tauren"),
+(807, "Gnom", "Gnome"),
+(808, "Trol", "Troll"),
+(809, "Krwawy elf", "Blood elf"),
+(810, "Draenei", "Draenei"),
+
+(820, "Nieznana", "Unknown"),
+
+(821, "Wojownik", "Warrior"),
+(822, "Paladyn", "Paladin"),
+(823, "Łowca", "Hunter"),
+(824, "Łotrzyk", "Rogue"),
+(825, "Ksiądz", "Priest"),
+(826, "Szaman", "Shaman"),
+(827, "Mag", "Mage"),
+(828, "Czarnoksieżnik", "Warlock"),
+(829, "Druid", "Druid"),
+
+(851, "Brak", "None"),
+(852, "Zadanie ukończone", "Quest complete"),
+(853, "Zadanie niedostępne", "Quest unavailable"),
+(854, "Zadanie w trakcie", "Quest in progress"),
+(855, "Zadanie dostępne", "Quest available"),
+(856, "Zadanie nagrodzone", "Quest rewarded");
 
 CREATE TABLE IF NOT EXISTS Activity
 (

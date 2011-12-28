@@ -28,7 +28,7 @@
 #include "pages/licence.h"
 #include "pages/support.h"
 #include "pages/vote.h"
-//#include "pages/characters.h"
+#include "pages/characters.h"
 
 #include <WRegExpValidator>
 #include <WLengthValidator>
@@ -338,7 +338,6 @@ void HGMenuOption::Refresh()
     }
 }
 
-
 HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidget *parent)
 : WContainerWidget(parent)
 {
@@ -412,8 +411,8 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess), "password");
     menuSlots[MENU_SLOT_PASSWORD]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_PASS_CHANGE, new PassChangePage(sess), "passchange");
 
-//    menuSlots[MENU_SLOT_CHARACTERS] = new HGMenuOption(MENU_SLOT_CHARACTERS);
-//    menuSlots[MENU_SLOT_CHARACTERS]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_CHARACTERS, new CharacterInfoPage(sess), "characters");
+    menuSlots[MENU_SLOT_CHARACTERS] = new HGMenuOption(MENU_SLOT_CHARACTERS);
+    menuSlots[MENU_SLOT_CHARACTERS]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_CHARACTERS, new CharacterInfoPage(sess), "characters");
 
     menuSlots[MENU_SLOT_TELEPORT] = new HGMenuOption(MENU_SLOT_TELEPORT);
     menuSlots[MENU_SLOT_TELEPORT]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_TELEPORT, new TeleportPage(session), "teleport");

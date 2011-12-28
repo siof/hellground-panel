@@ -329,6 +329,14 @@ enum Texts
     TXT_LBL_CHAR_TOTAL_PLAYED       = 78,   /**< Character total played time label */
     TXT_LBL_CHAR_LVL_PLAYED         = 79,   /**< Character current level played time label*/
     TXT_LBL_CHAR_LIST               = 80,   /**< Character list/choose label */
+    TXT_LBL_CHAR_RACE               = 81,   /**< Character race label */
+    TXT_LBL_CHAR_TALENT_RESET_COST  = 82,   /**< Character last talent reset cost label */
+    TXT_LBL_CHAR_TALENT_RESET_TIME  = 83,   /**< Character last talent reset time label */
+    TXT_LBL_CHAR_ONLINE             = 84,   /**< Character  label */
+    TXT_LBL_CHAR_TAB_INFO           = 85,   /**< Character basic informations tab label */
+    TXT_LBL_CHAR_TAB_QUEST          = 86,   /**< Character quest informations tab label */
+    TXT_LBL_CHAR_TAB_SPELL          = 87,   /**< Character spell informations tab label */
+    TXT_LBL_CHAR_TAB_INVENTORY      = 88,   /**< Character inventory informations tab label */
 
     /** Account */
     TXT_LBL_ACC_CHARS               = 100,  /**< Account characters label */
@@ -468,6 +476,9 @@ enum Texts
     TXT_XP_RATE_SERVER              = 266,  /**< Text for server default XP rates */
     TXT_XP_RATE_BLIZZLIKE           = 267,  /**< Text for blizzlike XP rates */
     TXT_CHARACTER_PAGE_INFO         = 268,  /**< Text for character page title/info */
+    TXT_CHARACTER_PLAYED_FMT        = 269,  /**< Format for character total and level played time */
+    TXT_YES                         = 270,  /**< Text for 'yes' labels */
+    TXT_NO                          = 271,  /**< Text for 'no' labels */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
@@ -494,6 +505,49 @@ enum Texts
     TXT_ACT_RECOVERY_FAIL           = 606,  /**< Activity log info: Password recovery fail */
     TXT_ACT_IP_LOCK                 = 607,  /**< Activity log info: Someone tried to change ip lock state */
     TXT_ACT_XP_RATES                = 608,  /**< Activity log info: Someone tried to change XP rates for account */
+
+    TXT_LBL_QUEST_ID                = 701,  /**< Quest id label. */
+    TXT_LBL_QUEST_NAME              = 702,  /**< Quest name label. */
+    TXT_LBL_QUEST_LVL               = 703,  /**< Quest level label. */
+    TXT_LBL_QUEST_STATUS            = 704,  /**< Quest status label. */
+
+    TXT_LBL_SPELL_ID                = 711,  /**< Spell id label. */
+    TXT_LBL_SPELL_NAME              = 712,  /**< Spell name label. */
+    TXT_LBL_SPELL_ACTIVE            = 713,  /**< Spell active info label. */
+    TXT_LBL_SPELL_DISABLED          = 714,  /**< Spell disabled info label. */
+
+    TXT_LBL_ITEM_ID                 = 721,  /**< Item id label. */
+    TXT_LBL_ITEM_NAME               = 722,  /**< Item name label. */
+
+    TXT_LBL_RACE_HUMAN              = 801,  /**< Text for human race */
+    TXT_LBL_RACE_ORC                = 802,  /**< Text for orc race */
+    TXT_LBL_RACE_DWARF              = 803,  /**< Text for dwarf race */
+    TXT_LBL_RACE_NIGHT_ELF          = 804,  /**< Text for night elf race */
+    TXT_LBL_RACE_UNDEAD             = 805,  /**< Text for undead race */
+    TXT_LBL_RACE_TAUREN             = 806,  /**< Text for tauren race */
+    TXT_LBL_RACE_GNOME              = 807,  /**< Text for gnome race */
+    TXT_LBL_RACE_TROLL              = 808,  /**< Text for troll race */
+    TXT_LBL_RACE_BLOOD_ELF          = 809,  /**< Text for blood elf race */
+    TXT_LBL_RACE_DRAENEI            = 810,  /**< Text for draenei race */
+
+    TXT_LBL_UNKNOWN                 = 820,  /**< Text for unknown race/class/etc */
+
+    TXT_LBL_CLASS_WARRIOR           = 821,  /**< Text for warrior class */
+    TXT_LBL_CLASS_PALADIN           = 822,  /**< Text for paladin class */
+    TXT_LBL_CLASS_HUNTER            = 823,  /**< Text for hunter class */
+    TXT_LBL_CLASS_ROGUE             = 824,  /**< Text for rogue class */
+    TXT_LBL_CLASS_PRIEST            = 825,  /**< Text for priest class */
+    TXT_LBL_CLASS_SHAMAN            = 826,  /**< Text for shaman class */
+    TXT_LBL_CLASS_MAGE              = 827,  /**< Text for mage class */
+    TXT_LBL_CLASS_WARLOCK           = 828,  /**< Text for warlock class */
+    TXT_LBL_CLASS_DRUID             = 829,  /**< Text for druid class */
+
+    TXT_LBL_QUEST_STATUS_NONE       = 851,  /**< Quest isn't shown in quest list (default) */
+    TXT_LBL_QUEST_STATUS_COMPLETE   = 852,  /**< Quest has been completed  */
+    TXT_LBL_QUEST_STATUS_UNAVAILABLE= 853,  /**< Quest is unavailable to the character */
+    TXT_LBL_QUEST_STATUS_INCOMPLETE = 854,  /**< Quest is active in quest log but incomplete */
+    TXT_LBL_QUEST_STATUS_AVAILABLE  = 855,  /**< Quest is available to be taken by character */
+    TXT_LBL_QUEST_STATUS_REWARDED   = 856,  /**< Quest has been rewarded */
 };
 
 /********************************************//**
@@ -535,6 +589,46 @@ extern WString GetExpansionName(SessionInfo * sess, int index);
  ***********************************************/
 
 extern WString GetLocale(int index);
+
+/********************************************//**
+ * \brief Return character race name.
+ *
+ * \param sess      session informations to get text
+ * \param index     race index
+ * \return race name
+ *
+ * Returns character race name depends on race index.
+ *
+ ***********************************************/
+
+extern WString GetRaceName(SessionInfo * sess, int index);
+
+/********************************************//**
+ * \brief Return character class name.
+ *
+ * \param sess      session informations to get text
+ * \param index     class index
+ * \return class name
+ *
+ * Returns character class name depends on class index.
+ *
+ ***********************************************/
+
+extern WString GetClassName(SessionInfo * sess, int index);
+
+/********************************************//**
+ * \brief Return character quest status in string.
+ *
+ * \param sess      session informations to get text
+ * \param index     quest status index
+ * \param rewarded  information that quest is already rewarded or not
+ * \return quest status
+ *
+ * Returns character quest status in string depends on status index and rewarded info.
+ *
+ ***********************************************/
+
+extern WString GetQuestStatus(SessionInfo * sess, int index, bool rewarded);
 
 /********************************************//**
  * \brief Simple random function.
@@ -645,5 +739,29 @@ enum DBResult
  ***********************************************/
 
 extern std::string GetFormattedString(const char * format, ...);
+
+/********************************************//**
+ * \brief Represents single spell informations.
+ ***********************************************/
+
+struct SpellInfo
+{
+    SpellInfo():
+        entry(0), name("")
+    {
+
+    }
+
+    SpellInfo(uint32 entry, WString name) :
+        entry(entry), name(name)
+    {
+
+    }
+
+    uint32 entry;
+    WString name;
+};
+
+extern std::map<uint32, SpellInfo> spells;
 
 #endif // DEFINES_H_INCLUDED
