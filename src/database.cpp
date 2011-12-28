@@ -162,7 +162,7 @@ bool Database::SelectDatabase(std::string db)
     return mysql_select_db(connection, db.c_str()) != NULL;
 }
 
-int Database::ExecuteQuery()
+int Database::ExecuteQuery(bool log)
 {
     console(DEBUG_DB, "\nCall int Database::ExecuteQuery() : actualQuery: %s", actualQuery.c_str());
 
@@ -170,11 +170,13 @@ int Database::ExecuteQuery()
 
     console(DEBUG_DB, "\n\nExecuteQuery(): test1\n");
 
-    Log(LOG_DB_QUERY, "DB Query execute: %s", actualQuery.c_str());
+    if (log)
+        Log(LOG_DB_QUERY, "DB Query execute: %s", actualQuery.c_str());
 
     if (mysql_query(connection, actualQuery.c_str()))
     {
-        Log(LOG_DB_ERRORS, "DB Query error ! Error [%i]: %s", GetErrNo(), GetError());
+        if (log)
+            Log(LOG_DB_ERRORS, "DB Query error ! Error [%i]: %s", GetErrNo(), GetError());
         return DB_RESULT_ERROR;
     }
 
@@ -206,11 +208,11 @@ int Database::ExecuteQuery()
     return rows.size();
 }
 
-int Database::ExecuteQuery(std::string query)
+int Database::ExecuteQuery(std::string query, bool log)
 {
     actualQuery = query;
 
-    return ExecuteQuery();
+    return ExecuteQuery(log);
 }
 
 int Database::ExecutePQuery(const char * format, ...)

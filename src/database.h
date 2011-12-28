@@ -71,8 +71,8 @@ public:
     std::string EscapeString(std::string str);  // escape given string
     std::string EscapeString(WString str);      // escape given string
 
-    int ExecuteQuery(); // execute setted query and returns row count
-    int ExecuteQuery(std::string query);        // execute given query and return row count
+    int ExecuteQuery(bool log = true); // execute setted query and returns row count
+    int ExecuteQuery(std::string query, bool log = true);   // execute given query and return row count
     int ExecutePQuery(const char * format, ...);
 
     const char * GetError();    // get mysql error
