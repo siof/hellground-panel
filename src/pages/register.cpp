@@ -117,6 +117,7 @@ void RegisterPage::CreateRegisterPage()
     textSlots[REG_TEXT_LOGIN].SetLabel(session, TXT_LBL_ACC_LOGIN);
     txtLogin = new WLineEdit();
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
+    validator->setMandatory(true);
     txtLogin->setValidator(validator);
 
     addWidget(textSlots[REG_TEXT_LOGIN].GetLabel());
@@ -126,6 +127,7 @@ void RegisterPage::CreateRegisterPage()
     textSlots[REG_TEXT_EMAIL].SetLabel(session, TXT_LBL_ACC_MAIL);
     txtEmail = new WLineEdit();
     validator = new WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
+    validator->setMandatory(true);
     txtEmail->setValidator(validator);
 
     addWidget(textSlots[REG_TEXT_EMAIL].GetLabel());
