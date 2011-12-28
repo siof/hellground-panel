@@ -372,7 +372,7 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
             tmpMinutes = tmpVal/60;
 
             ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_PLAYED_LVL].GetWidget())->setText(GetFormattedString(session->GetText(TXT_CHARACTER_PLAYED_FMT).toUTF8().c_str(), tmpDays, tmpHours, tmpMinutes));
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_RESET_COST].GetWidget())->setText(GetFormattedString("%u g", uint64(tmpRow->fields[7].GetUInt64())));
+            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_RESET_COST].GetWidget())->setText(GetFormattedString("%lu g", uint64(tmpRow->fields[7].GetUInt64()/10000)));
             ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_RESET_TIME].GetWidget())->setText(tmpRow->fields[8].GetWString());
 
             break;
