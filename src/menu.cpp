@@ -369,6 +369,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     login->setEchoMode(WLineEdit::Normal);
     login->focussed().connect(this, &HGMenu::ClearWLineEdit);
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
+    validator->setMandatory(true);
     login->setValidator(validator);
 
     pass = new WLineEdit();
@@ -376,6 +377,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     pass->setEchoMode(WLineEdit::Password);
     pass->focussed().connect(this, &HGMenu::ClearWLineEdit);
     WLengthValidator * lenValidator = new WLengthValidator(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
+    lenValidator->setMandatory(true);
     pass->setValidator(lenValidator);
 
     btnLog = new WPushButton(session->GetText(TXT_BTN_LOGIN));
