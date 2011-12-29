@@ -399,8 +399,9 @@ int main(int argc, char **argv)
     srand(time(NULL));
 
     Database * db = new Database();
+    db->SetLogging(false);
     db->Connect(PANEL_DB_DATA, SQL_PANELDB);
-    db->ExecuteQuery("SELECT entry, name FROM spells", false);
+    db->ExecuteQuery("SELECT entry, name FROM spells");
 
     std::list<DatabaseRow*> rows = db->GetRows();
 
