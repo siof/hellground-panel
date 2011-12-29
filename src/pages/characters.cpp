@@ -45,16 +45,20 @@ CharacterInfoPage::CharacterInfoPage(SessionInfo * sess, WContainerWidget * pare
     setContentAlignment(AlignCenter|AlignTop);
 
     pageInfoSlots[CHARINFO_SLOT_INFO].SetLabel(sess, TXT_CHARACTER_PAGE_INFO);
+    addWidget(pageInfoSlots[CHARINFO_SLOT_INFO].GetLabel());
     addWidget(new WBreak());
     addWidget(new WBreak());
 
     pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(new WText("", this));
+    addWidget(pageInfoSlots[CHARINFO_SLOT_ADDINFO].GetLabel());
     addWidget(new WBreak());
     addWidget(new WBreak());
 
+    pageInfoSlots[CHARINFO_SLOT_CHARACTERS].SetLabel(sess, TXT_LBL_CHAR_LIST);
+    addWidget(pageInfoSlots[CHARINFO_SLOT_CHARACTERS].GetLabel());
     charList = new WComboBox(this);
     charList->activated().connect(this, &CharacterInfoPage::SelectionChanged);
-    pageInfoSlots[CHARINFO_SLOT_CHARACTERS].SetAll(sess, TXT_LBL_CHAR_LIST, charList, 0);
+    pageInfoSlots[CHARINFO_SLOT_CHARACTERS].SetWidget(charList);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
