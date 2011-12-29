@@ -71,8 +71,9 @@ public:
     std::string EscapeString(std::string str);  // escape given string
     std::string EscapeString(WString str);      // escape given string
 
-    int ExecuteQuery(bool log = true); // execute setted query and returns row count
-    int ExecuteQuery(std::string query, bool log = true);   // execute given query and return row count
+
+    int ExecuteQuery(); // execute setted query and returns row count
+    int ExecuteQuery(std::string query);   // execute given query and return row count
     int ExecutePQuery(const char * format, ...);
 
     const char * GetError();    // get mysql error
@@ -88,10 +89,14 @@ public:
     std::list<DatabaseRow*> GetRows();  // returns all rows
     std::string GetQuery() { return actualQuery; }
 
+    void SetLogging(bool enabled) { loggingEnabled = enabled; }
+
 private:
     MYSQL * connection;             // mysql connection
     std::string actualQuery;        // actual query
     std::list<DatabaseRow*> rows;   // query result
+
+    bool loggingEnabled;            // queries should be logged ?
 };
 
 #endif // DATABASE_H_INCLUDED
