@@ -106,7 +106,6 @@ void VotePage::CreateVotePage()
     addWidget(infoSlots[VOTE_SLOT_INFO].GetLabel());
     addWidget(new WBreak());
     addWidget(new WBreak());
-    addWidget(new WBreak());
 
     if (!wApp->environment().javaScript() || !wApp->environment().ajax())
     {
