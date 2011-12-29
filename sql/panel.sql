@@ -303,10 +303,10 @@ contact: siof@hellground.pl"),
 (263, "<h3>Vote Event</h3><br/><br/>
 Zapraszamy do głosowania na serwer Hellground na toplistach gier. Na każdej liście można głosować co <b>12</b> godzin. <br/>
 Zapoznaj się również z zasadami eventu - <a href=\"http://wow.hellground.pl/zasady-voteevent/\">http://wow.hellground.pl/zasady-voteevent/</a>.<br/><br/>
-Listy:<br/>", "<h3>Vote Event</h3><br/><br/>
+Listy:", "<h3>Vote Event</h3><br/><br/>
 We invite you to vote on Hellground Server on game toplists. You can vote on every list every <b>12</b> hours. <br/>
 Also, please read vote event rules - <a href=\"http://wowen.hellground.pl/rules-voteevent/\">http://wowen.hellground.pl/rules-voteevent/</a>.<br/><br/>
-Toplists:<br/>"),
+Toplists:"),
 (264, " Następne głosowanie: ", " Next vote time: "),
 (265, "Zagłosowano pomyślnie", "Vote successfull"),
 (266, "Domyślne serwerowe.", "Server default."),

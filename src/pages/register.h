@@ -49,7 +49,7 @@ enum RegistrationTextSlots
     REG_TEXT_INFO,              /**< Additional info/registration errors like trying to register with existing username. */
     REG_TEXT_LOGIN,             /**< New account login. */
     REG_TEXT_EMAIL,             /**< New account mail. On this mail password will be sent. */
-    REG_TEXT_RULES,             /**< Server rules information. */
+//    REG_TEXT_RULES,             /**< Server rules information. */
 //    REG_TEXT_RULES_ACCEPT,
 
     REG_TEXT_SLOT_COUNT

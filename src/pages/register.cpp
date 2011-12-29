@@ -85,7 +85,7 @@ void RegisterPage::UpdateTextWidgets()
     for (int i = 0; i < REG_TEXT_SLOT_COUNT; ++i)
         textSlots[i].UpdateLabel(session);
 
-    chRules->setText(session->GetText(TXT_LBL_REG_RULES_ACCEPT));
+    chRules->setText(session->GetText(TXT_LBL_REG_RULES));
     btnRegister->setText(session->GetText(TXT_BTN_REGISTER));
 }
 
@@ -134,12 +134,12 @@ void RegisterPage::CreateRegisterPage()
     addWidget(txtEmail);
     addWidget(new WBreak());
 
-    textSlots[REG_TEXT_RULES].SetLabel(session, TXT_LBL_REG_RULES);
-    addWidget(textSlots[REG_TEXT_RULES].GetLabel());
-    addWidget(new WBreak());
+//    textSlots[REG_TEXT_RULES].SetLabel(session, TXT_LBL_REG_RULES);
+//    addWidget(textSlots[REG_TEXT_RULES].GetLabel());
+//    addWidget(new WBreak());
 
 //    textSlots[REG_TEXT_RULES_ACCEPT].SetLabel(session, TXT_LBL_REGISTER_RULES_ACCEPT);
-    chRules = new WCheckBox(session->GetText(TXT_LBL_REG_RULES_ACCEPT));
+    chRules = new WCheckBox(session->GetText(TXT_LBL_REG_RULES));
 //    addWidget(textSlots[REG_TEXT_RULES_ACCEPT].GetLabel());
     addWidget(chRules);
     addWidget(new WBreak());
