@@ -104,6 +104,8 @@ const float RaceLocs[10][5] =   /**< Table with locations for races for characte
 
 #define STARTING_EXPANSION 1    /**< Starting expansion for registration */
 
+//#define ALLOW_TWO_SIDE_ACCOUNTS   /**< Uncomment to allow two side accounts (for character restore feature) */
+
 #endif // CONFIG_H_INCLUDED
 
 /**< \} */

@@ -145,6 +145,33 @@ enum CharacterTabsSlots
 };
 
 /********************************************//**
+ * \brief Structure to store some character informations.
+ *
+ * This structure is used to store some informations
+ * specially for character restore feature.
+ *
+ ***********************************************/
+
+struct CharInfo
+{
+    CharInfo() : guid(0), account(0), name(""), race(0), deleted(false), deletionDate("") { }
+    CharInfo(const uint64 & charGuid, uint32 charAcc, const WString & charName, uint8 charRace, bool del = false, const WString & delDate = ""):
+        guid(charGuid), account(charAcc), name(charName), race(charRace), deleted(del), deletionDate(delDate)
+    {
+
+    }
+
+    ~CharInfo() { }
+
+    uint64 guid;
+    uint32 account;
+    WString name;
+    uint8 race;
+    bool deleted;
+    WString deletionDate;
+};
+
+/********************************************//**
  * \brief A class to represents Character Informations page
  *
  * This class is container for other widgets with characters informations.
@@ -170,8 +197,13 @@ private:
     bool needCreation;
     /// list of characters to select from
     WComboBox * charList;
+    /// button to restore character
+    WPushButton * restoreCharacter;
     /// combo box index to character guid map
-    std::map<int, uint64> indexToGuid;
+    std::map<int, CharInfo> indexToCharInfo;
+
+    /// informs that RestoreCharacter function is actually executed
+    bool restoring;
 
     /// contains global page info slots like page title or additional info like errors
     PageSlotItem pageInfoSlots[CHARINFO_SLOT_COUNT];
@@ -183,6 +215,9 @@ private:
     BasicTextItem spellInfoSlots[CHARSPELLINFO_SLOT_COUNT];
     /// contains headers for inventory info table
     BasicTextItem inventoryInfoSlots[CHARINVINFO_SLOT_COUNT];
+
+    bool IsDeletedCharacter(const uint64 & guid);
+    bool IsDeletedCharacter(const CharInfo & charInfo) { return charInfo.deleted; }
 
     void UpdateTextWidgets();
     void UpdateInformations(uint64 guid);
@@ -202,6 +237,10 @@ private:
     void ClearPage(bool alsoCharList = true);
 
     void SelectionChanged(int selected);
+
+    void RebuildCharList();
+
+    void RestoreCharacter();
 };
 
 #endif // CHARACTERS_H_INCLUDED

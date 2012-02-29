@@ -39,7 +39,7 @@
  ***********************************************/
 
 CharacterInfoPage::CharacterInfoPage(SessionInfo * sess, WContainerWidget * parent) :
-    WContainerWidget(parent)
+    WContainerWidget(parent), restoreCharacter(NULL), restoring(false)
 {
     session = sess;
     setContentAlignment(AlignCenter|AlignTop);
@@ -100,7 +100,8 @@ void CharacterInfoPage::refresh()
             tabs->addTab(CreateCharacterInventoryInfo(), session->GetText(TXT_LBL_CHAR_TAB_INVENTORY), WTabWidget::PreLoading);
 
             charList->clear();
-            indexToGuid.clear();
+            indexToCharInfo.clear();
+            deletedGuids.clear();
             Database db;
             if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
             {
@@ -108,37 +109,59 @@ void CharacterInfoPage::refresh()
                 return;
             }
 
-            switch (db.ExecutePQuery("SELECT guid, name FROM characters WHERE account = '%u'", session->accid))
+            int index = 0;
+            switch (db.ExecutePQuery("SELECT guid, account, name, race FROM characters WHERE account = '%u'", session->accid))
             {
                 case DB_RESULT_ERROR:
                     pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
                     return;
                 case DB_RESULT_EMPTY:
-                    return;
+                    break;
                 default:
-                    db.Disconnect();
 
                     std::list<DatabaseRow*> rows = db.GetRows();
                     DatabaseRow * tmpRow;
 
-                    int index = 0;
                     for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
                     {
                         tmpRow = *itr;
-                        indexToGuid[index] = tmpRow->fields[0].GetUInt64();
-                        charList->insertItem(index++, tmpRow->fields[1].GetWString());
-                    }
 
-                    charList->setCurrentIndex(0);
+                        CharInfo tmpCharInfo(tmpRow->fields[0].GetUInt64(), tmpRow->fields[1].GetUInt32(), tmpRow->fields[2].GetWString(), tmpRow->fields[3].GetInt(), false);
+
+                        indexToCharInfo[index] = tmpCharInfo;
+                        charList->insertItem(index++, tmpCharInfo.name);
+                    }
                     break;
             }
+
+            if (db.ExecutePQuery("SELECT char_guid, acc, race, oldname, date "
+                                 "FROM deleted_chars JOIN characters ON deleted_chars.char_guid = characters.guid "
+                                 "WHERE acc = '%u'", session->accid) > DB_RESULT_EMPTY)
+            {
+
+                std::list<DatabaseRow*> rows = db.GetRows();
+                DatabaseRow * tmpRow;
+
+                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+                {
+                    tmpRow = *itr;
+
+                    CharInfo tmpCharInfo(tmpRow->fields[0].GetUInt64(), tmpRow->fields[1].GetUInt32(), tmpRow->fields[2].GetWString(),  tmpRow->fields[3].GetInt(), true, tmpRow->fields[4].GetWString());
+
+                    indexToCharInfo[index] = tmpCharInfo;
+                    charList->insertItem(index++, "[Del] " + tmpCharInfo.name);
+                }
+            }
+
+            db.Disconnect();
 
             // i think there is no need to update this informations
             if (charList->count() > 0)
             {
-                std::map<int, uint64>::const_iterator tmpItr = indexToGuid.find(charList->currentIndex());
-                if (tmpItr != indexToGuid.end())
-                    UpdateInformations(tmpItr->second);
+                charList->setCurrentIndex(0);
+                std::map<int, CharInfo>::const_iterator tmpItr = indexToCharInfo.find(charList->currentIndex());
+                if (tmpItr != indexToCharInfo.end())
+                    UpdateInformations(tmpItr->second.guid);
             }
         }
 
@@ -241,6 +264,15 @@ WContainerWidget * CharacterInfoPage::CreateCharacterBasicInfo()
         for (int j = 0; j < tmpCount; ++j)
             tmpContainer->addWidget(new WBreak());
     }
+
+    tmpContainer->addWidget(new WBreak());
+    tmpContainer->addWidget(new WBreak());
+
+    if (restoreCharacter)
+        delete restoreCharacter;
+
+    restoreCharacter = new WPushButton(session->GetText(TXT_BTN_CHARACTER_RESTORE), tmpContainer);
+    restoreCharacter->clicked().connect(this, &CharacterInfoPage::RestoreCharacter);
 
     return tmpContainer;
 }
@@ -378,6 +410,9 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
             ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_PLAYED_LVL].GetWidget())->setText(GetFormattedString(session->GetText(TXT_CHARACTER_PLAYED_FMT).toUTF8().c_str(), tmpDays, tmpHours, tmpMinutes));
             ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_RESET_COST].GetWidget())->setText(GetFormattedString("%lu g", uint64(tmpRow->fields[7].GetUInt64()/10000)));
             ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_RESET_TIME].GetWidget())->setText(tmpRow->fields[8].GetWString());
+
+            if (IsDeletedCharacter(guid))
+                restoreCharacter->show();
 
             break;
     }
@@ -597,7 +632,8 @@ void CharacterInfoPage::ClearPage(bool alsoCharList)
     {
         needCreation = true;
         charList->clear();
-        indexToGuid.clear();
+        indexToCharInfo.clear();
+        deletedGuids.clear();
     }
 }
 
@@ -605,10 +641,115 @@ void CharacterInfoPage::SelectionChanged(int selected)
 {
     if (selected >= 0 && selected < charList->count())
     {
-        std::map<int, uint64>::const_iterator tmpItr = indexToGuid.find(selected);
-        if (tmpItr != indexToGuid.end())
-            UpdateInformations(tmpItr->second);
+        std::map<int, CharInfo>::const_iterator tmpItr = indexToCharInfo.find(selected);
+        if (tmpItr != indexToCharInfo.end())
+            UpdateInformations(tmpItr->second.guid);
     }
+}
+
+bool CharacterInfoPage::IsDeletedCharacter(const uint64 & guid)
+{
+    if (!guid)
+        return false;
+
+    std::map<int, CharInfo>::const_iterator tmpItr = indexToCharInfo.find(guid);
+    if (tmpItr != indexToCharInfo.end())
+        return tmpItr->second.deleted;
+
+    return false;
+}
+
+void CharacterInfoPage::RestoreCharacter()
+{
+    if (restoring)
+        return;
+
+    restoring = true;
+
+    std::map<int, CharInfo>::iterator tmpItr = indexToCharInfo.find(charList->currentIndex());
+    if (tmpItr == indexToCharInfo.end())    // check if character on that index exists
+    {
+        restoring = false;
+        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_CHARACTER_NOT_FOUND);
+        return;
+    }
+
+    CharInfo tmpCharInfo = tmpItr->second;
+    if (!IsDeletedCharacter(tmpCharInfo))    // check if character is deleted one
+    {
+        restoring = false;
+        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_CHARACTER_NOT_FOUND);
+        return;
+    }
+
+    Database db;
+    if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    {
+        restoring = false;
+        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        return;
+    }
+
+    std::string escapedName = db.EscapeString(tmpCharInfo.name);
+
+    switch (db.ExecutePQuery("SELECT guid FROM characters WHERE name = '%s'", escapedName.c_str()))
+    {
+        case DB_RESULT_ERROR:
+            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            break;
+        case DB_RESULT_EMPTY:
+        {
+            bool sameFaction = true;
+
+            #ifndef ALLOW_TWO_SIDE_ACCOUNTS
+            ConflictSide tmpConflictSide = GetSide(tmpCharInfo.race);
+            for (std::map<int, CharInfo>::const_iterator itr = indexToCharInfo.begin(); itr != indexToCharInfo.end(); ++itr)
+            {
+                if (tmpConflictSide != GetSide(itr->second.race))
+                {
+                    sameFaction = false;
+                    break;
+                }
+            }
+            #endif
+
+            if (sameFaction)
+            {
+                if (db.ExecutePQuery("UPDATE characters SET name = '%s', account = '%u' WHERE guid = '%u'", escapedName.c_str(), tmpCharInfo.account, tmpCharInfo.guid) != DB_RESULT_ERROR)
+                {
+                    db.ExecutePQuery("DELETE FROM deleted_chars WHERE char_guid = '%u'", tmpCharInfo.guid);
+                    tmpItr->second.deleted = false;
+                    RebuildCharList();
+
+                    pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_CHARACTER_RESTORED);
+                }
+                else
+                    pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            }
+            else
+                pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_FACTION_MISMATCH);
+
+            break;
+        }
+        default:
+            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_CHARACTER_NAME_EXISTS);
+            break;
+    }
+
+    restoring = false;
+}
+
+void CharacterInfoPage::RebuildCharList()
+{
+    int currIndex = charList->currentIndex();
+
+    charList->clear();
+
+    for (std::map<int, CharInfo>::const_iterator itr = indexToCharInfo.begin(); itr != indexToCharInfo.end(); ++itr)
+        charList->insertItem(itr->first, (itr->second.deleted ? "[Del] " : "") + itr->second.name);
+
+    if (currIndex >= 0 && currIndex < charList->count())
+        charList->setCurrentIndex(currIndex);
 }
 
 /********************************************//**
