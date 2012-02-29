@@ -735,7 +735,7 @@ void CharacterInfoPage::RestoreCharacter()
                         db.ExecutePQuery("UPDATE realmcharacters SET numchars = '%u' WHERE account = '%u' AND realmid = 1", charactersCount + 1, tmpCharInfo.account);
 
                     tmpItr->second.deleted = false;
-                    RebuildCharList();
+                    charList->setItemText(tmpItr->first, tmpItr->second.name);
 
                     pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_CHARACTER_RESTORED);
                 }
