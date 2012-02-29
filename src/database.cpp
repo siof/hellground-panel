@@ -108,6 +108,7 @@ DatabaseRow::~DatabaseRow()
 Database::Database()
 {
     connection = NULL;
+    loggingEnabled = true;
 }
 
 Database::~Database()
