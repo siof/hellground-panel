@@ -337,6 +337,8 @@ If it''s your account please use password recovery option to reset password and 
 (360, 'Nie możesz jeszcze zagłosować na tą listę.', 'You can''t vote on that list yet.'),
 (361, 'Ta strona wymaga włączonego java script.', 'Java script is required for this site.'),
 (362, 'Postać o takim imieniu już istnieje.', 'Character with that name already exists.'),
+(363, 'Nie możesz posiadać na koncie postaci z różnych frakcji.', 'You can''t have characters from different factions on one account.'),
+(364, 'Zbyt duża ilość postaci na koncie.', 'To much characters on account.'),
 
 (501, 'DB Error: Błąd połączenia z bazą danych.', 'DB Error: Can''t connect to database.'),
 (502, 'DB Error: Zapytanie zwróciło pusty wynik.', 'DB Error: Query result was empty.'),
