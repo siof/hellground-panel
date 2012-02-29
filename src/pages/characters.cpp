@@ -101,7 +101,6 @@ void CharacterInfoPage::refresh()
 
             charList->clear();
             indexToCharInfo.clear();
-            deletedGuids.clear();
             Database db;
             if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
             {
@@ -633,7 +632,6 @@ void CharacterInfoPage::ClearPage(bool alsoCharList)
         needCreation = true;
         charList->clear();
         indexToCharInfo.clear();
-        deletedGuids.clear();
     }
 }
 
