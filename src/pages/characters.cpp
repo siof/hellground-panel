@@ -133,7 +133,7 @@ void CharacterInfoPage::refresh()
                     break;
             }
 
-            if (db.ExecutePQuery("SELECT char_guid, acc, race, oldname, date "
+            if (db.ExecutePQuery("SELECT char_guid, acc, oldname, race, date "
                                  "FROM deleted_chars JOIN characters ON deleted_chars.char_guid = characters.guid "
                                  "WHERE acc = '%u'", session->accid) > DB_RESULT_EMPTY)
             {
@@ -377,6 +377,7 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
             pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_EMPTY);
             return;
         default:
+        {
             db.Disconnect();
             DatabaseRow * tmpRow = db.GetRow();
 
@@ -414,6 +415,7 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
                 restoreCharacter->show();
 
             break;
+        }
     }
 }
 
@@ -688,6 +690,15 @@ void CharacterInfoPage::RestoreCharacter()
         return;
     }
 
+    int charactersCount = db.ExecutePQuery("SELECT Count(*) FROM characters WHERE account = '%u'", tmpCharInfo.account);
+
+    if (charactersCount >= MAX_CHARS_ON_ACCOUNT)
+    {
+        restoring = false;
+        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_TO_MUCH_CHARACTERS);
+        return;
+    }
+
     std::string escapedName = db.EscapeString(tmpCharInfo.name);
 
     switch (db.ExecutePQuery("SELECT guid FROM characters WHERE name = '%s'", escapedName.c_str()))
@@ -703,10 +714,13 @@ void CharacterInfoPage::RestoreCharacter()
             ConflictSide tmpConflictSide = GetSide(tmpCharInfo.race);
             for (std::map<int, CharInfo>::const_iterator itr = indexToCharInfo.begin(); itr != indexToCharInfo.end(); ++itr)
             {
-                if (tmpConflictSide != GetSide(itr->second.race))
+                if (!itr->second.deleted)
                 {
-                    sameFaction = false;
-                    break;
+                    if (tmpConflictSide != GetSide(itr->second.race))
+                    {
+                        sameFaction = false;
+                        break;
+                    }
                 }
             }
             #endif
@@ -716,6 +730,10 @@ void CharacterInfoPage::RestoreCharacter()
                 if (db.ExecutePQuery("UPDATE characters SET name = '%s', account = '%u' WHERE guid = '%u'", escapedName.c_str(), tmpCharInfo.account, tmpCharInfo.guid) != DB_RESULT_ERROR)
                 {
                     db.ExecutePQuery("DELETE FROM deleted_chars WHERE char_guid = '%u'", tmpCharInfo.guid);
+
+                    if (db.SelectDatabase(SQL_REALMDB))
+                        db.ExecutePQuery("UPDATE realmcharacters SET numchars = '%u' WHERE account = '%u' AND realmid = 1", charactersCount + 1, tmpCharInfo.account);
+
                     tmpItr->second.deleted = false;
                     RebuildCharList();
 

@@ -496,6 +496,7 @@ enum Texts
     TXT_ERROR_NEED_JAVA_SCRIPT      = 361,  /**< Error info: java script required */
     TXT_ERROR_CHARACTER_NAME_EXISTS = 362,  /**< Error info: character with that name already exists */
     TXT_ERROR_FACTION_MISMATCH      = 363,  /**< Error info: you can't have characters in both sides */
+    TXT_ERROR_TO_MUCH_CHARACTERS    = 364,  /**< Error info: to much characters on account */
 
     TXT_DBERROR_CANT_CONNECT        = 501,  /**< DB Error info: can't connect to database */
     TXT_DBERROR_QUERY_EMPTY         = 502,  /**< DB Error info: result empty */

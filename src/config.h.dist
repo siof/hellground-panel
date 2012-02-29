@@ -106,6 +106,8 @@ const float RaceLocs[10][5] =   /**< Table with locations for races for characte
 
 //#define ALLOW_TWO_SIDE_ACCOUNTS   /**< Uncomment to allow two side accounts (for character restore feature) */
 
+#define MAX_CHARS_ON_ACCOUNT 10     /**< Max count of characters on single account */
+
 #endif // CONFIG_H_INCLUDED
 
 /**< \} */
