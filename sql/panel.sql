@@ -154,11 +154,11 @@ Dla nowych graczy:<br/>
     <li>Rejestracja: <a href=\"#/account\"><font color=\"#00FF00\">Otwarta</font></a></li>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
-    <li>Emulator: TrinityCore + własne fixy</li>
+    <li>Emulator: TrinityCore + <a href=\"http://wow.hellground.pl/changelog/\">własne fixy</a></li>
     <li>Rates xp: opcjonalnie x1 - x2</li>
     <li>Rates xp quest: opcjonalnie x1 - x2</li>
     <li>Rates drop: x1</li>
-    <li>Typ: PvP/PvE</li>
+    <li>Typ: PvE/PvP</li>
     <li>Vmapy/LoS: Tak ( <a href=\"http://wow.hellground.pl/vmaps-hellground/\">Spis</a> )</li>
     <li>Główny kanał rozmów PL: join world</li>
     <li>Główny kanał rozmów ENG: join engworld</li>
@@ -179,11 +179,11 @@ For new players:<br/>
     <li>Registration: <a href=\"#/account\"><font color=\"#00FF00\">Available</font></a></li>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
-    <li>Emulator: TrinityCore + own fixes</li>
+    <li>Emulator: TrinityCore + <a href=\"http://wowen.hellground.pl/changelog/\">own fixes</a></li>
     <li>Rates xp: optional x1 - x2</li>
     <li>Rates xp quest: optional x1 - x2</li>
     <li>Rates drop: x1</li>
-    <li>Type: PvP/PvE</li>
+    <li>Type: PvE/PvP</li>
     <li>Vmaps/LoS: Yes (<a href=\"http://wowen.hellground.pl/vmaps-hellground/\">List</a>)</li>
     <li>Main talk channel (lang: PL): join world</li>
     <li>Main talk channel (lang: ENG): join engworld</li>
