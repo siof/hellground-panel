@@ -413,6 +413,8 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
 
             if (IsDeletedCharacter(guid))
                 restoreCharacter->show();
+            else
+                restoreCharacter->hide();
 
             break;
         }
@@ -690,7 +692,14 @@ void CharacterInfoPage::RestoreCharacter()
         return;
     }
 
-    int charactersCount = db.ExecutePQuery("SELECT Count(*) FROM characters WHERE account = '%u'", tmpCharInfo.account);
+    if (db.ExecutePQuery("SELECT Count(*) FROM characters WHERE account = '%u'", tmpCharInfo.account) == DB_RESULT_ERROR)
+    {
+        restoring = false;
+        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        return;
+    }
+
+    uint32 charactersCount = db.GetRow()->fields[0].GetUInt32();
 
     if (charactersCount >= MAX_CHARS_ON_ACCOUNT)
     {
