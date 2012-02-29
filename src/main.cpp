@@ -28,7 +28,7 @@
 
 using namespace Wt;
 
-void SendMail(WString& from, WString& to, WString& sub, WString& msg)
+void SendMail(const WString& from, const WString& to, const WString& sub, const WString& msg)
 {
     jwsmtp::mailer mail;
 
@@ -78,25 +78,25 @@ WString GetRaceName(SessionInfo * sess, int index)
 
     switch (index)
     {
-        case 1:
+        case RACE_HUMAN:
             return sess->GetText(TXT_LBL_RACE_HUMAN);
-        case 2:
+        case RACE_ORC:
             return sess->GetText(TXT_LBL_RACE_ORC);
-        case 3:
+        case RACE_DWARF:
             return sess->GetText(TXT_LBL_RACE_DWARF);
-        case 4:
+        case RACE_NIGHT_ELF:
             return sess->GetText(TXT_LBL_RACE_NIGHT_ELF);
-        case 5:
+        case RACE_UNDEAD:
             return sess->GetText(TXT_LBL_RACE_UNDEAD);
-        case 6:
+        case RACE_TAUREN:
             return sess->GetText(TXT_LBL_RACE_TAUREN);
-        case 7:
+        case RACE_GNOME:
             return sess->GetText(TXT_LBL_RACE_GNOME);
-        case 8:
+        case RACE_TROLL:
             return sess->GetText(TXT_LBL_RACE_TROLL);
-        case 10:
+        case RACE_BLOOD_ELF:
             return sess->GetText(TXT_LBL_RACE_BLOOD_ELF);
-        case 11:
+        case RACE_DRAENEI:
             return sess->GetText(TXT_LBL_RACE_DRAENEI);
         default:
             return sess->GetText(TXT_LBL_UNKNOWN);
@@ -110,23 +110,23 @@ WString GetClassName(SessionInfo * sess, int index)
 
     switch (index)
     {
-        case 1:
+        case CLASS_WARRIOR:
             return sess->GetText(TXT_LBL_CLASS_WARRIOR);
-        case 2:
+        case CLASS_PALADIN:
             return sess->GetText(TXT_LBL_CLASS_PALADIN);
-        case 3:
+        case CLASS_HUNTER:
             return sess->GetText(TXT_LBL_CLASS_HUNTER);
-        case 4:
+        case CLASS_ROGUE:
             return sess->GetText(TXT_LBL_CLASS_ROGUE);
-        case 5:
+        case CLASS_PRIEST:
             return sess->GetText(TXT_LBL_CLASS_PRIEST);
-        case 7:
+        case CLASS_SHAMAN:
             return sess->GetText(TXT_LBL_CLASS_SHAMAN);
-        case 8:
+        case CLASS_MAGE:
             return sess->GetText(TXT_LBL_CLASS_MAGE);
-        case 9:
+        case CLASS_WARLOCK:
             return sess->GetText(TXT_LBL_CLASS_WARLOCK);
-        case 11:
+        case CLASS_DRUID:
             return sess->GetText(TXT_LBL_CLASS_DRUID);
         default:
             return sess->GetText(TXT_LBL_UNKNOWN);
@@ -216,6 +216,32 @@ std::string GetFormattedString(const char * format, ...)
     va_end(args);
 
     return std::string(buffer);
+}
+
+ConflictSide GetSide(const uint8 & race)
+{
+    switch (race)
+    {
+        case RACE_BLOOD_ELF:
+        case RACE_ORC:
+        case RACE_TAUREN:
+        case RACE_TROLL:
+        case RACE_UNDEAD:
+            return SIDE_HORDE;
+        case RACE_DRAENEI:
+        case RACE_DWARF:
+        case RACE_GNOME:
+        case RACE_HUMAN:
+        case RACE_NIGHT_ELF:
+            return SIDE_ALLIANCE;
+        default:
+            return SIDE_UNKNOWN;
+    }
+}
+
+bool SameSide(const uint8 & race1, const uint8 & race2)
+{
+    return GetSide(race1) == GetSide(race2);
 }
 
 class PlayersPanel : public WApplication

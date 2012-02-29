@@ -116,7 +116,7 @@ Database::~Database()
     Clear();
 }
 
-void Database::SetQuery(std::string query)
+void Database::SetQuery(const std::string & query)
 {
     actualQuery = query;
 }
@@ -208,7 +208,7 @@ int Database::ExecuteQuery()
     return rows.size();
 }
 
-int Database::ExecuteQuery(std::string query)
+int Database::ExecuteQuery(const std::string & query)
 {
     actualQuery = query;
 
@@ -231,7 +231,7 @@ int Database::ExecutePQuery(const char * format, ...)
     return ExecuteQuery();
 }
 
-std::string Database::EscapeString(std::string str)
+std::string Database::EscapeString(const std::string & str)
 {
     char * tmp;
     tmp = new char[str.size()];
@@ -245,7 +245,7 @@ std::string Database::EscapeString(std::string str)
     return tmpString;
 }
 
-std::string Database::EscapeString(WString str)
+std::string Database::EscapeString(const WString & str)
 {
     return EscapeString(str.toUTF8());
 }

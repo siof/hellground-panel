@@ -430,6 +430,7 @@ enum Texts
     TXT_BTN_BANNED_ACC              = 206,  /**< Show banned account button label */
     TXT_BTN_BANNED_IP               = 207,  /**< Show banned ips button label */
     TXT_BTN_LOGOUT                  = 208,  /**< Log out from panel button label */
+    TXT_BTN_CHARACTER_RESTORE       = 209,  /**< Button to restore deleted character */
 
     /** Other */
     TXT_SITE_TITLE                  = 225,  /**< Players panel site title */
@@ -479,6 +480,7 @@ enum Texts
     TXT_CHARACTER_PLAYED_FMT        = 269,  /**< Format for character total and level played time */
     TXT_YES                         = 270,  /**< Text for 'yes' labels */
     TXT_NO                          = 271,  /**< Text for 'no' labels */
+    TXT_CHARACTER_RESTORED          = 272,  /**< Information that character was restored successfully */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
@@ -492,6 +494,8 @@ enum Texts
     TXT_ERROR_WRONG_PASSWORD        = 359,  /**< Error info: wrong current password */
     TXT_ERROR_CANT_VOTE_TWICE       = 360,  /**< Error info: can't vote twice on same page */
     TXT_ERROR_NEED_JAVA_SCRIPT      = 361,  /**< Error info: java script required */
+    TXT_ERROR_CHARACTER_NAME_EXISTS = 362,  /**< Error info: character with that name already exists */
+    TXT_ERROR_FACTION_MISMATCH      = 363,  /**< Error info: you can't have characters in both sides */
 
     TXT_DBERROR_CANT_CONNECT        = 501,  /**< DB Error info: can't connect to database */
     TXT_DBERROR_QUERY_EMPTY         = 502,  /**< DB Error info: result empty */
@@ -562,7 +566,7 @@ enum Texts
  *
  ***********************************************/
 
-extern void SendMail(WString& from, WString& to, WString& sub, WString& msg);
+extern void SendMail(const WString& from, const WString& to, const WString& sub, const WString& msg);
 
 /********************************************//**
  * \brief Returns expansion name.
@@ -724,10 +728,14 @@ struct Location
 
 extern void GetTeleportPosition(int race, Location & loc);
 
+/********************************************//**
+ * \brief Enum for DB Query result.
+ ***********************************************/
+
 enum DBResult
 {
-    DB_RESULT_ERROR = -1,
-    DB_RESULT_EMPTY = 0
+    DB_RESULT_ERROR     = -1,   /**< Informs that there was an error while executing query */
+    DB_RESULT_EMPTY     = 0     /**< Informs that DB returned empty result */
 };
 
 /********************************************//**
@@ -739,6 +747,77 @@ enum DBResult
  ***********************************************/
 
 extern std::string GetFormattedString(const char * format, ...);
+
+/********************************************//**
+ * \brief Enum for races.
+ ***********************************************/
+
+enum CharacterRaces
+{
+    RACE_HUMAN      = 1,    /**< Character race: Human */
+    RACE_ORC        = 2,    /**< Character race: Orc */
+    RACE_DWARF      = 3,    /**< Character race: Dwarf */
+    RACE_NIGHT_ELF  = 4,    /**< Character race: Night elf */
+    RACE_UNDEAD     = 5,    /**< Character race: Undead */
+    RACE_TAUREN     = 6,    /**< Character race: Tauren */
+    RACE_GNOME      = 7,    /**< Character race: Gnome */
+    RACE_TROLL      = 8,    /**< Character race: Troll */
+    RACE_BLOOD_ELF  = 10,   /**< Character race: Blood elf */
+    RACE_DRAENEI    = 11    /**< Character race: Draenei */
+};
+
+/********************************************//**
+ * \brief Enum for classes.
+ ***********************************************/
+
+enum CharacterClasses
+{
+    CLASS_WARRIOR   = 1,    /**< Character class: Warrior */
+    CLASS_PALADIN   = 2,    /**< Character class: Paladin */
+    CLASS_HUNTER    = 3,    /**< Character class: Hunter */
+    CLASS_ROGUE     = 4,    /**< Character class: Rogue */
+    CLASS_PRIEST    = 5,    /**< Character class: Priest */
+    CLASS_SHAMAN    = 7,    /**< Character class: Shaman */
+    CLASS_MAGE      = 8,    /**< Character class: Mage */
+    CLASS_WARLOCK   = 9,    /**< Character class: Warlock */
+    CLASS_DRUID     = 11    /**< Character class: Druid */
+};
+
+/********************************************//**
+ * \brief Enum with conflict side informations.
+ ***********************************************/
+
+enum ConflictSide
+{
+    SIDE_NONE       = 0,    /**< Conflict side: None */
+    SIDE_HORDE      = 1,    /**< Conflict side: Alliande */
+    SIDE_ALLIANCE   = 2,    /**< Conflict side: Horde */
+
+    SIDE_UNKNOWN    = 5     /**< Unknown conflict side */
+};
+
+/********************************************//**
+ * \brief Returns conflict side.
+ *
+ * \param race  character race
+ * \return inforamtion about side in conflict.
+ *
+ ***********************************************/
+
+extern ConflictSide GetSide(const uint8 & race);
+
+/********************************************//**
+ * \brief Returns informations if races are in same faction
+ *
+ * \param race1 first character race
+ * \param race2 second character race
+ * \return information that races are in same faction or not
+ *
+ * Function checks if given races are in same side and returns this information.
+ *
+ ***********************************************/
+
+extern bool SameSide(const uint8 & race1, const uint8 & race2);
 
 /********************************************//**
  * \brief Represents single spell informations.
