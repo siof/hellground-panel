@@ -145,7 +145,13 @@ void CharacterInfoPage::refresh()
                 {
                     tmpRow = *itr;
 
-                    CharInfo tmpCharInfo(tmpRow->fields[0].GetUInt64(), tmpRow->fields[1].GetUInt32(), tmpRow->fields[2].GetWString(),  tmpRow->fields[3].GetInt(), true, tmpRow->fields[4].GetWString());
+                    CharInfo tmpCharInfo;
+                    tmpCharInfo.guid = tmpRow->fields[0].GetUInt64();
+                    tmpCharInfo.account = tmpRow->fields[1].GetUInt32();
+                    tmpCharInfo.name = tmpRow->fields[2].GetWString();
+                    tmpCharInfo.race = tmpRow->fields[3].GetInt();
+                    tmpCharInfo.deleted = true;
+                    tmpCharInfo.deletionDate = tmpRow->fields[4].GetWString();
 
                     indexToCharInfo[index] = tmpCharInfo;
                     charList->insertItem(index++, "[Del] " + tmpCharInfo.name);
@@ -651,12 +657,9 @@ void CharacterInfoPage::SelectionChanged(int selected)
 
 bool CharacterInfoPage::IsDeletedCharacter(const uint64 & guid)
 {
-    if (!guid)
-        return false;
-
-    std::map<int, CharInfo>::const_iterator tmpItr = indexToCharInfo.find(guid);
-    if (tmpItr != indexToCharInfo.end())
-        return tmpItr->second.deleted;
+    for (std::map<int, CharInfo>::const_iterator itr = indexToCharInfo.begin(); itr != indexToCharInfo.end(); ++itr)
+        if (itr->second.guid == guid)
+            return itr->second.deleted;
 
     return false;
 }
