@@ -26,7 +26,7 @@
 
 #include <mysql/mysql.h>
 
-#define MAX_QUERY_LEN 256
+#define MAX_QUERY_LEN 512
 
 // connect to database, set query, escape query + execute query
 struct DatabaseField
