@@ -569,7 +569,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
     }
 
     switch (db.ExecutePQuery("SELECT ci.item_template, it.name, CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`data`, ' ', 15), ' ', -1) AS UNSIGNED) AS count "
-                            "FROM character_inventory AS ci JOIN item_instance AS ii ON ci.guid = ii.owner_guid JOIN %s.item_template AS it ON ci.item_template = it.entry "
+                            "FROM character_inventory AS ci JOIN item_instance AS ii ON ci.item = ii.guid JOIN %s.item_template AS it ON ci.item_template = it.entry "
                             "WHERE ci.guid = %u", SQL_WORLDDB, guid))
     {
         case DB_RESULT_ERROR:
