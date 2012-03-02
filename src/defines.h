@@ -488,7 +488,8 @@ enum Texts
     TXT_YES                         = 270,  /**< Text for 'yes' labels */
     TXT_NO                          = 271,  /**< Text for 'no' labels */
     TXT_CHARACTER_RESTORED          = 272,  /**< Information that character was restored successfully */
-    TXT_QUEST_LINK_NAME_FMT         = 273,  /**< Link to hgdb with quest name as text */
+    TXT_QUEST_LINK_NAME_FMT         = 273,  /**< Format for link to hgdb with quest name as text */
+    TXT_QUEST_TOOLTIP_FMT           = 274,  /**< Format for quest tooltip */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
