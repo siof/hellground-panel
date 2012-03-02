@@ -260,7 +260,11 @@ uint32 CalculateTalentCost(uint32 lastCost, uint32 months)
         if (months > 0)
         {
             // This cost will be reduced by a rate of 5 gold per month
-            int64 new_cost = lastCost - 5*GOLD*months;
+            uint64 reduction = 5*GOLD*months;
+            if (reduction > lastCost)
+                reduction = lastCost;
+
+            int64 new_cost = lastCost - reduction;
             // to a minimum of 10 gold.
             return (new_cost < 10*GOLD ? 10*GOLD : new_cost);
         }
