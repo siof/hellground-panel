@@ -49,6 +49,8 @@ INSERT INTO LangTexts VALUES
 (86, 'Questy', 'Quests'),
 (87, 'Czary', 'Spells'),
 (88, 'Ekwipunek', 'Inventory'),
+(89, 'Aktualny koszt resetu talentów: ', 'Actual talent reset cost: '),
+(90, 'Data usunięcia postaci: ', 'Character deletion date: '),
 
 (100, 'Postacie na koncie: ', 'Characters on account: '),
 (101, 'Data założenia konta: ', 'Account creation date: '),
@@ -352,6 +354,7 @@ If it''s your account please use password recovery option to reset password and 
 (606, 'Próba odzyskania hasła zakończona niepowodzeniem.', 'Unsuccessful password recovery.'),
 (607, 'Próba zmiany ustawień ip locka.', 'Someone tried to change ip lock state.'),
 (608, 'Próba zmiany ustawień XP rate.', 'Someone tried to change XP rates.'),
+(609, 'Postać %s została odzyskana.', 'Character %s restored.'),
 
 (701, 'ID zadania', 'Quest ID'),
 (702, 'Nazwa zadania', 'Quest name'),
@@ -365,6 +368,7 @@ If it''s your account please use password recovery option to reset password and 
 
 (721, 'ID przedmiotu', 'Item ID'),
 (722, 'Nazwa przedmiotu', 'Item name'),
+(723, 'Ilość', 'Count'),
 
 (801, 'Człowiek', 'Human'),
 (802, 'Ork', 'Orc'),

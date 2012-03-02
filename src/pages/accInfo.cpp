@@ -791,6 +791,7 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
                     tmpRow = *itr;
 
                     uint32 txtId = tmpRow->fields[2].GetUInt32();
+                    WString txt = tmpRow->fields[3].GetWString();
 
                     tabPanel->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
                     tabPanel->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
@@ -798,12 +799,20 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
                     if (txtId)
                     {
                         tmpText = new BasicTextItem();
-                        tmpText->SetLabel(session, txtId);
+
+                        if (txt != "")
+                        {
+                            std::string tmpStr = GetFormattedString(session->GetText(txtId).toUTF8().c_str(), txt.toUTF8().c_str());
+                            tmpText->SetLabel(tmpStr);
+                        }
+                        else
+                            tmpText->SetLabel(session, txtId);
+
                         activityInfoSlots.push_back(tmpText);
                         tabPanel->elementAt(i, 2)->addWidget(tmpText->GetText());
                     }
                     else
-                        tabPanel->elementAt(i, 2)->addWidget(new WText(tmpRow->fields[3].GetWString()));
+                        tabPanel->elementAt(i, 2)->addWidget(new WText(txt));
                 }
             }
         }

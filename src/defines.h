@@ -53,10 +53,14 @@
 
 using namespace Wt;
 
-typedef uint64_t uint64;
-typedef uint32_t uint32;
-typedef uint16_t uint16;
-typedef uint8_t  uint8;
+typedef uint64_t    uint64;
+typedef uint32_t    uint32;
+typedef uint16_t    uint16;
+typedef uint8_t     uint8;
+typedef int64_t     int64;
+typedef int32_t     int32;
+typedef int16_t     int16;
+typedef int8_t      int8;
 
 #ifdef DEBUG
 #include <iostream>
@@ -332,11 +336,13 @@ enum Texts
     TXT_LBL_CHAR_RACE               = 81,   /**< Character race label */
     TXT_LBL_CHAR_TALENT_RESET_COST  = 82,   /**< Character last talent reset cost label */
     TXT_LBL_CHAR_TALENT_RESET_TIME  = 83,   /**< Character last talent reset time label */
-    TXT_LBL_CHAR_ONLINE             = 84,   /**< Character  label */
+    TXT_LBL_CHAR_ONLINE             = 84,   /**< Character is online label */
     TXT_LBL_CHAR_TAB_INFO           = 85,   /**< Character basic informations tab label */
     TXT_LBL_CHAR_TAB_QUEST          = 86,   /**< Character quest informations tab label */
     TXT_LBL_CHAR_TAB_SPELL          = 87,   /**< Character spell informations tab label */
     TXT_LBL_CHAR_TAB_INVENTORY      = 88,   /**< Character inventory informations tab label */
+    TXT_LBL_CHAR_ACT_TAL_RESET_COST = 89,   /**< Character actual talent reset cost label */
+    TXT_LBL_CHAR_DELETION_DATE      = 90,   /**< Character deletion date label */
 
     /** Account */
     TXT_LBL_ACC_CHARS               = 100,  /**< Account characters label */
@@ -510,6 +516,7 @@ enum Texts
     TXT_ACT_RECOVERY_FAIL           = 606,  /**< Activity log info: Password recovery fail */
     TXT_ACT_IP_LOCK                 = 607,  /**< Activity log info: Someone tried to change ip lock state */
     TXT_ACT_XP_RATES                = 608,  /**< Activity log info: Someone tried to change XP rates for account */
+    TXT_ACT_CHARACTER_RESTORE       = 609,  /**< Activity log info: Character with %s restored */
 
     TXT_LBL_QUEST_ID                = 701,  /**< Quest id label. */
     TXT_LBL_QUEST_NAME              = 702,  /**< Quest name label. */
@@ -523,6 +530,7 @@ enum Texts
 
     TXT_LBL_ITEM_ID                 = 721,  /**< Item id label. */
     TXT_LBL_ITEM_NAME               = 722,  /**< Item name label. */
+    TXT_LBL_ITEM_COUNT              = 723,  /**< Item count label. */
 
     TXT_LBL_RACE_HUMAN              = 801,  /**< Text for human race */
     TXT_LBL_RACE_ORC                = 802,  /**< Text for orc race */
@@ -821,6 +829,17 @@ extern ConflictSide GetSide(const uint8 & race);
 extern bool SameSide(const uint8 & race1, const uint8 & race2);
 
 /********************************************//**
+ * \brief Calculates and returns reset talent cost.
+ *
+ * \param lastCost  last reset talent cost
+ * \param monts     count of months from last reset talent time
+ * \return actual reset talent cost
+ *
+ ***********************************************/
+
+extern uint32 CalculateTalentCost(uint32 lastCost, uint32 months);
+
+/********************************************//**
  * \brief Represents single spell informations.
  ***********************************************/
 
@@ -843,5 +862,21 @@ struct SpellInfo
 };
 
 extern std::map<uint32, SpellInfo> spells;
+
+
+enum TimeConstants
+{
+    MINUTE = 60,
+    HOUR   = MINUTE*60,
+    DAY    = HOUR*24,
+    WEEK   = DAY*7,
+    MONTH  = DAY*30,
+    YEAR   = MONTH*12,
+    IN_MILISECONDS = 1000
+};
+
+#define BRONZE  1
+#define SILVER  100
+#define GOLD    10000
 
 #endif // DEFINES_H_INCLUDED
