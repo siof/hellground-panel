@@ -377,8 +377,8 @@ WTable * CharacterInfoPage::CreateCharacterFriendInfo()
 
     tmpFriends->setHeaderCount(1);
 
-    friendInfoSlots[CHARFRIENDINFO_SLOT_NAME].SetLabel(session, TXT_LBL_ITEM_ID);
-    friendInfoSlots[CHARFRIENDINFO_SLOT_NOTE].SetLabel(session, TXT_LBL_ITEM_NAME);
+    friendInfoSlots[CHARFRIENDINFO_SLOT_NAME].SetLabel(session, TXT_LBL_FRIEND_NAME);
+    friendInfoSlots[CHARFRIENDINFO_SLOT_NOTE].SetLabel(session, TXT_LBL_FRIEND_NOTE);
     friendInfoSlots[CHARFRIENDINFO_SLOT_ONLINE].SetLabel("");
 
     int i;
@@ -676,9 +676,12 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
             {
                 tmpRow = *itr;
 
-                tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
-                tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
-                tmpTable->elementAt(i, 2)->addWidget(new WText(session->GetText((tmpRow->fields[2].GetBool() ? TXT_ONLINE : TXT_OFFLINE))));
+                if (tmpRow->fields[2].GetUInt32() & SOCIAL_FLAG_FRIEND)
+                {
+                    tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
+                    tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
+                    tmpTable->elementAt(i, 2)->addWidget(new WText(session->GetText((tmpRow->fields[3].GetBool() ? TXT_ONLINE : TXT_OFFLINE))));
+                }
             }
 
             break;

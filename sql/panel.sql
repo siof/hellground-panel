@@ -371,6 +371,9 @@ If it''s your account please use password recovery option to reset password and 
 (722, 'Nazwa przedmiotu', 'Item name'),
 (723, 'Ilość', 'Count'),
 
+(726, 'Imię znajomego', 'Friend name'),
+(727, 'Notka znajomego', 'Friend note'),
+
 (801, 'Człowiek', 'Human'),
 (802, 'Ork', 'Orc'),
 (803, 'Krasnolud', 'Dwarf'),
