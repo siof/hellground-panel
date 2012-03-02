@@ -488,6 +488,7 @@ enum Texts
     TXT_YES                         = 270,  /**< Text for 'yes' labels */
     TXT_NO                          = 271,  /**< Text for 'no' labels */
     TXT_CHARACTER_RESTORED          = 272,  /**< Information that character was restored successfully */
+    TXT_QUEST_LINK_NAME_FMT         = 273,  /**< Link to hgdb with quest name as text */
 
     TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
     TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
@@ -519,10 +520,9 @@ enum Texts
     TXT_ACT_XP_RATES                = 608,  /**< Activity log info: Someone tried to change XP rates for account */
     TXT_ACT_CHARACTER_RESTORE       = 609,  /**< Activity log info: Character with %s restored */
 
-    TXT_LBL_QUEST_ID                = 701,  /**< Quest id label. */
-    TXT_LBL_QUEST_NAME              = 702,  /**< Quest name label. */
-    TXT_LBL_QUEST_LVL               = 703,  /**< Quest level label. */
-    TXT_LBL_QUEST_STATUS            = 704,  /**< Quest status label. */
+    TXT_LBL_QUEST_NAME              = 701,  /**< Quest name label. */
+    TXT_LBL_QUEST_LVL               = 702,  /**< Quest level label. */
+    TXT_LBL_QUEST_STATUS            = 703,  /**< Quest status label. */
 
     TXT_LBL_SPELL_ID                = 711,  /**< Spell id label. */
     TXT_LBL_SPELL_NAME              = 712,  /**< Spell name label. */
@@ -890,5 +890,7 @@ enum SocialFlag
 #define BRONZE  1
 #define SILVER  100
 #define GOLD    10000
+
+#define QUEST_TYPE_DAILY    87
 
 #endif // DEFINES_H_INCLUDED

@@ -92,10 +92,9 @@ enum CharacterBasicInfoSlot
 
 enum CharacterQuestInfoSlot
 {
-    CHARQUESTINFO_SLOT_ID       = 0,        /**< Quest ID label. */
-    CHARQUESTINFO_SLOT_NAME     = 1,        /**< Quest name label. */
-    CHARQUESTINFO_SLOT_LEVEL    = 2,        /**< Quest level label. */
-    CHARQUESTINFO_SLOT_STATUS   = 3,        /**< Quest status label. */
+    CHARQUESTINFO_SLOT_NAME     = 0,        /**< Quest name label. */
+    CHARQUESTINFO_SLOT_LEVEL    = 1,        /**< Quest level label. */
+    CHARQUESTINFO_SLOT_STATUS   = 2,        /**< Quest status label. */
 
     CHARQUESTINFO_SLOT_COUNT
 };
