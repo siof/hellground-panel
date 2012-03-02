@@ -303,7 +303,6 @@ WTable * CharacterInfoPage::CreateCharacterQuestInfo()
 
     tmpQuest->setHeaderCount(1);
 
-    questInfoSlots[CHARQUESTINFO_SLOT_ID].SetLabel(session, TXT_LBL_QUEST_ID);
     questInfoSlots[CHARQUESTINFO_SLOT_NAME].SetLabel(session, TXT_LBL_QUEST_NAME);
     questInfoSlots[CHARQUESTINFO_SLOT_LEVEL].SetLabel(session, TXT_LBL_QUEST_LVL);
     questInfoSlots[CHARQUESTINFO_SLOT_STATUS].SetLabel(session, TXT_LBL_QUEST_STATUS);
@@ -489,7 +488,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
         return;
     }
 
-    switch (db.ExecutePQuery("SELECT cq.quest, qt.Title, qt.QuestLevel, cq.status, cq.rewarded "
+    switch (db.ExecutePQuery("SELECT cq.quest, qt.Title, qt.MinLevel, cq.status, cq.rewarded, qt.Type "
                             "FROM character_queststatus AS cq JOIN %s.quest_template AS qt ON cq.quest = qt.entry "
                             "WHERE guid = %u", SQL_WORLDDB, guid))
     {
@@ -517,10 +516,14 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
             {
                 tmpRow = *itr;
 
-                tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
-                tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
-                tmpTable->elementAt(i, 2)->addWidget(new WText(tmpRow->fields[2].GetWString()));
-                tmpTable->elementAt(i, 3)->addWidget(new WText(GetQuestStatus(session, tmpRow->fields[3].GetInt(), tmpRow->fields[4].GetBool())));
+                if (tmpRow->fields[5].GetInt() == QUEST_TYPE_DAILY)
+                    continue;
+
+                std::string tmpStr = GetFormattedString(session->GetText(TXT_QUEST_LINK_NAME_FMT).toUTF8().c_str(), tmpRow->fields[0].GetUInt32(), tmpRow->fields[1].GetCString());
+
+                tmpTable->elementAt(i, 0)->addWidget(new WText(tmpStr));
+                tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[2].GetWString()));
+                tmpTable->elementAt(i, 2)->addWidget(new WText(GetQuestStatus(session, tmpRow->fields[3].GetInt(), tmpRow->fields[4].GetBool())));
             }
 
             break;

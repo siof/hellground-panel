@@ -322,6 +322,7 @@ Toplists:'),
 (270, 'Tak', 'Yes'),
 (271, 'Nie', 'No'),
 (272, 'Postać została odzyskana', 'Character restored'),
+(273, '<a href=\"http://db.hellground.pl/?quest=%u\" target=\"_blank\">%s</a>', '<a href=\"http://db.hellground.pl/?quest=%u\" target=\"_blank\">%s</a>'),
 
 (350, 'Błędny login lub hasło', 'Wrong login or password'),
 (351, 'Błędny login lub email', 'Wrong login or email'),
