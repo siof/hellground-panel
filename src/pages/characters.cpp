@@ -98,6 +98,7 @@ void CharacterInfoPage::refresh()
             tabs->addTab(CreateCharacterQuestInfo(), session->GetText(TXT_LBL_CHAR_TAB_QUEST), WTabWidget::PreLoading);
             tabs->addTab(CreateCharacterSpellInfo(), session->GetText(TXT_LBL_CHAR_TAB_SPELL), WTabWidget::PreLoading);
             tabs->addTab(CreateCharacterInventoryInfo(), session->GetText(TXT_LBL_CHAR_TAB_INVENTORY), WTabWidget::PreLoading);
+            tabs->addTab(CreateCharacterFriendInfo(), session->GetText(TXT_LBL_CHAR_TAB_FRIENDS), WTabWidget::PreLoading);
 
             charList->clear();
             indexToCharInfo.clear();
@@ -209,6 +210,9 @@ void CharacterInfoPage::UpdateTextWidgets()
 
     for (i = 0; i < CHARINVINFO_SLOT_COUNT; ++i)
         inventoryInfoSlots[i].UpdateLabel(session);
+
+    for (i = 0; i < CHARFRIENDINFO_SLOT_COUNT; ++i)
+        friendInfoSlots[i].UpdateLabel(session);
 }
 
 /********************************************//**
@@ -220,13 +224,14 @@ void CharacterInfoPage::UpdateTextWidgets()
 
 void CharacterInfoPage::UpdateInformations(uint64 guid)
 {
-    if (guid == 0)
+    if (!guid)
         return;
 
     UpdateCharacterBasicInfo(guid);
     UpdateCharacterQuestInfo(guid);
     UpdateCharacterSpellInfo(guid);
     UpdateCharacterInventoryInfo(guid);
+    UpdateCharacterFriendInfo(guid);
 }
 
 /********************************************//**
@@ -357,6 +362,30 @@ WTable * CharacterInfoPage::CreateCharacterInventoryInfo()
         tmpInv->elementAt(0, i)->addWidget(inventoryInfoSlots[i].GetLabel());
 
     return tmpInv;
+}
+
+/********************************************//**
+ * \brief Create friends informations.
+ *
+ * All friends in character friend list will be listed in this table.
+ *
+ ***********************************************/
+
+WTable * CharacterInfoPage::CreateCharacterFriendInfo()
+{
+    WTable * tmpFriends = new WTable();
+
+    tmpFriends->setHeaderCount(1);
+
+    friendInfoSlots[CHARFRIENDINFO_SLOT_NAME].SetLabel(session, TXT_LBL_ITEM_ID);
+    friendInfoSlots[CHARFRIENDINFO_SLOT_NOTE].SetLabel(session, TXT_LBL_ITEM_NAME);
+    friendInfoSlots[CHARFRIENDINFO_SLOT_ONLINE].SetLabel("");
+
+    int i;
+    for (i = 0; i < CHARFRIENDINFO_SLOT_COUNT; ++i)
+        tmpFriends->elementAt(0, i)->addWidget(friendInfoSlots[i].GetLabel());
+
+    return tmpFriends;
 }
 
 /********************************************//**
@@ -576,7 +605,6 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
             pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
             return;
         case DB_RESULT_EMPTY:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_EMPTY);
             return;
         default:
             db.Disconnect();
@@ -599,6 +627,58 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
                 tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
                 tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
                 tmpTable->elementAt(i, 2)->addWidget(new WText(tmpRow->fields[2].GetWString()));
+            }
+
+            break;
+    }
+}
+
+/********************************************//**
+ * \brief Update Character Friend Informations widgets.
+ *
+ * Only informations update. There is no need to delete old and create new widgets.
+ *
+ ***********************************************/
+
+void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
+{
+    Database db;
+    if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    {
+        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        return;
+    }
+
+    switch (db.ExecutePQuery("SELECT ch.name, note, flags, ch.online "
+                            "FROM character_social AS cs JOIN characters AS ch ON cs.friend = ch.guid "
+                            "WHERE cs.guid = '%u'", guid))
+    {
+        case DB_RESULT_ERROR:
+            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            return;
+        case DB_RESULT_EMPTY:
+            return;
+        default:
+            db.Disconnect();
+            std::list<DatabaseRow*> rows = db.GetRows();
+
+            WTable * tmpTable = (WTable*)tabs->widget(CHAR_TAB_FRIENDS);
+
+            int i = tmpTable->rowCount() - 1;
+
+            for (; i > 0; --i)
+                tmpTable->deleteRow(i);
+
+            i = 1;
+
+            DatabaseRow * tmpRow;
+            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+            {
+                tmpRow = *itr;
+
+                tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
+                tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
+                tmpTable->elementAt(i, 2)->addWidget(new WText(session->GetText((tmpRow->fields[2].GetBool() ? TXT_ONLINE : TXT_OFFLINE))));
             }
 
             break;

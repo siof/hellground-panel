@@ -86,7 +86,7 @@ enum CharacterBasicInfoSlot
 /********************************************//**
  * \brief Slots for Character Quest Informations
  *
- * Also determines order on page.
+ * Also determines order in table.
  *
  ***********************************************/
 
@@ -103,7 +103,7 @@ enum CharacterQuestInfoSlot
 /********************************************//**
  * \brief Slots for Character Spells Informations
  *
- * Also determines order on page.
+ * Also determines order in table.
  *
  ***********************************************/
 
@@ -120,7 +120,7 @@ enum CharacterSpellInfoSlot
 /********************************************//**
  * \brief Slots for Character Inventory Informations
  *
- * Also determines order on page.
+ * Also determines order in table.
  *
  ***********************************************/
 
@@ -134,6 +134,22 @@ enum CharacterInventoryInfoSlot
 };
 
 /********************************************//**
+ * \brief Slots for Character Friend Informations
+ *
+ * Also determines order in table.
+ *
+ ***********************************************/
+
+enum CharacterFriendInfoSlot
+{
+    CHARFRIENDINFO_SLOT_NAME    = 0,        /**< Friend name label. */
+    CHARFRIENDINFO_SLOT_NOTE    = 1,        /**< Friend note label. */
+    CHARFRIENDINFO_SLOT_ONLINE  = 2,        /**< Friend is online/offline label. */
+
+    CHARFRIENDINFO_SLOT_COUNT
+};
+
+/********************************************//**
  * \brief Slots for character informations tabs
  ***********************************************/
 
@@ -143,6 +159,7 @@ enum CharacterTabsSlots
     CHAR_TAB_QUEST          = 1,            /**< Quest informations tab */
     CHAR_TAB_SPELL          = 2,            /**< Spell informations tab */
     CHAR_TAB_INVENTORY      = 3,            /**< Inventory informations tab */
+    CHAR_TAB_FRIENDS        = 4,            /**< Friends informations tab */
 
     CHAR_TAB_COUNT
 };
@@ -218,6 +235,8 @@ private:
     BasicTextItem spellInfoSlots[CHARSPELLINFO_SLOT_COUNT];
     /// contains headers for inventory info table
     BasicTextItem inventoryInfoSlots[CHARINVINFO_SLOT_COUNT];
+    /// contains headers for friend info table
+    BasicTextItem friendInfoSlots[CHARFRIENDINFO_SLOT_COUNT];
 
     bool IsDeletedCharacter(const uint64 & guid);
     bool IsDeletedCharacter(const CharInfo & charInfo) { return charInfo.deleted; }
@@ -236,6 +255,9 @@ private:
 
     WTable * CreateCharacterInventoryInfo();
     void UpdateCharacterInventoryInfo(uint64 guid);
+
+    WTable * CreateCharacterFriendInfo();
+    void UpdateCharacterFriendInfo(uint64 guid);
 
     void ClearPage(bool alsoCharList = true);
 
