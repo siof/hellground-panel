@@ -488,7 +488,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
         return;
     }
 
-    switch (db.ExecutePQuery("SELECT cq.quest, qt.Title, qt.MinLevel, cq.status, cq.rewarded, qt.Type "
+    switch (db.ExecutePQuery("SELECT cq.quest, qt.Title, qt.QuestLevel, cq.status, cq.rewarded, qt.Type, qt.MinLevel "
                             "FROM character_queststatus AS cq JOIN %s.quest_template AS qt ON cq.quest = qt.entry "
                             "WHERE guid = %u", SQL_WORLDDB, guid))
     {
@@ -512,6 +512,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
             i = 1;
 
             DatabaseRow * tmpRow;
+            WText * tmpText;
             for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
@@ -521,7 +522,12 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
 
                 std::string tmpStr = GetFormattedString(session->GetText(TXT_QUEST_LINK_NAME_FMT).toUTF8().c_str(), tmpRow->fields[0].GetUInt32(), tmpRow->fields[1].GetCString());
 
-                tmpTable->elementAt(i, 0)->addWidget(new WText(tmpStr));
+                tmpText = new WText(tmpStr);
+
+                tmpStr = GetFormattedString(session->GetText(TXT_QUEST_TOOLTIP_FMT).toUTF8().c_str(), tmpRow->fields[0].GetUInt32(), tmpRow->fields[6].GetUInt32());
+                tmpText->setToolTip(tmpStr, Wt::XHTMLText);
+
+                tmpTable->elementAt(i, 0)->addWidget(tmpText);
                 tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[2].GetWString()));
                 tmpTable->elementAt(i, 2)->addWidget(new WText(GetQuestStatus(session, tmpRow->fields[3].GetInt(), tmpRow->fields[4].GetBool())));
             }
