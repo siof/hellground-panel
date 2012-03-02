@@ -248,8 +248,10 @@ WContainerWidget * CharacterInfoPage::CreateCharacterBasicInfo()
     basicInfoSlots[CHARBASICINFO_SLOT_ONLINE].SetAll(session, TXT_LBL_CHAR_ONLINE, new WText(""), 1);
     basicInfoSlots[CHARBASICINFO_SLOT_PLAYED_TOT].SetAll(session, TXT_LBL_CHAR_TOTAL_PLAYED, new WText(""), 1);
     basicInfoSlots[CHARBASICINFO_SLOT_PLAYED_LVL].SetAll(session, TXT_LBL_CHAR_LVL_PLAYED, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_RESET_COST].SetAll(session, TXT_LBL_CHAR_TALENT_RESET_COST, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_RESET_TIME].SetAll(session, TXT_LBL_CHAR_TALENT_RESET_TIME, new WText(""), 1);
+    basicInfoSlots[CHARBASICINFO_SLOT_LAST_RESET_COST].SetAll(session, TXT_LBL_CHAR_TALENT_RESET_COST, new WText(""), 1);
+    basicInfoSlots[CHARBASICINFO_SLOT_LAST_RESET_TIME].SetAll(session, TXT_LBL_CHAR_TALENT_RESET_TIME, new WText(""), 1);
+    basicInfoSlots[CHARBASICINFO_SLOT_ACTUAL_RESET_COST].SetAll(session, TXT_LBL_CHAR_ACT_TAL_RESET_COST, new WText(""), 1);
+    basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].SetAll(session, TXT_LBL_CHAR_DELETION_DATE, new WText(""), 1);
 
     int tmpCount;
     WWidget * tmpWidget;
@@ -348,6 +350,7 @@ WTable * CharacterInfoPage::CreateCharacterInventoryInfo()
 
     inventoryInfoSlots[CHARINVINFO_SLOT_ID].SetLabel(session, TXT_LBL_ITEM_ID);
     inventoryInfoSlots[CHARINVINFO_SLOT_NAME].SetLabel(session, TXT_LBL_ITEM_NAME);
+    inventoryInfoSlots[CHARINVINFO_SLOT_STACK].SetLabel(session, TXT_LBL_ITEM_COUNT);
 
     int i;
     for (i = 0; i < CHARINVINFO_SLOT_COUNT; ++i)
@@ -372,8 +375,8 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
         return;
     }
 
-    switch (db.ExecutePQuery("SELECT level, race, class, name, online, totaltime, leveltime, resettalents_cost, FROM_UNIXTIME(resettalents_time) "
-                             "FROM characters "
+    switch (db.ExecutePQuery("SELECT level, race, class, name, online, totaltime, leveltime, resettalents_cost, FROM_UNIXTIME(resettalents_time), DATEDIFF(now(), FROM_UNIXTIME(resettalents_time)), date "
+                             "FROM characters LEFT OUTER JOIN deleted_chars ON characters.guid = deleted_chars.char_guid "
                              "WHERE guid = '%u'", guid))
     {
         case DB_RESULT_ERROR:
@@ -414,13 +417,27 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
             tmpMinutes = tmpVal/60;
 
             ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_PLAYED_LVL].GetWidget())->setText(GetFormattedString(session->GetText(TXT_CHARACTER_PLAYED_FMT).toUTF8().c_str(), tmpDays, tmpHours, tmpMinutes));
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_RESET_COST].GetWidget())->setText(GetFormattedString("%lu g", uint64(tmpRow->fields[7].GetUInt64()/10000)));
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_RESET_TIME].GetWidget())->setText(tmpRow->fields[8].GetWString());
+            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_LAST_RESET_COST].GetWidget())->setText(GetFormattedString("%u g", uint32(tmpRow->fields[7].GetUInt64()/GOLD)));
+            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_LAST_RESET_TIME].GetWidget())->setText(tmpRow->fields[8].GetWString());
+
+            tmpVal = tmpRow->fields[9].GetUInt64();
+            tmpVal /= 30;   // one month for core = 30 days
+            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_ACTUAL_RESET_COST].GetWidget())->setText(GetFormattedString("%u g", uint32(CalculateTalentCost(tmpRow->fields[7].GetUInt64(), tmpVal)/GOLD)));
+
 
             if (IsDeletedCharacter(guid))
+            {
                 restoreCharacter->show();
+                ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetWidget())->setText(tmpRow->fields[10].GetWString());
+                basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetLabel()->show();
+                basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetWidget()->show();
+            }
             else
+            {
                 restoreCharacter->hide();
+                basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetLabel()->hide();
+                basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetWidget()->hide();
+            }
 
             break;
         }
@@ -551,9 +568,9 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
         return;
     }
 
-    switch (db.ExecutePQuery("SELECT ci.item_template, it.name "
-                            "FROM character_inventory AS ci JOIN %s.item_template AS it ON ci.item_template = it.entry "
-                            "WHERE guid = %u", SQL_WORLDDB, guid))
+    switch (db.ExecutePQuery("SELECT ci.item_template, it.name, SELECT CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`data`, ' ', 15), ' ', -1) AS UNSIGNED) AS count "
+                            "FROM character_inventory AS ci JOIN item_instance AS ii ON ci.guid = ii.owner_guid JOIN %s.item_template AS it ON ci.item_template = it.entry "
+                            "WHERE ci.guid = %u", SQL_WORLDDB, guid))
     {
         case DB_RESULT_ERROR:
             pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
@@ -581,6 +598,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
 
                 tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
                 tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
+                tmpTable->elementAt(i, 2)->addWidget(new WText(tmpRow->fields[2].GetWString()));
             }
 
             break;
@@ -750,6 +768,9 @@ void CharacterInfoPage::RestoreCharacter()
                     charList->setItemText(tmpItr->first, tmpItr->second.name);
 
                     pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_CHARACTER_RESTORED);
+
+                    db.Connect(PANEL_DB_DATA, SQL_PANELDB);
+                    db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '%s')", tmpCharInfo.account, session->sessionIp.toUTF8().c_str(), TXT_ACT_CHARACTER_RESTORE, escapedName.c_str());
                 }
                 else
                     pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);

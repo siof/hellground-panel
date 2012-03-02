@@ -68,15 +68,17 @@ enum CharInfoSlot
 
 enum CharacterBasicInfoSlot
 {
-    CHARBASICINFO_SLOT_LEVEL        = 0,        /**< Text with character level. */
-    CHARBASICINFO_SLOT_RACE         = 1,        /**< Text with character race. */
-    CHARBASICINFO_SLOT_CLASS        = 2,        /**< Text with character class. */
-    CHARBASICINFO_SLOT_NAME         = 3,        /**< Text with character name. */
-    CHARBASICINFO_SLOT_ONLINE       = 4,        /**< Text with character online status. */
-    CHARBASICINFO_SLOT_PLAYED_TOT   = 5,        /**< Text with character total played time. */
-    CHARBASICINFO_SLOT_PLAYED_LVL   = 6,        /**< Text with character played time on current level. */
-    CHARBASICINFO_SLOT_RESET_COST   = 7,        /**< Text with character reset talent cost. */
-    CHARBASICINFO_SLOT_RESET_TIME   = 8,        /**< Text with character reset talent time. */
+    CHARBASICINFO_SLOT_LEVEL                = 0,        /**< Text with character level. */
+    CHARBASICINFO_SLOT_RACE                 = 1,        /**< Text with character race. */
+    CHARBASICINFO_SLOT_CLASS                = 2,        /**< Text with character class. */
+    CHARBASICINFO_SLOT_NAME                 = 3,        /**< Text with character name. */
+    CHARBASICINFO_SLOT_ONLINE               = 4,        /**< Text with character online status. */
+    CHARBASICINFO_SLOT_PLAYED_TOT           = 5,        /**< Text with character total played time. */
+    CHARBASICINFO_SLOT_PLAYED_LVL           = 6,        /**< Text with character played time on current level. */
+    CHARBASICINFO_SLOT_LAST_RESET_COST      = 7,        /**< Text with last character reset talent cost. */
+    CHARBASICINFO_SLOT_LAST_RESET_TIME      = 8,        /**< Text with last character reset talent time. */
+    CHARBASICINFO_SLOT_ACTUAL_RESET_COST    = 9,        /**< Text with character actual reset talent cost. */
+    CHARBASICINFO_SLOT_DELETION_TIME        = 10,       /**< Text with time when character was deleted. */
 
     CHARBASICINFO_SLOT_COUNT
 };
@@ -126,6 +128,7 @@ enum CharacterInventoryInfoSlot
 {
     CHARINVINFO_SLOT_ID     = 0,            /**< Item ID label. */
     CHARINVINFO_SLOT_NAME   = 1,            /**< Item name label. */
+    CHARINVINFO_SLOT_STACK  = 2,            /**< Items count in stack. */
 
     CHARINVINFO_SLOT_COUNT
 };

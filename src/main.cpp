@@ -244,6 +244,38 @@ bool SameSide(const uint8 & race1, const uint8 & race2)
     return GetSide(race1) == GetSide(race2);
 }
 
+uint32 CalculateTalentCost(uint32 lastCost, uint32 months)
+{
+    // The first time reset costs 1 gold
+    if (lastCost < 1*GOLD)
+        return 1*GOLD;
+    // then 5 gold
+    else if (lastCost < 5*GOLD)
+        return 5*GOLD;
+    // After that it increases in increments of 5 gold
+    else if (lastCost < 10*GOLD)
+        return 10*GOLD;
+    else
+    {
+        if (months > 0)
+        {
+            // This cost will be reduced by a rate of 5 gold per month
+            int64 new_cost = lastCost - 5*GOLD*months;
+            // to a minimum of 10 gold.
+            return (new_cost < 10*GOLD ? 10*GOLD : new_cost);
+        }
+        else
+        {
+            // After that it increases in increments of 5 gold
+            uint32 new_cost = lastCost + 5*GOLD;
+            // until it hits a cap of 50 gold.
+            if (new_cost > 50*GOLD)
+                new_cost = 50*GOLD;
+            return new_cost;
+        }
+    }
+}
+
 class PlayersPanel : public WApplication
 {
 public:
