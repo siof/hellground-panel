@@ -769,6 +769,10 @@ void CharacterInfoPage::RestoreCharacter()
 
                     pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_CHARACTER_RESTORED);
 
+                    restoreCharacter->hide();
+                    basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetLabel()->hide();
+                    basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetWidget()->hide();
+
                     db.Connect(PANEL_DB_DATA, SQL_PANELDB);
                     db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '%s')", tmpCharInfo.account, session->sessionIp.toUTF8().c_str(), TXT_ACT_CHARACTER_RESTORE, escapedName.c_str());
                 }
