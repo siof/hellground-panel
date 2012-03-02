@@ -533,6 +533,9 @@ enum Texts
     TXT_LBL_ITEM_NAME               = 722,  /**< Item name label. */
     TXT_LBL_ITEM_COUNT              = 723,  /**< Item count label. */
 
+    TXT_LBL_FRIEND_NAME             = 726,  /**< Friend name label. */
+    TXT_LBL_FRIEND_NOTE             = 727,  /**< Friend note label. */
+
     TXT_LBL_RACE_HUMAN              = 801,  /**< Text for human race */
     TXT_LBL_RACE_ORC                = 802,  /**< Text for orc race */
     TXT_LBL_RACE_DWARF              = 803,  /**< Text for dwarf race */
@@ -864,6 +867,7 @@ struct SpellInfo
 
 extern std::map<uint32, SpellInfo> spells;
 
+// enums/defines from core:
 
 enum TimeConstants
 {
@@ -874,6 +878,13 @@ enum TimeConstants
     MONTH  = DAY*30,
     YEAR   = MONTH*12,
     IN_MILISECONDS = 1000
+};
+
+enum SocialFlag
+{
+    SOCIAL_FLAG_FRIEND      = 0x01,
+    SOCIAL_FLAG_IGNORED     = 0x02,
+    SOCIAL_FLAG_MUTED       = 0x04                          // guessed
 };
 
 #define BRONZE  1
