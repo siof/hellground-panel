@@ -341,9 +341,9 @@ enum Texts
     TXT_LBL_CHAR_TAB_QUEST          = 86,   /**< Character quest informations tab label */
     TXT_LBL_CHAR_TAB_SPELL          = 87,   /**< Character spell informations tab label */
     TXT_LBL_CHAR_TAB_INVENTORY      = 88,   /**< Character inventory informations tab label */
-    TXT_LBL_CHAR_ACT_TAL_RESET_COST = 89,   /**< Character actual talent reset cost label */
-    TXT_LBL_CHAR_DELETION_DATE      = 90,   /**< Character deletion date label */
-    TXT_LBL_CHAR_TAB_FRIENDS        = 91,   /**< Character friends informations tab label */
+    TXT_LBL_CHAR_TAB_FRIENDS        = 89,   /**< Character friends informations tab label */
+    TXT_LBL_CHAR_ACT_TAL_RESET_COST = 90,   /**< Character actual talent reset cost label */
+    TXT_LBL_CHAR_DELETION_DATE      = 91,   /**< Character deletion date label */
 
     /** Account */
     TXT_LBL_ACC_CHARS               = 100,  /**< Account characters label */
