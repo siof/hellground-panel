@@ -49,9 +49,9 @@ INSERT INTO LangTexts VALUES
 (86, 'Questy', 'Quests'),
 (87, 'Czary', 'Spells'),
 (88, 'Ekwipunek', 'Inventory'),
-(89, 'Aktualny koszt resetu talentów: ', 'Actual talent reset cost: '),
-(90, 'Data usunięcia postaci: ', 'Character deletion date: '),
-(91, 'Znajomi', 'Friends'),
+(89, 'Znajomi', 'Friends'),
+(90, 'Aktualny koszt resetu talentów: ', 'Actual talent reset cost: '),
+(91, 'Data usunięcia postaci: ', 'Character deletion date: '),
 
 (100, 'Postacie na koncie: ', 'Characters on account: '),
 (101, 'Data założenia konta: ', 'Account creation date: '),
