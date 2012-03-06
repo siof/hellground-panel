@@ -612,7 +612,7 @@ void HGMenu::LogMeIn()
             btnLog->setDisabled(true);
             loginContainer->setHidden(true);
 
-            if (db.ExecutePQuery("SELECT * FROM account_banned WHERE id = '%u' AND active = 1 AND (bandate == unbandate OR unbandate > UNIX_TIMESTAMP())", session->accid) > DB_RESULT_EMPTY)
+            if (db.ExecutePQuery("SELECT * FROM account_banned WHERE id = '%u' AND active = 1 AND (bandate = unbandate OR unbandate > UNIX_TIMESTAMP())", session->accid) > DB_RESULT_EMPTY)
                 session->banned = true;
 
             if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
