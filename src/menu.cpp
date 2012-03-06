@@ -532,7 +532,9 @@ void HGMenu::LogMeIn()
     }
 
                //           0            1         2     3       4       5         6       7         8       9         10
-    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion, vote, account_flags FROM account WHERE username = '%s'", escapedLogin.c_str());
+    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion, vote, account_flags "
+                 "FROM account "
+                 "WHERE username = '%s'", escapedLogin.c_str());
 
     // execute will return 0 if result will be empty and -1 if there will be DB error.
     switch (db.ExecuteQuery())
@@ -609,6 +611,9 @@ void HGMenu::LogMeIn()
             pass->setDisabled(true);
             btnLog->setDisabled(true);
             loginContainer->setHidden(true);
+
+            if (db.ExecutePQuery("SELECT * FROM account_banned WHERE id = '%u' AND active = 1 AND (bandate == unbandate OR unbandate > UNIX_TIMESTAMP())", session->accid) > DB_RESULT_EMPTY)
+                session->banned = true;
 
             if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
             {

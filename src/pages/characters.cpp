@@ -779,6 +779,12 @@ void CharacterInfoPage::RestoreCharacter()
     if (restoring)
         return;
 
+    if (session->banned)
+    {
+        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_NOT_WHILE_BANNED);
+        return;
+    }
+
     restoring = true;
 
     std::map<int, CharInfo>::iterator tmpItr = indexToCharInfo.find(charList->currentIndex());
