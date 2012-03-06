@@ -346,6 +346,7 @@ If it''s your account please use password recovery option to reset password and 
 (362, 'Postać o takim imieniu już istnieje.', 'Character with that name already exists.'),
 (363, 'Nie możesz posiadać na koncie postaci z różnych frakcji.', 'You can''t have characters from different factions on one account.'),
 (364, 'Zbyt duża ilość postaci na koncie.', 'To much characters on account.'),
+(365, 'Nie możesz wykonać tej czynności póki jesteś zbanowany.', 'You can''t do that while banned.'),
 
 (501, 'DB Error: Błąd połączenia z bazą danych.', 'DB Error: Can''t connect to database.'),
 (502, 'DB Error: Zapytanie zwróciło pusty wynik.', 'DB Error: Query result was empty.'),

@@ -149,7 +149,7 @@ struct SessionInfo
      *
      ***********************************************/
 
-    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), vote(0), account_flags(0), textMissing("Error ! Text missing !") {}
+    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), vote(0), account_flags(0), banned(false), textMissing("Error ! Text missing !") {}
     ~SessionInfo() {}
 
     WString login;          /**< Login used to log on account. */
@@ -166,6 +166,7 @@ struct SessionInfo
     int expansion;          /**< Expansion enabled for this account. */
     uint32 vote;            /**< Vote points count */
     uint64 account_flags;   /**< Account custom flags (blizz xp rates for example) */
+    bool banned;            /**< Account was banned while login? */
 
     WString textMissing;    /**< "Error ! Text missing !" info. Should be shown when text wasn't found in langTexts. */
 
@@ -223,6 +224,7 @@ struct SessionInfo
         locked = false;
         expansion = 0;
         vote = 0;
+        banned = false;
     }
 };
 
@@ -506,6 +508,7 @@ enum Texts
     TXT_ERROR_CHARACTER_NAME_EXISTS = 362,  /**< Error info: character with that name already exists */
     TXT_ERROR_FACTION_MISMATCH      = 363,  /**< Error info: you can't have characters in both sides */
     TXT_ERROR_TO_MUCH_CHARACTERS    = 364,  /**< Error info: to much characters on account */
+    TXT_ERROR_NOT_WHILE_BANNED      = 365,  /**< Error info: you can't do that while banned */
 
     TXT_DBERROR_CANT_CONNECT        = 501,  /**< DB Error info: can't connect to database */
     TXT_DBERROR_QUERY_EMPTY         = 502,  /**< DB Error info: result empty */
