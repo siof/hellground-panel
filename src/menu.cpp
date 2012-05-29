@@ -17,6 +17,10 @@
 
 #include "menu.h"
 
+#include <WRegExpValidator>
+#include <WLengthValidator>
+#include <WSubMenuItem>
+
 #include "pages/default.h"
 #include "pages/accInfo.h"
 #include "pages/register.h"
@@ -29,10 +33,6 @@
 #include "pages/support.h"
 #include "pages/vote.h"
 #include "pages/characters.h"
-
-#include <WRegExpValidator>
-#include <WLengthValidator>
-#include <WSubMenuItem>
 
 #include "database.h"
 
@@ -605,13 +605,13 @@ void HGMenu::LogMeIn()
             login->setText("");
             pass->setText("");
 
-            WAnimation fade(WAnimation::Fade, WAnimation::Linear, 250);
-            login->setHidden(true, fade);
-            pass->setHidden(true, fade);
-            btnLog->setHidden(true, fade);
-            login->setDisabled(true);
-            pass->setDisabled(true);
-            btnLog->setDisabled(true);
+//            WAnimation fade(WAnimation::Fade, WAnimation::Linear, 250);
+//            login->setHidden(true, fade);
+//            pass->setHidden(true, fade);
+//            btnLog->setHidden(true, fade);
+//            login->setDisabled(true);
+//            pass->setDisabled(true);
+//            btnLog->setDisabled(true);
             loginContainer->setHidden(true);
 
             if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
@@ -677,7 +677,7 @@ void HGMenu::ShowMenuOptions(bool addLogin)
     tmpOption = NULL;
 
     // if player isn't logged
-    if (session->accid < 1)
+    if (session->accid == 0)
     {
         if (login)
             login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
@@ -691,13 +691,13 @@ void HGMenu::ShowMenuOptions(bool addLogin)
         if (addLogin)
         {
             loginContainer->setHidden(false);
-            WAnimation fade(WAnimation::Fade, WAnimation::Linear, 250);
-            login->setHidden(false, fade);
-            pass->setHidden(false, fade);
-            btnLog->setHidden(false, fade);
-            login->setDisabled(false);
-            pass->setDisabled(false);
-            btnLog->setDisabled(false);
+//            WAnimation fade(WAnimation::Pop, WAnimation::Linear, 250);
+//            login->setHidden(false, fade);
+//            pass->setHidden(false, fade);
+//            btnLog->setHidden(false, fade);
+//            login->setDisabled(false);
+//            pass->setDisabled(false);
+//            btnLog->setDisabled(false);
         }
     }
 }
