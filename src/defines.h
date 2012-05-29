@@ -33,6 +33,13 @@
 
 #include "config.h"
 
+#include <cstdio>
+#include <map>
+
+#ifdef DEBUG
+#include <iostream>
+#endif
+
 // standard includes for most files
 #include <WApplication>
 #include <WEnvironment>
@@ -48,9 +55,6 @@
 #include <WStackedWidget>
 #include <WAnimation>
 
-#include <cstdio>
-#include <map>
-
 using namespace Wt;
 
 typedef uint64_t    uint64;
@@ -61,10 +65,6 @@ typedef int64_t     int64;
 typedef int32_t     int32;
 typedef int16_t     int16;
 typedef int8_t      int8;
-
-#ifdef DEBUG
-#include <iostream>
-#endif
 
 #ifdef WIN32
 #define SSCANF      sscanf_s
@@ -789,15 +789,16 @@ enum CharacterRaces
 
 enum CharacterClasses
 {
-    CLASS_WARRIOR   = 1,    /**< Character class: Warrior */
-    CLASS_PALADIN   = 2,    /**< Character class: Paladin */
-    CLASS_HUNTER    = 3,    /**< Character class: Hunter */
-    CLASS_ROGUE     = 4,    /**< Character class: Rogue */
-    CLASS_PRIEST    = 5,    /**< Character class: Priest */
-    CLASS_SHAMAN    = 7,    /**< Character class: Shaman */
-    CLASS_MAGE      = 8,    /**< Character class: Mage */
-    CLASS_WARLOCK   = 9,    /**< Character class: Warlock */
-    CLASS_DRUID     = 11    /**< Character class: Druid */
+    CLASS_WARRIOR       = 1,    /**< Character class: Warrior */
+    CLASS_PALADIN       = 2,    /**< Character class: Paladin */
+    CLASS_HUNTER        = 3,    /**< Character class: Hunter */
+    CLASS_ROGUE         = 4,    /**< Character class: Rogue */
+    CLASS_PRIEST        = 5,    /**< Character class: Priest */
+    CLASS_DEATH_KNIGHT  = 6,    /**< Character class: Death Knight */
+    CLASS_SHAMAN        = 7,    /**< Character class: Shaman */
+    CLASS_MAGE          = 8,    /**< Character class: Mage */
+    CLASS_WARLOCK       = 9,    /**< Character class: Warlock */
+    CLASS_DRUID         = 11    /**< Character class: Druid */
 };
 
 /********************************************//**
