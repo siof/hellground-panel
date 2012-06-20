@@ -29,17 +29,19 @@
 
 #include "passRecovery.h"
 #include "../database.h"
-#include <WRegExpValidator>
+#include <Wt/WRegExpValidator>
 #include <boost/algorithm/string.hpp>
 
 PassRecoveryPage::PassRecoveryPage(SessionInfo * sess, WContainerWidget * parent):
-    WContainerWidget(parent), session(sess), needCreation(true)
+    WContainerWidget(parent), session(sess)
 {
     setContentAlignment(AlignCenter|AlignTop);
 
     txtLogin = NULL;
     txtEmail = NULL;
     btnRecover = NULL;
+
+    CreateRecoveryPage();
 }
 
 PassRecoveryPage::~PassRecoveryPage()
@@ -59,35 +61,12 @@ void PassRecoveryPage::refresh()
 {
     console(DEBUG_CODE, "PassRecoveryPage::refresh()");
 
-    // pass recovery page should be visible only for not logged yet players so there is no need to update/create it in other cases
-    if (session->accLvl == LVL_NOT_LOGGED)
-    {
-        if (needCreation)
-            CreateRecoveryPage();
-        else
-            UpdateTextWidgets();
-    }
+    if (isHidden() || isDisabled())
+        return;
 
-    WContainerWidget::refresh();
-}
-
-/********************************************//**
- * \brief Update text widgets.
- *
- * All text label widgets in all slots will be updated,
- * so if player will change language then automagically
- * labels should change too ;)
- *
- ***********************************************/
-
-void PassRecoveryPage::UpdateTextWidgets()
-{
     ClearRecoveryData();
 
-    for (int i = 0; i < RECOVERY_TEXT_SLOT_COUNT; ++i)
-        textSlots[i].UpdateLabel(session);
-
-    btnRecover->setText(session->GetText(TXT_BTN_PASS_SEND));
+    WContainerWidget::refresh();
 }
 
 /********************************************//**
@@ -100,42 +79,35 @@ void PassRecoveryPage::UpdateTextWidgets()
 
 void PassRecoveryPage::CreateRecoveryPage()
 {
-    clear();
-    needCreation = false;
+    addWidget(new WText(tr(TXT_INFO_PASS_RECOVERY)));
 
-    textSlots[RECOVERY_TEXT_MAIN].SetLabel(session, TXT_LBL_PASS_RECOVERY);
-    addWidget(textSlots[RECOVERY_TEXT_MAIN].GetLabel());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
+    for (int i = 0; i < 4; ++i)
+        addWidget(new WBreak());
 
-    textSlots[RECOVERY_TEXT_INFO].SetLabel("");
-    addWidget(textSlots[RECOVERY_TEXT_INFO].GetLabel());
+    recoveryInfo = new WText("");
+    addWidget(recoveryInfo);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
-    textSlots[RECOVERY_TEXT_LOGIN].SetLabel(session, TXT_LBL_ACC_LOGIN);
     txtLogin = new WLineEdit();
 
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
     txtLogin->setValidator(validator);
 
-    addWidget(textSlots[RECOVERY_TEXT_LOGIN].GetLabel());
+    addWidget(new WText(tr(TXT_ACC_LOGIN)));
     addWidget(txtLogin);
     addWidget(new WBreak());
 
-    textSlots[RECOVERY_TEXT_EMAIL].SetLabel(session, TXT_LBL_PASS_MAIL);
     txtEmail = new WLineEdit();
     validator = new WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
     txtEmail->setValidator(validator);
 
-    addWidget(textSlots[RECOVERY_TEXT_EMAIL].GetLabel());
+    addWidget(new WText(tr(TXT_PASS_MAIL)));
     addWidget(txtEmail);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
-    btnRecover = new WPushButton(session->GetText(TXT_BTN_PASS_SEND));
+    btnRecover = new WPushButton(tr(TXT_BTN_PASS_SEND));
     addWidget(btnRecover);
 
     txtLogin->focussed().connect(this, &PassRecoveryPage::ClearWLineEdit);
@@ -172,7 +144,7 @@ void PassRecoveryPage::Recover()
     if (!validLogin || !validEmail)
     {
         Log(LOG_INVALID_DATA, "User trying to recover password with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
-        textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_NOT_VALID_DATA);
+        recoveryInfo->setText(tr(TXT_ERROR_VALIDATION_RECOVERY));
         return;
     }
 
@@ -180,7 +152,7 @@ void PassRecoveryPage::Recover()
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        recoveryInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -196,7 +168,7 @@ void PassRecoveryPage::Recover()
         case DB_RESULT_ERROR:
         case DB_RESULT_EMPTY:
             AddActivityPassRecovery(false, login.toUTF8().c_str());
-            textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_RECOVERY_DATA);
+            recoveryInfo->setText(tr(TXT_ERROR_WRONG_RECOVERY_DATA));
             ClearRecoveryData();
             return;
         default:
@@ -217,7 +189,7 @@ void PassRecoveryPage::Recover()
     if (mail != dbMail)
     {
         AddActivityPassRecovery(accId, false);
-        textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_RECOVERY_DATA);
+        recoveryInfo->setText(tr(TXT_ERROR_WRONG_RECOVERY_DATA));
         ClearRecoveryData();
         return;
     }
@@ -237,28 +209,23 @@ void PassRecoveryPage::Recover()
     from = MAIL_FROM;
 
     // check should be moved to other place but here will be usefull for SendMail tests ;)
-    db.SetPQuery("UPDATE account SET sha_pass_hash = SHA1(UPPER('%s:%s')), sessionkey = '', s = '', v = '', locked = '0' WHERE id = '%i';", login.toUTF8().c_str(), pass.toUTF8().c_str(), accId);
+    db.SetPQuery("UPDATE account SET sha_pass_hash = SHA1(UPPER('%s:%s')), sessionkey = '', s = '', v = '', locked = '0' WHERE id = '%u';", login.toUTF8().c_str(), pass.toUTF8().c_str(), accId);
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         AddActivityPassRecovery(accId, false);
-        textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        recoveryInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         ClearRecoveryData();
         return;
     }
 
-    if (session->HasText(TXT_RECOVERY_MAIL))
-        msg = session->GetText(TXT_RECOVERY_MAIL);
-    else
-        msg = "Password Recovery Mail.\n\nRecovery date: %s \nRecovery session IP: %s \nNew pass: %s";
+    msg = tr(TXT_PASS_RECOVERY_MAIL).arg(dbDate).arg(session->sessionIp.toUTF8()).arg(tmpStr);
 
-    msg = GetFormattedString(msg.toUTF8().c_str(), dbDate.c_str(), session->sessionIp.toUTF8().c_str(), tmpStr.c_str());
-
-    SendMail(from, mail, session->GetText(TXT_RECOVERY_SUBJECT), msg);
+    SendMail(from, mail, tr(TXT_PASS_RECOVERY_SUBJECT), msg);
 
     ClearRecoveryData();
 
-    textSlots[RECOVERY_TEXT_INFO].SetLabel(session, TXT_RECOVERY_COMPLETE);
+    recoveryInfo->setText(tr(TXT_PASS_RECOVERY_COMPLETE));
 
     AddActivityPassRecovery(accId, true);
 }
@@ -291,7 +258,7 @@ void PassRecoveryPage::AddActivityPassRecovery(uint32 id, bool success)
     Database db;
 
     db.Connect(PANEL_DB_DATA, SQL_PANELDB);
-    db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_RECOVERY_SUCCESS : TXT_ACT_RECOVERY_FAIL);
+    db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_RECOVERY_SUCCESS : TXT_ACT_RECOVERY_FAIL);
 }
 
 /********************************************//**

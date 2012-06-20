@@ -17,14 +17,14 @@
 
 #include "slotItems.h"
 
-BasicTextItem::BasicTextItem(SessionInfo * sess, uint32 txtId)
+BasicTextItem::BasicTextItem(SessionInfo * sess, const char* id)
 {
-    console(DEBUG_CODE, "BasicTextItem::BasicTextItem(SessionInfo * sess = %i, uint32 txtId = %u)\n", sess != NULL, txtId);
-    if (!sess || !txtId)
+    console(DEBUG_CODE, "BasicTextItem::BasicTextItem(SessionInfo * sess = %i, uint32 txtId = %s)\n", sess != NULL, id);
+    if (!sess || !id)
         return;
 
-    label = new WText(sess->GetText(txtId));
-    textId = txtId;
+    label = new WText(tr(id));
+    textId = id;
     prevLang = sess->language;
 }
 
@@ -32,7 +32,7 @@ BasicTextItem::BasicTextItem(WString &lbl)
 {
     console(DEBUG_CODE, "BasicTextItem::BasicTextItem(WString &lbl = %s)\n", lbl.toUTF8().c_str());
     label = new WText(lbl);
-    textId = 0;
+    textId = "";
     prevLang = LANG_COUNT;
 }
 
@@ -44,27 +44,27 @@ BasicTextItem::~BasicTextItem()
 //    label = NULL;
 }
 
-void BasicTextItem::UpdateLabel(SessionInfo * sess, uint32 txtId)
+void BasicTextItem::UpdateLabel(const char* id)
 {
-    console(DEBUG_CODE, "void BasicTextItem::UpdateLabel(SessionInfo * sess = %i, uint32 txtId = %u)\n", sess != NULL, txtId);
-    if (prevLang != sess->language || txtId != textId)
-        SetLabel(sess, txtId);
+    console(DEBUG_CODE, "void BasicTextItem::UpdateLabel(const char * txtId = %s)\n", id);
+    if (/*prevLang != sess->language || */id != textId)
+        SetLabel(/*sess, */id);
 
-    prevLang = sess->language;
+//    prevLang = sess->language;
 }
 
-void BasicTextItem::UpdateText(SessionInfo * sess, uint32 txtId)
+void BasicTextItem::UpdateText(const char* id)
 {
-    console(DEBUG_CODE, "void BasicTextItem::UpdateText(SessionInfo * sess = %i, uint32 txtId = %u)\n", sess != NULL, txtId);
-    if (prevLang != sess->language || txtId != textId)
-        SetLabel(sess, txtId);
+    console(DEBUG_CODE, "void BasicTextItem::UpdateText(const char * txtId = %s)\n", id);
+    if (/*prevLang != sess->language || */id != textId)
+        SetLabel(/*sess, */id);
 
-    prevLang = sess->language;
+//    prevLang = sess->language;
 }
 
-void BasicTextItem::SetLabel(WText * lbl, uint32 id)
+void BasicTextItem::SetLabel(WText * lbl, const char* id)
 {
-    console(DEBUG_CODE, "void BasicTextItem::SetLabel(WText * lbl = %i, uint32 id = %u)\n", lbl != NULL, id);
+    console(DEBUG_CODE, "void BasicTextItem::SetLabel(WText * lbl = %i, const char * id = %s)\n", lbl != NULL, id);
     if (!lbl)
         return;
 
@@ -87,22 +87,19 @@ void BasicTextItem::SetLabel(WString &lbl)
         label->setText(lbl);
 }
 
-void BasicTextItem::SetLabel(SessionInfo * sess, uint32 id)
+void BasicTextItem::SetLabel(SessionInfo * sess, const char* id)
 {
-    console(DEBUG_CODE, "void BasicTextItem::SetLabel(SessionInfo * sess = %i, uint32 id = %u) prevLang = %i, lang = %i\n", sess != NULL, id, prevLang, sess->language);
+    console(DEBUG_CODE, "void BasicTextItem::SetLabel(SessionInfo * sess = %i, const char * id = %s) prevLang = %i, lang = %i\n", sess != NULL, id, prevLang, sess->language);
     if (!sess || (prevLang == sess->language && id == textId))
         return;
 
     if (id)
         textId = id;
 
-    if (!textId)
-        return;
-
-    SetLabel(sess->GetText(textId));
+    WString tmpStr = tr(textId.toUTF8());
+    SetLabel(tmpStr);
     prevLang = sess->language;
 }
-
 
 void BasicTextItem::SetLabel(std::string &lbl)
 {
@@ -118,9 +115,9 @@ void BasicTextItem::SetLabel(const char* lbl)
     SetLabel(tmpStr);
 }
 
-void BasicTextItem::SetText(WText * txt, uint32 id)
+void BasicTextItem::SetText(WText * txt, const char * id)
 {
-    console(DEBUG_CODE, "void BasicTextItem::SetText(WText * txt = %i, uint32 id = %u)\n", txt != NULL, id);
+    console(DEBUG_CODE, "void BasicTextItem::SetText(WText * txt = %i, const char * id = %s)\n", txt != NULL, id);
     SetLabel(txt, id);
 }
 
@@ -130,9 +127,9 @@ void BasicTextItem::SetText(WString &txt)
     SetLabel(txt);
 }
 
-void BasicTextItem::SetText(SessionInfo * sess, uint32 id)
+void BasicTextItem::SetText(SessionInfo * sess, const char* id)
 {
-    console(DEBUG_CODE, "void BasicTextItem::SetText(SessionInfo * sess = %i, uint32 id = %u)\n", sess != NULL, id);
+    console(DEBUG_CODE, "void BasicTextItem::SetText(SessionInfo * sess = %i, uint32 id = %s)\n", sess != NULL, id);
     SetLabel(sess, id);
 }
 
@@ -175,10 +172,10 @@ void PageSlotItem::SetLabel(WText * lbl)
  *
  ***********************************************/
 
-void PageSlotItem::SetLabel(SessionInfo * sess, uint32 txtId)
+void PageSlotItem::SetLabel(SessionInfo * sess, const char* id)
 {
-    console(DEBUG_CODE, "void PageSlotItem::SetLabel(SessionInfo * sess = %i, uint32 txtId = %u)\n", sess != NULL, txtId);
-    label.SetLabel(sess, txtId);
+    console(DEBUG_CODE, "void PageSlotItem::SetLabel(SessionInfo * sess = %i, uint32 txtId = %s)\n", sess != NULL, id);
+    label.SetLabel(sess, id);
 }
 
 /********************************************//**
@@ -220,13 +217,13 @@ void PageSlotItem::SetWidget(WWidget * wid)
  *
  ***********************************************/
 
-void PageSlotItem::SetAll(WText * txt, WWidget * wid, int br, uint32 txtId)
+void PageSlotItem::SetAll(WText * txt, WWidget * wid, int br, const char* id)
 {
-    console(DEBUG_CODE, "void PageSlotItem::SetAll(WText * txt = %i, WWidget * wid = %i, int br = %i, uint32 txtId = %u)\n", txt != NULL, wid != NULL, br, txtId);
+    console(DEBUG_CODE, "void PageSlotItem::SetAll(WText * txt = %i, WWidget * wid = %i, int br = %i, const char* id = %s)\n", txt != NULL, wid != NULL, br, id);
     SetLabel(txt);
     SetWidget(wid);
     SetBreakCount(br);
-    SetTextId(txtId);
+    SetTextId(id);
 }
 
 /********************************************//**
@@ -239,10 +236,10 @@ void PageSlotItem::SetAll(WText * txt, WWidget * wid, int br, uint32 txtId)
  *
  ***********************************************/
 
-void PageSlotItem::SetAll(SessionInfo * sess, uint32 txtId, WWidget * wid, int br)
+void PageSlotItem::SetAll(SessionInfo * sess, const char* id, WWidget * wid, int br)
 {
-    console(DEBUG_CODE, "void PageSlotItem::SetAll(SessionInfo * sess = %i, uint32 txtId = %u, WWidget * wid = %i, int br = %i)\n", sess != NULL, txtId, wid != NULL, br);
-    SetLabel(sess, txtId);
+    console(DEBUG_CODE, "void PageSlotItem::SetAll(SessionInfo * sess = %i, const char* id = %s, WWidget * wid = %i, int br = %i)\n", sess != NULL, id, wid != NULL, br);
+    SetLabel(sess, id);
     SetWidget(wid);
     SetBreakCount(br);
 }
@@ -255,8 +252,8 @@ void PageSlotItem::SetAll(SessionInfo * sess, uint32 txtId, WWidget * wid, int b
  *
  ***********************************************/
 
-void PageSlotItem::UpdateLabel(SessionInfo * sess, uint32 txtId)
+void PageSlotItem::UpdateLabel(SessionInfo * sess, const char* id)
 {
-    console(DEBUG_CODE, "void PageSlotItem::UpdateLabel(SessionInfo * sess = %i, uint32 txtId = %u)\n", sess != NULL, txtId);
-    label.UpdateLabel(sess, txtId);
+    console(DEBUG_CODE, "void PageSlotItem::UpdateLabel(SessionInfo * sess = %i, const char* id = %s)\n", sess != NULL, id);
+    label.UpdateLabel(id);
 }

@@ -1,0 +1,33 @@
+ALTER TABLE Activity DROP PRIMARY KEY;
+ALTER TABLE Activity
+    DROP COLUMN id,
+    CHANGE accId account_id INT UNSIGNED NOT NULL,
+    CHANGE eventDate event_date TIMESTAMP NOT NULL,
+    MODIFY ip CHAR(16) NOT NULL,
+    CHANGE textId activity_id VARCHAR(50) NOT NULL,
+    CHANGE text activity_args VARCHAR(100) NOT NULL DEFAULT '',
+    PRIMARY KEY(account_id, event_date);
+
+ALTER TABLE Vote
+    MODIFY id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    MODIFY url VARCHAR(200) NOT NULL,
+    CHANGE imgurl img_url VARCHAR(200) NOT NULL,
+    CHANGE alttext alt_text VARCHAR(200) NOT NULL DEFAULT '';
+
+ALTER TABLE AccVote DROP KEY voteId;
+ALTER TABLE AccVote
+    CHANGE acc account_id INT UNSIGNED NOT NULL,
+    CHANGE voteId vote_id INT UNSIGNED NOT NULL,
+    CHANGE resetDate reset_date TIMESTAMP NOT NULL,
+    FOREIGN KEY (vote_id) REFERENCES Vote(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE;
+
+ALTER TABLE IPVote DROP KEY voteId;
+ALTER TABLE IPVote
+    MODIFY ip CHAR(16) NOT NULL,
+    CHANGE voteId vote_id INT UNSIGNED NOT NULL,
+    CHANGE resetDate reset_date TIMESTAMP NOT NULL,
+    FOREIGN KEY (vote_id) REFERENCES Vote(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE;

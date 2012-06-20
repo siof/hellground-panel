@@ -21,6 +21,7 @@
 				<ExtraCommands>
 					<Add after="cp -r ../img ./Debug/" />
 					<Add after="cp -r ../css ./Debug/" />
+					<Add after="cp -r ../langs ./Debug/" />
 					<Add after="cp ../favicon.ico ./Debug/" />
 					<Mode after="always" />
 				</ExtraCommands>
@@ -45,6 +46,7 @@
 				<ExtraCommands>
 					<Add after="cp -r ../img ./Release/" />
 					<Add after="cp -r ../css ./Release/" />
+					<Add after="cp -r ../langs ./Release/" />
 					<Add after="cp ../favicon.ico ./Release/" />
 					<Mode after="always" />
 				</ExtraCommands>
@@ -64,6 +66,7 @@
 				<ExtraCommands>
 					<Add after="cp -r ../img ./Debug/" />
 					<Add after="cp -r ../css ./Debug/" />
+					<Add after="cp -r ../langs ./Debug/" />
 					<Add after="cp ../favicon.ico ./Debug/" />
 					<Mode after="always" />
 				</ExtraCommands>
@@ -87,6 +90,7 @@
 				<ExtraCommands>
 					<Add after="cp -r ../img ./Release/" />
 					<Add after="cp -r ../css ./Release/" />
+					<Add after="cp -r ../langs ./Release/" />
 					<Add after="cp ../favicon.ico ./Release/" />
 					<Mode after="always" />
 				</ExtraCommands>
@@ -117,6 +121,8 @@
 		</Linker>
 		<Unit filename="../LICENCE" />
 		<Unit filename="../LICENCE_PL" />
+		<Unit filename="../langs/panel.xml" />
+		<Unit filename="../langs/panel_pl.xml" />
 		<Unit filename="../sql/char.sql" />
 		<Unit filename="../sql/panel.sql" />
 		<Unit filename="../sql/spell.sql" />

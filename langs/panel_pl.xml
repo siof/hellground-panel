@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+    <message id='menu.home'>
+Strona główna
+    </message>
+    <message id='menu.login'>
+Zaloguj się
+    </message>
+    <message id='menu.logout'>
+Wyloguj mnie
+    </message>
+    <message id='menu.register'>
+Rejestracja
+    </message>
+    <message id='menu.account'>
+Informacje o koncie
+    </message>
+    <message id='menu.password.recovery'>
+Odzyskiwanie hasła
+    </message>
+    <message id='menu.password.change'>
+Zmiana hasła
+    </message>
+    <message id='menu.locks'>
+Blokada konta
+    </message>
+    <message id='menu.characters'>
+Postacie
+    </message>
+    <message id='menu.teleport'>
+Teleport
+    </message>
+    <message id='menu.support'>
+Wsparcie
+    </message>
+    <message id='menu.support.donate'>
+Dotacja
+    </message>
+    <message id='menu.support.vote'>
+Vote event
+    </message>
+    <message id='menu.serverstatus'>
+Status realmów
+    </message>
+    <message id='menu.links'>
+Linki
+    </message>
+    <message id='menu.licence'>
+Licencja
+    </message>
+    <message id='menu.error'>
+Błąd
+    </message>
+    <message id='menu.gm.panel'>
+Panel GM
+    </message>
+    <message id='menu.gm.tickets'>
+Tickety
+    </message>
+    <message id='menu.gm.online'>
+Sprawdź online
+    </message>
+    <message id='menu.gm.faction'>
+Sprawdź frakcje
+    </message>
+    <message id='menu.gm.ban.list'>
+Lista banów
+    </message>
+    <message id='menu.gm.mute.list'>
+Liste mute
+    </message>
+
+
+    <message id='character.name'>
+Nick
+    </message>
+    <message id='character.level'>
+Poziom
+    </message>
+    <message id='character.class'>
+Klasa
+    </message>
+    <message id='character.race'>
+Rasa
+    </message>
+    <message id='character.played.total'>
+Całkowity czas gry
+    </message>
+    <message id='character.played.level'>
+Czas gry na tym poziomie
+    </message>
+    <message id='character.played.fmt'>
+
+    </message>
+    <message id='character.list'>
+Wybierz postać
+    </message>
+    <message id='character.talent.reset.cost'>
+Koszt ostatniego resetu talentów
+    </message>
+    <message id='character.talent.reset.cost.actual'>
+Aktualny koszt resetu talentów
+    </message>
+    <message id='character.talent.reset.time'>
+Data ostatneigo resetu talentów
+    </message>
+    <message id='character.onlinestate'>
+Postać jest {1}
+    </message>
+    <message id='character.tab.info'>
+Podstawowe informacje
+    </message>
+    <message id='character.tab.quest'>
+Zadania
+    </message>
+    <message id='character.tab.spell'>
+Czary
+    </message>
+    <message id='character.tab.inventory'>
+Inwentarz
+    </message>
+    <message id='character.tab.fiends'>
+Znajomi
+    </message>
+    <message id='character.deletion.date'>
+Data usunięcia postaci
+    </message>
+    <message id='character.restored'>
+Postać odzyskana
+    </message>
+    <message id='character.race.human'>
+Człowiek
+    </message>
+    <message id='character.race.orc'>
+Ork
+    </message>
+    <message id='character.race.dwarf'>
+Krasnolud
+    </message>
+    <message id='character.race.nightelf'>
+Nocny elf
+    </message>
+    <message id='character.race.undead'>
+Nieumarły
+    </message>
+    <message id='character.race.tauren'>
+Tauren
+    </message>
+    <message id='character.race.gnome'>
+Gnom
+    </message>
+    <message id='character.race.troll'>
+Troll
+    </message>
+    <message id='character.race.bloodelf'>
+Krwawy elf
+    </message>
+    <message id='character.race.draenei'>
+Draenei
+    </message>
+    <message id='character.class.warrior'>
+Wojownik
+    </message>
+    <message id='character.class.paladin'>
+Paladyn
+    </message>
+    <message id='character.class.hunter'>
+Łowca
+    </message>
+    <message id='character.class.rogue'>
+Łotrzyk
+    </message>
+    <message id='character.class.priest'>
+Kapłan
+    </message>
+    <message id='character.class.shaman'>
+Szaman
+    </message>
+    <message id='character.class.mage'>
+Mag
+    </message>
+    <message id='character.class.warlock'>
+Czarnoksieżnik
+    </message>
+    <message id='character.class.druid'>
+Druid
+    </message>
+
+
+    <message id='account.create.date'>
+Data utworzenia konta
+    </message>
+    <message id='account.last.login'>
+Ostatnie logowanie
+    </message>
+    <message id='account.last.ip'>
+Ostatnie IP
+    </message>
+    <message id='account.last.passwordrecovery'>
+Data ostatniego odzyskiwania hasła
+    </message>
+    <message id='account.lock'>
+Blokada konta
+    </message>
+    <message id='account.lock.ip.state'>
+Blokada IP konta jest aktualnie {1}
+    </message>
+    <message id='account.ban.account'>
+Konto zbanowane
+    </message>
+    <message id='account.ban.ip'>
+IP zbanowane
+    </message>
+    <message id='account.online'>
+Online
+    </message>
+    <message id='account.support.points'>
+Punkty wsparcia
+    </message>
+    <message id='account.expansion'>
+Dodatek
+    </message>
+    <message id='account.client'>
+Wersja klienta
+    </message>
+    <message id='account.multiacc'>
+Multi konto
+    </message>
+    <message id='account.login'>
+Login
+    </message>
+    <message id='account.mail'>
+Adres email
+    </message>
+    <message id='account.im.type'>
+Typ komunikatora
+    </message>
+    <message id='account.im.id'>
+Identyfikator komunikatora
+    </message>
+    <message id='account.tab.informations'>
+Podstawowe informacje
+    </message>
+    <message id='account.tab.ban'>
+Bany
+    </message>
+    <message id='account.tab.mute'>
+Mute
+    </message>
+    <message id='account.tab.ticket'>
+Tickety
+    </message>
+    <message id='account.tab.activity'>
+Aktywność
+    </message>
+    <message id='account.xp.rate'>
+Mnożnik XP
+    </message>
+
+    <message id='password.change.complete'>
+Hasło zostało zmienione
+    </message>
+    <message id='password.old'>
+Stare hasło
+    </message>
+    <message id='password.new'>
+Nowe hasło
+    </message>
+    <message id='password.repeat'>
+Powtórz nowe hasło
+    </message>
+    <message id='password.mail'>
+Adres email konta
+    </message>
+    <message id='password.recovery.mail'>
+Witaj,
+otrzymałeś tą wiadomość, Ponieważ dnia {1} ktoś z adresu IP {2} wygenerował nowe hasło do konta.
+
+Twoje nowe hasło: {3}
+
+Aby zmienić hasło zaloguj sie w panelu gracza (http://panel.hellground.pl/) używając nowego hasła przesłanego w tej wiadomości.
+
+Serdecznie pozdrawiamy, administracja HellGround.pl
+    </message>
+    <message id='password.recovery.mail.subject'>
+Server HellGround - Odzyskiwanie hasła
+    </message>
+    <message id='password.recovery.complete'>
+Odzyskiwanie hasła zakończone. Nowe hasło zostało wysłane na adres email przypisany do konta.
+    </message>
+
+    <message id='instance.open'>
+Otwarta
+    </message>
+    <message id='instance.closed'>
+Zamknięta
+    </message>
+
+    <message id='registration.rules'>
+Oświadczam, że zapoznałem się i akceptuję <a href="http://wow.hellground.pl/regulamin-serwera/">regulamin serwera</a>
+    </message>
+    <message id='registration.rules.notaccepted'>
+Aby stworzyć konto musisz zaakceptować regulamin serwera.
+    </message>
+    <message id='registration.exists'>
+Konto o takim loginie już istnieje. Proszę spróbować innego.
+    </message>
+    <message id='registration.mail'>
+Hellground.pl
+
+Dziękujemy za utworzenie konta w naszym projekcie.
+<b>Twój login do konta:</b> {1}
+<b>Twoje nowe hasło:</b> {2}
+
+Proszę zachować tą wiadomość na wypadek zgubienia/zapomnienia loginu do konta – administracja nie przypomni ani nie zmieni Twoich danych do konta.
+Hasło do konta możesz zmienić poprzez panel gracza lub w grze poprzez użycie komendy. Aby poznać liste dostępnych dla Ciebie wpisz w chacie komendę .help
+
+Panel gracza: http://panel.hellground.pl.
+Jak zagrać: http://wow.hellground.pl/how-to-play/
+
+Życzymy przyjemnej gry, administracja Hellground.pl
+    </message>
+    <message id='registration.mail.subject'>
+Serwer Hellground - Rejestracja konta
+    </message>
+    <message id='registration.complete'>
+Rejestracja zakończona. Hasło zostało wysłane na podany adres email.
+    </message>
+    <message id='registration.error'>
+Wystąpił błąd podczas rejestracji. Proszę spróbować ponownie.
+    </message>
+
+    <message id='ban.date.from'>
+Data zbanowania
+    </message>
+    <message id='ban.date.to'>
+Data wygaśnięcia
+    </message>
+    <message id='ban.by'>
+Zbanowany przez
+    </message>
+    <message id='ban.reason'>
+Powód bana
+    </message>
+    <message id='ban.permanent'>
+Permanentny
+    </message>
+    <message id='ban.banned'>
+Tak: {1}
+    </message>
+
+
+    <message id='mute.date.from'>
+Data wyciszenia
+    </message>
+    <message id='mute.date.to'>
+Data wygaśnięcia
+    </message>
+    <message id='mute.by'>
+Wyciszony przez
+    </message>
+    <message id='mute.reason'>
+Powód wyciszenia
+    </message>
+
+
+    <message id='status.realm'>
+Nazwa realmu
+    </message>
+    <message id='status.state'>
+Stan realmu
+    </message>
+    <message id='status.online'>
+Graczy online
+    </message>
+    <message id='status.online.max'>
+Najwięcej graczy online
+    </message>
+    <message id='status.factions'>
+Frakcje
+    </message>
+    <message id='status.factions.fmt'>
+Horda: {1} % Przymierze: {2} %
+    </message>
+    <message id='status.uptime'>
+Czas działania realmu
+    </message>
+    <message id='status.uptime.fmt'>
+{1} dni {2} godzin {3} minut {4} sekund
+    </message>
+    <message id='status.revision'>
+Rewizja
+    </message>
+    <message id='status.diff'>
+Opóźnienie
+    </message>
+    <message id='status.diff.avarage'>
+Średnie opóźnienie
+    </message>
+
+    <message id='button.password.change'>
+Zmień
+    </message>
+    <message id='button.password.clear'>
+Wyczyść
+    </message>
+    <message id='button.password.send'>
+Wyslij
+    </message>
+    <message id='button.login'>
+Zaloguj
+    </message>
+    <message id='button.logout'>
+Wyloguj
+    </message>
+    <message id='button.register'>
+Zarejestruj
+    </message>
+    <message id='button.teleport'>
+Przenieś
+    </message>
+    <message id='button.character.restore'>
+Przywróć postać
+    </message>
+
+    <message id='spell.id'>
+ID czaru
+    </message>
+    <message id='spell.name'>
+Nazwa czaru
+    </message>
+    <message id='spell.active'>
+Aktywny
+    </message>
+    <message id='spell.disabled'>
+Wyłączony
+    </message>
+
+    <message id='item.id'>
+ID przedmiotu
+    </message>
+    <message id='item.name'>
+Nazwa przedmiotu
+    </message>
+    <message id='item.count'>
+Ilość
+    </message>
+
+    <message id='friend.name'>
+Nick znajomego
+    </message>
+    <message id='friend.note'>
+Notka znajomego
+    </message>
+
+    <message id='site.title'>
+Panel gracza HellGround
+    </message>
+    <message id='site.footer'>
+Logo World of Warcraft, is a registered trademark Blizzard Entertainment.<br/>
+© 2006-2012 Panel created by HellGround.pl
+    </message>
+
+    <message id='informations.server'>
+<h3>O serwerze:</h3><br/>
+<ul>
+    <li>Serwer działa od: 19 grudnia 2008r.</li>
+</ul><br/>
+Sprzęt:
+<ul>
+    <li>Procesor Intel Bi Xeon E5504 8x 2.00+ GHz, 2×4 MB L2 – QPI 2×4.8 GT/sec 45nm</li>
+    <li>RAM 24 GB DDR3</li>
+    <li>HDD Intel SSD X25-M 2x 80 GB, SATA 2 2x 1500 GB</li>
+    <li>Łącze 1 Gbps</li>
+</ul><br/>
+Dla nowych graczy:<br/>
+<ul>
+    <li>Rejestracja: <a href="#/account"><font color="#00FF00">Otwarta</font></a></li>
+    <li>realmlist: set realmlist logon.hellground.pl</li>
+    <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
+    <li>Emulator: TrinityCore + <a href="http://wow.hellground.pl/changelog/">własne fixy</a></li>
+    <li>Rates xp: opcjonalnie x1 - x2</li>
+    <li>Rates xp quest: opcjonalnie x1 - x2</li>
+    <li>Rates drop: x1</li>
+    <li>Typ: PvE/PvP</li>
+    <li>Vmapy/LoS: Tak</li>
+    <li>Główny kanał rozmów PL: join world</li>
+    <li>Główny kanał rozmów ENG: join engworld</li>
+    <li>Kanał handlu: join handel</li>
+</ul>
+    </message>
+    <message id='informations.teleport'>
+<h3>Teleport postaci</h3><br/>
+Teleport przeniesie wybraną postać do lokacji startowej <b>danej</b> rasy. <br/>
+Teleportacji używać możesz w dowolnym momencie, jednak każde użycie powoduje godzinny cooldown na Heartstone’a postaci.<br/>
+Twoja postać nie może być zalogowana w momencie używania teleportu.<br/>
+Wybierz postać, którą chcesz teleportować:
+    </message>
+    <message id='informations.instances'>
+<h3>TODO</h3>
+    </message>
+    <message id='informations.logout'>
+<h3>TODO</h3>
+    </message>
+    <message id='informations.status'>
+<h3>TODO</h3>
+    </message>
+    <message id='informations.registration'>
+<h3>HellGround - Stwórz konto</h3>
+    </message>
+    <message id='informations.password.recovery'>
+<h3>TODO</h3>
+    </message>
+    <message id='informations.password.change'>
+<h3>TODO</h3>
+    </message>
+    <message id='informations.account'>
+<h3>Informacje o koncie:</h3>
+    </message>
+    <message id='informations.support'>
+Pomóż rozwijać serwer Hellground poprzez dotacje oraz głosowanie na toplistach:<br/>
+<a href="http://wow.hellground.pl/dotacja/">Dotacja</a><br/>
+<a href="#/support/vote-event">Vote event</a>
+    </message>
+    <message id='informations.support.vote'>
+<h3>Vote Event</h3><br/><br/>
+Zapraszamy do głosowania na serwer Hellground na toplistach gier. Na każdej liście można głosować co <b>12</b> godzin. <br/>
+Zapoznaj się również z zasadami eventu - <a href="http://wow.hellground.pl/zasady-voteevent/">http://wow.hellground.pl/zasady-voteevent/</a>.<br/>
+Aby punkty zostały doliczone musisz kliknąć lewym przyciskiem myszy.<br/><br/>
+Listy:
+    </message>
+    <message id='character.informations'>
+<h3>Informacje o postaci:</h3>
+    </message>
+
+    <message id='expansion.classic'>
+World Of Warcraft
+    </message>
+    <message id='expansion.tbc'>
+World Of Warcraft: The Burning Crusade
+    </message>
+    <message id='expansion.wotlk'>
+World Of Warcraft: Wrath of the Lich King
+    </message>
+    <message id='expansion.cataclysm'>
+World Of Warcraft: Cataclysm
+    </message>
+
+    <message id='general.online'>
+Online
+    </message>
+    <message id='general.offline'>
+Offline
+    </message>
+    <message id='general.unknown'>
+Nieznane
+    </message>
+    <message id='general.yes'>
+Tak
+    </message>
+    <message id='general.no'>
+Nie
+    </message>
+    <message id='general.banned'>
+Zbanowane
+    </message>
+    <message id='general.notbanned'>
+Aktywne
+    </message>
+    <message id='general.never.banned'>
+Nigdy nie zbanowane
+    </message>
+    <message id='general.never.muted'>
+Nigdy nie wyciszone
+    </message>
+    <message id='general.active'>
+Aktywny
+    </message>
+    <message id='general.notactive'>
+Nieaktywny
+    </message>
+    <message id='general.permanent'>
+Stały
+    </message>
+    <message id='general.timed'>
+Czasowy
+    </message>
+
+    <message id='ip.current'>
+Aktualne IP
+    </message>
+    <message id='ip.current.ban'>
+Aktualne IP jest zbanowane
+    </message>
+
+    <message id='teleport.success'>
+Postać została przeniesiona do lokacji startowej.
+    </message>
+
+    <message id='activity.date'>
+Data aktywności
+    </message>
+    <message id='activity.ip'>
+IP
+    </message>
+    <message id='activity.text'>
+Typ aktywności
+    </message>
+    <message id='activity.login.success'>
+Pomyślne zalogowanie
+    </message>
+    <message id='activity.login.fail'>
+Próba zalogowania się na konto
+    </message>
+    <message id='activity.registration.complete'>
+Rejestracja konta
+    </message>
+    <message id='activity.password.change'>
+Zmiana hasła
+    </message>
+    <message id='activity.recovery.success'>
+Nowe hasło zostało wygenerowane
+    </message>
+    <message id='activity.recovery.fail'>
+Próba wygenerowania nowego hasła
+    </message>
+    <message id='activity.lock.change'>
+Zmiana blokady konta
+    </message>
+    <message id='activity.xp.rate.change'>
+Zmiana mnożnika doświadczenia
+    </message>
+    <message id='activity.character.restore'>
+Postać {1} odzyskana
+    </message>
+
+    <message id='licence.intro'>
+HG Players Panel - webowy panel dla graczy serwera HellGround<br/>
+Copyright (C) 2011 HellGround Team : Siof, lukaasm,<br/><br/>
+
+Ten program stanowi wolne oprogramowanie: możesz je rozpowszechniać<br/>
+i/lub modyfikować na warunkach GNU Affero Powszechnej Licencji<br/>
+Publicznej wydanej przez Free Software Foundation w wersji 3.<br/><br/>
+
+Ten program jest rozpowszechniany z nadzieją, że jest przydatny, ale<br/>
+BEZ JAKIEJKOLWIEK GWARANCJI, nawet bez domyślnej gwarancji<br/>
+PRZYDATNOŚCI HANDLOWEJ ORAZ PRZYDATNOŚCI DO OKREŚLONYCH ZASTOSOWAŃ.<br/>
+Przeczytaj GNU Affero Powszechną Licencję Publiczną w celu zapoznania<br/>
+się ze szczegółami.<br/><br/>
+
+Powinieneś otrzymać kopię GNU Affero Powszechnej Licencji Publiczej<br/>
+wraz z programem. Jeżeli nie otrzymałeś jej, zobacz na <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.<br/><br/>
+
+kontakt: siof@hellground.pl
+    </message>
+    <message id='licence.repository'>
+Repozytorium kodu źródłowego (zawiera także licencję): <a href="https://bitbucket.org/siof/hgplayerspanel">https://bitbucket.org/siof/hgplayerspanel</a>
+    </message>
+    <message id='licence.informations'>
+
+    </message>
+
+    <message id='support.vote.next'>
+{1} | Następne głosowanie: {2}
+    </message>
+    <message id='support.vote.cooldown'>
+Zagłosowano
+    </message>
+
+    <message id='xp.rate.default'>
+Domyślne serwerowe (x2)
+    </message>
+    <message id='xp.rate.blizzlike'>
+Blizzlike (x1)
+    </message>
+
+    <message id='quest.link.name.fmt'>
+<a href="http://db.hellground.pl/?quest={1}" target="_blank">{2}</a>
+    </message>
+    <message id='quest.tooltip.fmt'>
+Id: {1}<br/>
+Wymagany poziom: {2}
+    </message>
+    <message id='quest.name'>
+Nazwa zadania
+    </message>
+    <message id='quest.level'>
+Poziom zadania
+    </message>
+    <message id='quest.status'>
+Status wykonania
+    </message>
+
+    <message id='quest.status.none'>
+Brak
+    </message>
+    <message id='quest.status.complete'>
+Zadanie zakończone
+    </message>
+    <message id='quest.status.unavailable'>
+Zadanie niedostępne
+    </message>
+    <message id='quest.status.incomplete'>
+Zadanie w trakcie
+    </message>
+    <message id='quest.status.available'>
+Zadanie dostępne
+    </message>
+    <message id='quest.status.rewarded'>
+Zadanie oddane
+    </message>
+
+    <message id='error.wrong.data.login'>
+Zły login lub hasło
+    </message>
+    <message id='error.wrong.data.recovery'>
+Zły login lub adres email
+    </message>
+    <message id='error.wrong.current.password'>
+Złe hasło
+    </message>
+    <message id='error.password.mismatch'>
+Podane hasła muszą być takie same
+    </message>
+    <message id='error.password.toshort'>
+Podane hasło jest zbyt krótkie
+    </message>
+    <message id='error.password.tolong'>
+Podane haslo jest zbyt długie
+    </message>
+    <message id='error.validation.login'>
+Złe dane logowania.<br/>
+Minimalne wymagania dotyczące danych do konta:<br/><br/>
+Login musi:
+<ul>
+    <li>mieć co najmniej 6 znaków</li>
+    <li>mieć co najwyżej 16 znaków</li>
+    <li>składać się z liter, cyfr, myślnika lub znaku podkreślenia</li>
+</ul><br/><br/>
+Hasło musi:
+<ul>
+    <li>mieć co najmniej 6 znaków</li>
+    <li>mieć co najwyzej 16 znaków</li>
+</ul>
+    </message>
+    <message id='error.validation.recovery'>
+Złe dane przywracania hasła.<br/>
+Login musi:
+<ul>
+    <li>mieć co najmniej 6 znaków</li>
+    <li>mieć co najwyżej 16 znaków</li>
+    <li>składać się z liter, cyfr, myślnika lub znaku podkreślenia</li>
+</ul><br/><br/>
+W polu email musi znajdować sie adres email.
+    </message>
+    <message id='error.teleport.online'>
+Postać nie może być zalogowana aby została przeniesiona
+    </message>
+    <message id='error.character.notfound'>
+Nie znaleziono postaci !
+    </message>
+    <message id='error.ip.mistach'>
+Konto posiada włączoną blokadę IP oraz Twój aktualny adres IP nie pasuje do IP konta.<br/><br/>
+
+Jeśli to konto jest Twoje użyj opcji odzyskiwania hasła w celu zresetowania hasła i blokady IP.
+    </message>
+    <message id='error.vote.multiple'>
+Nie możesz jeszcze zagłosować na tą liste
+    </message>
+    <message id='error.javascript.required'>
+Ta strona wymaga włączonego Java Scriptu
+    </message>
+    <message id='error.character.name.exists'>
+Postać o takim nicku już istnieje
+    </message>
+    <message id='error.faction.mismatch'>
+Nie możesz posiadać postaci w obu frakcjach na jednym koncie
+    </message>
+    <message id='error.tomuch.characters'>
+Zbyt dużo postaci na koncie
+    </message>
+    <message id='error.cant.while.banned'>
+Nie możesz tego zrobić podczas posiadania bana
+    </message>
+
+    <message id='error.db.connection'>
+DB Error: Błąd połączenia z bazą danych
+    </message>
+    <message id='error.db.query.empty'>
+DB Error: Wynik zapytania pusty
+    </message>
+    <message id='error.db.query.error'>
+DB Error: Błąd w zapytanie do bazy danych
+    </message>
+
+    <message id='realm.informations.hellground'>
+<a href="http://wow.hellground.pl/jak-zagrac" target="_blank"><font color="#ffdf81">Jak zagrać - opis</font></a>
+    </message>
+</messages>

@@ -41,19 +41,19 @@
 #endif
 
 // standard includes for most files
-#include <WApplication>
-#include <WEnvironment>
-#include <WLogger>
-#include <WString>
-#include <WBreak>
-#include <WContainerWidget>
-#include <WLineEdit>
-#include <WPushButton>
-#include <WText>
-#include <WImage>
-#include <WTable>
-#include <WStackedWidget>
-#include <WAnimation>
+#include <Wt/WApplication>
+#include <Wt/WEnvironment>
+#include <Wt/WLogger>
+#include <Wt/WString>
+#include <Wt/WBreak>
+#include <Wt/WContainerWidget>
+#include <Wt/WLineEdit>
+#include <Wt/WPushButton>
+#include <Wt/WText>
+#include <Wt/WImage>
+#include <Wt/WTable>
+#include <Wt/WStackedWidget>
+#include <Wt/WAnimation>
 
 using namespace Wt;
 
@@ -149,7 +149,7 @@ struct SessionInfo
      *
      ***********************************************/
 
-    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), vote(0), account_flags(0), banned(false), textMissing("Error ! Text missing !") {}
+    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), vote(0), account_flags(0), banned(false) {}
     ~SessionInfo() {}
 
     WString login;          /**< Login used to log on account. */
@@ -161,47 +161,11 @@ struct SessionInfo
     WString sessionIp;      /**< Ip for current panel session. */
     Lang language;          /**< Chosen language which should be used to show informations in panel. */
     AccountLevel accLvl;    /**< Security level for this account(player, gm etc). Which content should be shown depends on this variable (For example: Player can't use GM section. Not logged player can't view account informations.). */
-    std::map<uint32 ,LangText> langTexts;   /**< Map with texts depend for supported languages loaded from database */
     bool locked;            /**< IP lock */
     int expansion;          /**< Expansion enabled for this account. */
     uint32 vote;            /**< Vote points count */
     uint64 account_flags;   /**< Account custom flags (blizz xp rates for example) */
     bool banned;            /**< Account was banned while login? */
-
-    WString textMissing;    /**< "Error ! Text missing !" info. Should be shown when text wasn't found in langTexts. */
-
-    /********************************************//**
-     * \brief Returns text based on ID and current language.
-     *
-     * \param id    Text id which should be returned.
-     * \return a referrence to text.
-     *
-     ***********************************************/
-
-    WString& GetText(uint32 id)
-    {
-        std::map<uint32, LangText>::iterator itr = langTexts.find(id);
-
-        if (itr == langTexts.end())
-            return textMissing;
-
-        return itr->second.GetText(language);
-    }
-
-    /********************************************//**
-     * \brief Checks if there is text based on given ID.
-     *
-     * \param id    Text id which should be returned.
-     * \return information that text exists or not.
-     *
-     ***********************************************/
-
-    bool HasText(uint32 id)
-    {
-        std::map<uint32, LangText>::iterator itr = langTexts.find(id);
-
-        return itr != langTexts.end();
-    }
 
     /********************************************//**
      * \brief Clears session informations.
@@ -297,279 +261,286 @@ enum MenuOptions
  *
  ***********************************************/
 
-enum Texts
-{
-    /** Buttons */
-    TXT_MENU_HOME                   = 0,    /**< Home menu button */
-    TXT_MENU_LOGIN                  = 1,    /**< Login menu button */
-    TXT_MENU_LOGOUT                 = 2,    /**< Logout menu button */
-    TXT_MENU_REGISTER               = 3,    /**< Register menu button */
-    TXT_MENU_PASS_RECOVERY          = 4,    /**< Password recovery menu button */
-    TXT_MENU_PASS_CHANGE            = 5,    /**< Password change menu button */
-    TXT_MENU_ACC_INFO               = 6,    /**< Account info menu button */
-    TXT_MENU_SERVER_STATUS          = 7,    /**< Server status menu button */
-    TXT_MENU_DONATE                 = 8,    /**< Donate menu button */
-    TXT_MENU_VOTE                   = 9,    /**< Vote menu button */
-    TXT_MENU_LINKS                  = 10,   /**< Links menu button */
-    TXT_MENU_TELEPORT               = 11,   /**< Teleport/Unstack menu button */
-    TXT_MENU_IP_BLOCK               = 12,   /**< Ip lock menu button */
-    TXT_MENU_BANINFO                = 13,   /**< Ban informations menu button */
-    TXT_MENU_BANLIST                = 14,   /**< Ban list menu button */
-    TXT_MENU_MUTEINFO               = 15,   /**< Mute informations menu button */
-    TXT_MENU_MUTELIST               = 16,   /**< Mute list menu button */
-    TXT_MENU_ERROR                  = 17,   /**< Error page (shouldn't be visible) */
-    TXT_MENU_LICENCE                = 18,   /**< Licence informations page */
-    TXT_MENU_SUPPORT                = 19,   /**< Support main */
-    TXT_MENU_CHARACTERS             = 20,   /**< Character information menu button */
+/** Menu */
+#define TXT_MENU_HOME                   "menu.home"                 /**< Home menu button */
+#define TXT_MENU_LOGIN                  "menu.login"                /**< Login menu button */
+#define TXT_MENU_LOGOUT                 "menu.logout"               /**< Logout menu button */
+#define TXT_MENU_REGISTER               "menu.register"             /**< Register menu button */
+#define TXT_MENU_ACC_INFO               "menu.account"              /**< Account info menu button */
+#define TXT_MENU_PASS_RECOVERY          "menu.password.recovery"    /**< Password recovery menu button */
+#define TXT_MENU_PASS_CHANGE            "menu.password.change"      /**< Password change menu button */
+#define TXT_MENU_IP_BLOCK               "menu.locks"                /**< Account locks menu button */
+#define TXT_MENU_CHARACTERS             "menu.characters"           /**< Character information menu button */
+#define TXT_MENU_TELEPORT               "menu.teleport"             /**< Teleport/Unstack menu button */
+#define TXT_MENU_SUPPORT                "menu.support"              /**< Support main */
+#define TXT_MENU_DONATE                 "menu.support.donate"       /**< Donate menu button */
+#define TXT_MENU_VOTE                   "menu.support.vote"         /**< Vote menu button */
+#define TXT_MENU_SERVER_STATUS          "menu.serverstatus"         /**< Server status menu button */
+#define TXT_MENU_LINKS                  "menu.links"                /**< Links menu button */
+#define TXT_MENU_LICENCE                "menu.licence"              /**< Licence informations page */
+#define TXT_MENU_ERROR                  "menu.error"                /**< Error page (shouldn't be visible) */
 
-    TXT_MENU_GM_PANEL               = 50,   /**< Game Masters panel menu button */
-    TXT_MENU_GM_TICKETS             = 51,   /**< Game Masters tickets (in panel) menu button*/
-    TXT_MENU_GM_ONLINE              = 52,   /**< Game Masters online check (in panel) menu button */
-    TXT_MENU_GM_FACTION             = 53,   /**< Game Masters faction check (in panel) menu button */
+#define TXT_MENU_GM_PANEL               "menu.gm.panel"             /**< Game Masters panel main page menu button */
+#define TXT_MENU_GM_TICKETS             "menu.gm.tickets"           /**< Game Masters tickets (in panel) menu button*/
+#define TXT_MENU_GM_ONLINE              "menu.gm.online"            /**< Game Masters online check (in panel) menu button */
+#define TXT_MENU_GM_FACTION             "menu.gm.faction"           /**< Game Masters faction check (in panel) menu button */
+#define TXT_MENU_GM_BANLIST             "menu.gm.ban.list"          /**< Ban list menu button */
+#define TXT_MENU_GM_MUTELIST            "menu.gm.mute.list"         /**< Mute list menu button */
 
-    /** Static texts/labels */
-    /** Character */
-    TXT_LBL_CHAR_NAME               = 75,   /**< Character name label */
-    TXT_LBL_CHAR_LVL                = 76,   /**< Character level label */
-    TXT_LBL_CHAR_CLASS              = 77,   /**< Character class label */
-    TXT_LBL_CHAR_TOTAL_PLAYED       = 78,   /**< Character total played time label */
-    TXT_LBL_CHAR_LVL_PLAYED         = 79,   /**< Character current level played time label*/
-    TXT_LBL_CHAR_LIST               = 80,   /**< Character list/choose label */
-    TXT_LBL_CHAR_RACE               = 81,   /**< Character race label */
-    TXT_LBL_CHAR_TALENT_RESET_COST  = 82,   /**< Character last talent reset cost label */
-    TXT_LBL_CHAR_TALENT_RESET_TIME  = 83,   /**< Character last talent reset time label */
-    TXT_LBL_CHAR_ONLINE             = 84,   /**< Character is online label */
-    TXT_LBL_CHAR_TAB_INFO           = 85,   /**< Character basic informations tab label */
-    TXT_LBL_CHAR_TAB_QUEST          = 86,   /**< Character quest informations tab label */
-    TXT_LBL_CHAR_TAB_SPELL          = 87,   /**< Character spell informations tab label */
-    TXT_LBL_CHAR_TAB_INVENTORY      = 88,   /**< Character inventory informations tab label */
-    TXT_LBL_CHAR_TAB_FRIENDS        = 89,   /**< Character friends informations tab label */
-    TXT_LBL_CHAR_ACT_TAL_RESET_COST = 90,   /**< Character actual talent reset cost label */
-    TXT_LBL_CHAR_DELETION_DATE      = 91,   /**< Character deletion date label */
+/** Character */
+#define TXT_CHAR_NAME                   "character.name"            /**< Character name label */
+#define TXT_CHAR_LVL                    "character.level"           /**< Character level label */
+#define TXT_CHAR_CLASS                  "character.class"           /**< Character class label */
+#define TXT_CHAR_PLAYED_TOTAL           "character.played.total"    /**< Character total played time label */
+#define TXT_CHAR_PLAYED_LEVEL           "character.played.level"    /**< Character current level played time label*/
+#define TXT_CHAR_PLAYED_FMT             "character.played.fmt"      /**< Format for character total and level played time */
+#define TXT_CHAR_LIST                   "character.list"            /**< Character list/choose label */
+#define TXT_CHAR_RACE                   "character.race"            /**< Character race label */
+#define TXT_CHAR_TALENT_RESET_COST      "character.talent.reset.cost"   /**< Character last talent reset cost label */
+#define TXT_CHAR_ACT_TAL_RESET_COST     "character.talent.reset.cost.actual"   /**< Character actual talent reset cost label */
+#define TXT_CHAR_TALENT_RESET_TIME      "character.talent.reset.time"   /**< Character last talent reset time label */
+#define TXT_CHAR_ONLINE                 "character.onlinestate"     /**< Character is online label */
+#define TXT_CHAR_TAB_INFO               "character.tab.info"        /**< Character basic informations tab label */
+#define TXT_CHAR_TAB_QUEST              "character.tab.quest"       /**< Character quest informations tab label */
+#define TXT_CHAR_TAB_SPELL              "character.tab.spell"       /**< Character spell informations tab label */
+#define TXT_CHAR_TAB_INVENTORY          "character.tab.inventory"   /**< Character inventory informations tab label */
+#define TXT_CHAR_TAB_FRIENDS            "character.tab.fiends"      /**< Character friends informations tab label */
+#define TXT_CHAR_DELETION_DATE          "character.deletion.date"   /**< Character deletion date label */
 
-    /** Account */
-    TXT_LBL_ACC_CHARS               = 100,  /**< Account characters label */
-    TXT_LBL_ACC_CREATE_DATE         = 101,  /**< Account create time label*/
-    TXT_LBL_ACC_LAST_LOGIN          = 102,  /**< Account last login time label */
-    TXT_LBL_ACC_LAST_IP             = 103,  /**< Account last login ip (server) label */
-    TXT_LBL_ACC_IP_LOCK             = 104,  /**< Account ip lock label */
-    TXT_LBL_ACC_BAN                 = 105,  /**< Account ban label */
-    TXT_LBL_ACC_ONLINE              = 106,  /**< Account online label */
-    TXT_LBL_ACC_VP                  = 107,  /**< Account vote points label */
-    TXT_LBL_ACC_EXPANSION           = 108,  /**< Account expansion label */
-    TXT_LBL_ACC_CLIENT_VERSION      = 109,  /**< Account client version label */
-    TXT_LBL_ACC_MULTIACC            = 110,  /**< Account multiacc (account have enabled multiacc with other account ?) label */
-    TXT_LBL_ACC_LAST_PASS_RECOVERY  = 111,  /**< Account last pass recovery time label */
-    TXT_LBL_ACC_LOGIN               = 112,  /**< Account login label */
-    TXT_LBL_ACC_MAIL                = 113,  /**< Account mail label */
-    TXT_LBL_ACC_GG                  = 114,  /**< Account IM label */
-    TXT_LBL_ACC_INFO                = 115,  /**< Account informations page title */
-    TXT_LBL_ACC_IP_LOCK_ON          = 116,  /**< Account ip lock is currently on label */
-    TXT_LBL_ACC_IP_LOCK_OFF         = 117,  /**< Account ip lock is currently off label */
-    TXT_LBL_ACC_IP_BAN              = 118,  /**< Account ip ban label */
-    TXT_LBL_ACC_TAB_INFO            = 119,  /**< Account basic information tab label */
-    TXT_LBL_ACC_TAB_BAN             = 120,  /**< Account ban information tab label */
-    TXT_LBL_ACC_TAB_MUTE            = 121,  /**< Account mute information tab label */
-    TXT_LBL_ACC_TAB_TICKET          = 122,  /**< Account ticket information tab label */
-    TXT_LBL_ACC_TAB_ACTIVITY        = 123,  /**< Account activity information tab label */
-    TXT_LBL_ACC_XP_RATES            = 124,  /**< Account XP rates. */
+#define TXT_CHAR_RESTORED               "character.restored"        /**< Information that character was restored successfully */
 
-    /** Password modifications */
-    TXT_LBL_PASS_CHANGE             = 130,  /**< Password change page title */
-    TXT_LBL_PASS_OLD                = 131,  /**< Old password label */
-    TXT_LBL_PASS_NEW                = 132,  /**< New password label */
-    TXT_LBL_PASS_REPEAT             = 133,  /**< Reapeat password label */
-    TXT_LBL_PASS_RECOVERY           = 134,  /**< Password recovery page title */
-    TXT_LBL_PASS_MAIL               = 135,  /**< Mail for password recovery label */
-    TXT_LBL_PASS_GG                 = 136,  /**< IM number for password recovery label */
+#define TXT_RACE_HUMAN                  "character.race.human"      /**< Text for human race */
+#define TXT_RACE_ORC                    "character.race.orc"        /**< Text for orc race */
+#define TXT_RACE_DWARF                  "character.race.dwarf"      /**< Text for dwarf race */
+#define TXT_RACE_NIGHT_ELF              "character.race.nightelf"   /**< Text for night elf race */
+#define TXT_RACE_UNDEAD                 "character.race.undead"     /**< Text for undead race */
+#define TXT_RACE_TAUREN                 "character.race.tauren"     /**< Text for tauren race */
+#define TXT_RACE_GNOME                  "character.race.gnome"      /**< Text for gnome race */
+#define TXT_RACE_TROLL                  "character.race.troll"      /**< Text for troll race */
+#define TXT_RACE_BLOOD_ELF              "character.race.bloodelf"   /**< Text for blood elf race */
+#define TXT_RACE_DRAENEI                "character.race.draenei"    /**< Text for draenei race */
 
-    /** Instance informations */
-    TXT_LBL_INSTANCE_OPEN           = 150,  /**< Instance is open label */
-    TXT_LBL_INSTANCE_CLOSED         = 151,  /**< Instance is closed label (min lvl > 70) */
+#define TXT_CLASS_WARRIOR               "character.class.warrior"   /**< Text for warrior class */
+#define TXT_CLASS_PALADIN               "character.class.paladin"   /**< Text for paladin class */
+#define TXT_CLASS_HUNTER                "character.class.hunter"    /**< Text for hunter class */
+#define TXT_CLASS_ROGUE                 "character.class.rogue"     /**< Text for rogue class */
+#define TXT_CLASS_PRIEST                "character.class.priest"    /**< Text for priest class */
+#define TXT_CLASS_SHAMAN                "character.class.shaman"    /**< Text for shaman class */
+#define TXT_CLASS_MAGE                  "character.class.mage"      /**< Text for mage class */
+#define TXT_CLASS_WARLOCK               "character.class.warlock"   /**< Text for warlock class */
+#define TXT_CLASS_DRUID                 "character.class.druid"     /**< Text for druid class */
 
-    /** Registration */
-    TXT_LBL_REG_RULES               = 155,  /**< Label with info that user must accept server rules (for registration) */
-    TXT_LBL_REG_RULES_ACCEPT        = 156,  /**< Accept server rules checkbox text */
-    TXT_LBL_REG_MAIN                = 157,  /**< Account registration page title */
-    TXT_LBL_REG_RULES_NOT_ACCEPTED  = 158,  /**< Rules not accepted but button clicked */
-    TXT_LBL_REG_ACC_EXISTS          = 159,  /**< There are already account with that login */
+/** Account */
+#define TXT_ACC_CREATE_DATE             "account.create.date"       /**< Account create time label*/
+#define TXT_ACC_LAST_LOGIN              "account.last.login"        /**< Account last login time label */
+#define TXT_ACC_LAST_IP                 "account.last.ip"           /**< Account last login ip (server) label */
+#define TXT_ACC_LAST_PASS_RECOVERY      "account.last.passwordrecovery"  /**< Account last pass recovery time label */
+#define TXT_ACC_LOCK                    "account.lock"              /**< Account ip lock label */
+#define TXT_ACC_LOCK_IP_STATE           "account.lock.ip.state"      /**< Account ip lock is currently on label */
+#define TXT_ACC_BAN                     "account.ban.account"       /**< Account ban label */
+#define TXT_ACC_BAN_IP                  "account.ban.ip"            /**< Account ip ban label */
+#define TXT_ACC_ONLINE                  "account.online"            /**< Account online label */
+#define TXT_ACC_SUPPORT_POINTS          "account.support.points"    /**< Account vote points label */
+#define TXT_ACC_EXPANSION               "account.expansion"         /**< Account expansion label */
+#define TXT_ACC_CLIENT_VERSION          "account.client"            /**< Account client version label */
+#define TXT_ACC_MULTIACC                "account.multiacc"          /**< Account multiacc (account have enabled multiacc with other account ?) label */
+#define TXT_ACC_LOGIN                   "account.login"             /**< Account login label */
+#define TXT_ACC_MAIL                    "account.mail"              /**< Account mail label */
+#define TXT_ACC_IM_TYPE                 "account.im.type"           /**< Account IM type (communicator protocol) label */
+#define TXT_ACC_IM_IDENTIFIER           "account.im.id"             /**< Account IM id label */
+#define TXT_ACC_TAB_INFO                "account.tab.informations"  /**< Account basic information tab label */
+#define TXT_ACC_TAB_BAN                 "account.tab.ban"           /**< Account ban information tab label */
+#define TXT_ACC_TAB_MUTE                "account.tab.mute"          /**< Account mute information tab label */
+#define TXT_ACC_TAB_TICKET              "account.tab.ticket"        /**< Account ticket information tab label */
+#define TXT_ACC_TAB_ACTIVITY            "account.tab.activity"      /**< Account activity information tab label */
+#define TXT_ACC_XP_RATE                 "account.xp.rate"           /**< Account XP rates. */
 
-    /** Ban informations */
-    TXT_LBL_BAN_LOGIN               = 160,  /**< Banned account login label */
-    TXT_LBL_BAN_FROM                = 161,  /**< Ban time label */
-    TXT_LBL_BAN_TO                  = 162,  /**< Unban time label */
-    TXT_LBL_BAN_BY                  = 163,  /**< Banned by label */
-    TXT_LBL_BAN_REASON              = 164,  /**< Ban reason label */
-    TXT_LBL_BAN_ACTIVE              = 165,  /**< Ban is active label */
-    TXT_LBL_BAN_NOT_ACTIVE          = 166,  /**< Ban is inactive label */
-    TXT_LBL_BAN_YES                 = 167,  /**< Account is banned label */
-    TXT_LBL_BAN_NO                  = 168,  /**< Account isn't banned label */
-    TXT_LBL_BAN_PERMANENT           = 169,  /**< Ban is permanent label */
+/** Password modifications */
+#define TXT_PASS_OLD                    "password.old"              /**< Old password label */
+#define TXT_PASS_NEW                    "password.new"              /**< New password label */
+#define TXT_PASS_REPEAT                 "password.repeat"           /**< Reapeat password label */
+#define TXT_PASS_MAIL                   "password.mail"             /**< Mail for password recovery label */
+#define TXT_PASS_IM_ID                  "password.im.id"            /**< IM identificator for password recovery label */
+#define TXT_PASS_CHANGE_COMPLETE        "password.change.complete"  /**< Information that password change was successfull */
+#define TXT_PASS_RECOVERY_MAIL          "password.recovery.mail"    /**< Email text for password recovery mails */
+#define TXT_PASS_RECOVERY_SUBJECT       "password.recovery.mail.subject"    /**< Email subject for password recovery mails */
+#define TXT_PASS_RECOVERY_COMPLETE      "password.recovery.complete"    /**< Information that password recovery was successfull */
 
-    /** Mute informations */
-    TXT_LBL_MUTE_FROM               = 170,  /**< Ban time label */
-    TXT_LBL_MUTE_TO                 = 171,  /**< Unban time label */
-    TXT_LBL_MUTE_BY                 = 172,  /**< Banned by label */
-    TXT_LBL_MUTE_REASON             = 173,  /**< Ban reason label */
-    TXT_LBL_MUTE_ACTIVE             = 174,  /**< Ban is active label */
-    TXT_LBL_MUTE_NOT_ACTIVE         = 175,  /**< Ban is inactive label */
-    TXT_LBL_MUTE_YES                = 176,  /**< Account is muted label */
-    TXT_LBL_MUTE_NO                 = 177,  /**< Account isn't muted label */
+/** Instance informations */
+#define TXT_INSTANCE_OPEN               "instance.open"             /**< Instance is open label */
+#define TXT_INSTANCE_CLOSED             "instance.closed"           /**< Instance is closed label (min lvl > 70) */
 
-    /** Server status */
-    TXT_LBL_STATUS_REALM            = 185,  /**< Realm label. */
-    TXT_LBL_STATUS_STATE            = 186,  /**< Realm state label. */
-    TXT_LBL_STATUS_ONLINE           = 187,  /**< Online players count label. */
-    TXT_LBL_STATUS_MAXONLINE        = 188,  /**< Max online players count label. */
-    TXT_LBL_STATUS_FACTIONS_FMT     = 189,  /**< Format for displaing online horde and ally % */
-    TXT_LBL_STATUS_UPTIME           = 190,  /**< Realm uptime label. */
-    TXT_LBL_STATUS_REV              = 191,  /**< Realm revision label. */
-    TXT_LBL_STATUS_DIFF             = 192,  /**< Realm diff label. */
-    TXT_LBL_STATUS_AVGDIFF          = 193,  /**< Realm avarage diff label. */
-    TXT_LBL_STATUS_INFO             = 194,  /**< Realm additional informations label. */
-    TXT_LBL_STATUS_MAIN             = 195,  /**< Server status page title. */
+/** Registration */
+#define TXT_REG_RULES                   "registration.rules"        /**< Label with info that user must accept server rules (for registration) */
+#define TXT_REG_RULES_NOT_ACCEPTED      "registration.rules.notaccepted"  /**< Rules not accepted but button clicked */
+#define TXT_REG_ACC_EXISTS              "registration.exists"       /**< There are already account with that login */
+#define TXT_REG_MAIL                    "registration.mail"         /**< Email text for registration mails */
+#define TXT_REG_SUBJECT                 "registration.mail.subject" /**< Email subject for registration mails */
+#define TXT_REG_COMPLETE                "registration.complete"     /**< Information that registration was successfull */
+#define TXT_REG_ERROR                   "registration.error"        /**< Information that there was an error in registration. */
 
-    /** Button labels */
-    TXT_BTN_PASS_CHANGE             = 200,  /**< Password change button label */
-    TXT_BTN_PASS_CLEAR              = 201,  /**< Password clear button label */
-    TXT_BTN_PASS_SEND               = 202,  /**< Send new password button label */
-    TXT_BTN_LOGIN                   = 203,  /**< Log in to panel button label */
-    TXT_BTN_REGISTER                = 204,  /**< Register button label */
-    TXT_BTN_TELEPORT                = 205,  /**< Character teleport button label */
-    TXT_BTN_BANNED_ACC              = 206,  /**< Show banned account button label */
-    TXT_BTN_BANNED_IP               = 207,  /**< Show banned ips button label */
-    TXT_BTN_LOGOUT                  = 208,  /**< Log out from panel button label */
-    TXT_BTN_CHARACTER_RESTORE       = 209,  /**< Button to restore deleted character */
+/** Ban informations */
+#define TXT_BAN_FROM                    "ban.date.from"             /**< Ban time label */
+#define TXT_BAN_TO                      "ban.date.to"               /**< Unban time label */
+#define TXT_BAN_BY                      "ban.by"                    /**< Banned by label */
+#define TXT_BAN_REASON                  "ban.reason"                /**< Ban reason label */
+#define TXT_BAN_PERMANENT               "ban.permanent"             /**< Ban is permanent label */
+#define TXT_BAN_BANNED                  "ban.banned"                /**< Info that account is banned till xxx */
 
-    /** Other */
-    TXT_SITE_TITLE                  = 225,  /**< Players panel site title */
-    TXT_SITE_FOOTER                 = 226,  /**< Players panel site footer */
-    TXT_SERVER_INFO                 = 227,  /**< Static server informations (machine, rates etc) */
-    TXT_TELEPORT                    = 228,  /**< Character teleport page informations */
-    TXT_IP_LOCK_ON                  = 229,  /**< IP lock is on info */
-    TXT_IP_LOCK_OFF                 = 230,  /**< IP lock is off info */
-    TXT_BAN                         = 231,  /**< Bans page title/static informations */
-    TXT_INSTANCES                   = 232,  /**< Instances information page informations */
-    TXT_EXPANSION_PRETBC            = 233,  /**< text/name for preTBC expansion */
-    TXT_EXPANSION_TBC               = 234,  /**< text/name for TBC expansion  */
-    TXT_EXPANSION_WOTLK             = 235,  /**< text/name for WOTLK expansion */
-    TXT_EXPANSION_CATACLYSM         = 236,  /**< text/name for Cata expansion */
-    TXT_CURRENT_IP                  = 237,  /**< Current ip label */
-    TXT_IS_ONLINE                   = 238,  /**< Account is online label */
-    TXT_IS_OFFLINE                  = 239,  /**< Account is offline label */
-    TXT_CURRENT_IP_BAN              = 240,  /**< Current ip ban label */
-    TXT_REGISTRATION_MAIL           = 241,  /**< Email text for registration mails */
-    TXT_REGISTRATION_SUBJECT        = 242,  /**< Email subject for registration mails */
-    TXT_RECOVERY_MAIL               = 243,  /**< Email text for password recovery mails */
-    TXT_RECOVERY_SUBJECT            = 244,  /**< Email subject for password recovery mails */
-    TXT_REGISTRATION_COMPLETE       = 245,  /**< Information that registration was successfull */
-    TXT_RECOVERY_COMPLETE           = 246,  /**< Information that password recovery was successfull */
-    TXT_PASS_CHANGE_COMPLETE        = 247,  /**< Information that password change was successfull */
-    TXT_ONLINE                      = 248,  /**< guess ... */
-    TXT_OFFLINE                     = 249,  /**< guess ... */
-    TXT_UPTIME_FMT                  = 250,  /**< format for server uptime time */
-    TXT_LOGOUT_INFO                 = 251,  /**< info to show on logout page */
-    TXT_REGISTRATION_ERROR          = 252,  /**< Information that there was an error in registration. */
-    TXT_TELEPORT_SUCCESSFULL        = 253,  /**< Information that character teleportation was successfull */
-    TXT_NEVER_BANNED                = 254,  /**< Information that player wasn't banned */
-    TXT_NEVER_MUTED                 = 255,  /**< Information that player wasn't muted */
-    TXT_ACTIVITY_DATE               = 256,  /**< Activity date label */
-    TXT_ACTIVITY_IP                 = 257,  /**< Activity ip label */
-    TXT_ACTIVITY_TEXT               = 258,  /**< Activity text label */
-    TXT_LICENCE_INTRO               = 259,  /**< Static licence intro */
-    TXT_LICENCE_REPO                = 260,  /**< Static link to panel repository/source code */
-    TXT_LICENCE_INFO                = 261,  /**< Additional static informations */
-    TXT_SUPPORT_MAIN                = 262,  /**< Static text for main support page */
-    TXT_SUPPORT_VOTE_INFO           = 263,  /**< Text for vote page title/info */
-    TXT_SUPPORT_VOTE_NEXT           = 264,  /**< Text for next vote time info */
-    TXT_SUPPORT_VOTED               = 265,  /**< Text for successfull vote */
-    TXT_XP_RATE_SERVER              = 266,  /**< Text for server default XP rates */
-    TXT_XP_RATE_BLIZZLIKE           = 267,  /**< Text for blizzlike XP rates */
-    TXT_CHARACTER_PAGE_INFO         = 268,  /**< Text for character page title/info */
-    TXT_CHARACTER_PLAYED_FMT        = 269,  /**< Format for character total and level played time */
-    TXT_YES                         = 270,  /**< Text for 'yes' labels */
-    TXT_NO                          = 271,  /**< Text for 'no' labels */
-    TXT_CHARACTER_RESTORED          = 272,  /**< Information that character was restored successfully */
-    TXT_QUEST_LINK_NAME_FMT         = 273,  /**< Format for link to hgdb with quest name as text */
-    TXT_QUEST_TOOLTIP_FMT           = 274,  /**< Format for quest tooltip */
+/** Mute informations */
+#define TXT_MUTE_FROM                   "mute.date.from"            /**< Ban time label */
+#define TXT_MUTE_TO                     "mute.date.to"              /**< Unban time label */
+#define TXT_MUTE_BY                     "mute.by"                   /**< Banned by label */
+#define TXT_MUTE_REASON                 "mute.reason"               /**< Ban reason label */
 
-    TXT_ERROR_WRONG_LOGIN_DATA      = 350,  /**< Error info: wrong login or password */
-    TXT_ERROR_WRONG_RECOVERY_DATA   = 351,  /**< Error info: wrong login or email */
-    TXT_ERROR_PASSWORDS_MISMATCH    = 352,  /**< Error info: typed passwords must be the same */
-    TXT_ERROR_PASSWORD_TO_SHORT     = 353,  /**< Error info: password to short */
-    TXT_ERROR_PASSWORD_TO_LONG      = 354,  /**< Error info: password to long */
-    TXT_ERROR_NOT_VALID_DATA        = 355,  /**< Error info: Validate error: wrong data */
-    TXT_ERROR_CANT_TELEPORT_ONLINE  = 356,  /**< Error info: Only offline characters can be teleported */
-    TXT_ERROR_CHARACTER_NOT_FOUND   = 357,  /**< Error info: character not found */
-    TXT_ERROR_IP_MISMATCH           = 358,  /**< Error info: IP lock on and IP is not matching */
-    TXT_ERROR_WRONG_PASSWORD        = 359,  /**< Error info: wrong current password */
-    TXT_ERROR_CANT_VOTE_TWICE       = 360,  /**< Error info: can't vote twice on same page */
-    TXT_ERROR_NEED_JAVA_SCRIPT      = 361,  /**< Error info: java script required */
-    TXT_ERROR_CHARACTER_NAME_EXISTS = 362,  /**< Error info: character with that name already exists */
-    TXT_ERROR_FACTION_MISMATCH      = 363,  /**< Error info: you can't have characters in both sides */
-    TXT_ERROR_TO_MUCH_CHARACTERS    = 364,  /**< Error info: to much characters on account */
-    TXT_ERROR_NOT_WHILE_BANNED      = 365,  /**< Error info: you can't do that while banned */
+/** Server status */
+#define TXT_STATUS_REALM                "status.realm"              /**< Realm label. */
+#define TXT_STATUS_STATE                "status.state"              /**< Realm state label. */
+#define TXT_STATUS_ONLINE               "status.online"             /**< Online players count label. */
+#define TXT_STATUS_MAXONLINE            "status.online.max"         /**< Max online players count label. */
+#define TXT_STATUS_FACTIONS             "status.factions"           /**< Factions label */
+#define TXT_STATUS_FACTIONS_FMT         "status.factions.fmt"       /**< Format for displaing online horde and ally % */
+#define TXT_STATUS_UPTIME               "status.uptime"             /**< Realm uptime label. */
+#define TXT_STATUS_UPTIME_FMT           "status.uptime.fmt"         /**< format for server uptime time */
+#define TXT_STATUS_REV                  "status.revision"           /**< Realm revision label. */
+#define TXT_STATUS_DIFF                 "status.diff"               /**< Realm diff label. */
+#define TXT_STATUS_AVGDIFF              "status.diff.avarage"       /**< Realm avarage diff label. */
 
-    TXT_DBERROR_CANT_CONNECT        = 501,  /**< DB Error info: can't connect to database */
-    TXT_DBERROR_QUERY_EMPTY         = 502,  /**< DB Error info: result empty */
-    TXT_DBERROR_QUERY_ERROR         = 503,  /**< DB Error info: query error */
+/** Buttons */
+#define TXT_BTN_PASS_CHANGE             "button.password.change"    /**< Password change button label */
+#define TXT_BTN_PASS_CLEAR              "button.password.clear"     /**< Password clear button label */
+#define TXT_BTN_PASS_SEND               "button.password.send"      /**< Send new password button label */
+#define TXT_BTN_LOGIN                   "button.login"              /**< Log in to panel button label */
+#define TXT_BTN_LOGOUT                  "button.logout"             /**< Log out from panel button label */
+#define TXT_BTN_REGISTER                "button.register"           /**< Register button label */
+#define TXT_BTN_TELEPORT                "button.teleport"           /**< Character teleport button label */
+#define TXT_BTN_CHARACTER_RESTORE       "button.character.restore"  /**< Button to restore deleted character */
 
-    TXT_ACT_LOGIN_SUCCESS           = 601,  /**< Activity log info: Account login successfull */
-    TXT_ACT_LOGIN_FAIL              = 602,  /**< Activity log info: Account login fail */
-    TXT_ACT_REGISTRATION_COMPLETE   = 603,  /**< Activity log info: Account registration complete */
-    TXT_ACT_PASS_CHANGE             = 604,  /**< Activity log info: Someone tried to change password */
-    TXT_ACT_RECOVERY_SUCCESS        = 605,  /**< Activity log info: Password recovery success */
-    TXT_ACT_RECOVERY_FAIL           = 606,  /**< Activity log info: Password recovery fail */
-    TXT_ACT_IP_LOCK                 = 607,  /**< Activity log info: Someone tried to change ip lock state */
-    TXT_ACT_XP_RATES                = 608,  /**< Activity log info: Someone tried to change XP rates for account */
-    TXT_ACT_CHARACTER_RESTORE       = 609,  /**< Activity log info: Character with %s restored */
+/** Spells */
+#define TXT_SPELL_ID                    "spell.id"                  /**< Spell id label. */
+#define TXT_SPELL_NAME                  "spell.name"                /**< Spell name label. */
+#define TXT_SPELL_ACTIVE                "spell.active"              /**< Spell active info label. */
+#define TXT_SPELL_DISABLED              "spell.disabled"            /**< Spell disabled info label. */
 
-    TXT_LBL_QUEST_NAME              = 701,  /**< Quest name label. */
-    TXT_LBL_QUEST_LVL               = 702,  /**< Quest level label. */
-    TXT_LBL_QUEST_STATUS            = 703,  /**< Quest status label. */
+/** Items */
+#define TXT_ITEM_ID                     "item.id"                   /**< Item id label. */
+#define TXT_ITEM_NAME                   "item.name"                 /**< Item name label. */
+#define TXT_ITEM_COUNT                  "item.count"                /**< Item count label. */
 
-    TXT_LBL_SPELL_ID                = 711,  /**< Spell id label. */
-    TXT_LBL_SPELL_NAME              = 712,  /**< Spell name label. */
-    TXT_LBL_SPELL_ACTIVE            = 713,  /**< Spell active info label. */
-    TXT_LBL_SPELL_DISABLED          = 714,  /**< Spell disabled info label. */
+/** Quests */
+#define TXT_QUEST_LINK_NAME_FMT         "quest.link.name.fmt"       /**< Format for link to hgdb with quest name as text */
+#define TXT_QUEST_TOOLTIP_FMT           "quest.tooltip.fmt"         /**< Format for quest tooltip */
+#define TXT_QUEST_NAME                  "quest.name"                /**< Quest name label. */
+#define TXT_QUEST_LVL                   "quest.level"               /**< Quest level label. */
+#define TXT_QUEST_STATUS                "quest.status"              /**< Quest status label. */
 
-    TXT_LBL_ITEM_ID                 = 721,  /**< Item id label. */
-    TXT_LBL_ITEM_NAME               = 722,  /**< Item name label. */
-    TXT_LBL_ITEM_COUNT              = 723,  /**< Item count label. */
+#define TXT_QUEST_STATUS_NONE           "quest.status.none"         /**< Quest isn't shown in quest list (default) */
+#define TXT_QUEST_STATUS_COMPLETE       "quest.status.complete"     /**< Quest has been completed  */
+#define TXT_QUEST_STATUS_UNAVAILABLE    "quest.status.unavailable"  /**< Quest is unavailable to the character */
+#define TXT_QUEST_STATUS_INCOMPLETE     "quest.status.incomplete"   /**< Quest is active in quest log but incomplete */
+#define TXT_QUEST_STATUS_AVAILABLE      "quest.status.available"    /**< Quest is available to be taken by character */
+#define TXT_QUEST_STATUS_REWARDED       "quest.status.rewarded"     /**< Quest has been rewarded */
 
-    TXT_LBL_FRIEND_NAME             = 726,  /**< Friend name label. */
-    TXT_LBL_FRIEND_NOTE             = 727,  /**< Friend note label. */
+/** Friends */
+#define TXT_FRIEND_NAME                 "friend.name"               /**< Friend name label. */
+#define TXT_FRIEND_NOTE                 "friend.note"               /**< Friend note label. */
 
-    TXT_LBL_RACE_HUMAN              = 801,  /**< Text for human race */
-    TXT_LBL_RACE_ORC                = 802,  /**< Text for orc race */
-    TXT_LBL_RACE_DWARF              = 803,  /**< Text for dwarf race */
-    TXT_LBL_RACE_NIGHT_ELF          = 804,  /**< Text for night elf race */
-    TXT_LBL_RACE_UNDEAD             = 805,  /**< Text for undead race */
-    TXT_LBL_RACE_TAUREN             = 806,  /**< Text for tauren race */
-    TXT_LBL_RACE_GNOME              = 807,  /**< Text for gnome race */
-    TXT_LBL_RACE_TROLL              = 808,  /**< Text for troll race */
-    TXT_LBL_RACE_BLOOD_ELF          = 809,  /**< Text for blood elf race */
-    TXT_LBL_RACE_DRAENEI            = 810,  /**< Text for draenei race */
+/** Site */
+#define TXT_SITE_TITLE                  "site.title"                /**< Players panel site title */
+#define TXT_SITE_FOOTER                 "site.footer"               /**< Players panel site footer */
 
-    TXT_LBL_UNKNOWN                 = 820,  /**< Text for unknown race/class/etc */
+/** Informations/main pages */
+#define TXT_INFO_SERVER                 "informations.server"       /**< Static server informations (machine, rates etc) */
+#define TXT_INFO_TELEPORT               "informations.teleport"     /**< Character teleport page informations */
+#define TXT_INFO_INSTANCES              "informations.instances"    /**< Instances information page informations */
+#define TXT_INFO_LOGOUT                 "informations.logout"       /**< info to show on logout page */
+#define TXT_INFO_STATUS                 "informations.status"       /**< Server status page title. */
+#define TXT_INFO_REGISTRATION           "informations.registration" /**< Account registration page title */
+#define TXT_INFO_PASS_RECOVERY          "informations.password.recovery"    /**< Password recovery page title */
+#define TXT_INFO_PASS_CHANGE            "informations.password.change"      /**< Password change page title */
+#define TXT_INFO_ACCOUNT                "informations.account"      /**< Account informations page title */
+#define TXT_INFO_SUPPORT                "informations.support"      /**< Support informations text */
+#define TXT_INFO_SUPPORT_VOTE           "informations.support.vote" /**< Vote event informations text */
+#define TXT_INFO_CHARACTER              "informations.character"    /**< Text for character page title/info */
 
-    TXT_LBL_CLASS_WARRIOR           = 821,  /**< Text for warrior class */
-    TXT_LBL_CLASS_PALADIN           = 822,  /**< Text for paladin class */
-    TXT_LBL_CLASS_HUNTER            = 823,  /**< Text for hunter class */
-    TXT_LBL_CLASS_ROGUE             = 824,  /**< Text for rogue class */
-    TXT_LBL_CLASS_PRIEST            = 825,  /**< Text for priest class */
-    TXT_LBL_CLASS_SHAMAN            = 826,  /**< Text for shaman class */
-    TXT_LBL_CLASS_MAGE              = 827,  /**< Text for mage class */
-    TXT_LBL_CLASS_WARLOCK           = 828,  /**< Text for warlock class */
-    TXT_LBL_CLASS_DRUID             = 829,  /**< Text for druid class */
+/** Expansion names */
+#define TXT_EXPANSION_CLASSIC           "expansion.classic"         /**< text/name for preTBC expansion */
+#define TXT_EXPANSION_TBC               "expansion.tbc"             /**< text/name for TBC expansion  */
+#define TXT_EXPANSION_WOTLK             "expansion.wotlk"           /**< text/name for WOTLK expansion */
+#define TXT_EXPANSION_CATACLYSM         "expansion.cataclysm"       /**< text/name for Cata expansion */
 
-    TXT_LBL_QUEST_STATUS_NONE       = 851,  /**< Quest isn't shown in quest list (default) */
-    TXT_LBL_QUEST_STATUS_COMPLETE   = 852,  /**< Quest has been completed  */
-    TXT_LBL_QUEST_STATUS_UNAVAILABLE= 853,  /**< Quest is unavailable to the character */
-    TXT_LBL_QUEST_STATUS_INCOMPLETE = 854,  /**< Quest is active in quest log but incomplete */
-    TXT_LBL_QUEST_STATUS_AVAILABLE  = 855,  /**< Quest is available to be taken by character */
-    TXT_LBL_QUEST_STATUS_REWARDED   = 856,  /**< Quest has been rewarded */
-};
+/** General info */
+#define TXT_GEN_ONLINE                  "general.online"            /**< General online label */
+#define TXT_GEN_OFFLINE                 "general.offline"           /**< General offline label */
+#define TXT_GEN_UNKNOWN                 "general.unknown"           /**< Text for unknown race/class/etc */
+#define TXT_GEN_YES                     "general.yes"               /**< Text for 'yes' labels */
+#define TXT_GEN_NO                      "general.no"                /**< Text for 'no' labels */
+#define TXT_GEN_BANNED                  "general.banned"            /**< 'banned' informations */
+#define TXT_GEN_NOT_BANNED              "general.notbanned"         /**< not banned info */
+#define TXT_GEN_NEVER_BANNED            "general.never.banned"      /**< Information that player wasn't banned */
+#define TXT_GEN_NEVER_MUTED             "general.never.muted"       /**< Information that player wasn't muted */
+#define TXT_GEN_ACTIVE                  "general.active"            /**< General active label */
+#define TXT_GEN_NOT_ACTIVE              "general.notactive"         /**< General not active label */
+#define TXT_GEN_PERM                    "general.permanent"         /**< General permanent label */
+#define TXT_GEN_TIMED                   "general.timed"             /**< General timed (not perm) label */
+
+/** Current ip */
+#define TXT_CURRENT_IP                  "ip.current"                /**< Current ip label */
+#define TXT_CURRENT_IP_BAN              "ip.current.ban"            /**< Current ip ban label */
+
+/** Teleport option */
+#define TXT_TELEPORT_SUCCESS            "teleport.success"          /**< Information that character teleportation was successfull */
+
+/** Activity */
+#define TXT_ACT_DATE                    "activity.date"             /**< Activity date label */
+#define TXT_ACT_IP                      "activity.ip"               /**< Activity ip label */
+#define TXT_ACT_TEXT                    "activity.text"             /**< Activity text label */
+#define TXT_ACT_CHARACTER_RESTORE       "activity.character.restore"    /**< Activity log info: Character with %s restored */
+#define TXT_ACT_IP_LOCK                 "activity.lock.change"      /**< Activity log info: Someone tried to change ip lock state */
+#define TXT_ACT_LOGIN_SUCCESS           "activity.login.success"    /**< Activity log info: Account login successfull */
+#define TXT_ACT_LOGIN_FAIL              "activity.login.fail"       /**< Activity log info: Account login fail */
+#define TXT_ACT_PASS_CHANGE             "activity.password.change"  /**< Activity log info: Someone tried to change password */
+#define TXT_ACT_RECOVERY_SUCCESS        "activity.recovery.success" /**< Activity log info: Password recovery success */
+#define TXT_ACT_RECOVERY_FAIL           "activity.recovery.fail"    /**< Activity log info: Password recovery fail */
+#define TXT_ACT_REGISTRATION_COMPLETE   "activity.registration.complete"    /**< Activity log info: Account registration complete */
+#define TXT_ACT_XP_RATES                "activity.xp.rate.change"   /**< Activity log info: Someone tried to change XP rates for account */
+
+/** Licence */
+#define TXT_LICENCE_INTRO               "licence.intro"             /**< Static licence intro */
+#define TXT_LICENCE_REPO                "licence.repository"        /**< Static link to panel repository/source code */
+#define TXT_LICENCE_INFO                "licence.informations"      /**< Additional static informations */
+
+/** Support */
+#define TXT_SUPPORT_VOTE_NEXT           "support.vote.next"         /**< Text for next vote time info */
+#define TXT_SUPPORT_VOTED               "support.vote.cooldown"     /**< Text for successfull vote */
+
+/** XP modes */
+#define TXT_XP_RATE_SERVER              "xp.rate.default"           /**< Text for server default XP rates */
+#define TXT_XP_RATE_BLIZZLIKE           "xp.rate.blizzlike"         /**< Text for blizzlike XP rates */
+
+/** Errors */
+#define TXT_ERROR_WRONG_LOGIN_DATA      "error.wrong.data.login"    /**< Error info: wrong login or password */
+#define TXT_ERROR_WRONG_RECOVERY_DATA   "error.wrong.data.recovery" /**< Error info: wrong login or email */
+#define TXT_ERROR_WRONG_PASSWORD        "error.wrong.current.password"  /**< Error info: wrong current password */
+#define TXT_ERROR_PASSWORDS_MISMATCH    "error.password.mismatch"   /**< Error info: typed passwords must be the same */
+#define TXT_ERROR_PASSWORD_TO_SHORT     "error.password.toshort"    /**< Error info: password to short */
+#define TXT_ERROR_PASSWORD_TO_LONG      "error.password.tolong"     /**< Error info: password to long */
+#define TXT_ERROR_VALIDATION_LOGIN      "error.validation.login"    /**< Error info: Validate error: wrong data */
+#define TXT_ERROR_VALIDATION_RECOVERY   "error.validation.recovery" /**< Error info: Validate error: wrong data */
+#define TXT_ERROR_CANT_TELEPORT_ONLINE  "error.teleport.online"     /**< Error info: Only offline characters can be teleported */
+#define TXT_ERROR_CHARACTER_NOT_FOUND   "error.character.notfound"  /**< Error info: character not found */
+#define TXT_ERROR_IP_MISMATCH           "error.ip.mistach"          /**< Error info: IP lock on and IP is not matching */
+#define TXT_ERROR_CANT_VOTE_TWICE       "error.vote.multiple"       /**< Error info: can't vote twice on same page */
+#define TXT_ERROR_NEED_JAVA_SCRIPT      "error.javascript.required" /**< Error info: java script required */
+#define TXT_ERROR_CHARACTER_NAME_EXISTS "error.character.name.exists"   /**< Error info: character with that name already exists */
+#define TXT_ERROR_FACTION_MISMATCH      "error.faction.mismatch"    /**< Error info: you can't have characters in both sides */
+#define TXT_ERROR_TO_MUCH_CHARACTERS    "error.tomuch.characters"   /**< Error info: to much characters on account */
+#define TXT_ERROR_NOT_WHILE_BANNED      "error.cant.while.banned"   /**< Error info: you can't do that while banned */
+
+/** Database errors */
+#define TXT_ERROR_DB_CANT_CONNECT       "error.db.connection"       /**< DB Error info: can't connect to database */
+#define TXT_ERROR_DB_QUERY_EMPTY        "error.db.query.empty"      /**< DB Error info: result empty */
+#define TXT_ERROR_DB_QUERY_ERROR        "error.db.query.error"      /**< DB Error info: query error */
 
 /********************************************//**
  * \brief Sends email.
@@ -597,7 +568,7 @@ extern void SendMail(const WString& from, const WString& to, const WString& sub,
  *
  ***********************************************/
 
-extern WString GetExpansionName(SessionInfo * sess, int index);
+extern WString GetExpansionName(int index);
 
 /********************************************//**
  * \brief Return client locale name.
@@ -622,7 +593,7 @@ extern WString GetLocale(int index);
  *
  ***********************************************/
 
-extern WString GetRaceName(SessionInfo * sess, int index);
+extern WString GetRaceName(int index);
 
 /********************************************//**
  * \brief Return character class name.
@@ -635,7 +606,7 @@ extern WString GetRaceName(SessionInfo * sess, int index);
  *
  ***********************************************/
 
-extern WString GetClassName(SessionInfo * sess, int index);
+extern WString GetClassName(int index);
 
 /********************************************//**
  * \brief Return character quest status in string.
@@ -649,7 +620,7 @@ extern WString GetClassName(SessionInfo * sess, int index);
  *
  ***********************************************/
 
-extern WString GetQuestStatus(SessionInfo * sess, int index, bool rewarded);
+extern WString GetQuestStatus(int index, bool rewarded);
 
 /********************************************//**
  * \brief Simple random function.
@@ -872,6 +843,18 @@ struct SpellInfo
 
 extern std::map<uint32, SpellInfo> spells;
 
+/********************************************//**
+ * \brief Enum for realm informations
+ ***********************************************/
+
+enum RealmInformations
+{
+    REALM_INFO_NAME         = 0,    /**< Realm name */
+    REALM_INFO_STATUS_URL   = 1,    /**< Link to file with realm status */
+    REALM_INFO_ADDITIONAL   = 2,    /**< Additional informations about realm */
+    REALM_INFO_ID           = 3     /**< Realm id from Realms database */
+};
+
 // enums/defines from core:
 
 enum TimeConstants
@@ -897,5 +880,7 @@ enum SocialFlag
 #define GOLD    10000
 
 #define QUEST_TYPE_DAILY    87
+
+#define tr(a) Wt::WString::tr(a)
 
 #endif // DEFINES_H_INCLUDED

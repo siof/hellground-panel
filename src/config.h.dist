@@ -32,7 +32,7 @@
 #ifndef CONFIG_H_INCLUDED
 #define CONFIG_H_INCLUDED
 
-#define SHOW_DATABASE_ERRORS    /**< Comment if you don't want to show database errors on error page */
+#define SHOW_DATABASE_ERRORS                    /**< Comment if you don't want to show database errors on error page */
 
 #define DEBUG_OPTIONS DEBUG_NONE /*| DEBUG_DB*/ /**< Add enums to show some debug informations for now(DEBUG_NONE, DEBUG_DB, DEBUG_CODE)*/
 
@@ -67,22 +67,22 @@
 
 #define MAIL_FROM   "kontakt@gamefreedom.pl"    /**< email addres for "from" clause */
 
-#define MAIL_HOST  "localhost"  /**< host for emails */
-#define MAIL_USER  "root"       /**< login to email host */
-#define MAIL_PASS  "root"       /**< pass to email host */
+#define MAIL_HOST  "localhost"          /**< host for emails */
+#define MAIL_USER  "root"               /**< login to email host */
+#define MAIL_PASS  "root"               /**< pass to email host */
 
-#define REGISTRATION_ENABLED    /**< comment this to disable registration */
+#define REGISTRATION_ENABLED            /**< comment this to disable registration */
 
 #define SHOW_EMAIL_CHARACTERS_COUNT 2   /**< how many email address characters should be visible in information page (0 - show all) */
 #define EMAIL_HIDE_CHAR             '*' /**< character which should be displayed in hidden place */
 #define EMAIL_HIDE_CHAR_COUNT       4   /**< how many EMAIL_HIDE_CHAR characters should be displayed (0 - same count as hidden email characters) */
 #define HIDE_EMAIL_DOMAIN               /**< if defined then domain will be also hidden */
 
-#define REALM_NAME  "HellGround"    /**< Realm name. */
+#define REALM_NAME  "HellGround"        /**< Realm name. */
 
-#define STATUS_SOURCE   ""      /**< Http address with status to parse */
+#define STATUS_SOURCE   ""              /**< Http address with status to parse */
 
-const float RaceLocs[10][5] =   /**< Table with locations for races for character teleport option */
+const float RaceLocs[10][5] =           /**< Table with locations for races for character teleport option */
 {
 //   map    zone    pos X       pos Y       pos Z
     {0,     12,     -8949.95,   -132.493,   83.5312},   // 1    Human
@@ -100,13 +100,35 @@ const float RaceLocs[10][5] =   /**< Table with locations for races for characte
 #define ACTIVITY_PANEL_LIMIT    100     /**< Max count of panel activities to list */
 #define ACTIVITY_SERVER_LIMIT   100     /**< Max count of server activities to list */
 
-#define VOTE_INTERVAL   12  /**< Vote interval in hours (uint value) */
+#define VOTE_INTERVAL   12              /**< Vote interval in hours (uint value) */
 
-#define STARTING_EXPANSION 1    /**< Starting expansion for registration */
+#define STARTING_EXPANSION 1            /**< Starting expansion for registration */
 
-//#define ALLOW_TWO_SIDE_ACCOUNTS   /**< Uncomment to allow two side accounts (for character restore feature) */
+//#define ALLOW_TWO_SIDE_ACCOUNTS       /**< Uncomment to allow two side accounts (for character restore feature) */
 
-#define MAX_CHARS_ON_ACCOUNT 10     /**< Max count of characters on single account */
+#define MAX_CHARS_ON_ACCOUNT 10         /**< Max count of characters on single account */
+
+#define LANG_FILE_PATH  "langs/panel"   /**< Path to xml file with texts to localize. Default name is for english language, specified locales should have additional files named name_xx.xml (where xx is lang: pl - Polish, nl - Dutch, fr - French etc). */
+
+#define MAX_STATUS_WAIT_TIME    5       /**< Maximum time to wait for download realm status (in seconds) */
+#define REALMS_COUNT            2       /**< Realms count for realmfInfo array */
+
+/// Array with informations about specific realms to provide multi realm support (example below)
+static const std::string realmsInfo[REALMS_COUNT][] =
+{
+    {
+        "HellGround",                           // realm 1 name
+        "http://wow.hellground.pl/status.bla",  // link to realm 1 status file
+        "realm.informations.hellground",        // realm 1 additional info ID for panel*.xml lang files
+        "1"                                     // realm 1 id in DB
+    },
+    {
+        "HellGround Test Realm",                // realm 2 name
+        "http://wow.hellground.pl/status.bla",  // link to realm 2 status file
+        "realm.informations.test",              // realm 2 additional info
+        "2"                                     // realm 2 id in DB
+    }
+};
 
 #endif // CONFIG_H_INCLUDED
 

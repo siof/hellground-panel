@@ -15,8 +15,8 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <WMenu>
-#include <WStackedWidget>
+#include <Wt/WMenu>
+#include <Wt/WStackedWidget>
 
 #include <stdarg.h>
 
@@ -44,19 +44,19 @@ void SendMail(const WString& from, const WString& to, const WString& sub, const 
     mail.send();
 }
 
-WString GetExpansionName(SessionInfo * sess, int index)
+WString GetExpansionName(int index)
 {
     switch (index)
     {
         case EXPANSION_TBC:
-            return sess->GetText(TXT_EXPANSION_TBC);
+            return tr(TXT_EXPANSION_TBC);
         case EXPANSION_WOTLK:
-            return sess->GetText(TXT_EXPANSION_WOTLK);
+            return tr(TXT_EXPANSION_WOTLK);
         case EXPANSION_CATA:
-            return sess->GetText(TXT_EXPANSION_CATACLYSM);
+            return tr(TXT_EXPANSION_CATACLYSM);
         case EXPANSION_PRETBC:
         default:
-            return sess->GetText(TXT_EXPANSION_PRETBC);
+            return tr(TXT_EXPANSION_CLASSIC);
     }
 }
 
@@ -71,90 +71,81 @@ WString GetLocale(int index)
     }
 }
 
-WString GetRaceName(SessionInfo * sess, int index)
+WString GetRaceName(int index)
 {
-    if (!sess)
-        return WString::fromUTF8("unknown");
-
     switch (index)
     {
         case RACE_HUMAN:
-            return sess->GetText(TXT_LBL_RACE_HUMAN);
+            return tr(TXT_RACE_HUMAN);
         case RACE_ORC:
-            return sess->GetText(TXT_LBL_RACE_ORC);
+            return tr(TXT_RACE_ORC);
         case RACE_DWARF:
-            return sess->GetText(TXT_LBL_RACE_DWARF);
+            return tr(TXT_RACE_DWARF);
         case RACE_NIGHT_ELF:
-            return sess->GetText(TXT_LBL_RACE_NIGHT_ELF);
+            return tr(TXT_RACE_NIGHT_ELF);
         case RACE_UNDEAD:
-            return sess->GetText(TXT_LBL_RACE_UNDEAD);
+            return tr(TXT_RACE_UNDEAD);
         case RACE_TAUREN:
-            return sess->GetText(TXT_LBL_RACE_TAUREN);
+            return tr(TXT_RACE_TAUREN);
         case RACE_GNOME:
-            return sess->GetText(TXT_LBL_RACE_GNOME);
+            return tr(TXT_RACE_GNOME);
         case RACE_TROLL:
-            return sess->GetText(TXT_LBL_RACE_TROLL);
+            return tr(TXT_RACE_TROLL);
         case RACE_BLOOD_ELF:
-            return sess->GetText(TXT_LBL_RACE_BLOOD_ELF);
+            return tr(TXT_RACE_BLOOD_ELF);
         case RACE_DRAENEI:
-            return sess->GetText(TXT_LBL_RACE_DRAENEI);
+            return tr(TXT_RACE_DRAENEI);
         default:
-            return sess->GetText(TXT_LBL_UNKNOWN);
+            return tr(TXT_GEN_UNKNOWN);
     }
 }
 
-WString GetClassName(SessionInfo * sess, int index)
+WString GetClassName(int index)
 {
-    if (!sess)
-        return WString::fromUTF8("unknown");
-
     switch (index)
     {
         case CLASS_WARRIOR:
-            return sess->GetText(TXT_LBL_CLASS_WARRIOR);
+            return tr(TXT_CLASS_WARRIOR);
         case CLASS_PALADIN:
-            return sess->GetText(TXT_LBL_CLASS_PALADIN);
+            return tr(TXT_CLASS_PALADIN);
         case CLASS_HUNTER:
-            return sess->GetText(TXT_LBL_CLASS_HUNTER);
+            return tr(TXT_CLASS_HUNTER);
         case CLASS_ROGUE:
-            return sess->GetText(TXT_LBL_CLASS_ROGUE);
+            return tr(TXT_CLASS_ROGUE);
         case CLASS_PRIEST:
-            return sess->GetText(TXT_LBL_CLASS_PRIEST);
+            return tr(TXT_CLASS_PRIEST);
         case CLASS_SHAMAN:
-            return sess->GetText(TXT_LBL_CLASS_SHAMAN);
+            return tr(TXT_CLASS_SHAMAN);
         case CLASS_MAGE:
-            return sess->GetText(TXT_LBL_CLASS_MAGE);
+            return tr(TXT_CLASS_MAGE);
         case CLASS_WARLOCK:
-            return sess->GetText(TXT_LBL_CLASS_WARLOCK);
+            return tr(TXT_CLASS_WARLOCK);
         case CLASS_DRUID:
-            return sess->GetText(TXT_LBL_CLASS_DRUID);
+            return tr(TXT_CLASS_DRUID);
         default:
-            return sess->GetText(TXT_LBL_UNKNOWN);
+            return tr(TXT_GEN_UNKNOWN);
     }
 }
 
-WString GetQuestStatus(SessionInfo * sess, int index, bool rewarded)
+WString GetQuestStatus(int index, bool rewarded)
 {
-    if (!sess)
-       return WString::fromUTF8("unknown");
-
     if (rewarded)
-        return sess->GetText(TXT_LBL_QUEST_STATUS_REWARDED);
+        return tr(TXT_QUEST_STATUS_REWARDED);
 
     switch (index)
     {
         case 0:
-            return sess->GetText(TXT_LBL_QUEST_STATUS_NONE);
+            return tr(TXT_QUEST_STATUS_NONE);
         case 1:
-            return sess->GetText(TXT_LBL_QUEST_STATUS_COMPLETE);
+            return tr(TXT_QUEST_STATUS_COMPLETE);
         case 2:
-            return sess->GetText(TXT_LBL_QUEST_STATUS_UNAVAILABLE);
+            return tr(TXT_QUEST_STATUS_UNAVAILABLE);
         case 3:
-            return sess->GetText(TXT_LBL_QUEST_STATUS_INCOMPLETE);
+            return tr(TXT_QUEST_STATUS_INCOMPLETE);
         case 4:
-            return sess->GetText(TXT_LBL_QUEST_STATUS_AVAILABLE);
+            return tr(TXT_QUEST_STATUS_AVAILABLE);
         default:
-            return sess->GetText(TXT_LBL_UNKNOWN);
+            return tr(TXT_GEN_UNKNOWN);
     }
 }
 
@@ -290,7 +281,6 @@ private:
     WContainerWidget * page;        // whole page container
     HGMenu * menu;                  // menu
     SessionInfo * session;          // store info about user session
-    void LoadLangTexts();
 };
 
 PlayersPanel::PlayersPanel(const WEnvironment& env)
@@ -304,9 +294,8 @@ PlayersPanel::PlayersPanel(const WEnvironment& env)
     content = new WStackedWidget();
     session = new SessionInfo();
     session->sessionIp = env.clientAddress();
-    LoadLangTexts();
 
-    setTitle(session->GetText(TXT_SITE_TITLE));
+    setTitle(tr(TXT_SITE_TITLE));
 
 //    content->setTransitionAnimation(WAnimation(WAnimation::SlideInFromBottom, WAnimation::EaseIn), true);
 
@@ -412,46 +401,17 @@ PlayersPanel::~PlayersPanel()
     delete page;
 }
 
-void PlayersPanel::LoadLangTexts()
-{
-    console(DEBUG_CODE, "Call void PlayersPanel::LoadLangTexts()");
-
-    Database tmpDb;
-    if (tmpDb.Connect(PANEL_DB_DATA, SQL_PANELDB))
-    {
-        tmpDb.SetQuery("SELECT id, lang_0, lang_1 FROM LangTexts");
-
-        if (tmpDb.ExecuteQuery() > DB_RESULT_EMPTY)
-        {
-            std::list<DatabaseRow*> tmpList = tmpDb.GetRows();
-
-            tmpDb.Disconnect();
-
-            for (std::list<DatabaseRow*>::const_iterator itr = tmpList.begin(); itr != tmpList.end(); ++itr)
-            {
-                DatabaseRow * row = *itr;
-
-                if (row)
-                {
-                    LangText tmpText(row->fields[0].GetUInt32());
-
-                    for (int i = 0; i < LANG_COUNT; ++i)
-                        tmpText.texts[i] = row->fields[i+1].GetWString();
-
-                    session->langTexts[tmpText.textId] = tmpText;
-                }
-            }
-        }
-    }
-}
-
 WApplication *createApplication(const WEnvironment& env)
 {
     console(DEBUG_CODE, "Call WApplication *createApplication(const WEnvironment& env)");
     // You could read information from the environment to decide
     // whether the user has permission to start a new application
 
-    return new PlayersPanel(env);
+    PlayersPanel * tmpPanel = new PlayersPanel(env);
+
+    tmpPanel->messageResourceBundle().use("langs/panel");
+
+    return tmpPanel;
 }
 
 std::map<uint32, SpellInfo> spells;

@@ -44,21 +44,16 @@
 class LogoutPage : public WContainerWidget
 {
 public:
-    LogoutPage(SessionInfo * sess, WContainerWidget * parent = 0);
+    LogoutPage(SessionInfo * session, WContainerWidget * parent = 0);
     ~LogoutPage() { clear(); }
 
     void refresh();
 private:
-    /// pointer to object with current session informations
-    SessionInfo * session;
-    /// should be true only once per player
-    bool needCreation;
-
-    WText * info;
     WPushButton * btn;
 
+    SessionInfo * sess;
+
     void CreateLogoutPage();
-    void UpdateLogoutPage();
 
     void Logout();
 };

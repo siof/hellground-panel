@@ -44,21 +44,17 @@ CharacterInfoPage::CharacterInfoPage(SessionInfo * sess, WContainerWidget * pare
     session = sess;
     setContentAlignment(AlignCenter|AlignTop);
 
-    pageInfoSlots[CHARINFO_SLOT_INFO].SetLabel(sess, TXT_CHARACTER_PAGE_INFO);
-    addWidget(pageInfoSlots[CHARINFO_SLOT_INFO].GetLabel());
+    addWidget(new WText(tr(TXT_INFO_CHARACTER)));
     addWidget(new WBreak());
     addWidget(new WBreak());
 
-    pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(new WText("", this));
-    addWidget(pageInfoSlots[CHARINFO_SLOT_ADDINFO].GetLabel());
+    charPageInfo = new WText("", this);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
-    pageInfoSlots[CHARINFO_SLOT_CHARACTERS].SetLabel(sess, TXT_LBL_CHAR_LIST);
-    addWidget(pageInfoSlots[CHARINFO_SLOT_CHARACTERS].GetLabel());
+    addWidget(new WText(tr(TXT_CHAR_LIST)));
     charList = new WComboBox(this);
     charList->activated().connect(this, &CharacterInfoPage::SelectionChanged);
-    pageInfoSlots[CHARINFO_SLOT_CHARACTERS].SetWidget(charList);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
@@ -94,18 +90,18 @@ void CharacterInfoPage::refresh()
         {
             needCreation = false;
 
-            tabs->addTab(CreateCharacterBasicInfo(), session->GetText(TXT_LBL_CHAR_TAB_INFO), WTabWidget::PreLoading);
-            tabs->addTab(CreateCharacterQuestInfo(), session->GetText(TXT_LBL_CHAR_TAB_QUEST), WTabWidget::PreLoading);
-            tabs->addTab(CreateCharacterSpellInfo(), session->GetText(TXT_LBL_CHAR_TAB_SPELL), WTabWidget::PreLoading);
-            tabs->addTab(CreateCharacterInventoryInfo(), session->GetText(TXT_LBL_CHAR_TAB_INVENTORY), WTabWidget::PreLoading);
-            tabs->addTab(CreateCharacterFriendInfo(), session->GetText(TXT_LBL_CHAR_TAB_FRIENDS), WTabWidget::PreLoading);
+            tabs->addTab(CreateCharacterBasicInfo(), tr(TXT_CHAR_TAB_INFO), WTabWidget::PreLoading);
+            tabs->addTab(CreateCharacterQuestInfo(), tr(TXT_CHAR_TAB_QUEST), WTabWidget::PreLoading);
+            tabs->addTab(CreateCharacterSpellInfo(), tr(TXT_CHAR_TAB_SPELL), WTabWidget::PreLoading);
+            tabs->addTab(CreateCharacterInventoryInfo(), tr(TXT_CHAR_TAB_INVENTORY), WTabWidget::PreLoading);
+            tabs->addTab(CreateCharacterFriendInfo(), tr(TXT_CHAR_TAB_FRIENDS), WTabWidget::PreLoading);
 
             charList->clear();
             indexToCharInfo.clear();
             Database db;
             if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
             {
-                pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+                charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
                 return;
             }
 
@@ -113,7 +109,7 @@ void CharacterInfoPage::refresh()
             switch (db.ExecutePQuery("SELECT guid, account, name, race FROM characters WHERE account = '%u'", session->accid))
             {
                 case DB_RESULT_ERROR:
-                    pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+                    charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
                     return;
                 case DB_RESULT_EMPTY:
                     break;
@@ -170,49 +166,11 @@ void CharacterInfoPage::refresh()
                     UpdateInformations(tmpItr->second.guid);
             }
         }
-
-        UpdateTextWidgets();
     }
     else
         ClearPage();
 
     WContainerWidget::refresh();
-}
-
-/********************************************//**
- * \brief Update text widgets.
- *
- * All text label widgets in all slots from current tab
- * will be updated, so if player will change language
- * then automagically labels should change too ;)
- *
- ***********************************************/
-
-void CharacterInfoPage::UpdateTextWidgets()
-{
-    int i;
-    for (i = 0; i < CHARINFO_SLOT_COUNT; ++i)
-        pageInfoSlots[i].UpdateLabel(session);
-
-    int count = tabs->count();
-
-    for (i = 0; i < count; ++i)
-        tabs->setTabText(i, session->GetText(TXT_LBL_CHAR_TAB_INFO + i));
-
-    for (i = 0; i < CHARBASICINFO_SLOT_COUNT; ++i)
-        basicInfoSlots[i].UpdateLabel(session);
-
-    for (i = 0; i < CHARQUESTINFO_SLOT_COUNT; ++i)
-        questInfoSlots[i].UpdateLabel(session);
-
-    for (i = 0; i < CHARSPELLINFO_SLOT_COUNT; ++i)
-        spellInfoSlots[i].UpdateLabel(session);
-
-    for (i = 0; i < CHARINVINFO_SLOT_COUNT; ++i)
-        inventoryInfoSlots[i].UpdateLabel(session);
-
-    for (i = 0; i < CHARFRIENDINFO_SLOT_COUNT; ++i)
-        friendInfoSlots[i].UpdateLabel(session);
 }
 
 /********************************************//**
@@ -246,36 +204,39 @@ WContainerWidget * CharacterInfoPage::CreateCharacterBasicInfo()
 {
     WContainerWidget * tmpContainer = new WContainerWidget();
 
-    basicInfoSlots[CHARBASICINFO_SLOT_LEVEL].SetAll(session, TXT_LBL_CHAR_LVL, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_RACE].SetAll(session, TXT_LBL_CHAR_RACE, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_CLASS].SetAll(session, TXT_LBL_CHAR_CLASS, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_NAME].SetAll(session, TXT_LBL_CHAR_NAME, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_ONLINE].SetAll(session, TXT_LBL_CHAR_ONLINE, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_PLAYED_TOT].SetAll(session, TXT_LBL_CHAR_TOTAL_PLAYED, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_PLAYED_LVL].SetAll(session, TXT_LBL_CHAR_LVL_PLAYED, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_LAST_RESET_COST].SetAll(session, TXT_LBL_CHAR_TALENT_RESET_COST, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_LAST_RESET_TIME].SetAll(session, TXT_LBL_CHAR_TALENT_RESET_TIME, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_ACTUAL_RESET_COST].SetAll(session, TXT_LBL_CHAR_ACT_TAL_RESET_COST, new WText(""), 1);
-    basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].SetAll(session, TXT_LBL_CHAR_DELETION_DATE, new WText(""), 1);
+    charBasicInfo = new Wt::WTable(tmpContainer);
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LEVEL, 0)->addWidget(new WText(tr(TXT_CHAR_LVL)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LEVEL, 1)->addWidget(new WText(""));
 
-    int tmpCount;
-    WWidget * tmpWidget;
-    // add widgets to page
-    for (int i = 0; i < CHARBASICINFO_SLOT_COUNT; ++i)
-    {
-        tmpWidget = basicInfoSlots[i].GetLabel();
-        if (tmpWidget)
-            tmpContainer->addWidget(tmpWidget);
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_RACE, 0)->addWidget(new WText(tr(TXT_CHAR_RACE)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_RACE, 1)->addWidget(new WText(""));
 
-        tmpWidget = basicInfoSlots[i].GetWidget();
-        if (tmpWidget)
-            tmpContainer->addWidget(tmpWidget);
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_CLASS, 0)->addWidget(new WText(tr(TXT_CHAR_CLASS)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_CLASS, 1)->addWidget(new WText(""));
 
-        tmpCount = basicInfoSlots[i].GetBreakCount();
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_NAME, 0)->addWidget(new WText(tr(TXT_CHAR_NAME)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_NAME, 1)->addWidget(new WText(""));
 
-        for (int j = 0; j < tmpCount; ++j)
-            tmpContainer->addWidget(new WBreak());
-    }
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_ONLINE, 0)->addWidget(new WText(tr(TXT_CHAR_ONLINE)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_ONLINE, 1)->addWidget(new WText(""));
+
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_TOT, 0)->addWidget(new WText(tr(TXT_CHAR_PLAYED_TOTAL)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_TOT, 1)->addWidget(new WText(""));
+
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_LVL, 0)->addWidget(new WText(tr(TXT_CHAR_PLAYED_LEVEL)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_LVL, 1)->addWidget(new WText(""));
+
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_COST, 0)->addWidget(new WText(tr(TXT_CHAR_TALENT_RESET_COST)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_COST, 1)->addWidget(new WText(""));
+
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_TIME, 0)->addWidget(new WText(tr(TXT_CHAR_TALENT_RESET_TIME)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_TIME, 1)->addWidget(new WText(""));
+
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_ACTUAL_RESET_COST, 0)->addWidget(new WText(tr(TXT_CHAR_ACT_TAL_RESET_COST)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_ACTUAL_RESET_COST, 1)->addWidget(new WText(""));
+
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_DELETION_TIME, 0)->addWidget(new WText(tr(TXT_CHAR_DELETION_DATE)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_DELETION_TIME, 1)->addWidget(new WText(""));
 
     tmpContainer->addWidget(new WBreak());
     tmpContainer->addWidget(new WBreak());
@@ -283,7 +244,7 @@ WContainerWidget * CharacterInfoPage::CreateCharacterBasicInfo()
     if (restoreCharacter)
         delete restoreCharacter;
 
-    restoreCharacter = new WPushButton(session->GetText(TXT_BTN_CHARACTER_RESTORE), tmpContainer);
+    restoreCharacter = new WPushButton(tr(TXT_BTN_CHARACTER_RESTORE), tmpContainer);
     restoreCharacter->clicked().connect(this, &CharacterInfoPage::RestoreCharacter);
 
     return tmpContainer;
@@ -303,13 +264,9 @@ WTable * CharacterInfoPage::CreateCharacterQuestInfo()
 
     tmpQuest->setHeaderCount(1);
 
-    questInfoSlots[CHARQUESTINFO_SLOT_NAME].SetLabel(session, TXT_LBL_QUEST_NAME);
-    questInfoSlots[CHARQUESTINFO_SLOT_LEVEL].SetLabel(session, TXT_LBL_QUEST_LVL);
-    questInfoSlots[CHARQUESTINFO_SLOT_STATUS].SetLabel(session, TXT_LBL_QUEST_STATUS);
-
-    int i;
-    for (i = 0; i < CHARQUESTINFO_SLOT_COUNT; ++i)
-        tmpQuest->elementAt(0, i)->addWidget(questInfoSlots[i].GetLabel());
+    tmpQuest->elementAt(0, CHARQUESTINFO_SLOT_NAME)->addWidget(new WText(tr(TXT_QUEST_NAME)));
+    tmpQuest->elementAt(0, CHARQUESTINFO_SLOT_LEVEL)->addWidget(new WText(tr(TXT_QUEST_LVL)));
+    tmpQuest->elementAt(0, CHARQUESTINFO_SLOT_STATUS)->addWidget(new WText(tr(TXT_QUEST_STATUS)));
 
     return tmpQuest;
 }
@@ -327,14 +284,10 @@ WTable * CharacterInfoPage::CreateCharacterSpellInfo()
 
     tmpSpell->setHeaderCount(1);
 
-    spellInfoSlots[CHARSPELLINFO_SLOT_ID].SetLabel(session, TXT_LBL_SPELL_ID);
-    spellInfoSlots[CHARSPELLINFO_SLOT_NAME].SetLabel(session, TXT_LBL_SPELL_NAME);
-    spellInfoSlots[CHARSPELLINFO_SLOT_ACTIVE].SetLabel(session, TXT_LBL_SPELL_ACTIVE);
-    spellInfoSlots[CHARSPELLINFO_SLOT_DISABLED].SetLabel(session, TXT_LBL_SPELL_DISABLED);
-
-    int i;
-    for (i = 0; i < CHARSPELLINFO_SLOT_COUNT; ++i)
-        tmpSpell->elementAt(0, i)->addWidget(spellInfoSlots[i].GetLabel());
+    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_ID)->addWidget(new WText(tr(TXT_SPELL_ID)));
+    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_NAME)->addWidget(new WText(tr(TXT_SPELL_NAME)));
+    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_ACTIVE)->addWidget(new WText(tr(TXT_SPELL_ACTIVE)));
+    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_DISABLED)->addWidget(new WText(tr(TXT_SPELL_DISABLED)));
 
     return tmpSpell;
 }
@@ -352,13 +305,9 @@ WTable * CharacterInfoPage::CreateCharacterInventoryInfo()
 
     tmpInv->setHeaderCount(1);
 
-    inventoryInfoSlots[CHARINVINFO_SLOT_ID].SetLabel(session, TXT_LBL_ITEM_ID);
-    inventoryInfoSlots[CHARINVINFO_SLOT_NAME].SetLabel(session, TXT_LBL_ITEM_NAME);
-    inventoryInfoSlots[CHARINVINFO_SLOT_STACK].SetLabel(session, TXT_LBL_ITEM_COUNT);
-
-    int i;
-    for (i = 0; i < CHARINVINFO_SLOT_COUNT; ++i)
-        tmpInv->elementAt(0, i)->addWidget(inventoryInfoSlots[i].GetLabel());
+    tmpInv->elementAt(0, CHARINVINFO_SLOT_ID)->addWidget(new WText(tr(TXT_ITEM_ID)));
+    tmpInv->elementAt(0, CHARINVINFO_SLOT_NAME)->addWidget(new WText(tr(TXT_ITEM_NAME)));
+    tmpInv->elementAt(0, CHARINVINFO_SLOT_STACK)->addWidget(new WText(tr(TXT_ITEM_COUNT)));
 
     return tmpInv;
 }
@@ -376,13 +325,9 @@ WTable * CharacterInfoPage::CreateCharacterFriendInfo()
 
     tmpFriends->setHeaderCount(1);
 
-    friendInfoSlots[CHARFRIENDINFO_SLOT_NAME].SetLabel(session, TXT_LBL_FRIEND_NAME);
-    friendInfoSlots[CHARFRIENDINFO_SLOT_NOTE].SetLabel(session, TXT_LBL_FRIEND_NOTE);
-    friendInfoSlots[CHARFRIENDINFO_SLOT_ONLINE].SetLabel("");
-
-    int i;
-    for (i = 0; i < CHARFRIENDINFO_SLOT_COUNT; ++i)
-        tmpFriends->elementAt(0, i)->addWidget(friendInfoSlots[i].GetLabel());
+    tmpFriends->elementAt(0, CHARFRIENDINFO_SLOT_NAME)->addWidget(new WText(tr(TXT_FRIEND_NAME)));
+    tmpFriends->elementAt(0, CHARFRIENDINFO_SLOT_NOTE)->addWidget(new WText(tr(TXT_FRIEND_NOTE)));
+    tmpFriends->elementAt(0, CHARFRIENDINFO_SLOT_ONLINE)->addWidget(new WText(""));
 
     return tmpFriends;
 }
@@ -399,7 +344,7 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -408,32 +353,32 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
                              "WHERE guid = '%u'", guid))
     {
         case DB_RESULT_ERROR:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
         case DB_RESULT_EMPTY:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_EMPTY);
+            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_EMPTY));
             return;
         default:
         {
             db.Disconnect();
             DatabaseRow * tmpRow = db.GetRow();
 
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_LEVEL].GetWidget())->setText(tmpRow->fields[0].GetWString());
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_RACE].GetWidget())->setText(GetRaceName(session, tmpRow->fields[1].GetInt()));
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_CLASS].GetWidget())->setText(GetClassName(session, tmpRow->fields[2].GetInt()));
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_NAME].GetWidget())->setText(tmpRow->fields[3].GetWString());
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_ONLINE].GetWidget())->setText(session->GetText(tmpRow->fields[4].GetBool() ? TXT_ONLINE : TXT_OFFLINE));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_LEVEL, 1)->widget(0))->setText(tmpRow->fields[0].GetWString());
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_RACE, 1)->widget(0))->setText(GetRaceName(tmpRow->fields[1].GetInt()));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_CLASS, 1)->widget(0))->setText(GetClassName(tmpRow->fields[2].GetInt()));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_NAME, 1)->widget(0))->setText(tmpRow->fields[3].GetWString());
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_ONLINE, 1)->widget(0))->setText(tr(tmpRow->fields[4].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
 
             uint64 tmpVal = tmpRow->fields[5].GetUInt64();
-            uint32 tmpDays = tmpVal/86400;
+            int tmpDays = tmpVal/86400;
 
             tmpVal -= tmpDays * 86400;
-            uint32 tmpHours = tmpVal/3600;
+            int tmpHours = tmpVal/3600;
 
             tmpVal -= tmpHours * 3600;
-            uint32 tmpMinutes = tmpVal/60;
+            int tmpMinutes = tmpVal/60;
 
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_PLAYED_TOT].GetWidget())->setText(GetFormattedString(session->GetText(TXT_CHARACTER_PLAYED_FMT).toUTF8().c_str(), tmpDays, tmpHours, tmpMinutes));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_TOT, 1)->widget(0))->setText(tr(TXT_CHAR_PLAYED_FMT).arg(tmpDays).arg(tmpHours).arg(tmpMinutes));
 
             tmpVal = tmpRow->fields[6].GetUInt64();
             tmpDays = tmpVal/86400;
@@ -444,27 +389,24 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
             tmpVal -= tmpHours*3600;
             tmpMinutes = tmpVal/60;
 
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_PLAYED_LVL].GetWidget())->setText(GetFormattedString(session->GetText(TXT_CHARACTER_PLAYED_FMT).toUTF8().c_str(), tmpDays, tmpHours, tmpMinutes));
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_LAST_RESET_COST].GetWidget())->setText(GetFormattedString("%u g", uint32(tmpRow->fields[7].GetUInt64()/GOLD)));
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_LAST_RESET_TIME].GetWidget())->setText(tmpRow->fields[8].GetWString());
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_LVL, 1)->widget(0))->setText(tr(TXT_CHAR_PLAYED_FMT).arg(tmpDays).arg(tmpHours).arg(tmpMinutes));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_COST, 1)->widget(0))->setText(GetFormattedString("%u g", uint32(tmpRow->fields[7].GetUInt64()/GOLD)));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_TIME, 1)->widget(0))->setText(tmpRow->fields[8].GetWString());
 
             tmpVal = tmpRow->fields[9].GetUInt64();
             tmpVal /= 30;   // one month for core = 30 days
-            ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_ACTUAL_RESET_COST].GetWidget())->setText(GetFormattedString("%u g", uint32(CalculateTalentCost(tmpRow->fields[7].GetUInt64(), tmpVal)/GOLD)));
-
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_ACTUAL_RESET_COST, 1)->widget(0))->setText(GetFormattedString("%u g", uint32(CalculateTalentCost(tmpRow->fields[7].GetUInt64(), tmpVal)/GOLD)));
 
             if (IsDeletedCharacter(guid))
             {
                 restoreCharacter->show();
-                ((WText*)basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetWidget())->setText(tmpRow->fields[10].GetWString());
-                basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetLabel()->show();
-                basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetWidget()->show();
+                ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_DELETION_TIME, 1)->widget(0))->setText(tmpRow->fields[10].GetWString());
+                charBasicInfo->rowAt(CHARBASICINFO_SLOT_DELETION_TIME)->show();
             }
             else
             {
                 restoreCharacter->hide();
-                basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetLabel()->hide();
-                basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetWidget()->hide();
+                charBasicInfo->rowAt(CHARBASICINFO_SLOT_DELETION_TIME)->hide();
             }
 
             break;
@@ -484,7 +426,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -493,10 +435,10 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
                             "WHERE guid = %u", SQL_WORLDDB, guid))
     {
         case DB_RESULT_ERROR:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
         case DB_RESULT_EMPTY:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_EMPTY);
+            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_EMPTY));
             return;
         default:
             db.Disconnect();
@@ -520,16 +462,12 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
                 if (tmpRow->fields[5].GetInt() == QUEST_TYPE_DAILY)
                     continue;
 
-                std::string tmpStr = GetFormattedString(session->GetText(TXT_QUEST_LINK_NAME_FMT).toUTF8().c_str(), tmpRow->fields[0].GetUInt32(), tmpRow->fields[1].GetCString());
-
-                tmpText = new WText(tmpStr);
-
-                tmpStr = GetFormattedString(session->GetText(TXT_QUEST_TOOLTIP_FMT).toUTF8().c_str(), tmpRow->fields[0].GetUInt32(), tmpRow->fields[6].GetUInt32());
-                tmpText->setToolTip(tmpStr, Wt::XHTMLText);
+                tmpText = new WText(tr(TXT_QUEST_LINK_NAME_FMT).arg(tmpRow->fields[0].GetInt()).arg(tmpRow->fields[1].GetCString()));
+                tmpText->setToolTip(tr(TXT_QUEST_TOOLTIP_FMT).arg(tmpRow->fields[0].GetInt()).arg(tmpRow->fields[6].GetInt()), Wt::XHTMLText);
 
                 tmpTable->elementAt(i, 0)->addWidget(tmpText);
                 tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[2].GetWString()));
-                tmpTable->elementAt(i, 2)->addWidget(new WText(GetQuestStatus(session, tmpRow->fields[3].GetInt(), tmpRow->fields[4].GetBool())));
+                tmpTable->elementAt(i, 2)->addWidget(new WText(GetQuestStatus(tmpRow->fields[3].GetInt(), tmpRow->fields[4].GetBool())));
             }
 
             break;
@@ -548,7 +486,7 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -557,10 +495,10 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
                              "WHERE guid = '%u'", guid))
     {
         case DB_RESULT_ERROR:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
         case DB_RESULT_EMPTY:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_EMPTY);
+            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_EMPTY));
             return;
         default:
             db.Disconnect();
@@ -582,8 +520,8 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
 
                 tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
                 tmpTable->elementAt(i, 1)->addWidget(new WText(spells[tmpRow->fields[0].GetUInt32()].name));
-                tmpTable->elementAt(i, 2)->addWidget(new WText(session->GetText(tmpRow->fields[1].GetBool() ? TXT_YES : TXT_NO)));
-                tmpTable->elementAt(i, 3)->addWidget(new WText(session->GetText(tmpRow->fields[2].GetBool() ? TXT_YES : TXT_NO)));
+                tmpTable->elementAt(i, 2)->addWidget(new WText(tr(tmpRow->fields[1].GetBool() ? TXT_GEN_YES : TXT_GEN_NO)));
+                tmpTable->elementAt(i, 3)->addWidget(new WText(tr(tmpRow->fields[2].GetBool() ? TXT_GEN_YES : TXT_GEN_NO)));
             }
 
             break;
@@ -602,7 +540,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -611,7 +549,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
                             "WHERE ci.guid = %u", SQL_WORLDDB, guid))
     {
         case DB_RESULT_ERROR:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
         case DB_RESULT_EMPTY:
             return;
@@ -654,7 +592,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -663,7 +601,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
                             "WHERE cs.guid = '%u'", guid))
     {
         case DB_RESULT_ERROR:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
         case DB_RESULT_EMPTY:
             return;
@@ -689,7 +627,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
                 {
                     tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
                     tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
-                    tmpTable->elementAt(i, 2)->addWidget(new WText(session->GetText((tmpRow->fields[3].GetBool() ? TXT_ONLINE : TXT_OFFLINE))));
+                    tmpTable->elementAt(i, 2)->addWidget(new WText(tr(tmpRow->fields[3].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE)));
                 }
             }
 
@@ -720,7 +658,9 @@ void CharacterInfoPage::ClearPage(bool alsoCharList)
             switch (i)
             {
                 case CHAR_TAB_BASIC:
+                    charBasicInfo->clear();
                     ((WContainerWidget*)tmpWid)->clear();
+                    delete charBasicInfo;
                     delete tmpWid;
                     break;
                 case CHAR_TAB_QUEST:
@@ -734,18 +674,6 @@ void CharacterInfoPage::ClearPage(bool alsoCharList)
             }
         }
     }
-
-    for (i = 0; i < CHARBASICINFO_SLOT_COUNT; ++i)
-        basicInfoSlots[i].Clear();
-
-    for (i = 0; i < CHARQUESTINFO_SLOT_COUNT; ++i)
-        questInfoSlots[i].Clear();
-
-    for (i = 0; i < CHARSPELLINFO_SLOT_COUNT; ++i)
-        spellInfoSlots[i].Clear();
-
-    for (i = 0; i < CHARINVINFO_SLOT_COUNT; ++i)
-        inventoryInfoSlots[i].Clear();
 
     if (alsoCharList)
     {
@@ -781,7 +709,7 @@ void CharacterInfoPage::RestoreCharacter()
 
     if (session->banned)
     {
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_NOT_WHILE_BANNED);
+        charPageInfo->setText(tr(TXT_ERROR_NOT_WHILE_BANNED));
         return;
     }
 
@@ -791,7 +719,7 @@ void CharacterInfoPage::RestoreCharacter()
     if (tmpItr == indexToCharInfo.end())    // check if character on that index exists
     {
         restoring = false;
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_CHARACTER_NOT_FOUND);
+        charPageInfo->setText(tr(TXT_ERROR_CHARACTER_NOT_FOUND));
         return;
     }
 
@@ -799,7 +727,7 @@ void CharacterInfoPage::RestoreCharacter()
     if (!IsDeletedCharacter(tmpCharInfo))    // check if character is deleted one
     {
         restoring = false;
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_CHARACTER_NOT_FOUND);
+        charPageInfo->setText(tr(TXT_ERROR_CHARACTER_NOT_FOUND));
         return;
     }
 
@@ -807,14 +735,14 @@ void CharacterInfoPage::RestoreCharacter()
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
         restoring = false;
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
     if (db.ExecutePQuery("SELECT Count(*) FROM characters WHERE account = '%u'", tmpCharInfo.account) == DB_RESULT_ERROR)
     {
         restoring = false;
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
@@ -823,7 +751,7 @@ void CharacterInfoPage::RestoreCharacter()
     if (charactersCount >= MAX_CHARS_ON_ACCOUNT)
     {
         restoring = false;
-        pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_TO_MUCH_CHARACTERS);
+        charPageInfo->setText(tr(TXT_ERROR_TO_MUCH_CHARACTERS));
         return;
     }
 
@@ -832,7 +760,7 @@ void CharacterInfoPage::RestoreCharacter()
     switch (db.ExecutePQuery("SELECT guid FROM characters WHERE name = '%s'", escapedName.c_str()))
     {
         case DB_RESULT_ERROR:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
         case DB_RESULT_EMPTY:
         {
@@ -865,25 +793,24 @@ void CharacterInfoPage::RestoreCharacter()
                     tmpItr->second.deleted = false;
                     charList->setItemText(tmpItr->first, tmpItr->second.name);
 
-                    pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_CHARACTER_RESTORED);
+                    charPageInfo->setText(tr(TXT_CHAR_RESTORED));
 
                     restoreCharacter->hide();
-                    basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetLabel()->hide();
-                    basicInfoSlots[CHARBASICINFO_SLOT_DELETION_TIME].GetWidget()->hide();
+                    charBasicInfo->rowAt(CHARBASICINFO_SLOT_DELETION_TIME)->hide();
 
                     db.Connect(PANEL_DB_DATA, SQL_PANELDB);
-                    db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '%s')", tmpCharInfo.account, session->sessionIp.toUTF8().c_str(), TXT_ACT_CHARACTER_RESTORE, escapedName.c_str());
+                    db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '%s')", tmpCharInfo.account, session->sessionIp.toUTF8().c_str(), TXT_ACT_CHARACTER_RESTORE, escapedName.c_str());
                 }
                 else
-                    pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+                    charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             }
             else
-                pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_FACTION_MISMATCH);
+                charPageInfo->setText(tr(TXT_ERROR_FACTION_MISMATCH));
 
             break;
         }
         default:
-            pageInfoSlots[CHARINFO_SLOT_ADDINFO].SetLabel(session, TXT_ERROR_CHARACTER_NAME_EXISTS);
+            charPageInfo->setText(tr(TXT_ERROR_CHARACTER_NAME_EXISTS));
             break;
     }
 

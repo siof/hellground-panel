@@ -23,13 +23,13 @@
 class ErrorPageSlot
 {
 public:
-    ErrorPageSlot() : text(NULL), textId(0), str(WString::fromUTF8("")), textIdBased(false) {}
+    ErrorPageSlot() : text(NULL), textId(""), str(WString::fromUTF8("")), textIdBased(false) {}
     ~ErrorPageSlot();
 
-    void SetText(WText * txt, uint32 id);
+    void SetText(WText * txt, const char * id);
     void SetText(WText * txt, WString &strn);
     void SetText(WString &strn);
-    void SetText(SessionInfo * sess, uint32 id);
+    void SetText(SessionInfo * sess, const char * id);
 
     WText * CreateText(SessionInfo * sess);
     void DeleteText();
@@ -40,13 +40,13 @@ public:
     void Clear()
     {
         DeleteText();
-        textId = 0;
+        textId = "";
         str = "";
         textIdBased = false;
     }
 private:
     WText * text;
-    uint32 textId;
+    std::string textId;
     WString str;
     bool textIdBased;
 };
@@ -58,7 +58,7 @@ public:
     ~ErrorPage() {}
 
     void refresh();     // overload WWidget::refresh() for automatic content change ;) this should be done for all pages
-    void SetErrorMsg(ErrorSlots slot, uint32 txtId);
+    void SetErrorMsg(ErrorSlots slot, const char * txtId);
     void SetErrorMsg(ErrorSlots slot, WString &str);
     void ClearSlots();
 private:

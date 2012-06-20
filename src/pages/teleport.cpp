@@ -36,12 +36,11 @@ TeleportPage::TeleportPage(SessionInfo * sess, WContainerWidget * parent):
     console(DEBUG_CODE, "TeleportPage::TeleportPage(SessionInfo * sess = %i, WContainerWidget * parent = %i)", sess != NULL, parent != NULL);
     setContentAlignment(AlignCenter|AlignTop);
 
-    teleportSlots[TELEPORT_SLOT_INFO].SetText(sess, TXT_TELEPORT);
-    teleportSlots[TELEPORT_SLOT_STATUS].SetText("");
+    teleInfo = new WText("");
 
-    addWidget(teleportSlots[TELEPORT_SLOT_INFO].GetText());
+    addWidget(new WText(tr(TXT_INFO_TELEPORT)));
     addWidget(new WBreak());
-    addWidget(teleportSlots[TELEPORT_SLOT_STATUS].GetText());
+    addWidget(teleInfo);
     addWidget(new WBreak());
     addWidget(new WBreak());
     addWidget(new WBreak());
@@ -51,7 +50,7 @@ TeleportPage::TeleportPage(SessionInfo * sess, WContainerWidget * parent):
     addWidget(new WBreak());
     addWidget(new WBreak());
 
-    btnTeleport = new WPushButton(sess->GetText(TXT_BTN_TELEPORT));
+    btnTeleport = new WPushButton(tr(TXT_BTN_TELEPORT));
     btnTeleport->clicked().connect(this, &TeleportPage::Teleport);
     addWidget(btnTeleport);
 }
@@ -71,35 +70,13 @@ TeleportPage::~TeleportPage()
 
 void TeleportPage::refresh()
 {
-    #ifdef DEBUG
-    printf("TeleportPage::refresh()");
-    #endif
+    console(DEBUG_CODE, "TeleportPage::refresh()");
 
     // teleport page should be only for not logged yet players so there is no need to update it in other cases
     if (session->accLvl > LVL_NOT_LOGGED)
-    {
-        UpdateTextWidgets();
         LoadCharacters();
-    }
 
     WContainerWidget::refresh();
-}
-
-/********************************************//**
- * \brief Update text widgets.
- *
- * All text label widgets in all slots will be updated,
- * so if player will change language then automagically
- * labels should change too ;)
- *
- ***********************************************/
-
-void TeleportPage::UpdateTextWidgets()
-{
-    for (int i = 0; i < TELEPORT_SLOT_COUNT; ++i)
-        teleportSlots[i].UpdateText(session);
-
-    btnTeleport->setText(session->GetText(TXT_BTN_TELEPORT));
 }
 
 /********************************************//**
@@ -169,7 +146,7 @@ void TeleportPage::Teleport()
     if (index < 0 || index >= characters->count())
         return;
 
-    uint32 teleportStatus;
+    const char * teleportStatus;
 
     Database db;
     bool success = false;
@@ -182,7 +159,7 @@ void TeleportPage::Teleport()
         switch (db.ExecuteQuery())
         {
             case DB_RESULT_ERROR:
-                teleportStatus = TXT_DBERROR_QUERY_ERROR;
+                teleportStatus = TXT_ERROR_DB_QUERY_ERROR;
                 break;
             case DB_RESULT_EMPTY:
                 teleportStatus = TXT_ERROR_CHARACTER_NOT_FOUND;
@@ -203,11 +180,11 @@ void TeleportPage::Teleport()
                     if (db.ExecuteQuery() != DB_RESULT_ERROR)
                     {
                         db.ExecutePQuery("REPLACE INTO character_spell_cooldown VALUES (%u, 8690, 0, unix_timestamp()+3600)", guids[index]);
-                        teleportStatus = TXT_TELEPORT_SUCCESSFULL;
+                        teleportStatus = TXT_TELEPORT_SUCCESS;
                         success = true;
                     }
                     else
-                        teleportStatus = TXT_DBERROR_QUERY_ERROR;
+                        teleportStatus = TXT_ERROR_DB_QUERY_ERROR;
                 }
                 else
                     teleportStatus = TXT_ERROR_CANT_TELEPORT_ONLINE;
@@ -215,14 +192,14 @@ void TeleportPage::Teleport()
         }
     }
     else
-        teleportStatus = TXT_DBERROR_CANT_CONNECT;
+        teleportStatus = TXT_ERROR_DB_CANT_CONNECT;
 
-    teleportSlots[TELEPORT_SLOT_STATUS].SetText(session, teleportStatus);
+    teleInfo->setText(tr(teleportStatus));
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
         std::string tmpStr = GetFormattedString("Teleport. Character: %s. success: %s", db.EscapeString(name).c_str(), success ? "Yes" : "No");
-        db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', 0, '%s')", session->accid, session->sessionIp.toUTF8().c_str(), tmpStr.c_str());
+        db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '', '%s')", session->accid, session->sessionIp.toUTF8().c_str(), tmpStr.c_str());
     }
 }
 

@@ -34,26 +34,9 @@
 #ifndef TELEPORT_H_INCLUDED
 #define TELEPORT_H_INCLUDED
 
+#include <Wt/WComboBox>
+
 #include "../defines.h"
-#include "../slotItems.h"
-
-#include <WComboBox>
-
-/********************************************//**
- * \brief Slots for basic text labels.
- *
- * In this slots will be basic texts which depends on language.
- *
- ***********************************************/
-
-
-enum TeleportPageSlots
-{
-    TELEPORT_SLOT_INFO      = 0,
-    TELEPORT_SLOT_STATUS    = 1,
-
-    TELEPORT_SLOT_COUNT
-};
 
 /********************************************//**
  * \brief A class to represent Teleport page
@@ -76,8 +59,8 @@ public:
 private:
     /// panel session informations
     SessionInfo * session;
-    /// slots for static labels
-    BasicTextItem teleportSlots[TELEPORT_SLOT_COUNT];
+    /// label for teleport informations
+    WText * teleInfo;
     /// Combo box with character names
     WComboBox * characters;
     /// Button to confirm character teleportation
@@ -85,11 +68,9 @@ private:
     /// Pointer to table with character guids (teleport will be done on character with guid from this table)
     uint64 * guids;
 
-    void UpdateTextWidgets();
     void LoadCharacters();
     void Teleport();
 };
-
 
 #endif // TELEPORT_H_INCLUDED
 

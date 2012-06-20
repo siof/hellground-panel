@@ -31,12 +31,14 @@
 #include "../database.h"
 
 PassChangePage::PassChangePage(SessionInfo * sess, WContainerWidget * parent):
-    WContainerWidget(parent), session(sess), needCreation(true)
+    WContainerWidget(parent), session(sess)
 {
     setContentAlignment(AlignCenter|AlignTop);
     txtPass = NULL;
     txtPass2 = NULL;
     btnChange = NULL;
+
+    CreatePassChangePage();
 }
 
 PassChangePage::~PassChangePage()
@@ -55,34 +57,7 @@ PassChangePage::~PassChangePage()
 void PassChangePage::refresh()
 {
     console(DEBUG_CODE, "PassChangePage::refresh()");
-
-    // pass change page should be visible only for logged players so there is no need to create/update in other cases
-    if (session->accLvl > LVL_NOT_LOGGED)
-    {
-        if (needCreation)
-            CreatePassChangePage();
-        else
-            UpdateTextWidgets();
-    }
-
     WContainerWidget::refresh();
-}
-
-/********************************************//**
- * \brief Update text widgets.
- *
- * All text label widgets in all slots will be updated,
- * so if player will change language then automagically
- * labels should change too ;)
- *
- ***********************************************/
-
-void PassChangePage::UpdateTextWidgets()
-{
-    for (int i = 0; i < PASS_CHANGE_TEXT_SLOT_COUNT; ++i)
-        textSlots[i].UpdateLabel(session);
-
-    btnChange->setText(session->GetText(TXT_BTN_PASS_CHANGE));
 }
 
 /********************************************//**
@@ -95,44 +70,35 @@ void PassChangePage::UpdateTextWidgets()
 
 void PassChangePage::CreatePassChangePage()
 {
-    clear();
-    needCreation = false;
+    addWidget(new WText(tr(TXT_INFO_PASS_CHANGE)));
+    for (int i = 0; i < 4; ++i)
+        addWidget(new WBreak());
 
-    textSlots[PASS_CHANGE_TEXT_MAIN].SetLabel(session, TXT_LBL_PASS_CHANGE);
-    addWidget(textSlots[PASS_CHANGE_TEXT_MAIN].GetLabel());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-
-    textSlots[PASS_CHANGE_TEXT_INFO].SetLabel("");
-    addWidget(textSlots[PASS_CHANGE_TEXT_INFO].GetLabel());
+    changeInfo = new WText("");
+    addWidget(changeInfo);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
-    textSlots[PASS_CHANGE_TEXT_OLDPASS].SetLabel(session, TXT_LBL_PASS_OLD);
     txtPassOld = new WLineEdit();
     txtPassOld->setEchoMode(WLineEdit::Password);
-    addWidget(textSlots[PASS_CHANGE_TEXT_OLDPASS].GetLabel());
+    addWidget(new WText(tr(TXT_PASS_OLD)));
     addWidget(txtPassOld);
     addWidget(new WBreak());
 
-    textSlots[PASS_CHANGE_TEXT_PASS].SetLabel(session, TXT_LBL_PASS_NEW);
     txtPass = new WLineEdit();
     txtPass->setEchoMode(WLineEdit::Password);
-    addWidget(textSlots[PASS_CHANGE_TEXT_PASS].GetLabel());
+    addWidget(new WText(tr(TXT_PASS_NEW)));
     addWidget(txtPass);
     addWidget(new WBreak());
 
-    textSlots[PASS_CHANGE_TEXT_PASS2].SetLabel(session, TXT_LBL_PASS_REPEAT);
     txtPass2 = new WLineEdit();
     txtPass2->setEchoMode(WLineEdit::Password);
-    addWidget(textSlots[PASS_CHANGE_TEXT_PASS2].GetLabel());
+    addWidget(new WText(tr(TXT_PASS_REPEAT)));
     addWidget(txtPass2);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
-    btnChange = new WPushButton(session->GetText(TXT_BTN_PASS_CHANGE));
+    btnChange = new WPushButton(tr(TXT_BTN_PASS_CHANGE));
     addWidget(btnChange);
 
     txtPass->focussed().connect(this, &PassChangePage::ClearWLineEdit);
@@ -176,21 +142,21 @@ void PassChangePage::Change()
 
     if (tmpPass.size() > PASSWORD_LENGTH_MAX)
     {
-        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_ERROR_PASSWORD_TO_LONG);
+        changeInfo->setText(tr(TXT_ERROR_PASSWORD_TO_LONG));
         ClearPass();
         return;
     }
 
     if (tmpPass.size() < PASSWORD_LENGTH_MIN)
     {
-        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_ERROR_PASSWORD_TO_SHORT);
+        changeInfo->setText(tr(TXT_ERROR_PASSWORD_TO_SHORT));
         ClearPass();
         return;
     }
 
     if (pass != pass2)
     {
-        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_ERROR_PASSWORDS_MISMATCH);
+        changeInfo->setText(tr(TXT_ERROR_PASSWORDS_MISMATCH));
         ClearPass();
         return;
     }
@@ -198,7 +164,7 @@ void PassChangePage::Change()
     Database db;
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
-        db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_PASS_CHANGE);
+        db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_PASS_CHANGE);
 
     WString shapass;
     std::string escapedLogin = db.EscapeString(session->login);
@@ -208,7 +174,7 @@ void PassChangePage::Change()
         shapass = db.GetRow()->fields[0].GetWString();
     else
     {
-        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        changeInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         ClearPass();
         return;
     }
@@ -216,7 +182,7 @@ void PassChangePage::Change()
     if (shapass != session->pass)
     {
         console(DEBUG_CODE, "void PassChangePage::Change(): oldPass: %s , shapass: %s , pass: %s\n", txtPassOld->text().toUTF8().c_str(), shapass.toUTF8().c_str(), session->pass.toUTF8().c_str());
-        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_ERROR_WRONG_PASSWORD);
+        changeInfo->setText(tr(TXT_ERROR_WRONG_PASSWORD));
         ClearPass();
         return;
     }
@@ -227,25 +193,25 @@ void PassChangePage::Change()
         shapass = db.GetRow()->fields[0].GetWString();
     else
     {
-        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        changeInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         ClearPass();
         return;
     }
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        changeInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
     db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = NULL, s = NULL, v = NULL WHERE id = '%u'", shapass.toUTF8().c_str(), session->accid);
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
-        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        changeInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
     else
     {
         session->pass = shapass;
-        textSlots[PASS_CHANGE_TEXT_INFO].SetLabel(session, TXT_PASS_CHANGE_COMPLETE);
+        changeInfo->setText(tr(TXT_PASS_CHANGE_COMPLETE));
     }
 
     ClearPass();

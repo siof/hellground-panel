@@ -32,40 +32,40 @@
 class BasicTextItem
 {
 public:
-    BasicTextItem() : textId(0), label(NULL), prevLang(LANG_COUNT) {}
-    BasicTextItem(SessionInfo * sess, uint32 txtId);
+    BasicTextItem() : textId(""), label(NULL), prevLang(LANG_COUNT) {}
+    BasicTextItem(SessionInfo * sess, const char* id);
     BasicTextItem(WString &lbl);
     ~BasicTextItem();
 
-    void UpdateLabel(SessionInfo * sess, uint32 txtId = 0);
-    void UpdateText(SessionInfo * sess, uint32 txtId = 0);
+    void UpdateLabel(const char* id = NULL);
+    void UpdateText(const char* id = NULL);
 
-    void SetLabel(WText * lbl, uint32 id = 0);
+    void SetLabel(WText * lbl, const char* id = NULL);
     void SetLabel(WString &lbl);
-    void SetLabel(SessionInfo * sess, uint32 id);
+    void SetLabel(SessionInfo * sess, const char* id);
     void SetLabel(std::string &lbl);
     void SetLabel(const char* lbl);
 
-    void SetText(WText * txt, uint32 id = 0);
+    void SetText(WText * txt, const char* id = NULL);
     void SetText(WString &lbl);
-    void SetText(SessionInfo * sess, uint32 id);
+    void SetText(SessionInfo * sess, const char* id);
     void SetText(std::string &lbl);
     void SetText(const char* lbl);
 
-    void SetTextId(uint32 txtId) { textId = txtId; }
+    void SetTextId(const char* id) { textId = id; }
 
     WText * GetLabel() { return label; }
     WText * GetText() { return label; }
 
     void Clear()
     {
-        textId = 0;
+        textId = "";
         label = NULL;
         prevLang = LANG_COUNT;
     }
 
 private:
-    uint32 textId;
+    WString textId;
     WText * label;
     Lang prevLang;
 };
@@ -87,17 +87,17 @@ public:
     PageSlotItem() : breaks(0), widget(NULL) {}
     ~PageSlotItem();
 
-    void UpdateLabel(SessionInfo * sess, uint32 txtId = 0);
+    void UpdateLabel(SessionInfo * sess, const char* id = NULL);
 
     void SetLabel(WText * lbl);
-    void SetLabel(SessionInfo * sess, uint32 txtId);
+    void SetLabel(SessionInfo * sess, const char* id);
     void SetLabel(WString & lbl);
     void SetWidget(WWidget * wid);
     void SetBreakCount(int br) { breaks = br; }
-    void SetTextId(uint32 txtId) { label.SetTextId(txtId); }
+    void SetTextId(const char* id) { label.SetTextId(id); }
 
-    void SetAll(WText * txt, WWidget * wid, int br, uint32 txtId = 0);
-    void SetAll(SessionInfo * sess, uint32 txtId, WWidget * wid, int br);
+    void SetAll(WText * txt, WWidget * wid, int br, const char* id = NULL);
+    void SetAll(SessionInfo * sess, const char* id, WWidget * wid, int br);
 
     WText * GetLabel() { return label.GetLabel(); }
     WWidget * GetWidget() { return widget; }

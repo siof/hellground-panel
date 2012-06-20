@@ -18,8 +18,8 @@
 #ifndef MENU_H_INCLUDED
 #define MENU_H_INCLUDED
 
-#include <WMenu>
-#include <WMenuItem>
+#include <Wt/WMenu>
+#include <Wt/WMenuItem>
 
 #include "defines.h"
 #include "pages/error.h"
@@ -34,17 +34,17 @@ public:
     HGSubMenu(WStackedWidget * target, HGMenu * hgMenu, WSubMenuItem * parent = NULL);
     ~HGSubMenu();
 
-    void AddMenuItem(uint32 textId, WMenuItem * menuItem);
-    void AddMenuItem(SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload = true);
+    void AddMenuItem(const char * textId, WMenuItem * menuItem);
+    void AddMenuItem(SessionInfo * sess, const char * textId, WContainerWidget * item, bool preload = true);
 
     const std::list<WMenuItem*> GetMenuItems();
     WMenu * GetMenu();
-    void UpdateTexts(SessionInfo * sess);
+    void UpdateTexts();
 
     void Refresh();
 
 private:
-    std::list<uint32> textIds;
+    std::list<const char *> textIds;
     std::list<WMenuItem*> items;
     WMenu * menu;
 };
@@ -55,24 +55,24 @@ public:
     HGMenuOption(MenuOptions menuOption);
     ~HGMenuOption();
 
-    void AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem);
-    void AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, const char * path = NULL, bool preload = true);
+    void AddMenuItem(AccountLevel accLvl, const char * textId, WMenuItem * menuItem);
+    void AddMenuItem(AccountLevel accLvl, SessionInfo * sess, const char * textId, WContainerWidget * item, const char * path = NULL, bool preload = true);
     void RemoveMenuItem(WMenuItem * menuItem, bool alsoDelete = true);
     void RemoveMenuItem(AccountLevel accLvl, bool alsoDelete = true);
 
-    void AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuItem * menuItem, WStackedWidget * target, HGMenu * menu);
-    void AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, HGMenu * menu, const char * path = NULL, bool preload = true);
+    void AddSubMenuItem(AccountLevel accLvl, const char * textId, WSubMenuItem * menuItem, WStackedWidget * target, HGMenu * menu);
+    void AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, const char * textId, WContainerWidget * item, WStackedWidget * target, HGMenu * menu, const char * path = NULL, bool preload = true);
     void RemoveSubMenuItem(AccountLevel accLvl, bool alsoDelete = true);
-    void AddSubMenuOption(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem);
-    void AddSubMenuOption(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload = true);
+    void AddSubMenuOption(AccountLevel accLvl, const char * textId, WMenuItem * menuItem);
+    void AddSubMenuOption(AccountLevel accLvl, SessionInfo * sess, const char *  textId, WContainerWidget * item, bool preload = true);
 
     WMenuItem * GetMenuItemForLevel(AccountLevel accLvl);
-    void UpdateTexts(SessionInfo * sess);
+    void UpdateTexts();
 
     void Refresh();
 
 private:
-    uint32 * textIds;
+    const char ** textIds;
     MenuOptions menuOption;
     WMenuItem ** items;
     HGSubMenu ** subMenus;
@@ -86,10 +86,10 @@ public:
 
     void refresh();         // overload, some link should be available only if user is logged in
     void ShowError(ErrorSlots error, std::string &msg);
-    void ShowError(ErrorSlots error, uint32 textId = 0);
+    void ShowError(ErrorSlots error, const char * textId = NULL);
     void ShowError();
     bool SetError(ErrorSlots error, std::string &msg, ErrorPage * err = NULL);
-    bool SetError(ErrorSlots error, uint32 textId = 0, ErrorPage * err = NULL);
+    bool SetError(ErrorSlots error, const char * textId = NULL, ErrorPage * err = NULL);
 
     void RefreshActiveMenuWidget();
 

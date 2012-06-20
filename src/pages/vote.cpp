@@ -28,8 +28,10 @@
  ***********************************************/
 
 #include "vote.h"
+
+#include <Wt/WAnchor>
+
 #include "../database.h"
-#include <WAnchor>
 
 /********************************************//**
  * \brief Creates new VotePage object.
@@ -42,8 +44,8 @@
 VotePage::VotePage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
 {
-    needCreation = true;
     setContentAlignment(AlignCenter);
+    CreateVotePage();
 }
 
 VotePage::~VotePage()
@@ -64,23 +66,7 @@ void VotePage::refresh()
     console(DEBUG_CODE, "void VotePage::refresh()\n");
 
     // only logged in players can visit this page so there is no need to create/update it in other cases
-    if (session->accLvl > LVL_NOT_LOGGED)
-    {
-        if (needCreation)
-        {
-            needCreation = false;
-            CreateVotePage();
-        }
-        else
-        {
-            infoSlots[VOTE_SLOT_MAIN].UpdateLabel(session);
-            infoSlots[VOTE_SLOT_INFO].UpdateLabel(session);
-
-            for (std::map<uint32, VoteSlotItem>::iterator itr = voteMap.begin(); itr != voteMap.end(); ++itr)
-                itr->second.UpdateExpireLabel(session);
-        }
-    }
-    else
+    if (session->accLvl <= LVL_NOT_LOGGED)
         ClearPage();
 
     WContainerWidget::refresh();
@@ -97,19 +83,19 @@ void VotePage::refresh()
 void VotePage::CreateVotePage()
 {
     console(DEBUG_CODE, "void VotePage::CreateVotePage()\n");
-    infoSlots[VOTE_SLOT_MAIN].SetLabel(session, TXT_SUPPORT_VOTE_INFO);
-    infoSlots[VOTE_SLOT_INFO].SetLabel("");
 
-    addWidget(infoSlots[VOTE_SLOT_MAIN].GetLabel());
+    voteInfo = new WText("");
+
+    addWidget(new WText(tr(TXT_INFO_SUPPORT_VOTE)));
     addWidget(new WBreak());
     addWidget(new WBreak());
-    addWidget(infoSlots[VOTE_SLOT_INFO].GetLabel());
+    addWidget(voteInfo);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
     if (!wApp->environment().javaScript() || !wApp->environment().ajax())
     {
-        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_ERROR_NEED_JAVA_SCRIPT);
+        voteInfo->setText(tr(TXT_ERROR_NEED_JAVA_SCRIPT));
         return;
     }
 
@@ -117,7 +103,7 @@ void VotePage::CreateVotePage()
 
     if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        voteInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -129,7 +115,7 @@ void VotePage::CreateVotePage()
     switch (db.ExecuteQuery())
     {
         case DB_RESULT_ERROR:
-            infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
         case DB_RESULT_EMPTY:
         default:
@@ -155,7 +141,7 @@ void VotePage::CreateVotePage()
     switch (db.ExecuteQuery())
     {
         case DB_RESULT_ERROR:
-            infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
         case DB_RESULT_EMPTY:
         default:
@@ -184,7 +170,7 @@ void VotePage::CreateVotePage()
     switch (db.ExecuteQuery("SELECT id, url, imgurl, alttext, name FROM Vote"))
     {
         case DB_RESULT_ERROR:
-            infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+            voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
         case DB_RESULT_EMPTY:
         default:
@@ -208,10 +194,12 @@ void VotePage::CreateVotePage()
                 BindVote(tmpWidget->clicked(), voteId);
 
                 voteMap[voteId].SetName(tmpRow->fields[4].GetWString());
-                WString tmpStr = tmpRow->fields[4].GetWString();
+                WString tmpStr;
 
                 if (voteMap[voteId].IsDisabled())
-                    tmpStr += session->GetText(TXT_SUPPORT_VOTE_NEXT) + voteMap[voteId].GetExpire();
+                    tmpStr = tr(TXT_SUPPORT_VOTE_NEXT).arg(tmpRow->fields[4].GetWString()).arg(voteMap[voteId].GetExpire());
+                else
+                    tmpStr = tmpRow->fields[4].GetWString();
 
                 voteMap[voteId].SetAll(new WText(tmpStr), tmpWidget, 2);
             }
@@ -246,14 +234,7 @@ void VotePage::CreateVotePage()
 void VotePage::ClearPage()
 {
     console(DEBUG_CODE, "void VotePage::ClearPage()\n");
-    clear();
-
     voteMap.clear();
-
-    for (int i = 0; i < VOTE_SLOT_COUNT; ++i)
-        infoSlots[i].Clear();
-
-    needCreation = true;
 }
 
 void VotePage::BindVote(EventSignal<WMouseEvent>& signal, const uint32& id)
@@ -269,7 +250,7 @@ void VotePage::Vote(const uint32& id)
         WAnchor * tmpAnch = ((WAnchor*)WObject::sender());
         if (tmpAnch->isDisabled())
         {
-            infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_ERROR_CANT_VOTE_TWICE);
+            voteInfo->setText(tr(TXT_ERROR_CANT_VOTE_TWICE));
             return;
         }
 
@@ -278,7 +259,7 @@ void VotePage::Vote(const uint32& id)
 
     if (voteMap[id].IsDisabled())
     {
-        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_ERROR_CANT_VOTE_TWICE);
+        voteInfo->setText(tr(TXT_ERROR_CANT_VOTE_TWICE));
         return;
     }
 
@@ -288,7 +269,7 @@ void VotePage::Vote(const uint32& id)
 
     if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        voteInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -298,27 +279,27 @@ void VotePage::Vote(const uint32& id)
     }
     else
     {
-        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
     db.SetPQuery("INSERT INTO AccVote VALUES ('%u', '%u', '%s')", session->accid, id, voteMap[id].GetExpire().toUTF8().c_str());
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
-        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
     db.SetPQuery("INSERT INTO IPVote VALUES ('%s', '%u', '%s')", session->sessionIp.toUTF8().c_str(), id, voteMap[id].GetExpire().toUTF8().c_str());
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
-        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        voteInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -326,10 +307,10 @@ void VotePage::Vote(const uint32& id)
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         session->vote--;
-        infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_DBERROR_QUERY_ERROR);
+        voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
-    infoSlots[VOTE_SLOT_INFO].SetLabel(session, TXT_SUPPORT_VOTED);
-    voteMap[id].UpdateExpireLabel(session);
+    voteInfo->setText(tr(TXT_SUPPORT_VOTED));
+    voteMap[id].UpdateExpireLabel();
 }

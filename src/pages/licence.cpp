@@ -37,12 +37,10 @@
  *
  ***********************************************/
 
-LicencePage::LicencePage(SessionInfo * sess, WContainerWidget * parent)
-: WContainerWidget(parent)
+LicencePage::LicencePage(WContainerWidget * parent)
+: Wt::WContainerWidget(parent)
 {
     setContentAlignment(AlignCenter|AlignTop);
-    needCreation = true;
-    session = sess;
     ShowText();
 }
 
@@ -59,12 +57,7 @@ void LicencePage::refresh()
     if (isHidden() || isDisabled())
         return;
 
-    if (needCreation)
-        ShowText();
-    else
-        UpdateText();
-
-    WContainerWidget::refresh();
+    Wt::WContainerWidget::refresh();
 }
 
 /********************************************//**
@@ -76,31 +69,12 @@ void LicencePage::refresh()
 
 void LicencePage::ShowText()
 {
-    needCreation = false;
-
-    licenceTextSlots[LICENCE_SLOT_INTRO].SetLabel(session, TXT_LICENCE_INTRO);
-    licenceTextSlots[LICENCE_SLOT_REPO].SetLabel(session, TXT_LICENCE_REPO);
-    licenceTextSlots[LICENCE_SLOT_INFO].SetLabel(session, TXT_LICENCE_INFO);
-
-    addWidget(licenceTextSlots[LICENCE_SLOT_INTRO].GetText());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-    addWidget(licenceTextSlots[LICENCE_SLOT_REPO].GetText());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-    addWidget(licenceTextSlots[LICENCE_SLOT_INFO].GetText());
-}
-
-/********************************************//**
- * \brief Updates content of licence page
- *
- * This function updates content depends on actual language.
- *
- ***********************************************/
-
-void LicencePage::UpdateText()
-{
-    for (int i = 0; i < LICENCE_SLOT_COUNT; ++i)
-        licenceTextSlots[i].UpdateText(session);
+    addWidget(new Wt::WText(tr(TXT_LICENCE_INTRO)));
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WText(tr(TXT_LICENCE_REPO)));
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WText(tr(TXT_LICENCE_INFO)));
 }

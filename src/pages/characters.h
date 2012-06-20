@@ -37,27 +37,10 @@
 #define CHARACTERS_H_INCLUDED
 
 #include "../defines.h"
-#include "../slotItems.h"
 
-#include <WTabWidget>
-#include <WTable>
-#include <WComboBox>
-
-/********************************************//**
- * \brief Slots for Basic page informations.
- *
- * Also determines order on page.
- *
- ***********************************************/
-
-enum CharInfoSlot
-{
-    CHARINFO_SLOT_INFO          = 0,    /**< Page title text. */
-    CHARINFO_SLOT_ADDINFO,              /**< Additional info slot */
-    CHARINFO_SLOT_CHARACTERS,           /**< Slot for character selection */
-
-    CHARINFO_SLOT_COUNT
-};
+#include <Wt/WTabWidget>
+#include <Wt/WTable>
+#include <Wt/WComboBox>
 
 /********************************************//**
  * \brief Slots for Basic Character Informations
@@ -210,6 +193,8 @@ public:
 private:
     /// panel session informations
     SessionInfo * session;
+    /// label with character page additional info
+    WText * charPageInfo;
     /// tab widget to group specific characters informations
     WTabWidget * tabs;
     /// tabs was created or not?
@@ -224,29 +209,16 @@ private:
     /// informs that RestoreCharacter function is actually executed
     bool restoring;
 
-    /// contains global page info slots like page title or additional info like errors
-    PageSlotItem pageInfoSlots[CHARINFO_SLOT_COUNT];
-    /// contains basic character info slots so we can update them in easy way ;)
-    PageSlotItem basicInfoSlots[CHARBASICINFO_SLOT_COUNT];
-    /// contains headers for quest info table
-    BasicTextItem questInfoSlots[CHARQUESTINFO_SLOT_COUNT];
-    /// contains headers for spell info table
-    BasicTextItem spellInfoSlots[CHARSPELLINFO_SLOT_COUNT];
-    /// contains headers for inventory info table
-    BasicTextItem inventoryInfoSlots[CHARINVINFO_SLOT_COUNT];
-    /// contains headers for friend info table
-    BasicTextItem friendInfoSlots[CHARFRIENDINFO_SLOT_COUNT];
-
     bool IsDeletedCharacter(const uint64 & guid);
     bool IsDeletedCharacter(const CharInfo & charInfo) { return charInfo.deleted; }
 
-    void UpdateTextWidgets();
     void UpdateInformations(uint64 guid);
 
-    WContainerWidget * CreateCharacterBasicInfo();
+    Wt::WTable * charBasicInfo;
+    Wt::WContainerWidget * CreateCharacterBasicInfo();
     void UpdateCharacterBasicInfo(uint64 guid);
 
-    WTable * CreateCharacterQuestInfo();
+    Wt::WTable * CreateCharacterQuestInfo();
     void UpdateCharacterQuestInfo(uint64 guid);
 
     WTable * CreateCharacterSpellInfo();
