@@ -17,9 +17,9 @@
 
 #include "menu.h"
 
-#include <WRegExpValidator>
-#include <WLengthValidator>
-#include <WSubMenuItem>
+#include <Wt/WRegExpValidator>
+#include <Wt/WLengthValidator>
+#include <Wt/WSubMenuItem>
 
 #include "pages/default.h"
 #include "pages/accInfo.h"
@@ -50,7 +50,7 @@ HGSubMenu::~HGSubMenu()
     menu = NULL;
 }
 
-void HGSubMenu::AddMenuItem(uint32 textId, WMenuItem * menuItem)
+void HGSubMenu::AddMenuItem(const char * textId, WMenuItem * menuItem)
 {
     if (!textId || !menuItem)
         return;
@@ -61,12 +61,12 @@ void HGSubMenu::AddMenuItem(uint32 textId, WMenuItem * menuItem)
     menuItem = NULL;
 }
 
-void HGSubMenu::AddMenuItem(SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload)
+void HGSubMenu::AddMenuItem(SessionInfo * sess, const char * textId, WContainerWidget * item, bool preload)
 {
     if (!textId || !item)
         return;
 
-    items.push_back(new WMenuItem(sess->GetText(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading));
+    items.push_back(new WMenuItem(tr(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading));
     textIds.push_back(textId);
     menu->addItem(items.back());
     item = NULL;
@@ -82,19 +82,16 @@ WMenu * HGSubMenu::GetMenu()
     return menu;
 }
 
-void HGSubMenu::UpdateTexts(SessionInfo * sess)
+void HGSubMenu::UpdateTexts()
 {
-    if (!sess)
-        return;
-
     WMenuItem * tmpItem;
-    std::list<uint32>::const_iterator textItr = textIds.begin();
+    std::list<const char *>::const_iterator textItr = textIds.begin();
 
     for (std::list<WMenuItem*>::const_iterator itr = items.begin(); itr != items.end() && textItr != textIds.end();
          ++itr, ++textItr)
     {
         if (tmpItem = *itr)
-            tmpItem->setText(sess->GetText(*textItr));
+            tmpItem->setText(tr(*textItr));
     }
 }
 
@@ -109,7 +106,7 @@ HGMenuOption::HGMenuOption(MenuOptions menuOption):
     menuOption(menuOption)
 {
     items = new WMenuItem * [ACCOUNT_LEVEL_COUNT];
-    textIds = new uint32[ACCOUNT_LEVEL_COUNT];
+    textIds = new const char *[ACCOUNT_LEVEL_COUNT];
     subMenus = new HGSubMenu * [ACCOUNT_LEVEL_COUNT];
 
     for (int i = 0; i < ACCOUNT_LEVEL_COUNT; ++i)
@@ -146,7 +143,7 @@ HGMenuOption::~HGMenuOption()
     delete [] items;
 }
 
-void HGMenuOption::AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem)
+void HGMenuOption::AddMenuItem(AccountLevel accLvl, const char * textId, WMenuItem * menuItem)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !menuItem)
         return;
@@ -158,14 +155,14 @@ void HGMenuOption::AddMenuItem(AccountLevel accLvl, uint32 textId, WMenuItem * m
     menuItem = NULL;
 }
 
-void HGMenuOption::AddMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, const char * path, bool preload)
+void HGMenuOption::AddMenuItem(AccountLevel accLvl, SessionInfo * sess, const char * textId, WContainerWidget * item, const char * path, bool preload)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !sess || !item)
         return;
 
     RemoveMenuItem(accLvl);
 
-    items[accLvl+1] = new WMenuItem(sess->GetText(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading);
+    items[accLvl+1] = new WMenuItem(tr(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading);
     textIds[accLvl+1] = textId;
     if (path)
         items[accLvl+1]->setPathComponent(path);
@@ -217,7 +214,7 @@ void HGMenuOption::RemoveMenuItem(AccountLevel accLvl, bool alsoDelete)
     textIds[accLvl+1] = 0;
 }
 
-void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuItem * menuItem, WStackedWidget * target, HGMenu * menu)
+void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, const char * textId, WSubMenuItem * menuItem, WStackedWidget * target, HGMenu * menu)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !menuItem)
         return;
@@ -230,14 +227,14 @@ void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, uint32 textId, WSubMenuIt
     menuItem = NULL;
 }
 
-void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, WStackedWidget * target, HGMenu * menu, const char * path, bool preload)
+void HGMenuOption::AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, const char * textId, WContainerWidget * item, WStackedWidget * target, HGMenu * menu, const char * path, bool preload)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !sess || !item)
         return;
 
     RemoveSubMenuItem(accLvl);
 
-    items[accLvl+1] = new WSubMenuItem(sess->GetText(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading);
+    items[accLvl+1] = new WSubMenuItem(tr(textId), item, preload ? WMenuItem::PreLoading : WMenuItem::LazyLoading);
     textIds[accLvl+1] = textId;
     subMenus[accLvl+1] = new HGSubMenu(target, menu, (WSubMenuItem*)items[accLvl+1]);
     item = NULL;
@@ -271,7 +268,7 @@ void HGMenuOption::RemoveSubMenuItem(AccountLevel accLvl, bool alsoDelete)
     textIds[accLvl+1] = 0;
 }
 
-void HGMenuOption::AddSubMenuOption(AccountLevel accLvl, uint32 textId, WMenuItem * menuItem)
+void HGMenuOption::AddSubMenuOption(AccountLevel accLvl, const char * textId, WMenuItem * menuItem)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !menuItem)
         return;
@@ -282,7 +279,7 @@ void HGMenuOption::AddSubMenuOption(AccountLevel accLvl, uint32 textId, WMenuIte
         tmpSubMenu->AddMenuItem(textId, menuItem);
 }
 
-void HGMenuOption::AddSubMenuOption(AccountLevel accLvl, SessionInfo * sess, uint32 textId, WContainerWidget * item, bool preload)
+void HGMenuOption::AddSubMenuOption(AccountLevel accLvl, SessionInfo * sess, const char * textId, WContainerWidget * item, bool preload)
 {
     if (accLvl >= ACCOUNT_LEVEL_COUNT || accLvl < LVL_NOT_LOGGED || !item)
         return;
@@ -306,9 +303,9 @@ WMenuItem * HGMenuOption::GetMenuItemForLevel(AccountLevel accLvl)
     return NULL;
 }
 
-void HGMenuOption::UpdateTexts(SessionInfo * sess)
+void HGMenuOption::UpdateTexts()
 {
-    if (!items || !sess)
+    if (!items)
         return;
 
     WMenuItem * tmpItem;
@@ -317,10 +314,10 @@ void HGMenuOption::UpdateTexts(SessionInfo * sess)
     for (int i = 0; i < ACCOUNT_LEVEL_COUNT; ++i)
     {
         if (tmpItem = items[i])
-            tmpItem->setText(sess->GetText(textIds[i]));
+            tmpItem->setText(tr(textIds[i]));
 
         if (tmpSubMenu = subMenus[i])
-            tmpSubMenu->UpdateTexts(sess);
+            tmpSubMenu->UpdateTexts();
     }
 }
 
@@ -364,7 +361,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     loginContainer = new WContainerWidget(this);
 
     login = new WLineEdit();
-    login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
+    login->setText(tr(TXT_ACC_LOGIN));
     login->setEchoMode(WLineEdit::Normal);
     login->focussed().connect(this, &HGMenu::ClearWLineEdit);
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
@@ -379,7 +376,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     lenValidator->setMandatory(true);
     pass->setValidator(lenValidator);
 
-    btnLog = new WPushButton(session->GetText(TXT_BTN_LOGIN));
+    btnLog = new WPushButton(tr(TXT_BTN_LOGIN));
     btnLog->clicked().connect(this, &HGMenu::LogMeIn);
 
     breakTab = new WBreak*[3];
@@ -422,19 +419,19 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     menuSlots[MENU_SLOT_SUPPORT]->AddSubMenuOption(LVL_PLAYER, session, TXT_MENU_VOTE, new VotePage(session));
 
     menuSlots[MENU_SLOT_SERVER_STATUS] = new HGMenuOption(MENU_SLOT_SERVER_STATUS);
-    menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(sess), "status");
+    menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_SERVER_STATUS, new ServerStatusPage(), "status");
     menuSlots[MENU_SLOT_SERVER_STATUS]->AddMenuItem(LVL_PLAYER, TXT_MENU_SERVER_STATUS, menuSlots[MENU_SLOT_SERVER_STATUS]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
     menuSlots[MENU_SLOT_LOGIN] = new HGMenuOption(MENU_SLOT_LOGIN);
     menuSlots[MENU_SLOT_LOGIN]->AddMenuItem(LVL_PLAYER, session, TXT_MENU_LOGOUT, new LogoutPage(session), "log");
 
     menuSlots[MENU_SLOT_LICENCE] = new HGMenuOption(MENU_SLOT_LICENCE);
-    menuSlots[MENU_SLOT_LICENCE]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_LICENCE, new LicencePage(session), "licence");
+    menuSlots[MENU_SLOT_LICENCE]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_LICENCE, new LicencePage(), "licence");
     menuSlots[MENU_SLOT_LICENCE]->AddMenuItem(LVL_PLAYER, TXT_MENU_LICENCE, menuSlots[MENU_SLOT_LICENCE]->GetMenuItemForLevel(LVL_NOT_LOGGED));
 
     menuSlots[MENU_SLOT_ERROR] = new HGMenuOption(MENU_SLOT_ERROR);
     menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, session, TXT_MENU_ERROR, new ErrorPage(session));
-    //menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, TXT_MENU_ERROR, new WMenuItem(sess->GetText(TXT_MENU_ERROR), new ErrorPage(session)));
+    //menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_NOT_LOGGED, TXT_MENU_ERROR, new WMenuItem(tr(TXT_MENU_ERROR), new ErrorPage(session)));
     menuSlots[MENU_SLOT_ERROR]->AddMenuItem(LVL_PLAYER, TXT_MENU_ERROR, menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_NOT_LOGGED));
     menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->hide();
     menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(LVL_PLAYER)->disable();
@@ -483,7 +480,7 @@ void HGMenu::LogMeIn()
     if (!validLogin || !validPass)
     {
         Log(LOG_INVALID_DATA, "User trying to log in with invalid data ! ip: %s login: %s pass: %s", session->sessionIp.toUTF8().c_str(), login->text().toUTF8().c_str(), pass->text().toUTF8().c_str());
-        ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_NOT_VALID_DATA);
+        ShowError(ERROR_SLOT_ADDITIONAL, TXT_ERROR_VALIDATION_LOGIN);
         return;
     }
 
@@ -639,14 +636,12 @@ void HGMenu::LogMeIn()
 
 void HGMenu::SetPlLang()
 {
-    session->language = LANG_PL;
-    refresh();
+    wApp->setLocale("pl");
 }
 
 void HGMenu::SetEngLang()
 {
-    session->language = LANG_EN;
-    refresh();
+    wApp->setLocale("en");
 }
 
 void HGMenu::ShowMenuOptions(bool addLogin)
@@ -680,13 +675,13 @@ void HGMenu::ShowMenuOptions(bool addLogin)
     if (session->accid == 0)
     {
         if (login)
-            login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
+            login->setText(tr(TXT_ACC_LOGIN));
 
         if (pass)
             pass->setText(WString("pass"));
 
         if (btnLog)
-            btnLog->setText(session->GetText(TXT_BTN_LOGIN));
+            btnLog->setText(tr(TXT_BTN_LOGIN));
 
         if (addLogin)
         {
@@ -707,18 +702,18 @@ void HGMenu::UpdateMenuOptions()
     HGMenuOption * tmpOption = NULL;
     for (int i = 0; i < MENU_SLOT_COUNT; ++i)
         if (tmpOption = menuSlots[i])
-            tmpOption->UpdateTexts(session);
+            tmpOption->UpdateTexts();
 
     tmpOption = NULL;
 
     if (login)
-        login->setText(session->GetText(TXT_LBL_ACC_LOGIN));
+        login->setText(tr(TXT_ACC_LOGIN));
 
     if (pass)
         pass->setText(WString("pass"));
 
     if (btnLog)
-        btnLog->setText(session->GetText(TXT_BTN_LOGIN));
+        btnLog->setText(tr(TXT_BTN_LOGIN));
 }
 
 void HGMenu::refresh()
@@ -735,6 +730,7 @@ void HGMenu::refresh()
         // reset pages that need this
         menuSlots[MENU_SLOT_ACCOUNT]->Refresh();
         menuSlots[MENU_SLOT_SUPPORT]->Refresh();
+        menuSlots[MENU_SLOT_CHARACTERS]->Refresh();
 
         session->accLvl = LVL_NOT_LOGGED;
         menu->select(0);
@@ -776,9 +772,9 @@ bool HGMenu::SetError(ErrorSlots error, std::string &msg, ErrorPage * err)
     return true;
 }
 
-bool HGMenu::SetError(ErrorSlots error, uint32 textId, ErrorPage * err)
+bool HGMenu::SetError(ErrorSlots error, const char * textId, ErrorPage * err)
 {
-    console(DEBUG_CODE, "\nHGMenu::SetError(ErrorSlots error = %i, uint32 textId = %u, ErrorPage * err = %i) overload: 2\n", error, textId, err ? 1 : 0);
+    console(DEBUG_CODE, "\nHGMenu::SetError(ErrorSlots error = %i, const char * textId = %s, ErrorPage * err = %i) overload: 2\n", error, textId, err ? 1 : 0);
 
     ErrorPage * tmpError = err;
     if (!tmpError)
@@ -817,9 +813,9 @@ void HGMenu::ShowError(ErrorSlots error, std::string &msg)
     RefreshActiveMenuWidget();
 }
 
-void HGMenu::ShowError(ErrorSlots error, uint32 textId)
+void HGMenu::ShowError(ErrorSlots error, const char * textId)
 {
-    console(DEBUG_CODE, "\nHGMenu::ShowError(ErrorSlots error = %i, uint32 textId = %u) overload: 2\n", error, textId);
+    console(DEBUG_CODE, "\nHGMenu::ShowError(ErrorSlots error = %i, const char * textId = %s) overload: 2\n", error, textId);
 
     WMenuItem * tmpItem = menuSlots[MENU_SLOT_ERROR]->GetMenuItemForLevel(session->accLvl);
     if (!tmpItem)
@@ -875,5 +871,5 @@ void HGMenu::AddActivityLogIn(uint32 id, bool success)
     Database db;
 
     db.Connect(PANEL_DB_DATA, SQL_PANELDB);
-    db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_LOGIN_SUCCESS : TXT_ACT_LOGIN_FAIL);
+    db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_LOGIN_SUCCESS : TXT_ACT_LOGIN_FAIL);
 }

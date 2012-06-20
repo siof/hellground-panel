@@ -29,10 +29,10 @@
 
 #include "register.h"
 #include "../database.h"
-#include <WRegExpValidator>
+#include <Wt/WRegExpValidator>
 
 RegisterPage::RegisterPage(SessionInfo * sess, WContainerWidget * parent):
-    WContainerWidget(parent), session(sess), needCreation(true)
+    WContainerWidget(parent), session(sess)
 {
     setContentAlignment(AlignCenter|AlignTop);
 
@@ -40,6 +40,8 @@ RegisterPage::RegisterPage(SessionInfo * sess, WContainerWidget * parent):
     txtEmail = NULL;
     btnRegister = NULL;
     chRules = NULL;
+
+    CreateRegisterPage();
 }
 
 RegisterPage::~RegisterPage()
@@ -58,35 +60,7 @@ RegisterPage::~RegisterPage()
 void RegisterPage::refresh()
 {
     console(DEBUG_CODE, "RegisterPage::refresh()");
-
-    // registration page should be only for not logged yet players so there is no need to update it in other cases
-    if (session->accLvl == LVL_NOT_LOGGED)
-    {
-        if (needCreation)
-            CreateRegisterPage();
-        else
-            UpdateTextWidgets();
-    }
-
     WContainerWidget::refresh();
-}
-
-/********************************************//**
- * \brief Update text widgets.
- *
- * All text label widgets in all slots will be updated,
- * so if player will change language then automagically
- * labels should change too ;)
- *
- ***********************************************/
-
-void RegisterPage::UpdateTextWidgets()
-{
-    for (int i = 0; i < REG_TEXT_SLOT_COUNT; ++i)
-        textSlots[i].UpdateLabel(session);
-
-    chRules->setText(session->GetText(TXT_LBL_REG_RULES));
-    btnRegister->setText(session->GetText(TXT_BTN_REGISTER));
 }
 
 /********************************************//**
@@ -99,38 +73,30 @@ void RegisterPage::UpdateTextWidgets()
 
 void RegisterPage::CreateRegisterPage()
 {
-    clear();
-    needCreation = false;
+    addWidget(new WText(tr(TXT_INFO_REGISTRATION)));
+    for (int i = 0; i < 4; ++i)
+        addWidget(new WBreak());
 
-    textSlots[REG_TEXT_MAIN].SetLabel(session, TXT_LBL_REG_MAIN);
-    addWidget(textSlots[REG_TEXT_MAIN].GetLabel());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-
-    textSlots[REG_TEXT_INFO].SetLabel("");
-    addWidget(textSlots[REG_TEXT_INFO].GetLabel());
+    regInfo = new WText("");
+    addWidget(regInfo);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
-    textSlots[REG_TEXT_LOGIN].SetLabel(session, TXT_LBL_ACC_LOGIN);
     txtLogin = new WLineEdit();
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
     validator->setMandatory(true);
     txtLogin->setValidator(validator);
 
-    addWidget(textSlots[REG_TEXT_LOGIN].GetLabel());
+    addWidget(new WText(tr(TXT_ACC_LOGIN)));
     addWidget(txtLogin);
     addWidget(new WBreak());
 
-    textSlots[REG_TEXT_EMAIL].SetLabel(session, TXT_LBL_ACC_MAIL);
     txtEmail = new WLineEdit();
     validator = new WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
     validator->setMandatory(true);
     txtEmail->setValidator(validator);
 
-    addWidget(textSlots[REG_TEXT_EMAIL].GetLabel());
+    addWidget(new WText(tr(TXT_ACC_MAIL)));
     addWidget(txtEmail);
     addWidget(new WBreak());
 
@@ -139,13 +105,13 @@ void RegisterPage::CreateRegisterPage()
 //    addWidget(new WBreak());
 
 //    textSlots[REG_TEXT_RULES_ACCEPT].SetLabel(session, TXT_LBL_REGISTER_RULES_ACCEPT);
-    chRules = new WCheckBox(session->GetText(TXT_LBL_REG_RULES));
+    chRules = new WCheckBox(tr(TXT_REG_RULES));
 //    addWidget(textSlots[REG_TEXT_RULES_ACCEPT].GetLabel());
     addWidget(chRules);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
-    btnRegister = new WPushButton(session->GetText(TXT_BTN_REGISTER));
+    btnRegister = new WPushButton(tr(TXT_BTN_REGISTER));
 
     if (wApp->environment().javaScript())
         btnRegister->setDisabled(true);
@@ -198,13 +164,13 @@ void RegisterPage::Register()
     if (!validLogin || !validEmail)
     {
         Log(LOG_INVALID_DATA, "User trying to register with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
-        textSlots[REG_TEXT_INFO].SetLabel(session, TXT_ERROR_NOT_VALID_DATA);
+        regInfo->setText(tr(TXT_ERROR_VALIDATION_LOGIN));
         return;
     }
 
     if (!chRules->isChecked())
     {
-        textSlots[REG_TEXT_INFO].SetLabel(session, TXT_LBL_REG_RULES_NOT_ACCEPTED);
+        regInfo->setText(tr(TXT_REG_RULES_NOT_ACCEPTED));
         return;
     }
 
@@ -212,7 +178,7 @@ void RegisterPage::Register()
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        textSlots[REG_TEXT_INFO].SetLabel(session, TXT_DBERROR_CANT_CONNECT);
+        regInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         ClearRegisterData();
         return;
     }
@@ -226,7 +192,7 @@ void RegisterPage::Register()
     if (db.ExecuteQuery() > DB_RESULT_EMPTY)
     {
         ClearRegisterData();
-        textSlots[REG_TEXT_INFO].SetLabel(session, TXT_LBL_REG_ACC_EXISTS);
+        regInfo->setText(tr(TXT_REG_ACC_EXISTS));
         chRules->setChecked(false);
         CheckChange();
         return;
@@ -252,25 +218,22 @@ void RegisterPage::Register()
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
-        textSlots[REG_TEXT_INFO].SetLabel(session, TXT_REGISTRATION_ERROR);
+        regInfo->setText(tr(TXT_REG_ERROR));
         chRules->setChecked(false);
         CheckChange();
         ClearRegisterData();
         return;
     }
 
-    if (session->HasText(TXT_REGISTRATION_MAIL))
-        msg = GetFormattedString(session->GetText(TXT_REGISTRATION_MAIL).toUTF8().c_str(), login.toUTF8().c_str(), tmpStr.c_str());
-    else
-        msg = GetFormattedString("Registration Mail\n\n Your password for login %s is: %s", login.toUTF8().c_str(), tmpStr.c_str());
+    msg = tr(TXT_REG_MAIL).arg(login.toUTF8()).arg(tmpStr);
 
-    SendMail(from, mail, session->GetText(TXT_REGISTRATION_SUBJECT), msg);
+    SendMail(from, mail, tr(TXT_REG_SUBJECT), msg);
 
     ClearRegisterData();
     chRules->setChecked(false);
     CheckChange();
 
-    textSlots[REG_TEXT_INFO].SetLabel(session, TXT_REGISTRATION_COMPLETE);
+    regInfo->setText(tr(TXT_REG_COMPLETE));
 
     uint32 accId;
 
@@ -280,7 +243,7 @@ void RegisterPage::Register()
         return;
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
-        db.ExecutePQuery("INSERT INTO Activity VALUES ('XXX', '%u', NOW(), '%s', '%u', '')", accId, session->sessionIp.toUTF8().c_str(), TXT_ACT_REGISTRATION_COMPLETE);
+        db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", accId, session->sessionIp.toUTF8().c_str(), TXT_ACT_REGISTRATION_COMPLETE);
 }
 
 /********************************************//**

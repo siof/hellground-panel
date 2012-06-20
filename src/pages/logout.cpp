@@ -37,13 +37,12 @@
  *
  ***********************************************/
 
-LogoutPage::LogoutPage(SessionInfo * sess, WContainerWidget * parent)
-: WContainerWidget(parent)
+LogoutPage::LogoutPage(SessionInfo * session, WContainerWidget * parent)
+: WContainerWidget(parent), sess(session)
 {
-    session = sess;
-    needCreation = true;
-    info = NULL;
     btn = NULL;
+
+    CreateLogoutPage();
 }
 
 /********************************************//**
@@ -61,14 +60,6 @@ void LogoutPage::refresh()
     if (isHidden() || isDisabled())
         return;
 
-    if (session->accLvl > LVL_NOT_LOGGED)
-    {
-        if (needCreation)
-            CreateLogoutPage();
-        else
-            UpdateLogoutPage();
-    }
-
     WContainerWidget::refresh();
 }
 
@@ -83,35 +74,15 @@ void LogoutPage::CreateLogoutPage()
 {
     console(DEBUG_CODE, "\nLogoutPage::CreateLogoutPage()\n");
 
-    clear();
-
-    info = new WText(session->GetText(TXT_LOGOUT_INFO));
-    btn = new WPushButton(session->GetText(TXT_BTN_LOGOUT));
+    btn = new WPushButton(tr(TXT_BTN_LOGOUT));
     btn->clicked().connect(this, &LogoutPage::Logout);
 
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-    addWidget(info);
+    addWidget(new WText(tr(TXT_INFO_LOGOUT)));
     addWidget(new WBreak());
     addWidget(new WBreak());
     addWidget(new WBreak());
     addWidget(new WBreak());
     addWidget(btn);
-}
-
-/********************************************//**
- * \brief Update content of logout page
- *
- * This function set new texts for content depends on actual language.
- *
- ***********************************************/
-
-void LogoutPage::UpdateLogoutPage()
-{
-    console(DEBUG_CODE, "\nLogoutPage::UpdateLogoutPage()\n");
-
-    info->setText(session->GetText(TXT_LOGOUT_INFO));
-    btn->setText(session->GetText(TXT_BTN_LOGOUT));
 }
 
 /********************************************//**
@@ -125,7 +96,7 @@ void LogoutPage::Logout()
 {
     console(DEBUG_CODE, "\nLogoutPage::Logout()\n");
 
-    session->Clear();
+    sess->Clear();
 
     wApp->root()->refresh();
 }

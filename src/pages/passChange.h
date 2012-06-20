@@ -36,25 +36,6 @@
 #define PASSCHANGE_H_INCLUDED
 
 #include "../defines.h"
-#include "../slotItems.h"
-
-/********************************************//**
- * \brief Slots for password change page
- *
- ***********************************************/
-
-enum PassChangeTextSlots
-{
-    PASS_CHANGE_TEXT_MAIN = 0,      /**< Page title/main text shown on top. */
-    PASS_CHANGE_TEXT_INFO,          /**< Additional info/change errors. */
-    PASS_CHANGE_TEXT_LOGIN,         /**< Account login. */
-    PASS_CHANGE_TEXT_OLDPASS,       /**< Old password. */
-    PASS_CHANGE_TEXT_PASS,          /**< New password. */
-    PASS_CHANGE_TEXT_PASS2,         /**< New password 2. */
-
-    PASS_CHANGE_TEXT_SLOT_COUNT
-};
-
 
 /********************************************//**
  * \brief A class to represents Password change page
@@ -77,20 +58,18 @@ public:
 private:
     /// panel session informations
     SessionInfo * session;
-    /// should be true only on page creation
-    bool needCreation;
+
+    /// label with informations for changing password
+    WText * changeInfo;
 
     /// text box for passwords
     WLineEdit * txtPassOld;
     WLineEdit * txtPass;
     WLineEdit * txtPass2;
+
     /// register button
     WPushButton * btnChange;
 
-    /// labels
-    BasicTextItem textSlots[PASS_CHANGE_TEXT_SLOT_COUNT];
-
-    void UpdateTextWidgets();
     void CreatePassChangePage();
 
     void ClearPass();
@@ -102,7 +81,6 @@ private:
             ((WLineEdit*)WObject::sender())->setText("");
     }
 };
-
 
 #endif // PASSCHANGE_H_INCLUDED
 

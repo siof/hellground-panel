@@ -36,25 +36,9 @@
 #define ACCINFO_H_INCLUDED
 
 #include "../defines.h"
-#include "../slotItems.h"
 
-#include <WTabWidget>
-#include <WTable>
-
-/********************************************//**
- * \brief Slots for Basic page informations.
- *
- * Also determines order on page.
- *
- ***********************************************/
-
-enum PageInfoSlot
-{
-    ACCPAGEINFO_SLOT_INFO   = 0,    /**< Page title text. */
-    ACCPAGEINFO_SLOT_ADDINFO,       /**< Additional info slot */
-
-    ACCPAGEINFO_SLOT_COUNT
-};
+#include <Wt/WTabWidget>
+#include <Wt/WTable>
 
 /********************************************//**
  * \brief Slots for Basic Account Informations
@@ -163,19 +147,14 @@ private:
     WTabWidget * tabs;
     /// tabs was created or not?
     bool needCreation;
+    /// account page additional info
+    WText * accPageInfo;
 
-    /// contains global page info slots like page title or additional info like errors
-    BasicTextItem pageInfoSlots[ACCPAGEINFO_SLOT_COUNT];
-    /// contains account info slots so we can update them in easy way ;)
-    PageSlotItem accInfoSlots[ACCINFO_SLOT_COUNT];
-    /// contains headers for ban info table
-    BasicTextItem banInfoSlots[ACCBANINFO_SLOT_COUNT];
-    /// contains headers for mute info table
-    BasicTextItem muteInfoSlots[ACCMUTEINFO_SLOT_COUNT];
-
-    void UpdateTextWidgets();
     void UpdateInformations();
 
+    // basic account info
+    /// table with basic account iformations
+    Wt::WTable * accountInfo;
     WContainerWidget * CreateAccountInfo();
     void UpdateAccountInfo(bool first = false);
 
@@ -184,7 +163,6 @@ private:
     WTable * CreateMuteInfo();
 
     WTabWidget * activityTabs;
-    std::list<BasicTextItem*> activityInfoSlots;
     WContainerWidget * CreateActivityInfo();
 
     void ClearPage();

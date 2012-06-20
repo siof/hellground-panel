@@ -35,25 +35,7 @@
 #define REGISTER_H_INCLUDED
 
 #include "../defines.h"
-#include "../slotItems.h"
-#include <WCheckBox>
-
-/********************************************//**
- * \brief Slots for Registration page
- *
- ***********************************************/
-
-enum RegistrationTextSlots
-{
-    REG_TEXT_MAIN = 0,          /**< Page title/main text shown on top. */
-    REG_TEXT_INFO,              /**< Additional info/registration errors like trying to register with existing username. */
-    REG_TEXT_LOGIN,             /**< New account login. */
-    REG_TEXT_EMAIL,             /**< New account mail. On this mail password will be sent. */
-//    REG_TEXT_RULES,             /**< Server rules information. */
-//    REG_TEXT_RULES_ACCEPT,
-
-    REG_TEXT_SLOT_COUNT
-};
+#include <Wt/WCheckBox>
 
 /********************************************//**
  * \brief A class to represents Registration page
@@ -77,8 +59,9 @@ public:
 private:
     /// panel session informations
     SessionInfo * session;
-    /// should be true only on page creation
-    bool needCreation;
+
+    /// label for registration informations
+    WText * regInfo;
 
     /// text box for login
     WLineEdit * txtLogin;
@@ -89,10 +72,6 @@ private:
     /// check box server rules accepting
     WCheckBox * chRules;
 
-    /// labels
-    BasicTextItem textSlots[REG_TEXT_SLOT_COUNT];
-
-    void UpdateTextWidgets();
     void CreateRegisterPage();
 
     void ClearRegisterData();

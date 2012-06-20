@@ -31,16 +31,6 @@
 #define LICENCE_H_INCLUDED
 
 #include "../defines.h"
-#include "../slotItems.h"
-
-enum LicenceTextSlot
-{
-    LICENCE_SLOT_INTRO  = 0,
-    LICENCE_SLOT_REPO   = 1,
-    LICENCE_SLOT_INFO   = 2,
-
-    LICENCE_SLOT_COUNT
-};
 
 /********************************************//**
  * \brief A class to represent licence page.
@@ -54,20 +44,12 @@ enum LicenceTextSlot
 class LicencePage : public WContainerWidget
 {
 public:
-    LicencePage(SessionInfo * sess, WContainerWidget * parent = 0);
+    LicencePage(WContainerWidget * parent = 0);
     ~LicencePage() { clear(); }
 
     void refresh();
 private:
-    /// pointer to object with current session informations
-    SessionInfo * session;
-
-    bool needCreation;
-
-    BasicTextItem licenceTextSlots[LICENCE_SLOT_COUNT];
-
     void ShowText();
-    void UpdateText();
 };
 
 #endif // LICENCE_H_INCLUDED
@@ -76,4 +58,3 @@ private:
  * \}
  * \}
  ***********************************************/
-

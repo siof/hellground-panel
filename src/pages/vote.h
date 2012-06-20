@@ -67,12 +67,11 @@ public:
     WString GetName() { return voteName; }
     void SetName(const WString & name) { voteName = name; }
 
-    void UpdateExpireLabel(SessionInfo * sess)
+    void UpdateExpireLabel()
     {
         if (disabled)
         {
-            WString tmpLbl = voteName + sess->GetText(TXT_SUPPORT_VOTE_NEXT) + expire;
-            SetLabel(tmpLbl);
+            SetLabel(tr(TXT_SUPPORT_VOTE_NEXT).arg(voteName).arg(expire));
         }
     }
 
@@ -102,10 +101,9 @@ public:
 private:
     /// panel session informations
     SessionInfo * session;
-    /// created or not?
-    bool needCreation;
-    /// vote info slots
-    BasicTextItem infoSlots[VOTE_SLOT_COUNT];
+
+    /// label with vote informations
+    WText * voteInfo;
 
     void CreateVotePage();
     void UpdateVotePage();

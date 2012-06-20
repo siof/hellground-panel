@@ -64,11 +64,11 @@ void DefaultPage::refresh()
     if (needCreation)
     {
         needCreation = false;
-        text = new WText(session->GetText(TXT_SERVER_INFO), this);
+        text = new WText(tr(TXT_INFO_SERVER), this);
         text->setInternalPathEncoding(true);
     }
     else
-        text->setText(session->GetText(TXT_SERVER_INFO));
+        text->setText(tr(TXT_INFO_SERVER));
 
     WContainerWidget::refresh();
 }

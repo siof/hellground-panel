@@ -40,13 +40,16 @@
  *
  ***********************************************/
 
-ServerStatusPage::ServerStatusPage(SessionInfo * sess, WContainerWidget * parent)
-: WContainerWidget(parent), session(sess), needCreation(true)
+ServerStatusPage::ServerStatusPage(Wt::WContainerWidget * parent)
+: Wt::WContainerWidget(parent)
 {
     setContentAlignment(AlignCenter|AlignTop);
-    timer = new WTimer();
+
+    timer = new Wt::WTimer();
     timer->setInterval(60000);
     timer->timeout().connect(this, &ServerStatusPage::UpdateStatus);
+
+    CreateStatusPage();
 }
 
 /********************************************//**
@@ -62,15 +65,9 @@ void ServerStatusPage::refresh()
     if (isHidden() || isDisabled())
         return;
 
-    if (needCreation)
-        CreateStatusPage();
-    else
-    {
-        UpdateLabels();
-        UpdateStatus();
-    }
+    UpdateStatus();
 
-    WContainerWidget::refresh();
+    Wt::WContainerWidget::refresh();
 }
 
 /********************************************//**
@@ -83,79 +80,44 @@ void ServerStatusPage::refresh()
 
 void ServerStatusPage::CreateStatusPage()
 {
-    clear();
-    needCreation = false;
+    addWidget(new Wt::WText(tr(TXT_INFO_STATUS)));
+    for (int i = 0; i < 4; ++i)
+        addWidget(new Wt::WBreak());
 
-    WWidget * tmpWidget = NULL;
-
-    statusSlots[SERVER_STATUS_TEXT_MAIN].SetAll(session, TXT_LBL_STATUS_MAIN, NULL, 4);
-
-    tmpWidget = new WText("");
-    statusSlots[SERVER_STATUS_TEXT_REALM].SetAll(session, TXT_LBL_STATUS_REALM, tmpWidget, 1);
-
-    tmpWidget = new WText("");
-    statusSlots[SERVER_STATUS_TEXT_STATE].SetAll(session, TXT_LBL_STATUS_STATE, tmpWidget, 1);
-
-    tmpWidget = new WText("");
-    statusSlots[SERVER_STATUS_TEXT_ONLINE].SetAll(session, TXT_LBL_STATUS_ONLINE, tmpWidget, 1);
-
-    tmpWidget = new WText("");
-    statusSlots[SERVER_STATUS_TEXT_MAXONLINE].SetAll(session, TXT_LBL_STATUS_MAXONLINE, tmpWidget, 1);
-
-    tmpWidget = new WText("");
-    statusSlots[SERVER_STATUS_TEXT_FACTIONS].SetAll(NULL, tmpWidget, 1, 0);
-
-    tmpWidget = new WText("");
-    statusSlots[SERVER_STATUS_TEXT_UPTIME].SetAll(session, TXT_LBL_STATUS_UPTIME, tmpWidget, 1);
-
-    tmpWidget = new WText("");
-    statusSlots[SERVER_STATUS_TEXT_REVISION].SetAll(session, TXT_LBL_STATUS_REV, tmpWidget, 1);
-
-    tmpWidget = new WText("");
-    statusSlots[SERVER_STATUS_TEXT_DIFF].SetAll(session, TXT_LBL_STATUS_DIFF, tmpWidget, 1);
-
-    tmpWidget = new WText("");
-    statusSlots[SERVER_STATUS_TEXT_AVGDIFF].SetAll(session, TXT_LBL_STATUS_AVGDIFF, tmpWidget, 1);
-
-    tmpWidget = new WText("");
-    statusSlots[SERVER_STATUS_TEXT_INFO].SetAll(session, TXT_LBL_STATUS_INFO, tmpWidget, 1);
-
-    int tmpCount;
-
-    // add widgets to page
-    for (int i = 0; i < SERVER_STATUS_TEXT_SLOT_COUNT; ++i)
+    for (int i = 0; i < REALMS_COUNT; ++i)
     {
-        tmpWidget = statusSlots[i].GetLabel();
-        if (tmpWidget)
-            addWidget(tmpWidget);
+        realms[i] = new Wt::WTable();
 
-        tmpWidget = statusSlots[i].GetWidget();
-        if (tmpWidget)
-            addWidget(tmpWidget);
+        realms[i]->elementAt(SERVER_STATUS_TEXT_REALM, 0)->addWidget(new Wt::WText(tr(TXT_STATUS_REALM)));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_STATE, 0)->addWidget(new Wt::WText(tr(TXT_STATUS_STATE)));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_ONLINE, 0)->addWidget(new Wt::WText(tr(TXT_STATUS_ONLINE)));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_MAXONLINE, 0)->addWidget(new Wt::WText(tr(TXT_STATUS_MAXONLINE)));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_FACTIONS, 0)->addWidget(new Wt::WText(tr(TXT_STATUS_FACTIONS)));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_UPTIME, 0)->addWidget(new Wt::WText(tr(TXT_STATUS_UPTIME)));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_REVISION, 0)->addWidget(new Wt::WText(tr(TXT_STATUS_REV)));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_DIFF, 0)->addWidget(new Wt::WText(tr(TXT_STATUS_DIFF)));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_AVGDIFF, 0)->addWidget(new Wt::WText(tr(TXT_STATUS_AVGDIFF)));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_INFO, 0)->addWidget(new Wt::WText(tr(realmsInfo[i][REALM_INFO_ADDITIONAL])));
 
-        tmpCount = statusSlots[i].GetBreakCount();
+        realms[i]->elementAt(SERVER_STATUS_TEXT_REALM, 1)->addWidget(new Wt::WText(""));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_STATE, 1)->addWidget(new Wt::WText(""));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_ONLINE, 1)->addWidget(new Wt::WText(""));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_MAXONLINE, 1)->addWidget(new Wt::WText(""));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_FACTIONS, 1)->addWidget(new Wt::WText(""));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_UPTIME, 1)->addWidget(new Wt::WText(""));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_REVISION, 1)->addWidget(new Wt::WText(""));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_DIFF, 1)->addWidget(new Wt::WText(""));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_AVGDIFF, 1)->addWidget(new Wt::WText(""));
+//        realms[i]->elementAt(SERVER_STATUS_TEXT_INFO, 1)->addWidget(new WText(""));
+        realms[i]->elementAt(SERVER_STATUS_TEXT_INFO, 0)->setColumnSpan(2);
 
-        console(DEBUG_CODE, "\nCreateStatusPage(): i: %i, tmpCount: %i\n", i, tmpCount);
-
-        for (int j = 0; j < tmpCount; ++j)
-            addWidget(new WBreak());
+        addWidget(realms[i]);
+        addWidget(new WBreak());
+        addWidget(new WBreak());
     }
 
     UpdateStatus();
     timer->start();
-}
-
-/********************************************//**
- * \brief Updates server status labels
- *
- * This function updates server status labels depends on language.
- *
- ***********************************************/
-
-void ServerStatusPage::UpdateLabels()
-{
-    for (int i = 0; i < SERVER_STATUS_TEXT_SLOT_COUNT; ++i)
-        statusSlots[i].UpdateLabel(session);
 }
 
 /********************************************//**
@@ -182,62 +144,63 @@ void ServerStatusPage::UpdateStatus()
 
     curl = curl_easy_init();
 
-    if(curl)
+    if (curl)
     {
-        char * buffer = new char[256];
-        curl_easy_setopt(curl, CURLOPT_URL, STATUS_SOURCE);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writebuffer);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, buffer);
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);    // max 10 seconds for status download
-
-        results = curl_easy_perform(curl);
-
-        if (results != CURLE_OK)
+        for (int i = 0; i < REALMS_COUNT; ++i)
         {
-            for (int i = 0; i < 20; ++i)
+            char * buffer = new char[256];
+            curl_easy_setopt(curl, CURLOPT_URL, realmsInfo[i][REALM_INFO_STATUS_URL]);
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writebuffer);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, buffer);
+            curl_easy_setopt(curl, CURLOPT_TIMEOUT, MAX_STATUS_WAIT_TIME);
+
+            results = curl_easy_perform(curl);
+
+            if (results != CURLE_OK)
             {
-                if (i%2)
-                    buffer[i] = '0';
-                else
-                    buffer[i] = ' ';
+                for (int i = 0; i < 20; ++i)
+                {
+                    if (i%2)
+                        buffer[i] = '0';
+                    else
+                        buffer[i] = ' ';
+                }
             }
+
+            std::istringstream iss(buffer);
+            delete [] buffer;
+            std::string online, maxOnline, rev, diff, avgDiff, queue, maxQueue, unk;
+            int tmpUp, ally = 0, horde = 0;
+
+            iss >> tmpUp;
+            iss >> online;
+            iss >> maxOnline;
+            iss >> queue;
+            iss >> maxQueue;
+            iss >> unk;
+            iss >> rev;
+            iss >> diff;
+            iss >> avgDiff;
+//            iss >> horde; // core support needed
+//            iss >> ally;  // core support needed
+
+            int d, h, m, s;
+            d = tmpUp/DAY;
+            h = (tmpUp - d*DAY)/HOUR;
+            m = (tmpUp - d*DAY - h*HOUR)/MINUTE;
+            s = tmpUp - d*DAY - h*HOUR - m*MINUTE;
+
+            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_REALM, 1)->widget(0))->setText(realmsInfo[i][REALM_INFO_NAME]);
+            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_STATE, 1)->widget(0))->setText(tr(tmpUp ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
+            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_ONLINE, 1)->widget(0))->setText(online);
+            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_MAXONLINE, 1)->widget(0))->setText(maxOnline);
+            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_FACTIONS, 1)->widget(0))->setText(tr(TXT_STATUS_FACTIONS_FMT).arg(horde).arg(ally));
+            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_UPTIME, 1)->widget(0))->setText(tr(TXT_STATUS_UPTIME_FMT).arg(d).arg(h).arg(m).arg(s));
+            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_REVISION, 1)->widget(0))->setText(rev);
+            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_DIFF, 1)->widget(0))->setText(diff);
+            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_AVGDIFF, 1)->widget(0))->setText(avgDiff);
+//            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_INFO, 1)->widget(0))->setText();
         }
-
-        std::istringstream iss(buffer);
-        delete [] buffer;
-        std::string online, maxOnline, rev, diff, avgDiff, queue, maxQueue, unk;
-        uint32 tmpUp, ally = 0, horde = 0;
-
-        iss >> tmpUp;
-        iss >> online;
-        iss >> maxOnline;
-        iss >> queue;
-        iss >> maxQueue;
-        iss >> unk;
-        iss >> rev;
-        iss >> diff;
-        iss >> avgDiff;
-//        iss >> horde; // core support needed
-//        iss >> ally;  // core support needed
-
-        uint32 d, h, m, s;
-        d = tmpUp/(3600*24);
-        h = (tmpUp - d*3600*24)/3600;
-        m = (tmpUp - d*3600*24 - h*3600)/60;
-        s = tmpUp - d*3600*24 - h*3600 - m*60;
-
-        std::string uptime = GetFormattedString(session->GetText(TXT_UPTIME_FMT).toUTF8().c_str(), d, h, m, s);
-
-        ((WText*)statusSlots[SERVER_STATUS_TEXT_REALM].GetWidget())->setText(REALM_NAME);
-        ((WText*)statusSlots[SERVER_STATUS_TEXT_STATE].GetWidget())->setText(session->GetText(tmpUp ? TXT_ONLINE : TXT_OFFLINE));
-        ((WText*)statusSlots[SERVER_STATUS_TEXT_ONLINE].GetWidget())->setText(online);
-        ((WText*)statusSlots[SERVER_STATUS_TEXT_MAXONLINE].GetWidget())->setText(maxOnline);
-        ((WText*)statusSlots[SERVER_STATUS_TEXT_FACTIONS].GetWidget())->setText(GetFormattedString(session->GetText(TXT_LBL_STATUS_FACTIONS_FMT).toUTF8().c_str(), horde, ally));
-        ((WText*)statusSlots[SERVER_STATUS_TEXT_UPTIME].GetWidget())->setText(uptime);
-        ((WText*)statusSlots[SERVER_STATUS_TEXT_REVISION].GetWidget())->setText(rev);
-        ((WText*)statusSlots[SERVER_STATUS_TEXT_DIFF].GetWidget())->setText(diff);
-        ((WText*)statusSlots[SERVER_STATUS_TEXT_AVGDIFF].GetWidget())->setText(avgDiff);
-//        ((WText*)statusSlots[SERVER_STATUS_TEXT_INFO].GetWidget())->setText();
 
         curl_easy_cleanup(curl);
     }

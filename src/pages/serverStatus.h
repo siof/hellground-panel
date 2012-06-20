@@ -32,7 +32,8 @@
 
 #include "../defines.h"
 #include "../slotItems.h"
-#include <WTimer>
+#include <Wt/WTimer>
+#include <Wt/WTable>
 
 /********************************************//**
  * \brief Slots for server status page
@@ -43,8 +44,7 @@
 
 enum ServerStatusTextSlots
 {
-    SERVER_STATUS_TEXT_MAIN = 0,        /**< Page title/main text shown on top. */
-    SERVER_STATUS_TEXT_REALM,           /**< Realm name. */
+    SERVER_STATUS_TEXT_REALM = 0,       /**< Realm name. */
     SERVER_STATUS_TEXT_STATE,           /**< Realm state (online/offline). */
     SERVER_STATUS_TEXT_ONLINE,          /**< Current players online count. */
     SERVER_STATUS_TEXT_MAXONLINE,       /**< Max online players. */
@@ -71,23 +71,17 @@ enum ServerStatusTextSlots
 class ServerStatusPage : public WContainerWidget
 {
 public:
-    ServerStatusPage(SessionInfo * sess, WContainerWidget * parent = 0);
+    ServerStatusPage(WContainerWidget * parent = 0);
     ~ServerStatusPage() { clear(); }
 
     void refresh();
 private:
-    /// pointer to object with current session informations
-    SessionInfo * session;
-    /// should be true only on page creation
-    bool needCreation;
     /// status refresh timer
-    WTimer * timer;
-
-    /// labels
-    PageSlotItem statusSlots[SERVER_STATUS_TEXT_SLOT_COUNT];
+    Wt::WTimer * timer;
+    /// tables for multiple realm status
+    Wt::WTable * realms[REALMS_COUNT];
 
     void CreateStatusPage();
-    void UpdateLabels();
     void UpdateStatus();
 };
 

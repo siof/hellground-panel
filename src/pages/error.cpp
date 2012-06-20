@@ -25,9 +25,9 @@ ErrorPageSlot::~ErrorPageSlot()
     text = NULL;
 }
 
-void ErrorPageSlot::SetText(WText * txt, uint32 id)
+void ErrorPageSlot::SetText(WText * txt, const char * id)
 {
-    console(DEBUG_CODE, "\nErrorPageSlot::SetText(WText * txt = %i, uint32 id = %u)\n", txt ? 1 : 0, id);
+    console(DEBUG_CODE, "\nErrorPageSlot::SetText(WText * txt = %i, const char * id = %s)\n", txt ? 1 : 0, id);
 
     DeleteText();
 
@@ -56,9 +56,9 @@ void ErrorPageSlot::SetText(WString &strn)
     textIdBased = false;
 }
 
-void ErrorPageSlot::SetText(SessionInfo * sess, uint32 id)
+void ErrorPageSlot::SetText(SessionInfo * sess, const char * id)
 {
-    console(DEBUG_CODE, "\nErrorPageSlot::SetText(sess: %i, uint32 id = %u)\n", sess ? 1 : 0, id);
+    console(DEBUG_CODE, "\nErrorPageSlot::SetText(sess: %i, const char * id = %s)\n", sess ? 1 : 0, id);
 
     if (!sess)
         return;
@@ -66,7 +66,7 @@ void ErrorPageSlot::SetText(SessionInfo * sess, uint32 id)
     textId = id;
     textIdBased = true;
 
-    console(DEBUG_CODE, "\nErrorPageSlot::SetText(): textId %u, textIdBased %i\n", textId, textIdBased);
+    console(DEBUG_CODE, "\nErrorPageSlot::SetText(): const char * %s, textIdBased %i\n", textId.c_str(), textIdBased);
 }
 
 WText * ErrorPageSlot::CreateText(SessionInfo * sess)
@@ -84,15 +84,15 @@ WText * ErrorPageSlot::CreateText(SessionInfo * sess)
 
     if (textIdBased)
     {
-        if (textId)
-            text = new WText(sess->GetText(textId));
+        if (!textId.empty())
+            text = new WText(tr(textId));
     }
     else if (!str.empty())
         text = new WText(str);
     else
         text = new WText("");
 
-    console(DEBUG_CODE, "    text: %i, textIdBased: %i, textId: %u, str: %s, textmsg: %s\n", text ? 1 : 0, textIdBased, textId, str.toUTF8().c_str(), text ? text->text().toUTF8().c_str() : "");
+    console(DEBUG_CODE, "    text: %i, textIdBased: %i, textId: %s, str: %s, textmsg: %s\n", text ? 1 : 0, textIdBased, textId.c_str(), str.toUTF8().c_str(), text ? text->text().toUTF8().c_str() : "");
     return text;
 }
 
@@ -108,13 +108,13 @@ void ErrorPageSlot::DeleteText()
 
 void ErrorPageSlot::UpdateText(SessionInfo * sess)
 {
-    console(DEBUG_CODE, "\nErrorPageSlot::UpdateText(sess: %i): text %i, textId %i, textIdBased: %i\n", sess ? 1 : 0, text ? 1 : 0, textId, textIdBased);
+    console(DEBUG_CODE, "\nErrorPageSlot::UpdateText(sess: %i): text %i, textId %s, textIdBased: %i\n", sess ? 1 : 0, text ? 1 : 0, textId.c_str(), textIdBased);
 
     if (!sess || !text)
         return;
 
-    if (textIdBased && textId)
-        text->setText(sess->GetText(textId));
+    if (textIdBased && !textId.empty())
+        text->setText(tr(textId));
     else
         text->setText(str);
 }
@@ -136,7 +136,7 @@ void ErrorPage::refresh()
     WContainerWidget::refresh();
 }
 
-void ErrorPage::SetErrorMsg(ErrorSlots slot, uint32 txtId)
+void ErrorPage::SetErrorMsg(ErrorSlots slot, const char * txtId)
 {
     console(DEBUG_CODE, "\nErrorPage::SetErrorMsg(ErrorSlots slot = %i, uint32 txtId = %u) overload: 1\n", slot, txtId);
 

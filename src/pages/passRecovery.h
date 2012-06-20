@@ -36,23 +36,6 @@
 #define PASSRECOVERY_H_INCLUDED
 
 #include "../defines.h"
-#include "../slotItems.h"
-
-/********************************************//**
- * \brief Slots for password recovery page
- *
- ***********************************************/
-
-enum RecoveryTextSlots
-{
-    RECOVERY_TEXT_MAIN = 0,         /**< Page title/main text shown on top. */
-    RECOVERY_TEXT_INFO,             /**< Additional info/recovery errors. */
-    RECOVERY_TEXT_LOGIN,            /**< Account login. */
-    RECOVERY_TEXT_EMAIL,            /**< Account email. On this mail password will be sent. */
-
-    RECOVERY_TEXT_SLOT_COUNT
-};
-
 
 /********************************************//**
  * \brief A class to represents Password Recovery page
@@ -79,6 +62,9 @@ private:
     /// should be true only on page creation
     bool needCreation;
 
+    /// label with informations about pass recovery
+    Wt::WText * recoveryInfo;
+
     /// text box for login
     WLineEdit * txtLogin;
     /// text box for email
@@ -86,10 +72,6 @@ private:
     /// register button
     WPushButton * btnRecover;
 
-    /// labels
-    BasicTextItem textSlots[RECOVERY_TEXT_SLOT_COUNT];
-
-    void UpdateTextWidgets();
     void CreateRecoveryPage();
 
     void ClearRecoveryData();
