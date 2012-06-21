@@ -43,24 +43,16 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
 {
     session = sess;
     setContentAlignment(AlignCenter|AlignTop);
-
-    addWidget(new WText(tr(TXT_INFO_ACCOUNT)));
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-
-    accPageInfo = new WText("", this);
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-
-    tabs = new WTabWidget();
-    tabs->contentsStack()->setTransitionAnimation(WAnimation(WAnimation::SlideInFromRight, WAnimation::EaseIn), true);
-    addWidget(tabs);
-
     needCreation = true;
 }
 
 AccountInfoPage::~AccountInfoPage()
 {
+    // NULL pointers
+    accountInfo = NULL;
+    accPageInfo = NULL;
+    tabs = NULL;
+    activityTabs = NULL;
     session = NULL;
 }
 
@@ -83,6 +75,18 @@ void AccountInfoPage::refresh()
         if (needCreation)
         {
             needCreation = false;
+            addWidget(new WText(tr(TXT_INFO_ACCOUNT)));
+            addWidget(new WBreak());
+            addWidget(new WBreak());
+
+            accPageInfo = new WText("", this);
+            addWidget(new WBreak());
+            addWidget(new WBreak());
+
+            tabs = new WTabWidget();
+            tabs->contentsStack()->setTransitionAnimation(WAnimation(WAnimation::SlideInFromRight, WAnimation::EaseIn), true);
+            addWidget(tabs);
+
             tabs->addTab(CreateAccountInfo(), tr(TXT_ACC_TAB_INFO), WTabWidget::PreLoading);
             tabs->addTab(CreateBanInfo(), tr(TXT_ACC_TAB_BAN), WTabWidget::PreLoading);
             tabs->addTab(CreateMuteInfo(), tr(TXT_ACC_TAB_MUTE), WTabWidget::PreLoading);
@@ -229,7 +233,7 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
 WContainerWidget * AccountInfoPage::CreateAccountInfo()
 {
     console(DEBUG_CODE, "\nCall WContainerWidget * AccountInfoPage::CreateAccountInfo()\n");
-    WContainerWidget * basicInfo = new WContainerWidget();
+    WContainerWidget * basicInfo = new WContainerWidget(this);
 
     accountInfo = new WTable(basicInfo);
 
@@ -398,35 +402,13 @@ void AccountInfoPage::ClearPage()
 
     needCreation = true;
 
-    WWidget * tmpWid;
-    int i;
+    clear();
 
-    for (i = ACCTAB_SLOT_COUNT - 1; i >= 0; --i)
-    {
-        if (tmpWid = tabs->widget(i))
-        {
-            tabs->removeTab(tmpWid);
-
-            switch (i)
-            {
-                case ACCTAB_SLOT_BASIC:
-                case ACCTAB_SLOT_ACTIVITY:
-                    ((WContainerWidget*)tmpWid)->clear();
-                    delete tmpWid;
-                    break;
-                case ACCTAB_SLOT_BANS:
-                case ACCTAB_SLOT_MUTE:
-                    ((WTable*)tmpWid)->clear();
-                    delete tmpWid;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    for (i = 0; i < ACCINFO_SLOT_COUNT; ++i)
-        accountInfo->clear();
+    // NULL pointers
+    accountInfo = NULL;
+    accPageInfo = NULL;
+    tabs = NULL;
+    activityTabs = NULL;
 }
 
 /********************************************//**
@@ -516,7 +498,7 @@ void AccountInfoPage::ChangeXPRates()
 
 WTable * AccountInfoPage::CreateBanInfo()
 {
-    WTable * banInfo = new WTable();
+    WTable * banInfo = new WTable(this);
 
     banInfo->setHeaderCount(1);
 
@@ -583,7 +565,7 @@ WTable * AccountInfoPage::CreateBanInfo()
 
 WTable * AccountInfoPage::CreateMuteInfo()
 {
-    WTable * muteInfo = new WTable();
+    WTable * muteInfo = new WTable(this);
 
     muteInfo->setHeaderCount(1);
 
@@ -645,7 +627,7 @@ WTable * AccountInfoPage::CreateMuteInfo()
 
 WContainerWidget * AccountInfoPage::CreateActivityInfo()
 {
-    WContainerWidget * activityInfo = new WContainerWidget();
+    WContainerWidget * activityInfo = new WContainerWidget(this);
 
     activityTabs = new WTabWidget(activityInfo);
     activityTabs->contentsStack()->setTransitionAnimation(WAnimation(WAnimation::SlideInFromRight, WAnimation::EaseIn), true);
