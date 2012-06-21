@@ -107,10 +107,11 @@ void VotePage::CreateVotePage()
         return;
     }
 
-    db.ExecutePQuery("DELETE FROM AccVote WHERE acc = '%u' AND resetDate < NOW()", session->accid);
-    db.ExecutePQuery("DELETE FROM IPVote WHERE ip = '%s' AND resetDate < NOW()", session->sessionIp.toUTF8().c_str());
+    // delete expired votes
+    db.ExecutePQuery("DELETE FROM AccVote WHERE reset_date < NOW()", session->accid);
+    db.ExecutePQuery("DELETE FROM IPVote WHERE reset_date < NOW()", session->sessionIp.toUTF8().c_str());
 
-    db.SetPQuery("SELECT voteId, resetDate FROM AccVote WHERE acc = '%u'", session->accid);
+    db.SetPQuery("SELECT vote_id, reset_date FROM AccVote WHERE account_id = '%u'", session->accid);
 
     switch (db.ExecuteQuery())
     {
@@ -136,7 +137,7 @@ void VotePage::CreateVotePage()
         }
     }
 
-    db.SetPQuery("SELECT voteId, resetDate FROM IPVote WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
+    db.SetPQuery("SELECT vote_id, reset_date FROM IPVote WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
 
     switch (db.ExecuteQuery())
     {
@@ -167,7 +168,7 @@ void VotePage::CreateVotePage()
         }
     }
 
-    switch (db.ExecuteQuery("SELECT id, url, imgurl, alttext, name FROM Vote"))
+    switch (db.ExecuteQuery("SELECT id, url, img_url, alt_text, name FROM Vote"))
     {
         case DB_RESULT_ERROR:
             voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));

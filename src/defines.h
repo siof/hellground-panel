@@ -483,6 +483,8 @@ enum MenuOptions
 #define TXT_GEN_NOT_ACTIVE              "general.notactive"         /**< General not active label */
 #define TXT_GEN_PERM                    "general.permanent"         /**< General permanent label */
 #define TXT_GEN_TIMED                   "general.timed"             /**< General timed (not perm) label */
+#define TXT_GEN_ON                      "general.on"                /**< General on label */
+#define TXT_GEN_OFF                     "general.off"               /**< General off label */
 
 /** Current ip */
 #define TXT_CURRENT_IP                  "ip.current"                /**< Current ip label */

@@ -78,10 +78,6 @@
 #define EMAIL_HIDE_CHAR_COUNT       4   /**< how many EMAIL_HIDE_CHAR characters should be displayed (0 - same count as hidden email characters) */
 #define HIDE_EMAIL_DOMAIN               /**< if defined then domain will be also hidden */
 
-#define REALM_NAME  "HellGround"        /**< Realm name. */
-
-#define STATUS_SOURCE   ""              /**< Http address with status to parse */
-
 const float RaceLocs[10][5] =           /**< Table with locations for races for character teleport option */
 {
 //   map    zone    pos X       pos Y       pos Z
@@ -112,9 +108,8 @@ const float RaceLocs[10][5] =           /**< Table with locations for races for 
 
 #define MAX_STATUS_WAIT_TIME    5       /**< Maximum time to wait for download realm status (in seconds) */
 #define REALMS_COUNT            2       /**< Realms count for realmfInfo array */
-
 /// Array with informations about specific realms to provide multi realm support (example below)
-static const std::string realmsInfo[REALMS_COUNT][] =
+static const char * realmsInfo[REALMS_COUNT][4] =
 {
     {
         "HellGround",                           // realm 1 name
