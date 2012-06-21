@@ -16,7 +16,7 @@ Rejestracja
 Informacje o koncie
     </message>
     <message id='menu.password.recovery'>
-Odzyskiwanie hasła
+Odzyskiwanie dostępu
     </message>
     <message id='menu.password.change'>
 Zmiana hasła
@@ -72,7 +72,7 @@ Liste mute
 
 
     <message id='character.name'>
-Nick
+Imię
     </message>
     <message id='character.level'>
 Poziom
@@ -105,7 +105,7 @@ Aktualny koszt resetu talentów
 Data ostatneigo resetu talentów
     </message>
     <message id='character.onlinestate'>
-Postać jest {1}
+Postać jest aktualnie
     </message>
     <message id='character.tab.info'>
 Podstawowe informacje
@@ -254,7 +254,7 @@ Tickety
 Aktywność
     </message>
     <message id='account.xp.rate'>
-Mnożnik XP
+Mnożnik doświadczenia
     </message>
 
     <message id='password.change.complete'>
@@ -283,10 +283,10 @@ Aby zmienić hasło zaloguj sie w panelu gracza (http://panel.hellground.pl/) u�
 Serdecznie pozdrawiamy, administracja HellGround.pl
     </message>
     <message id='password.recovery.mail.subject'>
-Server HellGround - Odzyskiwanie hasła
+Projekt HellGround - Odzyskiwanie dostępu do konta
     </message>
     <message id='password.recovery.complete'>
-Odzyskiwanie hasła zakończone. Nowe hasło zostało wysłane na adres email przypisany do konta.
+Nowe hasło zostało wygenerowane i wysłane na adres email przypisany do konta.
     </message>
 
     <message id='instance.open'>
@@ -297,7 +297,7 @@ Zamknięta
     </message>
 
     <message id='registration.rules'>
-Oświadczam, że zapoznałem się i akceptuję <a href="http://wow.hellground.pl/regulamin-serwera/">regulamin serwera</a>
+Oświadczam, że zapoznałem się i akceptuję <a href="http://hellground.pl/informacje-administracyjne/1648-regulamin-serwera-forum-i-taryfikator-kar.html">regulamin serwera</a>
     </message>
     <message id='registration.rules.notaccepted'>
 Aby stworzyć konto musisz zaakceptować regulamin serwera.
@@ -310,10 +310,10 @@ Hellground.pl
 
 Dziękujemy za utworzenie konta w naszym projekcie.
 <b>Twój login do konta:</b> {1}
-<b>Twoje nowe hasło:</b> {2}
+<b>Twoje hasło:</b> {2}
 
 Proszę zachować tą wiadomość na wypadek zgubienia/zapomnienia loginu do konta – administracja nie przypomni ani nie zmieni Twoich danych do konta.
-Hasło do konta możesz zmienić poprzez panel gracza lub w grze poprzez użycie komendy. Aby poznać liste dostępnych dla Ciebie wpisz w chacie komendę .help
+Hasło do konta możesz zmienić poprzez panel gracza lub w grze poprzez użycie komendy. Aby poznać liste komend dostępnych dla Ciebie wpisz w chacie komendę .help
 
 Panel gracza: http://panel.hellground.pl.
 Jak zagrać: http://wow.hellground.pl/how-to-play/
@@ -321,7 +321,7 @@ Jak zagrać: http://wow.hellground.pl/how-to-play/
 Życzymy przyjemnej gry, administracja Hellground.pl
     </message>
     <message id='registration.mail.subject'>
-Serwer Hellground - Rejestracja konta
+Projekt Hellground - Rejestracja konta
     </message>
     <message id='registration.complete'>
 Rejestracja zakończona. Hasło zostało wysłane na podany adres email.
@@ -371,13 +371,13 @@ Nazwa realmu
 Stan realmu
     </message>
     <message id='status.online'>
-Graczy online
+Ilość graczy online
     </message>
     <message id='status.online.max'>
 Najwięcej graczy online
     </message>
     <message id='status.factions'>
-Frakcje
+Podział frakcji
     </message>
     <message id='status.factions.fmt'>
 Horda: {1} % Przymierze: {2} %
@@ -392,7 +392,7 @@ Czas działania realmu
 Rewizja
     </message>
     <message id='status.diff'>
-Opóźnienie
+Opóźnienie serwera
     </message>
     <message id='status.diff.avarage'>
 Średnie opóźnienie
@@ -447,18 +447,18 @@ Ilość
     </message>
 
     <message id='friend.name'>
-Nick znajomego
+Imię znajomego
     </message>
     <message id='friend.note'>
 Notka znajomego
     </message>
 
     <message id='site.title'>
-Panel gracza HellGround
+Panel gracza  - projekt HellGround
     </message>
     <message id='site.footer'>
 Logo World of Warcraft, is a registered trademark Blizzard Entertainment.<br/>
-© 2006-2012 Panel created by HellGround.pl
+© 2006-2012 Panel created by HellGround.pl - more info in licence page
     </message>
 
     <message id='informations.server'>
@@ -479,8 +479,8 @@ Dla nowych graczy:<br/>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
     <li>Emulator: TrinityCore + <a href="http://wow.hellground.pl/changelog/">własne fixy</a></li>
-    <li>Rates xp: opcjonalnie x1 - x2</li>
-    <li>Rates xp quest: opcjonalnie x1 - x2</li>
+    <li>Rates xp: opcjonalnie x1 - x2 (wybór w panelu)</li>
+    <li>Rates xp quest: opcjonalnie x1 - x2 (wybór w panelu)</li>
     <li>Rates drop: x1</li>
     <li>Typ: PvE/PvP</li>
     <li>Vmapy/LoS: Tak</li>
@@ -491,31 +491,69 @@ Dla nowych graczy:<br/>
     </message>
     <message id='informations.teleport'>
 <h3>Teleport postaci</h3><br/>
-Teleport przeniesie wybraną postać do lokacji startowej <b>danej</b> rasy. <br/>
-Teleportacji używać możesz w dowolnym momencie, jednak każde użycie powoduje godzinny cooldown na Heartstone’a postaci.<br/>
-Twoja postać nie może być zalogowana w momencie używania teleportu.<br/>
+Opcja teleportu jest dodatkową możliwością odblokowania postaci która utknęła w grze jeśliby z jakiegoś powodu wbudowana opcja 'unstack' nie zadziałała.<br/>
+Opcja teleportu pozwala także na odbugowanie postaci w pewnych okolicznościach jak np utknięcie na gryfie/wiwernie i lecenie przez tekstury.<br/><br/>
+
+Teleport przeniesie wybraną postać do lokacji startowej <b>danej</b> rasy.<br/><br/>
+
+Teleportacji możesz używać w dowolnym momencie, jednak każde jegj użycie nakłada godzinny cooldown na HeartStone’a.<br/><br/>
+
+Twoja postać nie może być zalogowana w momencie używania teleportu.<br/><br/>
+
 Wybierz postać, którą chcesz teleportować:
     </message>
     <message id='informations.instances'>
-<h3>TODO</h3>
+<h3>Status instancji</h3><br/><br/><br/>
+Status instancji jest listą instancji na której możesz sprawdzić wymagania danej instancji oraz czy jest otwarta aktualnie czy nadal zamknięta.
     </message>
     <message id='informations.logout'>
-<h3>TODO</h3>
+<h3>Wyloguj mnie z panelu gracza</h3>
     </message>
     <message id='informations.status'>
-<h3>TODO</h3>
+<h3>Status realmów</h3><br/><br/>
+Na tej stronie możesz sprawdzić aktualny stan naszych realmów.<br/>
+Stan jest aktualizowany co około minutę na podstawie danych z danego realmu - dane te mogą być błędne w określonych sytuacjach.
     </message>
     <message id='informations.registration'>
-<h3>HellGround - Stwórz konto</h3>
+<h3>Tworzenie konta</h3><br/><br/>
+Aby stworzyć nowe konto wypełnij poniższe pola oraz kliknij przycisk 'Zarejestruj'.<br/>
+Podstawowe wymagania aby rejestracja była pomyślna:<br/>
+<ul>
+    <li>Aby zarejestrować nowe konto musisz zaakceptować regulamin serwera</li>
+    <li>Login musi mieć conajmniej 6 a maksymalnie 16 znaków</li>
+    <li>Login musi skłądać się wyłącznie z liter, cyfr, myślnika lub znaku podkreślenia</li>
+    <li>W polu adresu email musi być podany adres email</li>
+</ul><br/><br/>
+
+Prosimy pamiętać aby podać prawdziwy i aktualny adres email ponieważ na ten adres będzie przesyłane nowo wygenerowane hasło (zarówno podczas rejestracji konta jak i w późniejszym czasie np przy odzyskiwaniu dostępu do konta).<br/>
+Dodatkowo pragniemy poinformować iż administracja nie przypomni ani nie zmieni danych do konta.
     </message>
     <message id='informations.password.recovery'>
-<h3>TODO</h3>
+<h3>Odzyskiwanie dostępu do konta</h3><br/><br/>
+
+Witaj na stronie odzyskiwania dostępu do konta.<br/>
+Aby odzyskać dostęp do Twojego konta prosimy wypełnić poniższe pola oraz kliknąć przycisk 'Wyślij'.<br/>
+Jeśli podane dane będą sie zgadzały to w momencie kliknięcia przycisku wyślij panel wygeneruje nowe hasło do konta oraz prześle je na adres email konta.<br/><br/>
+
+W polu 'Login' proszę podać login do konta.<br/>
+W polu 'Adres email' proszę podać adres email przypisany do danego konta (podany przy rejestracji).<br/><br/>
+
+Dodatkowo pragniemy poinformować iż opcja odzyskiwania dostępu, poza zmianą hasła, wyłącza także blokadę IP.
     </message>
     <message id='informations.password.change'>
-<h3>TODO</h3>
+<h3>Zmiana hasła</h3><br/><br/>
+
+Aby zmienić hasło wypełnij poniższe pola.<br/><br/>
+
+Pole 'Stare/Aktualne hasło' oznacza aktualne hasło do konta.<br/>
+Pole 'Nowe hasło' oznacza nowe wybrane przez Ciebie hasło<br/>
+W polu 'Powtórz nowe hasło' proszę podać to samo hasło które zostało wpisane w pole 'Nowe hasło'<br/><br/>
+
+Hasło do konta musi mieć conajmniej 6 a maksymalnie 16 znaków.
     </message>
     <message id='informations.account'>
-<h3>Informacje o koncie:</h3>
+<h3>Informacje o koncie:</h3><br/>
+Na tej stronie możesz sprawdzic aktualne podstawowe informacje o Twoim koncie (adres email jest zamaskowany).
     </message>
     <message id='informations.support'>
 Pomóż rozwijać serwer Hellground poprzez dotacje oraz głosowanie na toplistach:<br/>
@@ -529,7 +567,7 @@ Zapoznaj się również z zasadami eventu - <a href="http://wow.hellground.pl/za
 Aby punkty zostały doliczone musisz kliknąć lewym przyciskiem myszy.<br/><br/>
 Listy:
     </message>
-    <message id='character.informations'>
+    <message id='informations.character'>
 <h3>Informacje o postaci:</h3>
     </message>
 
@@ -585,6 +623,12 @@ Stały
     <message id='general.timed'>
 Czasowy
     </message>
+    <message id='general.on'>
+włączona
+    </message>
+    <message id='general.off'>
+wyłaczona
+    </message>
 
     <message id='ip.current'>
 Aktualne IP
@@ -635,7 +679,7 @@ Postać {1} odzyskana
     </message>
 
     <message id='licence.intro'>
-HG Players Panel - webowy panel dla graczy serwera HellGround<br/>
+HG Players Panel - webowy panel projektu HellGround<br/>
 Copyright (C) 2011 HellGround Team : Siof, lukaasm,<br/><br/>
 
 Ten program stanowi wolne oprogramowanie: możesz je rozpowszechniać<br/>
@@ -726,7 +770,7 @@ Podane hasła muszą być takie same
 Podane hasło jest zbyt krótkie
     </message>
     <message id='error.password.tolong'>
-Podane haslo jest zbyt długie
+Podane hasło jest zbyt długie
     </message>
     <message id='error.validation.login'>
 Złe dane logowania.<br/>
@@ -762,7 +806,7 @@ Nie znaleziono postaci !
     <message id='error.ip.mistach'>
 Konto posiada włączoną blokadę IP oraz Twój aktualny adres IP nie pasuje do IP konta.<br/><br/>
 
-Jeśli to konto jest Twoje użyj opcji odzyskiwania hasła w celu zresetowania hasła i blokady IP.
+Jeśli to konto jest Twoje użyj opcji <a href="#/account">odzyskiwania hasła</a> w celu zresetowania hasła i blokady IP.
     </message>
     <message id='error.vote.multiple'>
 Nie możesz jeszcze zagłosować na tą liste

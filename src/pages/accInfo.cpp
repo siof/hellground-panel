@@ -449,7 +449,7 @@ void AccountInfoPage::ChangeIPLock()
         if (db.ExecuteQuery() != DB_RESULT_ERROR)
         {
             ((WPushButton*)accountInfo->elementAt(ACCINFO_SLOT_IP_LOCK, 1)->widget(0))->setText(session->locked ? tr(TXT_GEN_YES) : tr(TXT_GEN_NO));
-            accPageInfo->setText(tr(session->locked ? TXT_GEN_YES : TXT_GEN_NO));
+            accPageInfo->setText(tr(TXT_ACC_LOCK_IP_STATE).arg(tr(session->locked ? TXT_GEN_ON : TXT_GEN_OFF)));
         }
         else
         {
@@ -671,7 +671,7 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        db.SetPQuery("SELECT eventDate, ip, textId, text FROM Activity WHERE accId = %u ORDER BY eventDate DESC LIMIT %i", session->accid, ACTIVITY_PANEL_LIMIT);
+        db.SetPQuery("SELECT event_date, ip, activity_id, activity_args FROM Activity WHERE account_id = %u ORDER BY event_date DESC LIMIT %i", session->accid, ACTIVITY_PANEL_LIMIT);
 
         switch (db.ExecuteQuery())
         {

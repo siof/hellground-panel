@@ -105,7 +105,7 @@ Actual talent reset cost
 Last talent reset time
     </message>
     <message id='character.onlinestate'>
-Character is {1}
+Character is
     </message>
     <message id='character.tab.info'>
 Basic informations
