@@ -310,8 +310,8 @@ Account already exists. Please try another login.
 Hellground.pl
 
 Thank you for creating an account on our server.
-<b>Your account’s login:</b> %s
-<b>Your account’s password:</b> %s
+<b>Your account’s login:</b> {1}
+<b>Your account’s password:</b> {2}
 
 Please, save this message in case of losing your login or password – GMT will not remind it to you.
 
@@ -629,7 +629,7 @@ Someone tried to change ip lock state
 Someone tried to change XP rates
     </message>
     <message id='activity.character.restore'>
-Character %s restored
+Character {1} restored
     </message>
 
     <message id='licence.intro'>
