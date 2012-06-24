@@ -17,6 +17,9 @@
 
 #include "error.h"
 
+#include <Wt/WBreak>
+#include <Wt/WText>
+
 ErrorPageSlot::~ErrorPageSlot()
 {
     if (text)

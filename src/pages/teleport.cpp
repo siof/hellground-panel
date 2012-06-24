@@ -28,6 +28,12 @@
  ***********************************************/
 
 #include "teleport.h"
+
+#include <Wt/WBreak>
+#include <Wt/WComboBox>
+#include <Wt/WPushButton>
+#include <Wt/WText>
+
 #include "../database.h"
 
 TeleportPage::TeleportPage(SessionInfo * sess, WContainerWidget * parent):

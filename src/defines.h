@@ -40,20 +40,7 @@
 #include <iostream>
 #endif
 
-// standard includes for most files
-#include <Wt/WApplication>
-#include <Wt/WEnvironment>
-#include <Wt/WLogger>
 #include <Wt/WString>
-#include <Wt/WBreak>
-#include <Wt/WContainerWidget>
-#include <Wt/WLineEdit>
-#include <Wt/WPushButton>
-#include <Wt/WText>
-#include <Wt/WImage>
-#include <Wt/WTable>
-#include <Wt/WStackedWidget>
-#include <Wt/WAnimation>
 
 using namespace Wt;
 

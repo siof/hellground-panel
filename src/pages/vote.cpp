@@ -30,6 +30,12 @@
 #include "vote.h"
 
 #include <Wt/WAnchor>
+#include <Wt/WApplication>
+#include <Wt/WBreak>
+#include <Wt/WEnvironment>
+#include <Wt/WImage>
+#include <Wt/WTable>
+#include <Wt/WText>
 
 #include "../database.h"
 
@@ -221,6 +227,7 @@ void VotePage::ClearPage()
     console(DEBUG_CODE, "void VotePage::ClearPage()\n");
     votesInfo.clear();
     clear();
+    needCreation = true;
 }
 
 void VotePage::BindVote(EventSignal<WMouseEvent>& signal, const uint32& id)

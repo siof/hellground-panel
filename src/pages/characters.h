@@ -36,10 +36,9 @@
 #ifndef CHARACTERS_H_INCLUDED
 #define CHARACTERS_H_INCLUDED
 
-#include "../defines.h"
+#include <Wt/WContainerWidget>
 
-class Wt::WTabWidget;
-class Wt::WComboBox;
+#include "../defines.h"
 
 /********************************************//**
  * \brief Slots for Basic Character Informations

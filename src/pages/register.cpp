@@ -29,8 +29,14 @@
 
 #include "register.h"
 
-#include <Wt/WRegExpValidator>
+#include <Wt/WApplication>
+#include <Wt/WEnvironment>
+#include <Wt/WBreak>
 #include <Wt/WCheckBox>
+#include <Wt/WLineEdit>
+#include <Wt/WPushButton>
+#include <Wt/WRegExpValidator>
+#include <Wt/WText>
 
 #include "../database.h"
 
@@ -247,6 +253,12 @@ void RegisterPage::Register()
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
         db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", accId, session->sessionIp.toUTF8().c_str(), TXT_ACT_REGISTRATION_COMPLETE);
+}
+
+void RegisterPage::ClearWLineEdit()
+{
+    if (WObject::sender())
+        ((WLineEdit*)WObject::sender())->setText("");
 }
 
 /********************************************//**

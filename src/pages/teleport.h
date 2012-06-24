@@ -34,7 +34,7 @@
 #ifndef TELEPORT_H_INCLUDED
 #define TELEPORT_H_INCLUDED
 
-#include <Wt/WComboBox>
+#include <Wt/WContainerWidget>
 
 #include "../defines.h"
 

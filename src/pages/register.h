@@ -34,9 +34,9 @@
 #ifndef REGISTER_H_INCLUDED
 #define REGISTER_H_INCLUDED
 
-#include "../defines.h"
+#include <Wt/WContainerWidget>
 
-class Wt::WCheckBox;
+#include "../defines.h"
 
 /********************************************//**
  * \brief A class to represents Registration page
@@ -79,11 +79,7 @@ private:
     void CheckChange();
     void Register();
 
-    void ClearWLineEdit()
-    {
-        if (WObject::sender())
-            ((WLineEdit*)WObject::sender())->setText("");
-    }
+    void ClearWLineEdit();
 };
 
 

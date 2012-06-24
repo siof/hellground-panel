@@ -18,13 +18,10 @@
 #ifndef MENU_H_INCLUDED
 #define MENU_H_INCLUDED
 
-#include <Wt/WMenu>
-#include <Wt/WMenuItem>
+#include <Wt/WLineEdit>
 
 #include "defines.h"
 #include "pages/error.h"
-
-using namespace Wt;
 
 class HGMenu;
 

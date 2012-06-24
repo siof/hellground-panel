@@ -35,6 +35,8 @@
 #ifndef PASSCHANGE_H_INCLUDED
 #define PASSCHANGE_H_INCLUDED
 
+#include <Wt/WContainerWidget>
+
 #include "../defines.h"
 
 /********************************************//**
@@ -75,11 +77,7 @@ private:
     void ClearPass();
     void Change();
 
-    void ClearWLineEdit()
-    {
-        if (WObject::sender())
-            ((WLineEdit*)WObject::sender())->setText("");
-    }
+    void ClearWLineEdit();
 };
 
 #endif // PASSCHANGE_H_INCLUDED

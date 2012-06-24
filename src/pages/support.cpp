@@ -29,6 +29,8 @@
 
 #include "support.h"
 
+#include <Wt/WText>
+
 /********************************************//**
  * \brief Creates new SupportPage object.
  *
