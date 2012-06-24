@@ -29,6 +29,9 @@
 
 #include "licence.h"
 
+#include <Wt/WBreak>
+#include <Wt/WText>
+
 /********************************************//**
  * \brief Creates new LicencePage object.
  *

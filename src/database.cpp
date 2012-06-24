@@ -16,8 +16,8 @@
 */
 
 #include "database.h"
-#include <cstdarg>
 
+#include <cstdarg>
 
 /// DatabaseField
 

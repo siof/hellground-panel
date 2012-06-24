@@ -29,6 +29,8 @@
 
 #include "default.h"
 
+#include <Wt/WText>
+
 /********************************************//**
  * \brief Creates new DefaultPage object.
  *

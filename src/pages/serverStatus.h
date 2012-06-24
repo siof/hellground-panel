@@ -30,9 +30,9 @@
 #ifndef SERVERSTATUS_H_INCLUDED
 #define SERVERSTATUS_H_INCLUDED
 
-#include "../defines.h"
+#include <Wt/WContainerWidget>
 
-class Wt::WTimer;
+#include "../defines.h"
 
 /********************************************//**
  * \brief Slots for server status page

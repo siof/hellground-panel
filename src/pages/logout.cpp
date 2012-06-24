@@ -29,6 +29,11 @@
 
 #include "logout.h"
 
+#include <Wt/WApplication>
+#include <Wt/WBreak>
+#include <Wt/WPushButton>
+#include <Wt/WText>
+
 /********************************************//**
  * \brief Creates new LogoutPage object.
  *

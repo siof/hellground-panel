@@ -30,6 +30,8 @@
 #ifndef LICENCE_H_INCLUDED
 #define LICENCE_H_INCLUDED
 
+#include <Wt/WContainerWidget>
+
 #include "../defines.h"
 
 /********************************************//**

@@ -17,8 +17,13 @@
 
 #include "menu.h"
 
-#include <Wt/WRegExpValidator>
+#include <Wt/WApplication>
+#include <Wt/WBreak>
 #include <Wt/WLengthValidator>
+#include <Wt/WMenu>
+#include <Wt/WPushButton>
+#include <Wt/WRegExpValidator>
+#include <Wt/WStackedWidget>
 #include <Wt/WSubMenuItem>
 
 #include "pages/default.h"

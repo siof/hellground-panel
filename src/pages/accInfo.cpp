@@ -29,7 +29,12 @@
 
 #include "accInfo.h"
 
+#include <Wt/WBreak>
+#include <Wt/WPushButton>
+#include <Wt/WStackedWidget>
+#include <Wt/WTable>
 #include <Wt/WTabWidget>
+#include <Wt/WText>
 
 #include "../database.h"
 

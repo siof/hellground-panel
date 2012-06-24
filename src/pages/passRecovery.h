@@ -35,6 +35,8 @@
 #ifndef PASSRECOVERY_H_INCLUDED
 #define PASSRECOVERY_H_INCLUDED
 
+#include <Wt/WContainerWidget>
+
 #include "../defines.h"
 
 /********************************************//**
@@ -80,11 +82,7 @@ private:
     void AddActivityPassRecovery(bool success, const char * login = NULL);
     void AddActivityPassRecovery(uint32 id, bool success);
 
-    void ClearWLineEdit()
-    {
-        if (WObject::sender())
-            ((WLineEdit*)WObject::sender())->setText("");
-    }
+    void ClearWLineEdit();
 };
 
 

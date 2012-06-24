@@ -28,6 +28,12 @@
  ***********************************************/
 
 #include "passChange.h"
+
+#include <Wt/WBreak>
+#include <Wt/WLineEdit>
+#include <Wt/WPushButton>
+#include <Wt/WText>
+
 #include "../database.h"
 
 PassChangePage::PassChangePage(SessionInfo * sess, WContainerWidget * parent):
@@ -215,6 +221,12 @@ void PassChangePage::Change()
     }
 
     ClearPass();
+}
+
+void PassChangePage::ClearWLineEdit()
+{
+    if (WObject::sender())
+        ((WLineEdit*)WObject::sender())->setText("");
 }
 
 /********************************************//**

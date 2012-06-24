@@ -18,6 +18,8 @@
 #ifndef ERROR_H_INCLUDED
 #define ERROR_H_INCLUDED
 
+#include <Wt/WContainerWidget>
+
 #include "../defines.h"
 
 class ErrorPageSlot

@@ -29,8 +29,13 @@
 
 #include "characters.h"
 
-#include <Wt/WTabWidget>
+#include <Wt/WBreak>
 #include <Wt/WComboBox>
+#include <Wt/WPushButton>
+#include <Wt/WStackedWidget>
+#include <Wt/WTable>
+#include <Wt/WTabWidget>
+#include <Wt/WText>
 
 #include "../database.h"
 

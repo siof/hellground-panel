@@ -30,6 +30,8 @@
 #ifndef LOGOUT_H_INCLUDED
 #define LOGOUT_H_INCLUDED
 
+#include <Wt/WContainerWidget>
+
 #include "../defines.h"
 
 /********************************************//**

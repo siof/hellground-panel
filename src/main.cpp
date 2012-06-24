@@ -15,18 +15,22 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Wt/WMenu>
-#include <Wt/WStackedWidget>
+#include "menu.h"
 
 #include <stdarg.h>
 
-#include "defines.h"
-#include "menu.h"
-#include "database.h"
+#include <Wt/WApplication>
+#include <Wt/WEnvironment>
+#include <Wt/WImage>
+#include <Wt/WMenu>
+#include <Wt/WMenuItem>
+#include <Wt/WStackedWidget>
+#include <Wt/WTable>
 
 #include "jwsmtp/jwsmtp.h"
 
-using namespace Wt;
+#include "defines.h"
+#include "database.h"
 
 void SendMail(const WString& from, const WString& to, const WString& sub, const WString& msg)
 {

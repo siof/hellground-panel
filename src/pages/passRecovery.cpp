@@ -29,8 +29,12 @@
 
 #include "passRecovery.h"
 
-#include <Wt/WRegExpValidator>
 #include <boost/algorithm/string.hpp>
+#include <Wt/WBreak>
+#include <Wt/WLineEdit>
+#include <Wt/WPushButton>
+#include <Wt/WRegExpValidator>
+#include <Wt/WText>
 
 #include "../database.h"
 
@@ -261,6 +265,12 @@ void PassRecoveryPage::AddActivityPassRecovery(uint32 id, bool success)
 
     db.Connect(PANEL_DB_DATA, SQL_PANELDB);
     db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_RECOVERY_SUCCESS : TXT_ACT_RECOVERY_FAIL);
+}
+
+void PassRecoveryPage::ClearWLineEdit()
+{
+    if (WObject::sender())
+        ((WLineEdit*)WObject::sender())->setText("");
 }
 
 /********************************************//**

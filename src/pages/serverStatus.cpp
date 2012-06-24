@@ -32,9 +32,11 @@
 #include <iostream>
 #include <sstream>
 
-#include <Wt/WTimer>
-#include <Wt/WTable>
 #include <curl/curl.h>
+#include <Wt/WBreak>
+#include <Wt/WTable>
+#include <Wt/WText>
+#include <Wt/WTimer>
 
 /********************************************//**
  * \brief Creates new ServerStatusPage object.

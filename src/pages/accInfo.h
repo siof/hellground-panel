@@ -35,9 +35,9 @@
 #ifndef ACCINFO_H_INCLUDED
 #define ACCINFO_H_INCLUDED
 
-#include "../defines.h"
+#include <Wt/WContainerWidget>
 
-class Wt::WTabWidget;
+#include "../defines.h"
 
 /********************************************//**
  * \brief Slots for Basic Account Informations
