@@ -629,6 +629,12 @@ włączona
     <message id='general.off'>
 wyłaczona
     </message>
+    <message id='general.name'>
+Nazwa
+    </message>
+    <message id='general.state'>
+Stan
+    </message>
 
     <message id='ip.current'>
 Aktualne IP
@@ -704,10 +710,13 @@ Repozytorium kodu źródłowego (zawiera także licencję): <a href="https://bit
 
     </message>
 
-    <message id='support.vote.next'>
-{1} | Następne głosowanie: {2}
+    <message id='support.vote.ready'>
+Możesz zagłosować na tą topliste
     </message>
-    <message id='support.vote.cooldown'>
+    <message id='support.vote.next'>
+Następne głosowanie: {1}
+    </message>
+    <message id='support.vote.success'>
 Zagłosowano
     </message>
 

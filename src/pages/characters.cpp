@@ -28,6 +28,10 @@
  ***********************************************/
 
 #include "characters.h"
+
+#include <Wt/WTabWidget>
+#include <Wt/WComboBox>
+
 #include "../database.h"
 
 /********************************************//**
@@ -115,10 +119,10 @@ void CharacterInfoPage::refresh()
                     break;
                 default:
 
-                    std::list<DatabaseRow*> rows = db.GetRows();
+                    std::vector<DatabaseRow*> rows = db.GetRows();
                     DatabaseRow * tmpRow;
 
-                    for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+                    for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
                     {
                         tmpRow = *itr;
 
@@ -135,10 +139,10 @@ void CharacterInfoPage::refresh()
                                  "WHERE acc = '%u'", session->accid) > DB_RESULT_EMPTY)
             {
 
-                std::list<DatabaseRow*> rows = db.GetRows();
+                std::vector<DatabaseRow*> rows = db.GetRows();
                 DatabaseRow * tmpRow;
 
-                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+                for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
                 {
                     tmpRow = *itr;
 
@@ -442,7 +446,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
             return;
         default:
             db.Disconnect();
-            std::list<DatabaseRow*> rows = db.GetRows();
+            std::vector<DatabaseRow*> rows = db.GetRows();
 
             WTable * tmpTable = (WTable*)tabs->widget(CHAR_TAB_QUEST);
 
@@ -455,7 +459,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
 
             DatabaseRow * tmpRow;
             WText * tmpText;
-            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
 
@@ -502,7 +506,7 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
             return;
         default:
             db.Disconnect();
-            std::list<DatabaseRow*> rows = db.GetRows();
+            std::vector<DatabaseRow*> rows = db.GetRows();
 
             WTable * tmpTable = (WTable*)tabs->widget(CHAR_TAB_SPELL);
 
@@ -514,7 +518,7 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
             i = 1;
 
             DatabaseRow * tmpRow;
-            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
 
@@ -555,7 +559,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
             return;
         default:
             db.Disconnect();
-            std::list<DatabaseRow*> rows = db.GetRows();
+            std::vector<DatabaseRow*> rows = db.GetRows();
 
             WTable * tmpTable = (WTable*)tabs->widget(CHAR_TAB_INVENTORY);
 
@@ -567,7 +571,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
             i = 1;
 
             DatabaseRow * tmpRow;
-            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
 
@@ -607,7 +611,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
             return;
         default:
             db.Disconnect();
-            std::list<DatabaseRow*> rows = db.GetRows();
+            std::vector<DatabaseRow*> rows = db.GetRows();
 
             WTable * tmpTable = (WTable*)tabs->widget(CHAR_TAB_FRIENDS);
 
@@ -619,7 +623,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
             i = 1;
 
             DatabaseRow * tmpRow;
-            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
 

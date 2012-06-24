@@ -31,9 +31,8 @@
 #define SERVERSTATUS_H_INCLUDED
 
 #include "../defines.h"
-#include "../slotItems.h"
-#include <Wt/WTimer>
-#include <Wt/WTable>
+
+class Wt::WTimer;
 
 /********************************************//**
  * \brief Slots for server status page

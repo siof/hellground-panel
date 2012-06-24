@@ -425,10 +425,10 @@ int main(int argc, char **argv)
     db->Connect(PANEL_DB_DATA, SQL_PANELDB);
     db->ExecuteQuery("SELECT entry, name FROM spells");
 
-    std::list<DatabaseRow*> rows = db->GetRows();
+    std::vector<DatabaseRow*> rows = db->GetRows();
 
     uint32 tmpEntry;
-    for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+    for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
     {
         tmpEntry = (*itr)->fields[0].GetUInt32();
         spells[tmpEntry].entry = tmpEntry;

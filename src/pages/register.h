@@ -35,7 +35,8 @@
 #define REGISTER_H_INCLUDED
 
 #include "../defines.h"
-#include <Wt/WCheckBox>
+
+class Wt::WCheckBox;
 
 /********************************************//**
  * \brief A class to represents Registration page

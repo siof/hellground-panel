@@ -160,8 +160,6 @@
 		<Unit filename="../src/pages/teleport.h" />
 		<Unit filename="../src/pages/vote.cpp" />
 		<Unit filename="../src/pages/vote.h" />
-		<Unit filename="../src/slotItems.cpp" />
-		<Unit filename="../src/slotItems.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

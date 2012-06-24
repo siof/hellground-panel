@@ -485,6 +485,8 @@ enum MenuOptions
 #define TXT_GEN_TIMED                   "general.timed"             /**< General timed (not perm) label */
 #define TXT_GEN_ON                      "general.on"                /**< General on label */
 #define TXT_GEN_OFF                     "general.off"               /**< General off label */
+#define TXT_GEN_NAME                    "general.name"              /**< General name label */
+#define TXT_GEN_STATE                   "general.state"             /**< Genaral state label */
 
 /** Current ip */
 #define TXT_CURRENT_IP                  "ip.current"                /**< Current ip label */
@@ -513,8 +515,9 @@ enum MenuOptions
 #define TXT_LICENCE_INFO                "licence.informations"      /**< Additional static informations */
 
 /** Support */
+#define TXT_SUPPORT_VOTE_READY          "support.vote.ready"        /**< Text for ready to vote */
 #define TXT_SUPPORT_VOTE_NEXT           "support.vote.next"         /**< Text for next vote time info */
-#define TXT_SUPPORT_VOTED               "support.vote.cooldown"     /**< Text for successfull vote */
+#define TXT_SUPPORT_VOTED               "support.vote.success"      /**< Text for successfull vote */
 
 /** XP modes */
 #define TXT_XP_RATE_SERVER              "xp.rate.default"           /**< Text for server default XP rates */
