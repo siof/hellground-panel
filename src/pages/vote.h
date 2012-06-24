@@ -23,7 +23,7 @@
  * \{
  *
  * \file vote.h
- * This file contains th headers needed to provide vote possibility.
+ * This file contains the headers needed to provide vote possibility.
  *
  ***********************************************/
 
@@ -31,7 +31,6 @@
 #define VOTE_H_INCLUDED
 
 #include "../defines.h"
-#include "../slotItems.h"
 
 /********************************************//**
  * \brief Slots for vote page.
@@ -46,40 +45,22 @@ enum VoteSlots
 };
 
 /********************************************//**
- * \brief Class to represent Vote Page Slot Item.
+ * \brief Structure to store specific vote informations.
  ***********************************************/
 
-class VoteSlotItem : public PageSlotItem
+struct VoteInfo
 {
-public:
-    VoteSlotItem() : PageSlotItem(), disabled(false), voteId(0), expire(""), voteName("") {}
-    ~VoteSlotItem(){}
+    VoteInfo() : disabled(false), voteId(0), index(0), expire(""), voteName(""), url(""), imgUrl(""), altText("") {}
+    ~VoteInfo(){}
 
-    bool IsDisabled() { return disabled; }
-    void SetDisabled(bool disabled) { this->disabled = disabled; }
-
-    uint32 GetVoteId() { return voteId; }
-    void SetVoteId(uint32 id) { voteId = id; }
-
-    WString GetExpire() { return expire; }
-    void SetExpire(const WString & exp) { expire = exp; }
-
-    WString GetName() { return voteName; }
-    void SetName(const WString & name) { voteName = name; }
-
-    void UpdateExpireLabel()
-    {
-        if (disabled)
-        {
-            SetLabel(tr(TXT_SUPPORT_VOTE_NEXT).arg(voteName).arg(expire));
-        }
-    }
-
-private:
     bool disabled;
     uint32 voteId;
+    uint32 index;
     WString expire;
     WString voteName;
+    WString url;
+    WString imgUrl;
+    WString altText;
 };
 
 /********************************************//**
@@ -101,9 +82,12 @@ public:
 private:
     /// panel session informations
     SessionInfo * session;
-
+    /// info if page should be created
+    bool needCreation;
     /// label with vote informations
-    WText * voteInfo;
+    WText * votePageInfo;
+    /// Table with votes
+    Wt::WTable * votes;
 
     void CreateVotePage();
     void UpdateVotePage();
@@ -112,8 +96,8 @@ private:
 
     void Vote(const uint32& id);
 
-    /// stores vote state and vote 'slot' informations
-    std::map<uint32, VoteSlotItem> voteMap;
+    /// stores vote informations
+    std::vector<VoteInfo> votesInfo;
 };
 
 #endif //VOTE_H_INCLUDED

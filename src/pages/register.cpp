@@ -28,8 +28,11 @@
  ***********************************************/
 
 #include "register.h"
-#include "../database.h"
+
 #include <Wt/WRegExpValidator>
+#include <Wt/WCheckBox>
+
+#include "../database.h"
 
 RegisterPage::RegisterPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)

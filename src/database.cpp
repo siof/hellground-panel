@@ -263,7 +263,7 @@ unsigned int Database::GetErrNo()
 
 void Database::Clear()
 {
-    for (std::list<DatabaseRow*>::iterator itr = rows.begin(); itr != rows.end(); ++itr)
+    for (std::vector<DatabaseRow*>::iterator itr = rows.begin(); itr != rows.end(); ++itr)
         delete *itr;
 
     rows.clear();
@@ -280,10 +280,7 @@ DatabaseRow * Database::GetRow(uint32 index)
     if (index >= rows.size())
         return NULL;
 
-    std::list<DatabaseRow*>::iterator itr = rows.begin();
-    advance(itr, index);
-
-    return *itr;
+    return rows[index];
 }
 
 DatabaseRow * Database::GetRow()
@@ -294,7 +291,7 @@ DatabaseRow * Database::GetRow()
     return rows.front();
 }
 
-std::list<DatabaseRow*> Database::GetRows()
+std::vector<DatabaseRow*> Database::GetRows()
 {
     return rows;
 }

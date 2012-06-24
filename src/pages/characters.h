@@ -38,9 +38,8 @@
 
 #include "../defines.h"
 
-#include <Wt/WTabWidget>
-#include <Wt/WTable>
-#include <Wt/WComboBox>
+class Wt::WTabWidget;
+class Wt::WComboBox;
 
 /********************************************//**
  * \brief Slots for Basic Character Informations

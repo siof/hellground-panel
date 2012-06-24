@@ -28,9 +28,11 @@
  ***********************************************/
 
 #include "passRecovery.h"
-#include "../database.h"
+
 #include <Wt/WRegExpValidator>
 #include <boost/algorithm/string.hpp>
+
+#include "../database.h"
 
 PassRecoveryPage::PassRecoveryPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)

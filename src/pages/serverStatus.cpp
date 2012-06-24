@@ -28,9 +28,13 @@
  ***********************************************/
 
 #include "serverStatus.h"
-#include <curl/curl.h>
+
 #include <iostream>
 #include <sstream>
+
+#include <Wt/WTimer>
+#include <Wt/WTable>
+#include <curl/curl.h>
 
 /********************************************//**
  * \brief Creates new ServerStatusPage object.

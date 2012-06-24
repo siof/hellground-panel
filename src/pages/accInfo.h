@@ -37,8 +37,7 @@
 
 #include "../defines.h"
 
-#include <Wt/WTabWidget>
-#include <Wt/WTable>
+class Wt::WTabWidget;
 
 /********************************************//**
  * \brief Slots for Basic Account Informations

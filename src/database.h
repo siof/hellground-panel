@@ -85,7 +85,7 @@ public:
     int GetRowsCount() { return rows.size(); }  // return rows count
     DatabaseRow * GetRow(uint32 index);         // returns row from given index
     DatabaseRow * GetRow();                     // returns first row
-    std::list<DatabaseRow*> GetRows();          // returns all rows
+    std::vector<DatabaseRow*> GetRows();        // returns all rows
     std::string GetQuery() { return actualQuery; }
 
     void SetLogging(bool enabled) { loggingEnabled = enabled; }
@@ -93,7 +93,7 @@ public:
 private:
     MYSQL * connection;             // mysql connection
     std::string actualQuery;        // actual query
-    std::list<DatabaseRow*> rows;   // query result
+    std::vector<DatabaseRow*> rows; // query result
 
     bool loggingEnabled;            // queries should be logged ?
 };

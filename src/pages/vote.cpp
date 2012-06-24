@@ -45,7 +45,7 @@ VotePage::VotePage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
 {
     setContentAlignment(AlignCenter);
-    CreateVotePage();
+    needCreation = true;
 }
 
 VotePage::~VotePage()
@@ -68,6 +68,8 @@ void VotePage::refresh()
     // only logged in players can visit this page so there is no need to create/update it in other cases
     if (session->accLvl <= LVL_NOT_LOGGED)
         ClearPage();
+    else if (needCreation)
+        CreateVotePage();
 
     WContainerWidget::refresh();
 }
@@ -84,18 +86,29 @@ void VotePage::CreateVotePage()
 {
     console(DEBUG_CODE, "void VotePage::CreateVotePage()\n");
 
-    voteInfo = new WText("");
+    needCreation = false;
+
+    votePageInfo = new WText("");
 
     addWidget(new WText(tr(TXT_INFO_SUPPORT_VOTE)));
     addWidget(new WBreak());
     addWidget(new WBreak());
-    addWidget(voteInfo);
+    addWidget(votePageInfo);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
+    votes = new Wt::WTable();
+    votes->setHeaderCount(1);
+
+    votes->elementAt(0, 0)->addWidget(new WText(""));
+    votes->elementAt(0, 1)->addWidget(new WText(tr(TXT_GEN_NAME)));
+    votes->elementAt(0, 2)->addWidget(new WText(tr(TXT_GEN_STATE)));
+
+    addWidget(votes);
+
     if (!wApp->environment().javaScript() || !wApp->environment().ajax())
     {
-        voteInfo->setText(tr(TXT_ERROR_NEED_JAVA_SCRIPT));
+        votePageInfo->setText(tr(TXT_ERROR_NEED_JAVA_SCRIPT));
         return;
     }
 
@@ -103,7 +116,7 @@ void VotePage::CreateVotePage()
 
     if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        voteInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        votePageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -111,120 +124,91 @@ void VotePage::CreateVotePage()
     db.ExecutePQuery("DELETE FROM AccVote WHERE reset_date < NOW()", session->accid);
     db.ExecutePQuery("DELETE FROM IPVote WHERE reset_date < NOW()", session->sessionIp.toUTF8().c_str());
 
-    db.SetPQuery("SELECT vote_id, reset_date FROM AccVote WHERE account_id = '%u'", session->accid);
-
-    switch (db.ExecuteQuery())
-    {
-        case DB_RESULT_ERROR:
-            voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
-            break;
-        case DB_RESULT_EMPTY:
-        default:
-        {
-            std::list<DatabaseRow*> rows = db.GetRows();
-            DatabaseRow * tmpRow;
-            uint32 voteId;
-            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
-            {
-                tmpRow = *itr;
-                voteId = tmpRow->fields[0].GetUInt32();
-                voteMap[voteId].SetExpire(tmpRow->fields[1].GetWString());
-                voteMap[voteId].SetDisabled(true);
-                voteMap[voteId].SetVoteId(voteId);
-            }
-
-            break;
-        }
-    }
-
-    db.SetPQuery("SELECT vote_id, reset_date FROM IPVote WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
-
-    switch (db.ExecuteQuery())
-    {
-        case DB_RESULT_ERROR:
-            voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
-            break;
-        case DB_RESULT_EMPTY:
-        default:
-        {
-            std::list<DatabaseRow*> rows = db.GetRows();
-            DatabaseRow * tmpRow;
-            uint32 voteId;
-
-            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
-            {
-                tmpRow = *itr;
-                voteId = tmpRow->fields[0].GetUInt32();
-                if (!voteMap[voteId].IsDisabled())
-                {
-                    voteMap[voteId].SetExpire(tmpRow->fields[1].GetWString());
-                    voteMap[voteId].SetDisabled(true);
-                }
-
-                voteMap[voteId].SetVoteId(voteId);
-            }
-
-            break;
-        }
-    }
-
+    // load vote lists
     switch (db.ExecuteQuery("SELECT id, url, img_url, alt_text, name FROM Vote"))
     {
         case DB_RESULT_ERROR:
-            voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
         case DB_RESULT_EMPTY:
         default:
         {
-            std::list<DatabaseRow*> rows = db.GetRows();
+            std::vector<DatabaseRow*> rows = db.GetRows();
             DatabaseRow * tmpRow;
-            WAnchor * tmpWidget;
-            uint32 voteId;
 
-            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
             {
                 tmpRow = *itr;
 
-                voteId = tmpRow->fields[0].GetUInt32();
+                VoteInfo tmpInfo;
+                tmpInfo.voteId = tmpRow->fields[0].GetUInt32();
+                tmpInfo.url = tmpRow->fields[1].GetWString();
+                tmpInfo.imgUrl = tmpRow->fields[2].GetString();
+                tmpInfo.altText = tmpRow->fields[3].GetWString();
+                tmpInfo.voteName = tmpRow->fields[4].GetWString();
 
-                tmpWidget = new WAnchor(WLink(tmpRow->fields[1].GetString()));
-                tmpWidget->setImage(new WImage(WLink(tmpRow->fields[2].GetString()), tmpRow->fields[3].GetWString()));
-                tmpWidget->setTarget(TargetNewWindow);
-                tmpWidget->setDisabled(voteMap[voteId].IsDisabled());
-
-                BindVote(tmpWidget->clicked(), voteId);
-
-                voteMap[voteId].SetName(tmpRow->fields[4].GetWString());
-                WString tmpStr;
-
-                if (voteMap[voteId].IsDisabled())
-                    tmpStr = tr(TXT_SUPPORT_VOTE_NEXT).arg(tmpRow->fields[4].GetWString()).arg(voteMap[voteId].GetExpire());
-                else
-                    tmpStr = tmpRow->fields[4].GetWString();
-
-                voteMap[voteId].SetAll(new WText(tmpStr), tmpWidget, 2);
+                votesInfo.push_back(tmpInfo);
             }
 
             break;
         }
     }
 
-    WText * tmpText;
-    WWidget * tmpWidget;
-    int breakes;
+    // load cooldowns
+    db.SetPQuery("SELECT vote_id, reset_date FROM AccVote WHERE account_id = '%u' "
+                "UNION "
+                "SELECT vote_id, reset_date FROM IPVote WHERE ip = '%s'", session->accid, session->sessionIp.toUTF8().c_str());
 
-    for (std::map<uint32, VoteSlotItem>::iterator itr = voteMap.begin(); itr != voteMap.end(); ++itr)
+    switch (db.ExecuteQuery())
     {
-        tmpText = itr->second.GetLabel();
-        tmpWidget = itr->second.GetWidget();
-        breakes = itr->second.GetBreakCount();
+        case DB_RESULT_ERROR:
+            votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            break;
+        case DB_RESULT_EMPTY:
+        default:
+        {
+            std::vector<DatabaseRow*> rows = db.GetRows();
+            DatabaseRow * tmpRow;
+            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+            {
+                tmpRow = *itr;
 
-        addWidget(tmpText);
-        addWidget(new WBreak());
-        addWidget(tmpWidget);
+                for (std::vector<VoteInfo>::iterator vItr = votesInfo.begin(); vItr != votesInfo.end(); ++vItr)
+                {
+                    if ((*vItr).voteId == tmpRow->fields[0].GetUInt32())
+                    {
+                        (*vItr).disabled = true;
 
-        for (int i = 0; i < breakes; ++i)
-            addWidget(new WBreak());
+                        if ((*vItr).expire.empty() || (*vItr).expire < tmpRow->fields[1].GetWString())
+                            (*vItr).expire = tmpRow->fields[1].GetWString();
+
+                        break;
+                    }
+                }
+            }
+
+            break;
+        }
+    }
+
+    int i = 1;
+    for (std::vector<VoteInfo>::iterator itr = votesInfo.begin(); itr != votesInfo.end(); ++itr, ++i)
+    {
+        Wt::WAnchor * tmpAnch = new WAnchor(WLink((*itr).url.toUTF8()));
+        tmpAnch->setImage(new WImage(WLink((*itr).imgUrl.toUTF8()), (*itr).altText));
+        tmpAnch->setTarget(TargetNewWindow);
+        tmpAnch->setDisabled((*itr).disabled);
+
+        BindVote(tmpAnch->clicked(), (*itr).voteId);
+
+        votes->elementAt(i, 0)->addWidget(tmpAnch);
+        votes->elementAt(i, 1)->addWidget(new WText((*itr).voteName));
+        if ((*itr).disabled)
+            votes->elementAt(i, 2)->addWidget(new WText(tr(TXT_SUPPORT_VOTE_NEXT).arg((*itr).expire)));
+        else
+            votes->elementAt(i, 2)->addWidget(new WText(tr(TXT_SUPPORT_VOTE_READY)));
+
+        (*itr).index = i;
     }
 }
 
@@ -235,7 +219,8 @@ void VotePage::CreateVotePage()
 void VotePage::ClearPage()
 {
     console(DEBUG_CODE, "void VotePage::ClearPage()\n");
-    voteMap.clear();
+    votesInfo.clear();
+    clear();
 }
 
 void VotePage::BindVote(EventSignal<WMouseEvent>& signal, const uint32& id)
@@ -251,56 +236,65 @@ void VotePage::Vote(const uint32& id)
         WAnchor * tmpAnch = ((WAnchor*)WObject::sender());
         if (tmpAnch->isDisabled())
         {
-            voteInfo->setText(tr(TXT_ERROR_CANT_VOTE_TWICE));
+            votePageInfo->setText(tr(TXT_ERROR_CANT_VOTE_TWICE));
             return;
         }
 
         tmpAnch->setDisabled(true);
     }
 
-    if (voteMap[id].IsDisabled())
+    VoteInfo * currVote;
+
+    for (std::vector<VoteInfo>::iterator itr = votesInfo.begin(); itr != votesInfo.end(); ++itr)
     {
-        voteInfo->setText(tr(TXT_ERROR_CANT_VOTE_TWICE));
+        if ((*itr).voteId == id)
+        {
+            currVote = &(*itr);
+            break;
+        }
+    }
+
+    if (currVote->disabled)
+    {
+        votePageInfo->setText(tr(TXT_ERROR_CANT_VOTE_TWICE));
         return;
     }
 
-    voteMap[id].SetDisabled(true);
+    currVote->disabled = true;
 
     Database db;
 
     if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        voteInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        votePageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
     if (db.ExecutePQuery("SELECT NOW() + INTERVAL %u HOUR", VOTE_INTERVAL) > DB_RESULT_EMPTY)
-    {
-        voteMap[id].SetExpire(db.GetRow()->fields[0].GetWString());
-    }
+        currVote->expire = db.GetRow()->fields[0].GetWString();
     else
     {
-        voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
-    db.SetPQuery("INSERT INTO AccVote VALUES ('%u', '%u', '%s')", session->accid, id, voteMap[id].GetExpire().toUTF8().c_str());
+    db.SetPQuery("INSERT INTO AccVote VALUES ('%u', '%u', '%s')", session->accid, id, currVote->expire.toUTF8().c_str());
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
-        voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
-    db.SetPQuery("INSERT INTO IPVote VALUES ('%s', '%u', '%s')", session->sessionIp.toUTF8().c_str(), id, voteMap[id].GetExpire().toUTF8().c_str());
+    db.SetPQuery("INSERT INTO IPVote VALUES ('%s', '%u', '%s')", session->sessionIp.toUTF8().c_str(), id, currVote->expire.toUTF8().c_str());
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
-        voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        voteInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        votePageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -308,10 +302,11 @@ void VotePage::Vote(const uint32& id)
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         session->vote--;
-        voteInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
-    voteInfo->setText(tr(TXT_SUPPORT_VOTED));
-    voteMap[id].UpdateExpireLabel();
+    votePageInfo->setText(tr(TXT_SUPPORT_VOTED));
+
+    ((WText*)votes->elementAt(currVote->index, 2)->widget(0))->setText(tr(TXT_SUPPORT_VOTE_NEXT).arg(currVote->expire));
 }

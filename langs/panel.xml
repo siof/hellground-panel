@@ -583,6 +583,18 @@ Permanent
     <message id='general.timed'>
 Timed
     </message>
+    <message id='general.on'>
+on
+    </message>
+    <message id='general.off'>
+off
+    </message>
+    <message id='general.name'>
+Name
+    </message>
+    <message id='general.state'>
+State
+    </message>
 
     <message id='ip.current'>
 Current IP
@@ -657,10 +669,13 @@ Source code repository (also contains licence): <a href="https://bitbucket.org/s
 
     </message>
 
-    <message id='support.vote.next'>
-{1} | Next vote time: {2}
+    <message id='support.vote.ready'>
+You can vote on this toplist
     </message>
-    <message id='support.vote.cooldown'>
+    <message id='support.vote.next'>
+Next vote time: {1}
+    </message>
+    <message id='support.vote.success'>
 Vote successfull
     </message>
 
