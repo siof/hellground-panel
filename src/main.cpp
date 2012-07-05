@@ -69,9 +69,25 @@ WString GetLocale(int index)
     switch (index)
     {
         case 0:
-            return WString::fromUTF8("en");
+            return tr("locale.enus");
+        case 1:
+            return tr("locale.kokr");
+        case 2:
+            return tr("locale.frfr");
+        case 3:
+            return tr("locale.dede");
+        case 4:
+            return tr("locale.zhcn");
+        case 5:
+            return tr("locale.zhtw");
+        case 6:
+            return tr("locale.eses");
+        case 7:
+            return tr("locale.esmx");
+        case 8:
+            return tr("locale.ruru");
         default:
-            return WString::fromUTF8("unknown");
+            return tr("unknown");
     }
 }
 

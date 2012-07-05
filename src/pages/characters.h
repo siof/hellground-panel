@@ -43,8 +43,7 @@
 /********************************************//**
  * \brief Slots for Basic Character Informations
  *
- * Also determines order on page.
- *
+ * Must be same as order on page.
  ***********************************************/
 
 enum CharacterBasicInfoSlot
@@ -67,8 +66,7 @@ enum CharacterBasicInfoSlot
 /********************************************//**
  * \brief Slots for Character Quest Informations
  *
- * Also determines order in table.
- *
+ * Must be same as order on page.
  ***********************************************/
 
 enum CharacterQuestInfoSlot
@@ -83,8 +81,7 @@ enum CharacterQuestInfoSlot
 /********************************************//**
  * \brief Slots for Character Spells Informations
  *
- * Also determines order in table.
- *
+ * Must be same as order on page.
  ***********************************************/
 
 enum CharacterSpellInfoSlot
@@ -100,8 +97,7 @@ enum CharacterSpellInfoSlot
 /********************************************//**
  * \brief Slots for Character Inventory Informations
  *
- * Also determines order in table.
- *
+ * Must be same as order on page.
  ***********************************************/
 
 enum CharacterInventoryInfoSlot
@@ -116,8 +112,7 @@ enum CharacterInventoryInfoSlot
 /********************************************//**
  * \brief Slots for Character Friend Informations
  *
- * Also determines order in table.
- *
+ * Must be same as order on page.
  ***********************************************/
 
 enum CharacterFriendInfoSlot
