@@ -27,7 +27,6 @@
  *
  ***********************************************/
 
-
 #ifndef DEFINES_H_INCLUDED
 #define DEFINES_H_INCLUDED
 
@@ -41,8 +40,6 @@
 #endif
 
 #include <Wt/WString>
-
-using namespace Wt;
 
 typedef uint64_t    uint64;
 typedef uint32_t    uint32;
@@ -64,6 +61,8 @@ typedef int8_t      int8;
 #define OPENFILE    popen
 #define CLOSEFILE   pclose
 #endif
+
+using namespace Wt;
 
 /********************************************//**
  * \brief Contains numbers represents all supported languages.
@@ -97,29 +96,6 @@ enum AccountLevel
 };
 
 #define ACCOUNT_LEVEL_COUNT 6
-
-/********************************************//**
- * \brief Represents localized text loaded from DB
- *
- *
- * Contains single text with unique id for each supported language.
- *
- ***********************************************/
-
-struct LangText
-{
-    LangText() : textId(0) {}
-    LangText(uint32 id) : textId(id) {}
-    ~LangText() {}
-
-    WString& GetText(Lang lang)
-    {
-        return texts[lang];
-    }
-
-    uint32 textId;
-    WString texts[LANG_COUNT];
-};
 
 /********************************************//**
  * \brief Contains panel session informations.
@@ -625,9 +601,6 @@ extern WString GetQuestStatus(int index, bool rewarded);
 
 extern int irand(int min, int max);
 
-#define SERVER_DB_DATA  SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_PORT
-#define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
-
 /********************************************//**
  * \brief Debug flags for console debug.
  ***********************************************/
@@ -686,6 +659,16 @@ extern void console(DebugFlags flag, char const* text, ...);
 extern void Log(LogFlags flag, char const* text, ...);
 
 /********************************************//**
+ * \brief Resturns format string filled with data.
+ *
+ * \param format    string format to fill
+ * \return format string with filled with data
+ *
+ ***********************************************/
+
+extern std::string GetFormattedString(const char * format, ...);
+
+/********************************************//**
  * \brief Represents simple character location.
  ***********************************************/
 
@@ -717,16 +700,6 @@ enum DBResult
     DB_RESULT_ERROR     = -1,   /**< Informs that there was an error while executing query */
     DB_RESULT_EMPTY     = 0     /**< Informs that DB returned empty result */
 };
-
-/********************************************//**
- * \brief Resturns format string filled with data.
- *
- * \param format    string format to fill
- * \return format string with filled with data
- *
- ***********************************************/
-
-extern std::string GetFormattedString(const char * format, ...);
 
 /********************************************//**
  * \brief Enum for races.
@@ -844,19 +817,24 @@ enum RealmInformations
     REALM_INFO_NAME         = 0,    /**< Realm name */
     REALM_INFO_STATUS_URL   = 1,    /**< Link to file with realm status */
     REALM_INFO_ADDITIONAL   = 2,    /**< Additional informations about realm */
-    REALM_INFO_ID           = 3     /**< Realm id from Realms database */
+    REALM_INFO_ID           = 3     /**< Realm id from Accounts database */
 };
+
+#define SERVER_DB_DATA  SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_PORT
+#define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
+
+#define tr(a) Wt::WString::tr(a)
 
 // enums/defines from core:
 
 enum TimeConstants
 {
     MINUTE = 60,
-    HOUR   = MINUTE*60,
-    DAY    = HOUR*24,
-    WEEK   = DAY*7,
-    MONTH  = DAY*30,
-    YEAR   = MONTH*12,
+    HOUR   = MINUTE * 60,
+    DAY    = HOUR * 24,
+    WEEK   = DAY * 7,
+    MONTH  = DAY * 30,
+    YEAR   = MONTH * 12,
     IN_MILISECONDS = 1000
 };
 
@@ -867,12 +845,13 @@ enum SocialFlag
     SOCIAL_FLAG_MUTED       = 0x04                          // guessed
 };
 
-#define BRONZE  1
-#define SILVER  100
-#define GOLD    10000
+enum MoneyConstants
+{
+    BRONZE  = 1,
+    SILVER  = BRONZE * 100,
+    GOLD    = SILVER * 100
+};
 
 #define QUEST_TYPE_DAILY    87
-
-#define tr(a) Wt::WString::tr(a)
 
 #endif // DEFINES_H_INCLUDED

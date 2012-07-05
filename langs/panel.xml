@@ -789,4 +789,32 @@ DB Error: Database query error
     <message id='realm.informations.hellground'>
 <a href="http://en.hellground.pl/how-to-play" target="_blank"><font color="#ffdf81">How to play - info</font></a>
     </message>
+
+    <message id='locale.enus'>
+enUS
+    </message>
+    <message id='locale.kokr'>
+koKR
+    </message>
+    <message id='locale.frfr'>
+frFR
+    </message>
+    <message id='locale.dede'>
+deDE
+    </message>
+    <message id='locale.zhcn'>
+zhCN
+    </message>
+    <message id='locale.zhtw'>
+zhTW
+    </message>
+    <message id='locale.eses'>
+esES
+    </message>
+    <message id='locale.esmx'>
+esMX
+    </message>
+    <message id='locale.ruru'>
+ruRU
+    </message>
 </messages>
