@@ -183,6 +183,10 @@ public:
     ~CharacterInfoPage();
 
     void refresh();
+
+    static std::map<uint32, SpellInfo> spells;
+    static bool spellsLoaded;
+
 private:
     /// panel session informations
     SessionInfo * session;
@@ -230,6 +234,8 @@ private:
     void RebuildCharList();
 
     void RestoreCharacter();
+
+    void LoadSpells();
 };
 
 #endif // CHARACTERS_H_INCLUDED
