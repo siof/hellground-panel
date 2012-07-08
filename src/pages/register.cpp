@@ -92,6 +92,7 @@ void RegisterPage::CreateRegisterPage()
     addWidget(new WBreak());
 
     txtLogin = new WLineEdit();
+    txtLogin->setEmptyText(tr(TXT_ACC_LOGIN));
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
     validator->setMandatory(true);
     txtLogin->setValidator(validator);
@@ -101,6 +102,7 @@ void RegisterPage::CreateRegisterPage()
     addWidget(new WBreak());
 
     txtEmail = new WLineEdit();
+    txtEmail->setEmptyText(tr(TXT_ACC_MAIL));
     validator = new WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
     validator->setMandatory(true);
     txtEmail->setValidator(validator);
@@ -109,13 +111,7 @@ void RegisterPage::CreateRegisterPage()
     addWidget(txtEmail);
     addWidget(new WBreak());
 
-//    textSlots[REG_TEXT_RULES].SetLabel(session, TXT_LBL_REG_RULES);
-//    addWidget(textSlots[REG_TEXT_RULES].GetLabel());
-//    addWidget(new WBreak());
-
-//    textSlots[REG_TEXT_RULES_ACCEPT].SetLabel(session, TXT_LBL_REGISTER_RULES_ACCEPT);
     chRules = new WCheckBox(tr(TXT_REG_RULES));
-//    addWidget(textSlots[REG_TEXT_RULES_ACCEPT].GetLabel());
     addWidget(chRules);
     addWidget(new WBreak());
     addWidget(new WBreak());
@@ -127,8 +123,6 @@ void RegisterPage::CreateRegisterPage()
 
     addWidget(btnRegister);
 
-    txtLogin->focussed().connect(this, &RegisterPage::ClearWLineEdit);
-    txtEmail->focussed().connect(this, &RegisterPage::ClearWLineEdit);
     chRules->changed().connect(this, &RegisterPage::CheckChange);
     btnRegister->clicked().connect(this, &RegisterPage::Register);
 }
@@ -253,12 +247,6 @@ void RegisterPage::Register()
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
         db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", accId, session->sessionIp.toUTF8().c_str(), TXT_ACT_REGISTRATION_COMPLETE);
-}
-
-void RegisterPage::ClearWLineEdit()
-{
-    if (WObject::sender())
-        ((WLineEdit*)WObject::sender())->setText("");
 }
 
 /********************************************//**

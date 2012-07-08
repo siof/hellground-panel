@@ -366,17 +366,15 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidg
     loginContainer = new WContainerWidget(this);
 
     login = new WLineEdit();
-    login->setText(tr(TXT_ACC_LOGIN));
     login->setEchoMode(WLineEdit::Normal);
-    login->focussed().connect(this, &HGMenu::ClearWLineEdit);
+    login->setEmptyText(tr(TXT_ACC_LOGIN));
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
     validator->setMandatory(true);
     login->setValidator(validator);
 
     pass = new WLineEdit();
-    pass->setText(WString("pass"));
     pass->setEchoMode(WLineEdit::Password);
-    pass->focussed().connect(this, &HGMenu::ClearWLineEdit);
+    pass->setEmptyText(WString("pass"));
     WLengthValidator * lenValidator = new WLengthValidator(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
     lenValidator->setMandatory(true);
     pass->setValidator(lenValidator);
@@ -673,15 +671,6 @@ void HGMenu::ShowMenuOptions(bool addLogin)
     // if player isn't logged
     if (session->accid == 0)
     {
-        if (login)
-            login->setText(tr(TXT_ACC_LOGIN));
-
-        if (pass)
-            pass->setText(WString("pass"));
-
-        if (btnLog)
-            btnLog->setText(tr(TXT_BTN_LOGIN));
-
         if (addLogin)
         {
             loginContainer->setHidden(false);
@@ -704,15 +693,6 @@ void HGMenu::UpdateMenuOptions()
             tmpOption->UpdateTexts();
 
     tmpOption = NULL;
-
-    if (login)
-        login->setText(tr(TXT_ACC_LOGIN));
-
-    if (pass)
-        pass->setText(WString("pass"));
-
-    if (btnLog)
-        btnLog->setText(tr(TXT_BTN_LOGIN));
 }
 
 void HGMenu::refresh()

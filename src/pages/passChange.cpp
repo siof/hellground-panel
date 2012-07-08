@@ -86,18 +86,21 @@ void PassChangePage::CreatePassChangePage()
     addWidget(new WBreak());
 
     txtPassOld = new WLineEdit();
+    txtPassOld->setEmptyText(tr(TXT_PASS_OLD));
     txtPassOld->setEchoMode(WLineEdit::Password);
     addWidget(new WText(tr(TXT_PASS_OLD)));
     addWidget(txtPassOld);
     addWidget(new WBreak());
 
     txtPass = new WLineEdit();
+    txtPass->setEmptyText(tr(TXT_PASS_NEW));
     txtPass->setEchoMode(WLineEdit::Password);
     addWidget(new WText(tr(TXT_PASS_NEW)));
     addWidget(txtPass);
     addWidget(new WBreak());
 
     txtPass2 = new WLineEdit();
+    txtPass2->setEmptyText(tr(TXT_PASS_REPEAT));
     txtPass2->setEchoMode(WLineEdit::Password);
     addWidget(new WText(tr(TXT_PASS_REPEAT)));
     addWidget(txtPass2);
@@ -107,9 +110,6 @@ void PassChangePage::CreatePassChangePage()
     btnChange = new WPushButton(tr(TXT_BTN_PASS_CHANGE));
     addWidget(btnChange);
 
-    txtPass->focussed().connect(this, &PassChangePage::ClearWLineEdit);
-    txtPass2->focussed().connect(this, &PassChangePage::ClearWLineEdit);
-    txtPassOld->focussed().connect(this, &PassChangePage::ClearWLineEdit);
     btnChange->clicked().connect(this, &PassChangePage::Change);
 }
 
@@ -221,12 +221,6 @@ void PassChangePage::Change()
     }
 
     ClearPass();
-}
-
-void PassChangePage::ClearWLineEdit()
-{
-    if (WObject::sender())
-        ((WLineEdit*)WObject::sender())->setText("");
 }
 
 /********************************************//**

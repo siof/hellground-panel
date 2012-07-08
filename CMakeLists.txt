@@ -47,13 +47,8 @@ find_package(Boost 1.34.0 COMPONENTS regex REQUIRED)
 add_subdirectory(src)
 
 install(DIRECTORY css img langs DESTINATION ${INSTALL_DIR}
-    PATTERN "*.xml"
-    PATTERN "*.jpg"
-    PATTERN "*.png"
-    PATTERN "*.css"
-    PERMISSIONS OWNER_WRITE OWNER_READ
-                GROUP_READ
-                WORLD_READ
+    FILE_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
+    DIRECTORY_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
 )
 
 message("\nInstall directory: ${INSTALL_DIR}\n\n")
