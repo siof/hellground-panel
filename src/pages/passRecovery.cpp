@@ -99,12 +99,14 @@ void PassRecoveryPage::CreateRecoveryPage()
 
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
     txtLogin->setValidator(validator);
+    txtLogin->setEmptyText(tr(TXT_ACC_LOGIN));
 
     addWidget(new WText(tr(TXT_ACC_LOGIN)));
     addWidget(txtLogin);
     addWidget(new WBreak());
 
     txtEmail = new WLineEdit();
+    txtEmail->setEmptyText(tr(TXT_PASS_MAIL));
     validator = new WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
     txtEmail->setValidator(validator);
 
@@ -116,8 +118,6 @@ void PassRecoveryPage::CreateRecoveryPage()
     btnRecover = new WPushButton(tr(TXT_BTN_PASS_SEND));
     addWidget(btnRecover);
 
-    txtLogin->focussed().connect(this, &PassRecoveryPage::ClearWLineEdit);
-    txtEmail->focussed().connect(this, &PassRecoveryPage::ClearWLineEdit);
     btnRecover->clicked().connect(this, &PassRecoveryPage::Recover);
 }
 
@@ -265,12 +265,6 @@ void PassRecoveryPage::AddActivityPassRecovery(uint32 id, bool success)
 
     db.Connect(PANEL_DB_DATA, SQL_PANELDB);
     db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_RECOVERY_SUCCESS : TXT_ACT_RECOVERY_FAIL);
-}
-
-void PassRecoveryPage::ClearWLineEdit()
-{
-    if (WObject::sender())
-        ((WLineEdit*)WObject::sender())->setText("");
 }
 
 /********************************************//**

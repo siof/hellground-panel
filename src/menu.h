@@ -116,12 +116,6 @@ private:
 
     void AddActivityLogIn(bool success, const char * login = NULL);
     void AddActivityLogIn(uint32 id, bool success);
-
-    void ClearWLineEdit()
-    {
-        if (WObject::sender())
-            ((WLineEdit*)WObject::sender())->setText("");
-    }
 };
 
 #endif // MENU_H_INCLUDED

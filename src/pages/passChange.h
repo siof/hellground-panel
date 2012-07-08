@@ -76,8 +76,6 @@ private:
 
     void ClearPass();
     void Change();
-
-    void ClearWLineEdit();
 };
 
 #endif // PASSCHANGE_H_INCLUDED

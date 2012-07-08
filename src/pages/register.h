@@ -78,8 +78,6 @@ private:
     void ClearRegisterData();
     void CheckChange();
     void Register();
-
-    void ClearWLineEdit();
 };
 
 
