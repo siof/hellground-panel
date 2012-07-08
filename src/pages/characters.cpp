@@ -39,6 +39,9 @@
 
 #include "../database.h"
 
+bool CharacterInfoPage::spellsLoaded = false;
+std::map<uint32, SpellInfo> CharacterInfoPage::spells;
+
 /********************************************//**
  * \brief Creates new CharacterInfoPage object.
  *
@@ -289,6 +292,8 @@ WTable * CharacterInfoPage::CreateCharacterQuestInfo()
 
 WTable * CharacterInfoPage::CreateCharacterSpellInfo()
 {
+    LoadSpells();
+
     WTable * tmpSpell = new WTable();
 
     tmpSpell->setHeaderCount(1);
@@ -837,6 +842,30 @@ void CharacterInfoPage::RebuildCharList()
 
     if (currIndex >= 0 && currIndex < charList->count())
         charList->setCurrentIndex(currIndex);
+}
+
+void CharacterInfoPage::LoadSpells()
+{
+    if (spellsLoaded)
+        return;
+
+    Database db;
+    if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+        return;
+
+    db.ExecuteQuery("SELECT entry, name FROM spells");
+
+    std::vector<DatabaseRow*> rows = db.GetRows();
+
+    uint32 tmpEntry;
+    for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+    {
+        tmpEntry = (*itr)->fields[0].GetUInt32();
+        spells[tmpEntry].entry = tmpEntry;
+        spells[tmpEntry].name = (*itr)->fields[1].GetWString();
+    }
+
+    spellsLoaded = true;
 }
 
 /********************************************//**

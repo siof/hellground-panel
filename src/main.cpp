@@ -24,6 +24,7 @@
 #include <Wt/WImage>
 #include <Wt/WMenu>
 #include <Wt/WMenuItem>
+#include <Wt/WOverlayLoadingIndicator>
 #include <Wt/WStackedWidget>
 #include <Wt/WTable>
 
@@ -434,29 +435,8 @@ WApplication *createApplication(const WEnvironment& env)
     return tmpPanel;
 }
 
-std::map<uint32, SpellInfo> spells;
-
 int main(int argc, char **argv)
 {
     srand(time(NULL));
-
-    Database * db = new Database();
-    db->SetLogging(false);
-    db->Connect(PANEL_DB_DATA, SQL_PANELDB);
-    db->ExecuteQuery("SELECT entry, name FROM spells");
-
-    std::vector<DatabaseRow*> rows = db->GetRows();
-
-    uint32 tmpEntry;
-    for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
-    {
-        tmpEntry = (*itr)->fields[0].GetUInt32();
-        spells[tmpEntry].entry = tmpEntry;
-        spells[tmpEntry].name = (*itr)->fields[1].GetWString();
-    }
-
-    delete db;
-    db = NULL;
-
     return WRun(argc, argv, &createApplication);
 }

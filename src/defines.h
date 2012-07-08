@@ -806,8 +806,6 @@ struct SpellInfo
     WString name;
 };
 
-extern std::map<uint32, SpellInfo> spells;
-
 /********************************************//**
  * \brief Enum for realm informations
  ***********************************************/
