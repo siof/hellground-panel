@@ -2,25 +2,26 @@ file(GLOB_RECURSE PANEL_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp *.h)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
-    /usr/include
-    /usr/include/Wt
-    /usr/local/Wt/include
-    /usr/local/wt/include
-    /usr/local/Wt
-    /usr/local/wt
-    /usr/local/include/jwsmtp
-    /usr/local/include/jwsmtp-1.32
-    /usr/local/include
-    /usr/local/include/wt
-    /usr/local/include/Wt
+    ${Wt_INCLUDE_DIR}
+    ${MYSQL_INCLUDE_DIR}
+    ${CURL_INCLUDE_DIR}
+    ${JWSMTP_INCLUDE_DIR}
 )
 
 add_executable(panel.wt ${PANEL_SRCS})
 
 target_link_libraries(panel.wt
-    wt
-    wtfcgi
-    mysqlclient
-    jwsmtp
-    curl
+    ${Wt_LIBRARY}
+    ${Wt_FCGI_LIBRARY}
+    ${Boost_REGEX_LIBRARY}
+    ${MYSQL_LIBRARY}
+    ${CURL_LIBRARY}
+    ${JWSMTP_LIBRARY}
+)
+
+install(TARGETS panel.wt
+    RUNTIME DESTINATION ${INSTALL_DIR}
+    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+                GROUP_EXECUTE GROUP_READ
+                WORLD_EXECUTE WORLD_READ
 )
