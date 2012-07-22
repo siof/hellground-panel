@@ -185,8 +185,14 @@ void ServerStatusPage::UpdateStatus()
             iss >> rev;
             iss >> diff;
             iss >> avgDiff;
-//            iss >> horde; // core support needed
-//            iss >> ally;  // core support needed
+            iss >> ally;
+            iss >> horde;
+
+            if (ally || horde)
+            {
+                horde = horde/float(ally+horde) * 100;
+                ally = 100 - horde;
+            }
 
             int d, h, m, s;
             d = tmpUp/DAY;
