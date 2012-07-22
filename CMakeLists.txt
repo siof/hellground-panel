@@ -22,18 +22,18 @@ project("HellGround Panel")
 message(
 "\nThis scripts builds HellGround Panel
 You can use following options for customization:
-    INSTALL_DIR: Path where the server should be installed to (default - current dir)
+    CMAKE_INSTALL_PREFIX: Path where the server should be installed to (default - ${CMAKE_INSTALL_PREFIX})
+    USE_HTTP: Uses wthttp to linking instead of wtfcgi (default - OFF)
 
-For example: cmake -DINSTALL_DIR=/var/www ..\n\n"
+For example: cmake -DCMAKE_INSTALL_PREFIX=\"${CMAKE_INSTALL_PREFIX}\"
+             cmake -DUSE_HTTP=ON\n"
 )
 
-if (NOT INSTALL_DIR)
-    set(INSTALL_DIR ${CMAKE_BINARY_DIR})
-endif (NOT INSTALL_DIR)
+option(USE_HTTP "Uses wthttp to linking instead of wtfcgi" OFF)
 
 set(CMAKE_MODULE_PATH
-  ${CMAKE_MODULE_PATH}
-  ${CMAKE_SOURCE_DIR}/cmake
+    ${CMAKE_MODULE_PATH}
+    ${CMAKE_SOURCE_DIR}/cmake
 )
 
 find_package(Wt REQUIRED)
@@ -46,9 +46,16 @@ find_package(Boost 1.34.0 COMPONENTS regex REQUIRED)
 
 add_subdirectory(src)
 
-install(DIRECTORY css img langs DESTINATION ${INSTALL_DIR}
+message("")
+
+if (USE_HTTP)
+    message("*** Using Wthttp server\n")
+else (USE_HTTP)
+    message("*** Using Wtfcgi server\n")
+endif (USE_HTTP)
+
+message("Install directory: ${CMAKE_INSTALL_PREFIX}\n\n")
+install(DIRECTORY res langs DESTINATION .
     FILE_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
     DIRECTORY_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
 )
-
-message("\nInstall directory: ${INSTALL_DIR}\n\n")

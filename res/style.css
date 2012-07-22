@@ -1,0 +1,190 @@
+body
+{
+    background-color: #000;
+    color: #FFF;
+    font-size: 14px;
+}     
+
+a 
+{
+    cursor: pointer; cursor: hand;
+    color: white;
+    text-decoration: underline;
+}
+
+a:hover
+{
+    cursor: pointer; cursor: hand;
+    color: red;
+    text-decoration: underline;
+}
+
+button
+{
+    border: 2px solid gray;
+    border-radius: 10px;
+}
+
+div.main
+{
+    width: 1000px;
+    margin: 10px auto;
+    border: 1px;
+    overflow: hidden;
+}
+
+div.head
+{
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    float: left;
+    background-image: url(img/header.png);
+    background-repeat: no-repeat;
+}
+
+div.sidebar
+{
+    float: left;
+    width: 250px;
+    margin: 5px 5px;
+    overflow: hidden;
+}
+
+div.menu-top 
+{
+    float: left;
+    width: 100%;
+    height: 30px;
+    background-image: url(img/menutop.png);
+}
+
+div.menu
+{
+    float: left;
+    width: 100%;
+    background-image: url(img/menucont.png);
+    background-repeat: repeat-y;
+    overflow: hidden;
+}
+
+div.menu-bottom 
+{
+    float: left;
+    width: 100%;
+    height: 30px;
+    background-image: url(img/menubottom.png);
+}
+
+div.langs-top 
+{
+    float: left;
+    width: 100%;
+    height: 30px;
+    background-image: url(img/menutop.png);
+}
+
+div.langs
+{
+    margin: auto 0px;
+    float: left;
+    width: 100%;
+    min-height: 20px;   
+    padding-left: 30px;
+    padding-right: 30px;
+    background-image: url(img/menucont.png);
+    background-repeat: repeat-y;
+    overflow: hidden; 
+}
+
+div.langs-bottom 
+{
+    float: left;
+    width: 100%;
+    height: 30px;
+    background-image: url(img/menubottom.png);
+}
+
+div.profile-top {}
+
+div.profile
+{
+    float: left;
+    width: 100%; 
+    overflow: hidden;  
+    padding: 5px 20px 5px 20px;  
+}
+
+div.profile-bottom {}
+
+div.content
+{
+    float: right;
+    padding: 20px 10px 10px 10px;
+    width: 720px;
+    overflow: hidden;    
+    min-height: 500px;
+}
+
+div.footer
+{
+    clear: both;  
+    min-height: 50px;  
+    text-align: center;
+}
+
+.menu ul
+{
+    list-style-type: none;
+    list-style-image: url(img/ul.png);
+}
+
+.menu * .item 
+{
+    cursor: pointer; cursor: hand;
+    color: white;
+    text-decoration: underline;
+}
+
+.menu * .item a 
+{
+    cursor: pointer; cursor: hand;
+    color: white;
+    text-decoration: underline;
+}
+
+.menu a:visited
+{
+    color: white;
+}
+
+.menu a:hover
+{
+    color: red;
+}
+
+.menu * .itemselected 
+{
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;  
+}
+
+.menu * .itemselected a 
+{
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;  
+}
+
+p
+{
+    text-align: justify;
+}
+
+table, th, td
+{
+    border: 2px solid gray;
+    padding: 2px 5px 2px 5px;
+    text-align: center;
+}

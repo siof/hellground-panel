@@ -75,6 +75,16 @@ enum Lang
 {
     LANG_PL = 0,    /**< Polish */
     LANG_EN,        /**< English */
+    LANG_JA,        /**< Japanese */
+    LANG_RU,        /**< Russian */
+    LANG_CZ,        /**< Czech */
+    LANG_IT,        /**< Italian */
+    LANG_DE,        /**< German */
+    LANG_FR,        /**< French */
+    LANG_ES,        /**<  */
+    LANG_CS,        /**<  */
+    LANG_PT,        /**<  */
+    LANG_ZH,        /**<  */
 
     LANG_COUNT
 };
@@ -92,10 +102,11 @@ enum AccountLevel
     LVL_GM_TRIAL    = 1,    /**< Game Master level 1 (Trial/Moderator) */
     LVL_GM_HELPER   = 2,    /**< Game Master level 2 (Game Master Helper) */
     LVL_GM_HEAD     = 3,    /**< Game Master level 3 (Head/Root Game Master) */
-    LVL_ADM         = 4     /**< Server Administrator */
-};
+    LVL_ADM         = 4,    /**< Server Administrator */
 
-#define ACCOUNT_LEVEL_COUNT 6
+
+    LVL_NONE        = 999,  /**< not existing level */
+};
 
 /********************************************//**
  * \brief Contains panel session informations.
@@ -820,8 +831,6 @@ enum RealmInformations
 
 #define SERVER_DB_DATA  SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_PORT
 #define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
-
-#define tr(a) Wt::WString::tr(a)
 
 // enums/defines from core:
 

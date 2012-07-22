@@ -88,7 +88,7 @@ WText * ErrorPageSlot::CreateText(SessionInfo * sess)
     if (textIdBased)
     {
         if (!textId.empty())
-            text = new WText(tr(textId));
+            text = new WText(Wt::WString::tr(textId));
     }
     else if (!str.empty())
         text = new WText(str);
@@ -117,7 +117,7 @@ void ErrorPageSlot::UpdateText(SessionInfo * sess)
         return;
 
     if (textIdBased && !textId.empty())
-        text->setText(tr(textId));
+        text->setText(Wt::WString::tr(textId));
     else
         text->setText(str);
 }

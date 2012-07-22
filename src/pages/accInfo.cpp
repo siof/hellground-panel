@@ -83,7 +83,7 @@ void AccountInfoPage::refresh()
         if (needCreation)
         {
             needCreation = false;
-            addWidget(new WText(tr(TXT_INFO_ACCOUNT)));
+            addWidget(new WText(Wt::WString::tr(TXT_INFO_ACCOUNT)));
             addWidget(new WBreak());
             addWidget(new WBreak());
 
@@ -93,13 +93,14 @@ void AccountInfoPage::refresh()
 
             tabs = new WTabWidget();
             tabs->contentsStack()->setTransitionAnimation(WAnimation(WAnimation::SlideInFromRight, WAnimation::EaseIn), true);
-            addWidget(tabs);
 
-            tabs->addTab(CreateAccountInfo(), tr(TXT_ACC_TAB_INFO), WTabWidget::PreLoading);
-            tabs->addTab(CreateBanInfo(), tr(TXT_ACC_TAB_BAN), WTabWidget::PreLoading);
-            tabs->addTab(CreateMuteInfo(), tr(TXT_ACC_TAB_MUTE), WTabWidget::PreLoading);
-            tabs->addTab(new WText("ticket test"), tr(TXT_ACC_TAB_TICKET), WTabWidget::PreLoading);
-            tabs->addTab(CreateActivityInfo(), tr(TXT_ACC_TAB_ACTIVITY), WTabWidget::PreLoading);
+            tabs->addTab(CreateAccountInfo(), Wt::WString::tr(TXT_ACC_TAB_INFO)/*, WTabWidget::PreLoading*/);
+            tabs->addTab(CreateBanInfo(), Wt::WString::tr(TXT_ACC_TAB_BAN)/*, WTabWidget::PreLoading*/);
+            tabs->addTab(CreateMuteInfo(), Wt::WString::tr(TXT_ACC_TAB_MUTE)/*, WTabWidget::PreLoading*/);
+            tabs->addTab(new WText("ticket test"), Wt::WString::tr(TXT_ACC_TAB_TICKET)/*, WTabWidget::PreLoading*/);
+            tabs->addTab(CreateActivityInfo(), Wt::WString::tr(TXT_ACC_TAB_ACTIVITY)/*, WTabWidget::PreLoading*/);
+
+            addWidget(tabs);
         }
 
         UpdateInformations();
@@ -161,7 +162,7 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
 
     if (!realmDb.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        accPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -184,10 +185,10 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
         ((WText*)tmpWidget)->setText(tmpRow->fields[1].GetWString());
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_IP_LOCK, 1)->widget(0);
-        ((WPushButton*)tmpWidget)->setText(tr(tmpRow->fields[6].GetBool() ? TXT_GEN_YES : TXT_GEN_NO));
+        ((WPushButton*)tmpWidget)->setText(Wt::WString::tr(tmpRow->fields[6].GetBool() ? TXT_GEN_YES : TXT_GEN_NO));
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_ONLINE, 1)->widget(0);
-        ((WText*)tmpWidget)->setText(tr(tmpRow->fields[3].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
+        ((WText*)tmpWidget)->setText(Wt::WString::tr(tmpRow->fields[3].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_CLIENT_VERSION, 1)->widget(0);
         ((WText*)tmpWidget)->setText(GetLocale(tmpRow->fields[5].GetInt()));
@@ -196,7 +197,7 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
         ((WText*)tmpWidget)->setText(GetFormattedString("%u", session->vote));
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_XP_RATE, 1)->widget(0);
-        ((WPushButton*)tmpWidget)->setText(tr(session->account_flags & 0x0008 ? TXT_XP_RATE_BLIZZLIKE : TXT_XP_RATE_SERVER));
+        ((WPushButton*)tmpWidget)->setText(Wt::WString::tr(session->account_flags & 0x0008 ? TXT_XP_RATE_BLIZZLIKE : TXT_XP_RATE_SERVER));
 
 /*
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_MULTIACC, 1)->widget(0);
@@ -206,26 +207,26 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_ACC_BAN, 1)->widget(0);
         realmDb.SetPQuery("SELECT banreason FROM account_banned WHERE active = 1 AND id = '%u'", session->accid);
         if (realmDb.ExecuteQuery() > DB_RESULT_EMPTY)
-            ((WText*)tmpWidget)->setText(tr(TXT_BAN_BANNED).arg(realmDb.GetRow()->fields[0].GetWString()));
+            ((WText*)tmpWidget)->setText(Wt::WString::tr(TXT_BAN_BANNED).arg(realmDb.GetRow()->fields[0].GetWString()));
         else
-            ((WText*)tmpWidget)->setText(tr(TXT_GEN_NO));
+            ((WText*)tmpWidget)->setText(Wt::WString::tr(TXT_GEN_NO));
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_LAST_IP_BAN, 1)->widget(0);
         realmDb.SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->lastIp.toUTF8().c_str());
         if (realmDb.ExecuteQuery() > DB_RESULT_EMPTY)
-            ((WText*)tmpWidget)->setText(tr(TXT_GEN_YES));
+            ((WText*)tmpWidget)->setText(Wt::WString::tr(TXT_GEN_YES));
         else
-            ((WText*)tmpWidget)->setText(tr(TXT_GEN_NO));
+            ((WText*)tmpWidget)->setText(Wt::WString::tr(TXT_GEN_NO));
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_CURR_IP_BAN, 1)->widget(0);
         realmDb.SetPQuery("SELECT banreason FROM ip_banned WHERE ip = '%s'", session->sessionIp.toUTF8().c_str());
         if (realmDb.ExecuteQuery() > DB_RESULT_EMPTY)
-            ((WText*)tmpWidget)->setText(tr(TXT_GEN_YES));
+            ((WText*)tmpWidget)->setText(Wt::WString::tr(TXT_GEN_YES));
         else
-            ((WText*)tmpWidget)->setText(tr(TXT_GEN_NO));
+            ((WText*)tmpWidget)->setText(Wt::WString::tr(TXT_GEN_NO));
     }
     else
-        accPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
 
     tmpRow = NULL;
 }
@@ -245,50 +246,50 @@ WContainerWidget * AccountInfoPage::CreateAccountInfo()
 
     accountInfo = new WTable(basicInfo);
 
-    accountInfo->elementAt(ACCINFO_SLOT_TYPE, 0)->addWidget(new WText(tr(TXT_ACC_EXPANSION)));
+    accountInfo->elementAt(ACCINFO_SLOT_TYPE, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_EXPANSION)));
     accountInfo->elementAt(ACCINFO_SLOT_TYPE, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_CURRENT_IP, 0)->addWidget(new WText(tr(TXT_CURRENT_IP)));
+    accountInfo->elementAt(ACCINFO_SLOT_CURRENT_IP, 0)->addWidget(new WText(Wt::WString::tr(TXT_CURRENT_IP)));
     accountInfo->elementAt(ACCINFO_SLOT_CURRENT_IP, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_CREATE_DATE, 0)->addWidget(new WText(tr(TXT_ACC_CREATE_DATE)));
+    accountInfo->elementAt(ACCINFO_SLOT_CREATE_DATE, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_CREATE_DATE)));
     accountInfo->elementAt(ACCINFO_SLOT_CREATE_DATE, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_LAST_LOGIN_DATE, 0)->addWidget(new WText(tr(TXT_ACC_LAST_LOGIN)));
+    accountInfo->elementAt(ACCINFO_SLOT_LAST_LOGIN_DATE, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_LAST_LOGIN)));
     accountInfo->elementAt(ACCINFO_SLOT_LAST_LOGIN_DATE, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_LAST_LOGGED_IP, 0)->addWidget(new WText(tr(TXT_ACC_LAST_IP)));
+    accountInfo->elementAt(ACCINFO_SLOT_LAST_LOGGED_IP, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_LAST_IP)));
     accountInfo->elementAt(ACCINFO_SLOT_LAST_LOGGED_IP, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_IP_LOCK, 0)->addWidget(new WText(tr(TXT_ACC_LOCK)));
+    accountInfo->elementAt(ACCINFO_SLOT_IP_LOCK, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_LOCK)));
     accountInfo->elementAt(ACCINFO_SLOT_IP_LOCK, 1)->addWidget(new WPushButton("IP lock"));
     ((WPushButton*)accountInfo->elementAt(ACCINFO_SLOT_IP_LOCK, 1)->widget(0))->clicked().connect(this, &AccountInfoPage::ChangeIPLock);
 
-    accountInfo->elementAt(ACCINFO_SLOT_ONLINE, 0)->addWidget(new WText(tr(TXT_ACC_ONLINE)));
+    accountInfo->elementAt(ACCINFO_SLOT_ONLINE, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_ONLINE)));
     accountInfo->elementAt(ACCINFO_SLOT_ONLINE, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_CLIENT_VERSION, 0)->addWidget(new WText(tr(TXT_ACC_CLIENT_VERSION)));
+    accountInfo->elementAt(ACCINFO_SLOT_CLIENT_VERSION, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_CLIENT_VERSION)));
     accountInfo->elementAt(ACCINFO_SLOT_CLIENT_VERSION, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_EMAIL, 0)->addWidget(new WText(tr(TXT_ACC_MAIL)));
+    accountInfo->elementAt(ACCINFO_SLOT_EMAIL, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_MAIL)));
     accountInfo->elementAt(ACCINFO_SLOT_EMAIL, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_VOTE_POINTS, 0)->addWidget(new WText(tr(TXT_ACC_SUPPORT_POINTS)));
+    accountInfo->elementAt(ACCINFO_SLOT_VOTE_POINTS, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_SUPPORT_POINTS)));
     accountInfo->elementAt(ACCINFO_SLOT_VOTE_POINTS, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_XP_RATE, 0)->addWidget(new WText(tr(TXT_ACC_XP_RATE)));
+    accountInfo->elementAt(ACCINFO_SLOT_XP_RATE, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_XP_RATE)));
     accountInfo->elementAt(ACCINFO_SLOT_XP_RATE, 1)->addWidget(new WPushButton("XP rates"));
     ((WPushButton*)accountInfo->elementAt(ACCINFO_SLOT_XP_RATE, 1)->widget(0))->clicked().connect(this, &AccountInfoPage::ChangeXPRates);
 
     //accMultiAcc;
 
-    accountInfo->elementAt(ACCINFO_SLOT_ACC_BAN, 0)->addWidget(new WText(tr(TXT_ACC_BAN)));
+    accountInfo->elementAt(ACCINFO_SLOT_ACC_BAN, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_BAN)));
     accountInfo->elementAt(ACCINFO_SLOT_ACC_BAN, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_LAST_IP_BAN, 0)->addWidget(new WText(tr(TXT_ACC_BAN_IP)));
+    accountInfo->elementAt(ACCINFO_SLOT_LAST_IP_BAN, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_BAN_IP)));
     accountInfo->elementAt(ACCINFO_SLOT_LAST_IP_BAN, 1)->addWidget(new WText(""));
 
-    accountInfo->elementAt(ACCINFO_SLOT_CURR_IP_BAN, 0)->addWidget(new WText(tr(TXT_CURRENT_IP_BAN)));
+    accountInfo->elementAt(ACCINFO_SLOT_CURR_IP_BAN, 0)->addWidget(new WText(Wt::WString::tr(TXT_CURRENT_IP_BAN)));
     accountInfo->elementAt(ACCINFO_SLOT_CURR_IP_BAN, 1)->addWidget(new WText(""));
 
     UpdateAccountInfo(true);
@@ -438,17 +439,17 @@ void AccountInfoPage::ChangeIPLock()
         db.SetPQuery("UPDATE account SET locked = '%i' WHERE id = %u", session->locked, session->accid);
         if (db.ExecuteQuery() != DB_RESULT_ERROR)
         {
-            ((WPushButton*)accountInfo->elementAt(ACCINFO_SLOT_IP_LOCK, 1)->widget(0))->setText(session->locked ? tr(TXT_GEN_YES) : tr(TXT_GEN_NO));
-            accPageInfo->setText(tr(TXT_ACC_LOCK_IP_STATE).arg(tr(session->locked ? TXT_GEN_ON : TXT_GEN_OFF)));
+            ((WPushButton*)accountInfo->elementAt(ACCINFO_SLOT_IP_LOCK, 1)->widget(0))->setText(Wt::WString::tr(session->locked ? TXT_GEN_YES : TXT_GEN_NO));
+            accPageInfo->setText(Wt::WString::tr(TXT_ACC_LOCK_IP_STATE).arg(Wt::WString::tr(session->locked ? TXT_GEN_ON : TXT_GEN_OFF)));
         }
         else
         {
             session->locked = !session->locked;
-            accPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         }
     }
     else
-       accPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+       accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
         db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_IP_LOCK);
@@ -482,15 +483,15 @@ void AccountInfoPage::ChangeXPRates()
         }
 
         if (db.ExecuteQuery() != DB_RESULT_ERROR)
-            ((WPushButton*)accountInfo->elementAt(ACCINFO_SLOT_XP_RATE, 1)->widget(0))->setText(session->account_flags & 0x0008 ? tr(TXT_XP_RATE_BLIZZLIKE) : tr(TXT_XP_RATE_SERVER));
+            ((WPushButton*)accountInfo->elementAt(ACCINFO_SLOT_XP_RATE, 1)->widget(0))->setText(Wt::WString::tr(session->account_flags & 0x0008 ? TXT_XP_RATE_BLIZZLIKE : TXT_XP_RATE_SERVER));
         else
         {
             session->account_flags = prevflags;
-            accPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         }
     }
     else
-       accPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+       accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
         db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_XP_RATES);
@@ -510,18 +511,18 @@ WTable * AccountInfoPage::CreateBanInfo()
 
     banInfo->setHeaderCount(1);
 
-    banInfo->elementAt(0, ACCBANINFO_SLOT_BANDATE)->addWidget(new WText(tr(TXT_BAN_FROM)));
-    banInfo->elementAt(0, ACCBANINFO_SLOT_UNBANDATE)->addWidget(new WText(tr(TXT_BAN_TO)));
-    banInfo->elementAt(0, ACCBANINFO_SLOT_BANNEDBY)->addWidget(new WText(tr(TXT_BAN_BY)));
-    banInfo->elementAt(0, ACCBANINFO_SLOT_BANREASON)->addWidget(new WText(tr(TXT_BAN_REASON)));
-    banInfo->elementAt(0, ACCBANINFO_SLOT_PERMANENT)->addWidget(new WText(tr(TXT_BAN_PERMANENT)));
+    banInfo->elementAt(0, ACCBANINFO_SLOT_BANDATE)->addWidget(new WText(Wt::WString::tr(TXT_BAN_FROM)));
+    banInfo->elementAt(0, ACCBANINFO_SLOT_UNBANDATE)->addWidget(new WText(Wt::WString::tr(TXT_BAN_TO)));
+    banInfo->elementAt(0, ACCBANINFO_SLOT_BANNEDBY)->addWidget(new WText(Wt::WString::tr(TXT_BAN_BY)));
+    banInfo->elementAt(0, ACCBANINFO_SLOT_BANREASON)->addWidget(new WText(Wt::WString::tr(TXT_BAN_REASON)));
+    banInfo->elementAt(0, ACCBANINFO_SLOT_PERMANENT)->addWidget(new WText(Wt::WString::tr(TXT_BAN_PERMANENT)));
     banInfo->elementAt(0, ACCBANINFO_SLOT_ACTIVE)->addWidget(new WText(""));
 
     Database realmDB;
 
     if (!realmDB.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        accPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return banInfo;
     }
 
@@ -532,7 +533,7 @@ WTable * AccountInfoPage::CreateBanInfo()
     switch (count)
     {
         case DB_RESULT_ERROR:
-            accPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
         case DB_RESULT_EMPTY:
 //            accPageInfo->setText(tr(TXT_NEVER_BANNED));
@@ -551,10 +552,10 @@ WTable * AccountInfoPage::CreateBanInfo()
                         banInfo->elementAt(i, j)->addWidget(new WText((*itr)->fields[j].GetWString()));
 
                     perm = (*itr)->fields[0].GetWString() == (*itr)->fields[1].GetWString();
-                    banInfo->elementAt(i, 4)->addWidget(new WText(tr(perm ? TXT_GEN_PERM : TXT_GEN_TIMED)));
+                    banInfo->elementAt(i, 4)->addWidget(new WText(Wt::WString::tr(perm ? TXT_GEN_PERM : TXT_GEN_TIMED)));
 
                     active = (*itr)->fields[4].GetBool();
-                    banInfo->elementAt(i, 5)->addWidget(new WText(tr(active ? TXT_GEN_ACTIVE : TXT_GEN_NOT_ACTIVE)));
+                    banInfo->elementAt(i, 5)->addWidget(new WText(Wt::WString::tr(active ? TXT_GEN_ACTIVE : TXT_GEN_NOT_ACTIVE)));
                 }
             }
             break;
@@ -577,17 +578,17 @@ WTable * AccountInfoPage::CreateMuteInfo()
 
     muteInfo->setHeaderCount(1);
 
-    muteInfo->elementAt(0, ACCMUTEINFO_SLOT_MUTEDATE)->addWidget(new WText(tr(TXT_MUTE_FROM)));
-    muteInfo->elementAt(0, ACCMUTEINFO_SLOT_UNMUTEDATE)->addWidget(new WText(tr(TXT_MUTE_TO)));
-    muteInfo->elementAt(0, ACCMUTEINFO_SLOT_MUTEDBY)->addWidget(new WText(tr(TXT_MUTE_BY)));
-    muteInfo->elementAt(0, ACCMUTEINFO_SLOT_MUTEREASON)->addWidget(new WText(tr(TXT_MUTE_REASON)));
+    muteInfo->elementAt(0, ACCMUTEINFO_SLOT_MUTEDATE)->addWidget(new WText(Wt::WString::tr(TXT_MUTE_FROM)));
+    muteInfo->elementAt(0, ACCMUTEINFO_SLOT_UNMUTEDATE)->addWidget(new WText(Wt::WString::tr(TXT_MUTE_TO)));
+    muteInfo->elementAt(0, ACCMUTEINFO_SLOT_MUTEDBY)->addWidget(new WText(Wt::WString::tr(TXT_MUTE_BY)));
+    muteInfo->elementAt(0, ACCMUTEINFO_SLOT_MUTEREASON)->addWidget(new WText(Wt::WString::tr(TXT_MUTE_REASON)));
     muteInfo->elementAt(0, ACCMUTEINFO_SLOT_ACTIVE)->addWidget(new WText(""));
 
     Database realmDB;
 
     if (!realmDB.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        accPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return muteInfo;
     }
 
@@ -598,7 +599,7 @@ WTable * AccountInfoPage::CreateMuteInfo()
     switch (count)
     {
         case DB_RESULT_ERROR:
-            accPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
         case DB_RESULT_EMPTY:
 //            accPageInfo->setText(tr(TXT_NEVER_MUTED));
@@ -616,7 +617,7 @@ WTable * AccountInfoPage::CreateMuteInfo()
                         muteInfo->elementAt(i, j)->addWidget(new WText((*itr)->fields[j].GetWString()));
 
                     active = (*itr)->fields[4].GetBool();
-                    muteInfo->elementAt(i, 4)->addWidget(new WText(tr(active ? TXT_GEN_ACTIVE : TXT_GEN_NOT_ACTIVE)));
+                    muteInfo->elementAt(i, 4)->addWidget(new WText(Wt::WString::tr(active ? TXT_GEN_ACTIVE : TXT_GEN_NOT_ACTIVE)));
                 }
             }
             break;
@@ -648,12 +649,12 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
     tabPanel->setHeaderCount(1);
     tabServer->setHeaderCount(1);
 
-    tabPanel->elementAt(0, 0)->addWidget(new WText(tr(TXT_ACT_DATE)));
-    tabPanel->elementAt(0, 1)->addWidget(new WText(tr(TXT_ACT_IP)));
-    tabPanel->elementAt(0, 2)->addWidget(new WText(tr(TXT_ACT_TEXT)));
+    tabPanel->elementAt(0, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACT_DATE)));
+    tabPanel->elementAt(0, 1)->addWidget(new WText(Wt::WString::tr(TXT_ACT_IP)));
+    tabPanel->elementAt(0, 2)->addWidget(new WText(Wt::WString::tr(TXT_ACT_TEXT)));
 
-    tabServer->elementAt(0, 0)->addWidget(new WText(tr(TXT_ACT_DATE)));
-    tabServer->elementAt(0, 1)->addWidget(new WText(tr(TXT_ACT_IP)));
+    tabServer->elementAt(0, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACT_DATE)));
+    tabServer->elementAt(0, 1)->addWidget(new WText(Wt::WString::tr(TXT_ACT_IP)));
 
     // fill tables
     Database db;
@@ -666,7 +667,7 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
         switch (db.ExecuteQuery())
         {
             case DB_RESULT_ERROR:
-                accPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+                accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
                 break;
             case DB_RESULT_EMPTY:
                 break;
@@ -690,9 +691,9 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
                     if (!txtId.empty())
                     {
                         if (txt != "")
-                            tabPanel->elementAt(i, 2)->addWidget(new WText(tr(txtId).arg(txt)));
+                            tabPanel->elementAt(i, 2)->addWidget(new WText(Wt::WString::tr(txtId).arg(txt)));
                         else
-                            tabPanel->elementAt(i, 2)->addWidget(new WText(tr(txtId)));
+                            tabPanel->elementAt(i, 2)->addWidget(new WText(Wt::WString::tr(txtId)));
                     }
                     else
                         tabPanel->elementAt(i, 2)->addWidget(new WText(txt));
@@ -708,7 +709,7 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
         switch (db.ExecuteQuery())
         {
             case DB_RESULT_ERROR:
-                accPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+                accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
                 break;
             case DB_RESULT_EMPTY:
                 break;

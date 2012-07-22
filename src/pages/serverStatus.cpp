@@ -71,8 +71,6 @@ void ServerStatusPage::refresh()
     if (isHidden() || isDisabled())
         return;
 
-    UpdateStatus();
-
     Wt::WContainerWidget::refresh();
 }
 

@@ -43,17 +43,17 @@
  *
  ***********************************************/
 
-class LogoutPage : public WContainerWidget
+class LogoutPage : public Wt::WContainerWidget
 {
 public:
-    LogoutPage(SessionInfo * session, WContainerWidget * parent = 0);
+    LogoutPage(SessionInfo * session, Wt::WTemplate * tmpl, Wt::WContainerWidget * parent = 0);
     ~LogoutPage() { clear(); }
 
     void refresh();
 private:
-    WPushButton * btn;
-
+    Wt::WPushButton * btn;
     SessionInfo * sess;
+    Wt::WTemplate * templ;
 
     void CreateLogoutPage();
 

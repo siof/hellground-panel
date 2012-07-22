@@ -126,12 +126,17 @@
 		<Unit filename="../sql/char.sql" />
 		<Unit filename="../sql/panel.sql" />
 		<Unit filename="../sql/spell.sql" />
+		<Unit filename="../src/LangsWidget.cpp" />
+		<Unit filename="../src/LangsWidget.h" />
 		<Unit filename="../src/config.h" />
 		<Unit filename="../src/config.h.dist" />
 		<Unit filename="../src/database.cpp" />
 		<Unit filename="../src/database.h" />
 		<Unit filename="../src/defines.h" />
+		<Unit filename="../src/login.cpp" />
+		<Unit filename="../src/login.h" />
 		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/main.h" />
 		<Unit filename="../src/menu.cpp" />
 		<Unit filename="../src/menu.h" />
 		<Unit filename="../src/pages/accInfo.cpp" />

@@ -69,8 +69,7 @@ void SupportPage::refresh()
         if (needCreation)
         {
             needCreation = false;
-            info = new WText(tr(TXT_INFO_SUPPORT), this);
-            info->setInternalPathEncoding(true);
+            addWidget(new WText(tr(TXT_INFO_SUPPORT)));
         }
     }
     else

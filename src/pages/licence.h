@@ -49,7 +49,6 @@ public:
     LicencePage(WContainerWidget * parent = 0);
     ~LicencePage() { clear(); }
 
-    void refresh();
 private:
     void ShowText();
 };

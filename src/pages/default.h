@@ -46,17 +46,10 @@
 class DefaultPage : public WContainerWidget
 {
 public:
-    DefaultPage(SessionInfo * sess, WContainerWidget * parent = 0);
+    DefaultPage(WContainerWidget * parent = 0);
     ~DefaultPage();
 
-    void refresh();
 private:
-    /// pointer to object with current session informations
-    SessionInfo * session;
-
-    bool needCreation;
-
-    WText * text;
 };
 
 #endif // DEFAULT_H_INCLUDED

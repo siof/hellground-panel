@@ -58,12 +58,9 @@ public:
 
     void refresh();
 private:
-    /// panel session informations
-    SessionInfo * session;
     /// created or not?
     bool needCreation;
-
-    WText * info;
+    SessionInfo * session;
 };
 
 #endif //SUPPORT_H_INCLUDED
