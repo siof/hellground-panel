@@ -43,8 +43,6 @@
 RegisterPage::RegisterPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
 {
-    setContentAlignment(AlignCenter|AlignTop);
-
     txtLogin = NULL;
     txtEmail = NULL;
     btnRegister = NULL;

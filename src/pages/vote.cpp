@@ -50,7 +50,6 @@
 VotePage::VotePage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
 {
-    setContentAlignment(AlignCenter);
     needCreation = true;
 }
 

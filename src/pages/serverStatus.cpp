@@ -49,8 +49,6 @@
 ServerStatusPage::ServerStatusPage(Wt::WContainerWidget * parent)
 : Wt::WContainerWidget(parent)
 {
-    setContentAlignment(AlignCenter|AlignTop);
-
     timer = new Wt::WTimer();
     timer->setInterval(60000);
     timer->timeout().connect(this, &ServerStatusPage::UpdateStatus);

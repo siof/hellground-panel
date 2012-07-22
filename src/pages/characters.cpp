@@ -54,7 +54,6 @@ CharacterInfoPage::CharacterInfoPage(SessionInfo * sess, WContainerWidget * pare
     WContainerWidget(parent), restoreCharacter(NULL), restoring(false)
 {
     session = sess;
-    setContentAlignment(AlignCenter|AlignTop);
 
     needCreation = true;
 }

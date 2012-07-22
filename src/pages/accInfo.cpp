@@ -50,7 +50,6 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
     WContainerWidget(parent)
 {
     session = sess;
-    setContentAlignment(AlignCenter|AlignTop);
     needCreation = true;
 }
 

@@ -41,8 +41,6 @@
 PassRecoveryPage::PassRecoveryPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
 {
-    setContentAlignment(AlignCenter|AlignTop);
-
     txtLogin = NULL;
     txtEmail = NULL;
     btnRecover = NULL;

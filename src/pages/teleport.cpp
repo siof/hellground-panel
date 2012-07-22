@@ -40,7 +40,6 @@ TeleportPage::TeleportPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess), guids(NULL)
 {
     console(DEBUG_CODE, "TeleportPage::TeleportPage(SessionInfo * sess = %i, WContainerWidget * parent = %i)", sess != NULL, parent != NULL);
-    setContentAlignment(AlignCenter|AlignTop);
 
     teleInfo = new WText("");
 
