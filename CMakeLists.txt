@@ -42,7 +42,7 @@ find_package(JWSMTP REQUIRED)
 find_package(CURL REQUIRED)
 
 set(Boost_USE_MULTITHREADED  ON)
-find_package(Boost 1.34.0 COMPONENTS regex REQUIRED)
+find_package(Boost 1.34.0 COMPONENTS regex signals REQUIRED)
 
 add_subdirectory(src)
 
