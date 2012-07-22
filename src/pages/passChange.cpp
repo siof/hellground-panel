@@ -39,7 +39,6 @@
 PassChangePage::PassChangePage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
 {
-    setContentAlignment(AlignCenter|AlignTop);
     txtPass = NULL;
     txtPass2 = NULL;
     btnChange = NULL;

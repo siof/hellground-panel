@@ -43,7 +43,6 @@
 LicencePage::LicencePage(WContainerWidget * parent)
 : Wt::WContainerWidget(parent)
 {
-    setContentAlignment(AlignCenter|AlignTop);
     ShowText();
 }
 
