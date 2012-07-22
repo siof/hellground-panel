@@ -12,7 +12,7 @@ add_executable(panel.wt ${PANEL_SRCS})
 
 target_link_libraries(panel.wt
     ${Wt_LIBRARY}
-    ${Boost_REGEX_LIBRARY}
+    ${Boost_LIBRARIES}
     ${MYSQL_LIBRARY}
     ${CURL_LIBRARY}
     ${JWSMTP_LIBRARY}
