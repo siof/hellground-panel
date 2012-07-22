@@ -85,7 +85,7 @@ void PassRecoveryPage::refresh()
 
 void PassRecoveryPage::CreateRecoveryPage()
 {
-    addWidget(new WText(tr(TXT_INFO_PASS_RECOVERY)));
+    addWidget(new WText(Wt::WString::tr(TXT_INFO_PASS_RECOVERY)));
 
     for (int i = 0; i < 4; ++i)
         addWidget(new WBreak());
@@ -99,23 +99,23 @@ void PassRecoveryPage::CreateRecoveryPage()
 
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
     txtLogin->setValidator(validator);
-    txtLogin->setEmptyText(tr(TXT_ACC_LOGIN));
+    txtLogin->setEmptyText(Wt::WString::tr(TXT_ACC_LOGIN));
 
-    addWidget(new WText(tr(TXT_ACC_LOGIN)));
+    addWidget(new WText(Wt::WString::tr(TXT_ACC_LOGIN)));
     addWidget(txtLogin);
     addWidget(new WBreak());
 
     txtEmail = new WLineEdit();
-    txtEmail->setEmptyText(tr(TXT_PASS_MAIL));
+    txtEmail->setEmptyText(Wt::WString::tr(TXT_PASS_MAIL));
     validator = new WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
     txtEmail->setValidator(validator);
 
-    addWidget(new WText(tr(TXT_PASS_MAIL)));
+    addWidget(new WText(Wt::WString::tr(TXT_PASS_MAIL)));
     addWidget(txtEmail);
     addWidget(new WBreak());
     addWidget(new WBreak());
 
-    btnRecover = new WPushButton(tr(TXT_BTN_PASS_SEND));
+    btnRecover = new WPushButton(Wt::WString::tr(TXT_BTN_PASS_SEND));
     addWidget(btnRecover);
 
     btnRecover->clicked().connect(this, &PassRecoveryPage::Recover);
@@ -150,7 +150,7 @@ void PassRecoveryPage::Recover()
     if (!validLogin || !validEmail)
     {
         Log(LOG_INVALID_DATA, "User trying to recover password with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
-        recoveryInfo->setText(tr(TXT_ERROR_VALIDATION_RECOVERY));
+        recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_VALIDATION_RECOVERY));
         return;
     }
 
@@ -158,7 +158,7 @@ void PassRecoveryPage::Recover()
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        recoveryInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -174,7 +174,7 @@ void PassRecoveryPage::Recover()
         case DB_RESULT_ERROR:
         case DB_RESULT_EMPTY:
             AddActivityPassRecovery(false, login.toUTF8().c_str());
-            recoveryInfo->setText(tr(TXT_ERROR_WRONG_RECOVERY_DATA));
+            recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_WRONG_RECOVERY_DATA));
             ClearRecoveryData();
             return;
         default:
@@ -195,7 +195,7 @@ void PassRecoveryPage::Recover()
     if (mail != dbMail)
     {
         AddActivityPassRecovery(accId, false);
-        recoveryInfo->setText(tr(TXT_ERROR_WRONG_RECOVERY_DATA));
+        recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_WRONG_RECOVERY_DATA));
         ClearRecoveryData();
         return;
     }
@@ -220,18 +220,18 @@ void PassRecoveryPage::Recover()
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         AddActivityPassRecovery(accId, false);
-        recoveryInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         ClearRecoveryData();
         return;
     }
 
-    msg = tr(TXT_PASS_RECOVERY_MAIL).arg(dbDate).arg(session->sessionIp.toUTF8()).arg(tmpStr);
+    msg = Wt::WString::tr(TXT_PASS_RECOVERY_MAIL).arg(dbDate).arg(session->sessionIp.toUTF8()).arg(tmpStr);
 
-    SendMail(from, mail, tr(TXT_PASS_RECOVERY_SUBJECT), msg);
+    SendMail(from, mail, Wt::WString::tr(TXT_PASS_RECOVERY_SUBJECT), msg);
 
     ClearRecoveryData();
 
-    recoveryInfo->setText(tr(TXT_PASS_RECOVERY_COMPLETE));
+    recoveryInfo->setText(Wt::WString::tr(TXT_PASS_RECOVERY_COMPLETE));
 
     AddActivityPassRecovery(accId, true);
 }

@@ -8,3 +8,4 @@ glob:*.opensdf
 glob:*.suo
 glob:codeblocks/HGPlayersPanel.layout
 glob:codeblocks/HGPlayersPanel.depend
+glod:*~

@@ -48,22 +48,6 @@ LicencePage::LicencePage(WContainerWidget * parent)
 }
 
 /********************************************//**
- * \brief Overloads WContainerWidget::refresh() for automatic content change.
- *
- * This function can delete old and create new content.
- * In most situations this is used for content update or language change ;)
- *
- ***********************************************/
-
-void LicencePage::refresh()
-{
-    if (isHidden() || isDisabled())
-        return;
-
-    Wt::WContainerWidget::refresh();
-}
-
-/********************************************//**
  * \brief Shows content of licence page
  *
  * This function deletes old and creates new content depends on actual language.
@@ -72,12 +56,12 @@ void LicencePage::refresh()
 
 void LicencePage::ShowText()
 {
-    addWidget(new Wt::WText(tr(TXT_LICENCE_INTRO)));
+    addWidget(new Wt::WText(Wt::WString::tr(TXT_LICENCE_INTRO)));
     addWidget(new Wt::WBreak());
     addWidget(new Wt::WBreak());
-    addWidget(new Wt::WText(tr(TXT_LICENCE_REPO)));
+    addWidget(new Wt::WText(Wt::WString::tr(TXT_LICENCE_REPO)));
     addWidget(new Wt::WBreak());
     addWidget(new Wt::WBreak());
     addWidget(new Wt::WBreak());
-    addWidget(new Wt::WText(tr(TXT_LICENCE_INFO)));
+    addWidget(new Wt::WText(Wt::WString::tr(TXT_LICENCE_INFO)));
 }

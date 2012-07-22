@@ -18,104 +18,61 @@
 #ifndef MENU_H_INCLUDED
 #define MENU_H_INCLUDED
 
-#include <Wt/WLineEdit>
+#include <vector>
+
+#include <Wt/WMenu>
+#include <Wt/WMenuItem>
 
 #include "defines.h"
-#include "pages/error.h"
 
-class HGMenu;
-
-class HGSubMenu
+struct MenuItemInfo
 {
-public:
-    HGSubMenu(WStackedWidget * target, HGMenu * hgMenu, WSubMenuItem * parent = NULL);
-    ~HGSubMenu();
+    MenuItemInfo() : item(NULL), reqAccLvl(LVL_NOT_LOGGED), notLoggedAlso(false) {}
+    MenuItemInfo(const Wt::WString &text, Wt::WWidget *contents, AccountLevel reqLvl, bool notLogged, Wt::WMenuItem::LoadPolicy policy = Wt::WMenuItem::LazyLoading)
+    {
+        item = new Wt::WMenuItem(text, contents, policy);
+        reqAccLvl = reqLvl;
+        notLoggedAlso = notLogged;
+    }
 
-    void AddMenuItem(const char * textId, WMenuItem * menuItem);
-    void AddMenuItem(SessionInfo * sess, const char * textId, WContainerWidget * item, bool preload = true);
+    MenuItemInfo(Wt::WMenuItem * menuItem, AccountLevel reqLvl, bool notLogged)
+    {
+        item = menuItem;
+        reqAccLvl = reqLvl;
+        notLoggedAlso = notLogged;
+    }
 
-    const std::list<WMenuItem*> GetMenuItems();
-    WMenu * GetMenu();
-    void UpdateTexts();
+    ~MenuItemInfo()
+    {
+        item = NULL;
+        reqAccLvl = LVL_NOT_LOGGED;
+        notLoggedAlso = false;
+    }
 
-    void Refresh();
 
-private:
-    std::list<const char *> textIds;
-    std::list<WMenuItem*> items;
-    WMenu * menu;
+    Wt::WMenuItem * item;
+    AccountLevel reqAccLvl;
+    bool notLoggedAlso;
 };
 
-class HGMenuOption
+class HGMenu : public Wt::WMenu
 {
 public:
-    HGMenuOption(MenuOptions menuOption);
-    ~HGMenuOption();
-
-    void AddMenuItem(AccountLevel accLvl, const char * textId, WMenuItem * menuItem);
-    void AddMenuItem(AccountLevel accLvl, SessionInfo * sess, const char * textId, WContainerWidget * item, const char * path = NULL, bool preload = true);
-    void RemoveMenuItem(WMenuItem * menuItem, bool alsoDelete = true);
-    void RemoveMenuItem(AccountLevel accLvl, bool alsoDelete = true);
-
-    void AddSubMenuItem(AccountLevel accLvl, const char * textId, WSubMenuItem * menuItem, WStackedWidget * target, HGMenu * menu);
-    void AddSubMenuItem(AccountLevel accLvl, SessionInfo * sess, const char * textId, WContainerWidget * item, WStackedWidget * target, HGMenu * menu, const char * path = NULL, bool preload = true);
-    void RemoveSubMenuItem(AccountLevel accLvl, bool alsoDelete = true);
-    void AddSubMenuOption(AccountLevel accLvl, const char * textId, WMenuItem * menuItem);
-    void AddSubMenuOption(AccountLevel accLvl, SessionInfo * sess, const char *  textId, WContainerWidget * item, bool preload = true);
-
-    WMenuItem * GetMenuItemForLevel(AccountLevel accLvl);
-    void UpdateTexts();
-
-    void Refresh();
-
-private:
-    const char ** textIds;
-    MenuOptions menuOption;
-    WMenuItem ** items;
-    HGSubMenu ** subMenus;
-};
-
-class HGMenu : public WContainerWidget
-{
-public:
-    HGMenu(WStackedWidget * menuContents, SessionInfo * sess, WContainerWidget *parent=0);
+    HGMenu(Wt::WStackedWidget * menuContents, SessionInfo * sess, Wt::WTemplate * tmpl, Wt::Orientation ori = Wt::Vertical, Wt::WContainerWidget *parent=0);
     ~HGMenu();
 
     void refresh();         // overload, some link should be available only if user is logged in
-    void ShowError(ErrorSlots error, std::string &msg);
-    void ShowError(ErrorSlots error, const char * textId = NULL);
-    void ShowError();
-    bool SetError(ErrorSlots error, std::string &msg, ErrorPage * err = NULL);
-    bool SetError(ErrorSlots error, const char * textId = NULL, ErrorPage * err = NULL);
-
-    void RefreshActiveMenuWidget();
 
 private:
-    WContainerWidget * container;       // contains menu + additional items added on menu side
-    WContainerWidget * loginContainer;  // contains login forms
-    WStackedWidget * menuContents;      // container where menu items will be shown after click
-    WMenu * menu;
-    WLineEdit * login;
-    WLineEdit * pass;
-    WPushButton * btnLog;
     SessionInfo * session;
-    WBreak ** breakTab;
+    WTemplate * templ;
 
-    WPushButton * plLang;
-    WPushButton * enLang;
+    std::vector<MenuItemInfo*> menuItems;
 
-    HGMenuOption * menuSlots[MENU_SLOT_COUNT];
+    void AddMenuItem(const char * txt, Wt::WWidget * contents, AccountLevel reqLvl, bool notLoggedAlso, const char * path = "");
 
-    void LogMeIn();
-    void SetPlLang();
-    void SetEngLang();
-    void RefreshMenuWidgets();
-    void ShowMenuOptions(bool addLogin = false);
     void UpdateMenuOptions();
-    void ClearLoginData();
-
-    void AddActivityLogIn(bool success, const char * login = NULL);
-    void AddActivityLogIn(uint32 id, bool success);
+    void RefreshActiveMenuWidget();
 };
 
 #endif // MENU_H_INCLUDED

@@ -56,24 +56,6 @@ CharacterInfoPage::CharacterInfoPage(SessionInfo * sess, WContainerWidget * pare
     session = sess;
     setContentAlignment(AlignCenter|AlignTop);
 
-    addWidget(new WText(tr(TXT_INFO_CHARACTER)));
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-
-    charPageInfo = new WText("", this);
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-
-    addWidget(new WText(tr(TXT_CHAR_LIST)));
-    charList = new WComboBox(this);
-    charList->activated().connect(this, &CharacterInfoPage::SelectionChanged);
-    addWidget(new WBreak());
-    addWidget(new WBreak());
-
-    tabs = new WTabWidget();
-    tabs->contentsStack()->setTransitionAnimation(WAnimation(WAnimation::SlideInFromRight, WAnimation::EaseIn), true);
-    addWidget(tabs);
-
     needCreation = true;
 }
 
@@ -102,18 +84,36 @@ void CharacterInfoPage::refresh()
         {
             needCreation = false;
 
-            tabs->addTab(CreateCharacterBasicInfo(), tr(TXT_CHAR_TAB_INFO), WTabWidget::PreLoading);
-            tabs->addTab(CreateCharacterQuestInfo(), tr(TXT_CHAR_TAB_QUEST), WTabWidget::PreLoading);
-            tabs->addTab(CreateCharacterSpellInfo(), tr(TXT_CHAR_TAB_SPELL), WTabWidget::PreLoading);
-            tabs->addTab(CreateCharacterInventoryInfo(), tr(TXT_CHAR_TAB_INVENTORY), WTabWidget::PreLoading);
-            tabs->addTab(CreateCharacterFriendInfo(), tr(TXT_CHAR_TAB_FRIENDS), WTabWidget::PreLoading);
+            addWidget(new WText(Wt::WString::tr(TXT_INFO_CHARACTER)));
+            addWidget(new WBreak());
+            addWidget(new WBreak());
+
+            charPageInfo = new WText("", this);
+            addWidget(new WBreak());
+            addWidget(new WBreak());
+
+            addWidget(new WText(Wt::WString::tr(TXT_CHAR_LIST)));
+            charList = new WComboBox(this);
+            charList->activated().connect(this, &CharacterInfoPage::SelectionChanged);
+            addWidget(new WBreak());
+            addWidget(new WBreak());
+
+            tabs = new WTabWidget();
+            tabs->contentsStack()->setTransitionAnimation(WAnimation(WAnimation::SlideInFromRight, WAnimation::EaseIn), true);
+            addWidget(tabs);
+
+            tabs->addTab(CreateCharacterBasicInfo(), Wt::WString::tr(TXT_CHAR_TAB_INFO)/*, WTabWidget::PreLoading*/);
+            tabs->addTab(CreateCharacterQuestInfo(), Wt::WString::tr(TXT_CHAR_TAB_QUEST)/*, WTabWidget::PreLoading*/);
+            tabs->addTab(CreateCharacterSpellInfo(), Wt::WString::tr(TXT_CHAR_TAB_SPELL)/*, WTabWidget::PreLoading*/);
+            tabs->addTab(CreateCharacterInventoryInfo(), Wt::WString::tr(TXT_CHAR_TAB_INVENTORY)/*, WTabWidget::PreLoading*/);
+            tabs->addTab(CreateCharacterFriendInfo(), Wt::WString::tr(TXT_CHAR_TAB_FRIENDS)/*, WTabWidget::PreLoading*/);
 
             charList->clear();
             indexToCharInfo.clear();
             Database db;
             if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
             {
-                charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+                charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
                 return;
             }
 
@@ -121,7 +121,7 @@ void CharacterInfoPage::refresh()
             switch (db.ExecutePQuery("SELECT guid, account, name, race FROM characters WHERE account = '%u'", session->accid))
             {
                 case DB_RESULT_ERROR:
-                    charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+                    charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
                     return;
                 case DB_RESULT_EMPTY:
                     break;
@@ -217,44 +217,41 @@ WContainerWidget * CharacterInfoPage::CreateCharacterBasicInfo()
     WContainerWidget * tmpContainer = new WContainerWidget();
 
     charBasicInfo = new Wt::WTable(tmpContainer);
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LEVEL, 0)->addWidget(new WText(tr(TXT_CHAR_LVL)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LEVEL, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_LVL)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_LEVEL, 1)->addWidget(new WText(""));
 
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_RACE, 0)->addWidget(new WText(tr(TXT_CHAR_RACE)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_RACE, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_RACE)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_RACE, 1)->addWidget(new WText(""));
 
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_CLASS, 0)->addWidget(new WText(tr(TXT_CHAR_CLASS)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_CLASS, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_CLASS)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_CLASS, 1)->addWidget(new WText(""));
 
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_NAME, 0)->addWidget(new WText(tr(TXT_CHAR_NAME)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_NAME, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_NAME)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_NAME, 1)->addWidget(new WText(""));
 
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_ONLINE, 0)->addWidget(new WText(tr(TXT_CHAR_ONLINE)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_ONLINE, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_ONLINE)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_ONLINE, 1)->addWidget(new WText(""));
 
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_TOT, 0)->addWidget(new WText(tr(TXT_CHAR_PLAYED_TOTAL)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_TOT, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_PLAYED_TOTAL)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_TOT, 1)->addWidget(new WText(""));
 
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_LVL, 0)->addWidget(new WText(tr(TXT_CHAR_PLAYED_LEVEL)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_LVL, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_PLAYED_LEVEL)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_LVL, 1)->addWidget(new WText(""));
 
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_COST, 0)->addWidget(new WText(tr(TXT_CHAR_TALENT_RESET_COST)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_COST, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_TALENT_RESET_COST)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_COST, 1)->addWidget(new WText(""));
 
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_TIME, 0)->addWidget(new WText(tr(TXT_CHAR_TALENT_RESET_TIME)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_TIME, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_TALENT_RESET_TIME)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_TIME, 1)->addWidget(new WText(""));
 
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_ACTUAL_RESET_COST, 0)->addWidget(new WText(tr(TXT_CHAR_ACT_TAL_RESET_COST)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_ACTUAL_RESET_COST, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_ACT_TAL_RESET_COST)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_ACTUAL_RESET_COST, 1)->addWidget(new WText(""));
 
-    charBasicInfo->elementAt(CHARBASICINFO_SLOT_DELETION_TIME, 0)->addWidget(new WText(tr(TXT_CHAR_DELETION_DATE)));
+    charBasicInfo->elementAt(CHARBASICINFO_SLOT_DELETION_TIME, 0)->addWidget(new WText(Wt::WString::tr(TXT_CHAR_DELETION_DATE)));
     charBasicInfo->elementAt(CHARBASICINFO_SLOT_DELETION_TIME, 1)->addWidget(new WText(""));
 
     tmpContainer->addWidget(new WBreak());
     tmpContainer->addWidget(new WBreak());
-
-    if (restoreCharacter)
-        delete restoreCharacter;
 
     restoreCharacter = new WPushButton(tr(TXT_BTN_CHARACTER_RESTORE), tmpContainer);
     restoreCharacter->clicked().connect(this, &CharacterInfoPage::RestoreCharacter);
@@ -276,9 +273,9 @@ WTable * CharacterInfoPage::CreateCharacterQuestInfo()
 
     tmpQuest->setHeaderCount(1);
 
-    tmpQuest->elementAt(0, CHARQUESTINFO_SLOT_NAME)->addWidget(new WText(tr(TXT_QUEST_NAME)));
-    tmpQuest->elementAt(0, CHARQUESTINFO_SLOT_LEVEL)->addWidget(new WText(tr(TXT_QUEST_LVL)));
-    tmpQuest->elementAt(0, CHARQUESTINFO_SLOT_STATUS)->addWidget(new WText(tr(TXT_QUEST_STATUS)));
+    tmpQuest->elementAt(0, CHARQUESTINFO_SLOT_NAME)->addWidget(new WText(Wt::WString::tr(TXT_QUEST_NAME)));
+    tmpQuest->elementAt(0, CHARQUESTINFO_SLOT_LEVEL)->addWidget(new WText(Wt::WString::tr(TXT_QUEST_LVL)));
+    tmpQuest->elementAt(0, CHARQUESTINFO_SLOT_STATUS)->addWidget(new WText(Wt::WString::tr(TXT_QUEST_STATUS)));
 
     return tmpQuest;
 }
@@ -298,10 +295,10 @@ WTable * CharacterInfoPage::CreateCharacterSpellInfo()
 
     tmpSpell->setHeaderCount(1);
 
-    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_ID)->addWidget(new WText(tr(TXT_SPELL_ID)));
-    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_NAME)->addWidget(new WText(tr(TXT_SPELL_NAME)));
-    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_ACTIVE)->addWidget(new WText(tr(TXT_SPELL_ACTIVE)));
-    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_DISABLED)->addWidget(new WText(tr(TXT_SPELL_DISABLED)));
+    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_ID)->addWidget(new WText(Wt::WString::tr(TXT_SPELL_ID)));
+    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_NAME)->addWidget(new WText(Wt::WString::tr(TXT_SPELL_NAME)));
+    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_ACTIVE)->addWidget(new WText(Wt::WString::tr(TXT_SPELL_ACTIVE)));
+    tmpSpell->elementAt(0, CHARSPELLINFO_SLOT_DISABLED)->addWidget(new WText(Wt::WString::tr(TXT_SPELL_DISABLED)));
 
     return tmpSpell;
 }
@@ -319,9 +316,9 @@ WTable * CharacterInfoPage::CreateCharacterInventoryInfo()
 
     tmpInv->setHeaderCount(1);
 
-    tmpInv->elementAt(0, CHARINVINFO_SLOT_ID)->addWidget(new WText(tr(TXT_ITEM_ID)));
-    tmpInv->elementAt(0, CHARINVINFO_SLOT_NAME)->addWidget(new WText(tr(TXT_ITEM_NAME)));
-    tmpInv->elementAt(0, CHARINVINFO_SLOT_STACK)->addWidget(new WText(tr(TXT_ITEM_COUNT)));
+    tmpInv->elementAt(0, CHARINVINFO_SLOT_ID)->addWidget(new WText(Wt::WString::tr(TXT_ITEM_ID)));
+    tmpInv->elementAt(0, CHARINVINFO_SLOT_NAME)->addWidget(new WText(Wt::WString::tr(TXT_ITEM_NAME)));
+    tmpInv->elementAt(0, CHARINVINFO_SLOT_STACK)->addWidget(new WText(Wt::WString::tr(TXT_ITEM_COUNT)));
 
     return tmpInv;
 }
@@ -339,8 +336,8 @@ WTable * CharacterInfoPage::CreateCharacterFriendInfo()
 
     tmpFriends->setHeaderCount(1);
 
-    tmpFriends->elementAt(0, CHARFRIENDINFO_SLOT_NAME)->addWidget(new WText(tr(TXT_FRIEND_NAME)));
-    tmpFriends->elementAt(0, CHARFRIENDINFO_SLOT_NOTE)->addWidget(new WText(tr(TXT_FRIEND_NOTE)));
+    tmpFriends->elementAt(0, CHARFRIENDINFO_SLOT_NAME)->addWidget(new WText(Wt::WString::tr(TXT_FRIEND_NAME)));
+    tmpFriends->elementAt(0, CHARFRIENDINFO_SLOT_NOTE)->addWidget(new WText(Wt::WString::tr(TXT_FRIEND_NOTE)));
     tmpFriends->elementAt(0, CHARFRIENDINFO_SLOT_ONLINE)->addWidget(new WText(""));
 
     return tmpFriends;
@@ -358,7 +355,7 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -367,10 +364,10 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
                              "WHERE guid = '%u'", guid))
     {
         case DB_RESULT_ERROR:
-            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
         case DB_RESULT_EMPTY:
-            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_EMPTY));
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_EMPTY));
             return;
         default:
         {
@@ -381,7 +378,7 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
             ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_RACE, 1)->widget(0))->setText(GetRaceName(tmpRow->fields[1].GetInt()));
             ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_CLASS, 1)->widget(0))->setText(GetClassName(tmpRow->fields[2].GetInt()));
             ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_NAME, 1)->widget(0))->setText(tmpRow->fields[3].GetWString());
-            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_ONLINE, 1)->widget(0))->setText(tr(tmpRow->fields[4].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_ONLINE, 1)->widget(0))->setText(Wt::WString::tr(tmpRow->fields[4].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
 
             uint64 tmpVal = tmpRow->fields[5].GetUInt64();
             int tmpDays = tmpVal/86400;
@@ -392,7 +389,7 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
             tmpVal -= tmpHours * 3600;
             int tmpMinutes = tmpVal/60;
 
-            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_TOT, 1)->widget(0))->setText(tr(TXT_CHAR_PLAYED_FMT).arg(tmpDays).arg(tmpHours).arg(tmpMinutes));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_TOT, 1)->widget(0))->setText(Wt::WString::tr(TXT_CHAR_PLAYED_FMT).arg(tmpDays).arg(tmpHours).arg(tmpMinutes));
 
             tmpVal = tmpRow->fields[6].GetUInt64();
             tmpDays = tmpVal/86400;
@@ -403,7 +400,7 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
             tmpVal -= tmpHours*3600;
             tmpMinutes = tmpVal/60;
 
-            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_LVL, 1)->widget(0))->setText(tr(TXT_CHAR_PLAYED_FMT).arg(tmpDays).arg(tmpHours).arg(tmpMinutes));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_LVL, 1)->widget(0))->setText(Wt::WString::tr(TXT_CHAR_PLAYED_FMT).arg(tmpDays).arg(tmpHours).arg(tmpMinutes));
             ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_COST, 1)->widget(0))->setText(GetFormattedString("%u g", uint32(tmpRow->fields[7].GetUInt64()/GOLD)));
             ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_TIME, 1)->widget(0))->setText(tmpRow->fields[8].GetWString());
 
@@ -440,7 +437,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -449,10 +446,10 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
                             "WHERE guid = %u", SQL_WORLDDB, guid))
     {
         case DB_RESULT_ERROR:
-            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
         case DB_RESULT_EMPTY:
-            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_EMPTY));
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_EMPTY));
             return;
         default:
             db.Disconnect();
@@ -476,8 +473,8 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
                 if (tmpRow->fields[5].GetInt() == QUEST_TYPE_DAILY)
                     continue;
 
-                tmpText = new WText(tr(TXT_QUEST_LINK_NAME_FMT).arg(tmpRow->fields[0].GetInt()).arg(tmpRow->fields[1].GetCString()));
-                tmpText->setToolTip(tr(TXT_QUEST_TOOLTIP_FMT).arg(tmpRow->fields[0].GetInt()).arg(tmpRow->fields[6].GetInt()), Wt::XHTMLText);
+                tmpText = new WText(Wt::WString::tr(TXT_QUEST_LINK_NAME_FMT).arg(tmpRow->fields[0].GetInt()).arg(tmpRow->fields[1].GetCString()));
+                tmpText->setToolTip(Wt::WString::tr(TXT_QUEST_TOOLTIP_FMT).arg(tmpRow->fields[0].GetInt()).arg(tmpRow->fields[6].GetInt()), Wt::XHTMLText);
 
                 tmpTable->elementAt(i, 0)->addWidget(tmpText);
                 tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[2].GetWString()));
@@ -500,7 +497,7 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -509,10 +506,10 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
                              "WHERE guid = '%u'", guid))
     {
         case DB_RESULT_ERROR:
-            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
         case DB_RESULT_EMPTY:
-            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_EMPTY));
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_EMPTY));
             return;
         default:
             db.Disconnect();
@@ -534,8 +531,8 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
 
                 tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
                 tmpTable->elementAt(i, 1)->addWidget(new WText(spells[tmpRow->fields[0].GetUInt32()].name));
-                tmpTable->elementAt(i, 2)->addWidget(new WText(tr(tmpRow->fields[1].GetBool() ? TXT_GEN_YES : TXT_GEN_NO)));
-                tmpTable->elementAt(i, 3)->addWidget(new WText(tr(tmpRow->fields[2].GetBool() ? TXT_GEN_YES : TXT_GEN_NO)));
+                tmpTable->elementAt(i, 2)->addWidget(new WText(Wt::WString::tr(tmpRow->fields[1].GetBool() ? TXT_GEN_YES : TXT_GEN_NO)));
+                tmpTable->elementAt(i, 3)->addWidget(new WText(Wt::WString::tr(tmpRow->fields[2].GetBool() ? TXT_GEN_YES : TXT_GEN_NO)));
             }
 
             break;
@@ -554,7 +551,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -563,7 +560,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
                             "WHERE ci.guid = %u", SQL_WORLDDB, guid))
     {
         case DB_RESULT_ERROR:
-            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
         case DB_RESULT_EMPTY:
             return;
@@ -606,7 +603,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
-        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -615,7 +612,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
                             "WHERE cs.guid = '%u'", guid))
     {
         case DB_RESULT_ERROR:
-            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
         case DB_RESULT_EMPTY:
             return;
@@ -641,7 +638,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
                 {
                     tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
                     tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
-                    tmpTable->elementAt(i, 2)->addWidget(new WText(tr(tmpRow->fields[3].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE)));
+                    tmpTable->elementAt(i, 2)->addWidget(new WText(Wt::WString::tr(tmpRow->fields[3].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE)));
                 }
             }
 
@@ -660,6 +657,7 @@ void CharacterInfoPage::ClearPage(bool alsoCharList)
 {
     console(DEBUG_CODE, "\nCharacterInfoPage::ClearPage()\n");
 
+/*
     WWidget * tmpWid;
     int i;
 
@@ -674,7 +672,7 @@ void CharacterInfoPage::ClearPage(bool alsoCharList)
                 case CHAR_TAB_BASIC:
                     charBasicInfo->clear();
                     ((WContainerWidget*)tmpWid)->clear();
-                    delete charBasicInfo;
+                    charBasicInfo = NULL;
                     delete tmpWid;
                     break;
                 case CHAR_TAB_QUEST:
@@ -688,13 +686,12 @@ void CharacterInfoPage::ClearPage(bool alsoCharList)
             }
         }
     }
+*/
 
-    if (alsoCharList)
-    {
-        needCreation = true;
-        charList->clear();
-        indexToCharInfo.clear();
-    }
+    clear();
+
+    needCreation = true;
+    indexToCharInfo.clear();
 }
 
 void CharacterInfoPage::SelectionChanged(int selected)
@@ -723,7 +720,7 @@ void CharacterInfoPage::RestoreCharacter()
 
     if (session->banned)
     {
-        charPageInfo->setText(tr(TXT_ERROR_NOT_WHILE_BANNED));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_NOT_WHILE_BANNED));
         return;
     }
 
@@ -733,7 +730,7 @@ void CharacterInfoPage::RestoreCharacter()
     if (tmpItr == indexToCharInfo.end())    // check if character on that index exists
     {
         restoring = false;
-        charPageInfo->setText(tr(TXT_ERROR_CHARACTER_NOT_FOUND));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_CHARACTER_NOT_FOUND));
         return;
     }
 
@@ -741,7 +738,7 @@ void CharacterInfoPage::RestoreCharacter()
     if (!IsDeletedCharacter(tmpCharInfo))    // check if character is deleted one
     {
         restoring = false;
-        charPageInfo->setText(tr(TXT_ERROR_CHARACTER_NOT_FOUND));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_CHARACTER_NOT_FOUND));
         return;
     }
 
@@ -749,14 +746,14 @@ void CharacterInfoPage::RestoreCharacter()
     if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
     {
         restoring = false;
-        charPageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
     if (db.ExecutePQuery("SELECT Count(*) FROM characters WHERE account = '%u'", tmpCharInfo.account) == DB_RESULT_ERROR)
     {
         restoring = false;
-        charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
@@ -765,7 +762,7 @@ void CharacterInfoPage::RestoreCharacter()
     if (charactersCount >= MAX_CHARS_ON_ACCOUNT)
     {
         restoring = false;
-        charPageInfo->setText(tr(TXT_ERROR_TO_MUCH_CHARACTERS));
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_TO_MUCH_CHARACTERS));
         return;
     }
 
@@ -774,7 +771,7 @@ void CharacterInfoPage::RestoreCharacter()
     switch (db.ExecutePQuery("SELECT guid FROM characters WHERE name = '%s'", escapedName.c_str()))
     {
         case DB_RESULT_ERROR:
-            charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
         case DB_RESULT_EMPTY:
         {
@@ -807,7 +804,7 @@ void CharacterInfoPage::RestoreCharacter()
                     tmpItr->second.deleted = false;
                     charList->setItemText(tmpItr->first, tmpItr->second.name);
 
-                    charPageInfo->setText(tr(TXT_CHAR_RESTORED));
+                    charPageInfo->setText(Wt::WString::tr(TXT_CHAR_RESTORED));
 
                     restoreCharacter->hide();
                     charBasicInfo->rowAt(CHARBASICINFO_SLOT_DELETION_TIME)->hide();
@@ -816,7 +813,7 @@ void CharacterInfoPage::RestoreCharacter()
                     db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '%s')", tmpCharInfo.account, session->sessionIp.toUTF8().c_str(), TXT_ACT_CHARACTER_RESTORE, escapedName.c_str());
                 }
                 else
-                    charPageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+                    charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             }
             else
                 charPageInfo->setText(tr(TXT_ERROR_FACTION_MISMATCH));
@@ -824,7 +821,7 @@ void CharacterInfoPage::RestoreCharacter()
             break;
         }
         default:
-            charPageInfo->setText(tr(TXT_ERROR_CHARACTER_NAME_EXISTS));
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_CHARACTER_NAME_EXISTS));
             break;
     }
 

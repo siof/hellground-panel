@@ -82,7 +82,7 @@ void RegisterPage::refresh()
 
 void RegisterPage::CreateRegisterPage()
 {
-    addWidget(new WText(tr(TXT_INFO_REGISTRATION)));
+    addWidget(new WText(Wt::WString::tr(TXT_INFO_REGISTRATION)));
     for (int i = 0; i < 4; ++i)
         addWidget(new WBreak());
 
@@ -92,26 +92,26 @@ void RegisterPage::CreateRegisterPage()
     addWidget(new WBreak());
 
     txtLogin = new WLineEdit();
-    txtLogin->setEmptyText(tr(TXT_ACC_LOGIN));
+    txtLogin->setEmptyText(Wt::WString::tr(TXT_ACC_LOGIN));
     WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
     validator->setMandatory(true);
     txtLogin->setValidator(validator);
 
-    addWidget(new WText(tr(TXT_ACC_LOGIN)));
+    addWidget(new WText(Wt::WString::tr(TXT_ACC_LOGIN)));
     addWidget(txtLogin);
     addWidget(new WBreak());
 
     txtEmail = new WLineEdit();
-    txtEmail->setEmptyText(tr(TXT_ACC_MAIL));
+    txtEmail->setEmptyText(Wt::WString::tr(TXT_ACC_MAIL));
     validator = new WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
     validator->setMandatory(true);
     txtEmail->setValidator(validator);
 
-    addWidget(new WText(tr(TXT_ACC_MAIL)));
+    addWidget(new WText(Wt::WString::tr(TXT_ACC_MAIL)));
     addWidget(txtEmail);
     addWidget(new WBreak());
 
-    chRules = new WCheckBox(tr(TXT_REG_RULES));
+    chRules = new WCheckBox(Wt::WString::tr(TXT_REG_RULES));
     addWidget(chRules);
     addWidget(new WBreak());
     addWidget(new WBreak());
@@ -167,13 +167,13 @@ void RegisterPage::Register()
     if (!validLogin || !validEmail)
     {
         Log(LOG_INVALID_DATA, "User trying to register with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
-        regInfo->setText(tr(TXT_ERROR_VALIDATION_LOGIN));
+        regInfo->setText(Wt::WString::tr(TXT_ERROR_VALIDATION_LOGIN));
         return;
     }
 
     if (!chRules->isChecked())
     {
-        regInfo->setText(tr(TXT_REG_RULES_NOT_ACCEPTED));
+        regInfo->setText(Wt::WString::tr(TXT_REG_RULES_NOT_ACCEPTED));
         return;
     }
 
@@ -181,7 +181,7 @@ void RegisterPage::Register()
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        regInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        regInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         ClearRegisterData();
         return;
     }
@@ -195,7 +195,7 @@ void RegisterPage::Register()
     if (db.ExecuteQuery() > DB_RESULT_EMPTY)
     {
         ClearRegisterData();
-        regInfo->setText(tr(TXT_REG_ACC_EXISTS));
+        regInfo->setText(Wt::WString::tr(TXT_REG_ACC_EXISTS));
         chRules->setChecked(false);
         CheckChange();
         return;
@@ -221,7 +221,7 @@ void RegisterPage::Register()
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
-        regInfo->setText(tr(TXT_REG_ERROR));
+        regInfo->setText(Wt::WString::tr(TXT_REG_ERROR));
         chRules->setChecked(false);
         CheckChange();
         ClearRegisterData();
@@ -230,13 +230,13 @@ void RegisterPage::Register()
 
     msg = tr(TXT_REG_MAIL).arg(login.toUTF8()).arg(tmpStr);
 
-    SendMail(from, mail, tr(TXT_REG_SUBJECT), msg);
+    SendMail(from, mail, Wt::WString::tr(TXT_REG_SUBJECT), msg);
 
     ClearRegisterData();
     chRules->setChecked(false);
     CheckChange();
 
-    regInfo->setText(tr(TXT_REG_COMPLETE));
+    regInfo->setText(Wt::WString::tr(TXT_REG_COMPLETE));
 
     uint32 accId;
 

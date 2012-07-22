@@ -15,23 +15,28 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "menu.h"
+#include "main.h"
 
 #include <stdarg.h>
 
-#include <Wt/WApplication>
+#include <jwsmtp/jwsmtp.h>
+
 #include <Wt/WEnvironment>
 #include <Wt/WImage>
 #include <Wt/WMenu>
 #include <Wt/WMenuItem>
 #include <Wt/WOverlayLoadingIndicator>
+#include <Wt/WPushButton>
 #include <Wt/WStackedWidget>
 #include <Wt/WTable>
-
-#include "jwsmtp/jwsmtp.h"
+#include <Wt/WText>
+#include <Wt/WTemplate>
 
 #include "defines.h"
 #include "database.h"
+#include "menu.h"
+#include "LangsWidget.h"
+#include "login.h"
 
 void SendMail(const WString& from, const WString& to, const WString& sub, const WString& msg)
 {
@@ -54,14 +59,14 @@ WString GetExpansionName(int index)
     switch (index)
     {
         case EXPANSION_TBC:
-            return tr(TXT_EXPANSION_TBC);
+            return Wt::WString::tr(TXT_EXPANSION_TBC);
         case EXPANSION_WOTLK:
-            return tr(TXT_EXPANSION_WOTLK);
+            return Wt::WString::tr(TXT_EXPANSION_WOTLK);
         case EXPANSION_CATA:
-            return tr(TXT_EXPANSION_CATACLYSM);
+            return Wt::WString::tr(TXT_EXPANSION_CATACLYSM);
         case EXPANSION_PRETBC:
         default:
-            return tr(TXT_EXPANSION_CLASSIC);
+            return Wt::WString::tr(TXT_EXPANSION_CLASSIC);
     }
 }
 
@@ -70,25 +75,25 @@ WString GetLocale(int index)
     switch (index)
     {
         case 0:
-            return tr("locale.enus");
+            return Wt::WString::tr("locale.enus");
         case 1:
-            return tr("locale.kokr");
+            return Wt::WString::tr("locale.kokr");
         case 2:
-            return tr("locale.frfr");
+            return Wt::WString::tr("locale.frfr");
         case 3:
-            return tr("locale.dede");
+            return Wt::WString::tr("locale.dede");
         case 4:
-            return tr("locale.zhcn");
+            return Wt::WString::tr("locale.zhcn");
         case 5:
-            return tr("locale.zhtw");
+            return Wt::WString::tr("locale.zhtw");
         case 6:
-            return tr("locale.eses");
+            return Wt::WString::tr("locale.eses");
         case 7:
-            return tr("locale.esmx");
+            return Wt::WString::tr("locale.esmx");
         case 8:
-            return tr("locale.ruru");
+            return Wt::WString::tr("locale.ruru");
         default:
-            return tr("unknown");
+            return Wt::WString::tr("unknown");
     }
 }
 
@@ -97,27 +102,27 @@ WString GetRaceName(int index)
     switch (index)
     {
         case RACE_HUMAN:
-            return tr(TXT_RACE_HUMAN);
+            return Wt::WString::tr(TXT_RACE_HUMAN);
         case RACE_ORC:
-            return tr(TXT_RACE_ORC);
+            return Wt::WString::tr(TXT_RACE_ORC);
         case RACE_DWARF:
-            return tr(TXT_RACE_DWARF);
+            return Wt::WString::tr(TXT_RACE_DWARF);
         case RACE_NIGHT_ELF:
-            return tr(TXT_RACE_NIGHT_ELF);
+            return Wt::WString::tr(TXT_RACE_NIGHT_ELF);
         case RACE_UNDEAD:
-            return tr(TXT_RACE_UNDEAD);
+            return Wt::WString::tr(TXT_RACE_UNDEAD);
         case RACE_TAUREN:
-            return tr(TXT_RACE_TAUREN);
+            return Wt::WString::tr(TXT_RACE_TAUREN);
         case RACE_GNOME:
-            return tr(TXT_RACE_GNOME);
+            return Wt::WString::tr(TXT_RACE_GNOME);
         case RACE_TROLL:
-            return tr(TXT_RACE_TROLL);
+            return Wt::WString::tr(TXT_RACE_TROLL);
         case RACE_BLOOD_ELF:
-            return tr(TXT_RACE_BLOOD_ELF);
+            return Wt::WString::tr(TXT_RACE_BLOOD_ELF);
         case RACE_DRAENEI:
-            return tr(TXT_RACE_DRAENEI);
+            return Wt::WString::tr(TXT_RACE_DRAENEI);
         default:
-            return tr(TXT_GEN_UNKNOWN);
+            return Wt::WString::tr(TXT_GEN_UNKNOWN);
     }
 }
 
@@ -126,47 +131,47 @@ WString GetClassName(int index)
     switch (index)
     {
         case CLASS_WARRIOR:
-            return tr(TXT_CLASS_WARRIOR);
+            return Wt::WString::tr(TXT_CLASS_WARRIOR);
         case CLASS_PALADIN:
-            return tr(TXT_CLASS_PALADIN);
+            return Wt::WString::tr(TXT_CLASS_PALADIN);
         case CLASS_HUNTER:
-            return tr(TXT_CLASS_HUNTER);
+            return Wt::WString::tr(TXT_CLASS_HUNTER);
         case CLASS_ROGUE:
-            return tr(TXT_CLASS_ROGUE);
+            return Wt::WString::tr(TXT_CLASS_ROGUE);
         case CLASS_PRIEST:
-            return tr(TXT_CLASS_PRIEST);
+            return Wt::WString::tr(TXT_CLASS_PRIEST);
         case CLASS_SHAMAN:
-            return tr(TXT_CLASS_SHAMAN);
+            return Wt::WString::tr(TXT_CLASS_SHAMAN);
         case CLASS_MAGE:
-            return tr(TXT_CLASS_MAGE);
+            return Wt::WString::tr(TXT_CLASS_MAGE);
         case CLASS_WARLOCK:
-            return tr(TXT_CLASS_WARLOCK);
+            return Wt::WString::tr(TXT_CLASS_WARLOCK);
         case CLASS_DRUID:
-            return tr(TXT_CLASS_DRUID);
+            return Wt::WString::tr(TXT_CLASS_DRUID);
         default:
-            return tr(TXT_GEN_UNKNOWN);
+            return Wt::WString::tr(TXT_GEN_UNKNOWN);
     }
 }
 
 WString GetQuestStatus(int index, bool rewarded)
 {
     if (rewarded)
-        return tr(TXT_QUEST_STATUS_REWARDED);
+        return Wt::WString::tr(TXT_QUEST_STATUS_REWARDED);
 
     switch (index)
     {
         case 0:
-            return tr(TXT_QUEST_STATUS_NONE);
+            return Wt::WString::tr(TXT_QUEST_STATUS_NONE);
         case 1:
-            return tr(TXT_QUEST_STATUS_COMPLETE);
+            return Wt::WString::tr(TXT_QUEST_STATUS_COMPLETE);
         case 2:
-            return tr(TXT_QUEST_STATUS_UNAVAILABLE);
+            return Wt::WString::tr(TXT_QUEST_STATUS_UNAVAILABLE);
         case 3:
-            return tr(TXT_QUEST_STATUS_INCOMPLETE);
+            return Wt::WString::tr(TXT_QUEST_STATUS_INCOMPLETE);
         case 4:
-            return tr(TXT_QUEST_STATUS_AVAILABLE);
+            return Wt::WString::tr(TXT_QUEST_STATUS_AVAILABLE);
         default:
-            return tr(TXT_GEN_UNKNOWN);
+            return Wt::WString::tr(TXT_GEN_UNKNOWN);
     }
 }
 
@@ -292,145 +297,89 @@ uint32 CalculateTalentCost(uint32 lastCost, uint32 months)
     }
 }
 
-class PlayersPanel : public WApplication
-{
-public:
-    PlayersPanel(const WEnvironment& env);
-    ~PlayersPanel();
-private:
-    WStackedWidget * content;       // container to show menu items after click (main content container)
-    WContainerWidget * page;        // whole page container
-    HGMenu * menu;                  // menu
-    SessionInfo * session;          // store info about user session
-};
-
 PlayersPanel::PlayersPanel(const WEnvironment& env)
-: WApplication(env)
+    : WApplication(env)
 {
-    // create all variables and set id/class for css use (based on css/layout.html)
-
-    // div body
-    page = new WContainerWidget(root());
-    page->setContentAlignment(AlignCenter);
-    content = new WStackedWidget();
     session = new SessionInfo();
     session->sessionIp = env.clientAddress();
 
-    setTitle(tr(TXT_SITE_TITLE));
+    setLoadingIndicator(new Wt::WOverlayLoadingIndicator("loading"));
 
-//    content->setTransitionAnimation(WAnimation(WAnimation::SlideInFromBottom, WAnimation::EaseIn), true);
+    setTitle(Wt::WString::tr(TXT_SITE_TITLE));
 
-    menu = new HGMenu(content, session);
+    useStyleSheet("res/style.css");
+    root()->setStyleClass("main");
 
-    page->setId("body");
+    messageResourceBundle().use("langs/panel");
 
-    // add header img
-    page->addWidget(new WImage("img/header_top.jpg", page));
+    // page creation
+    templ = new WTemplate();
 
-    // create and add div "header"
-    WContainerWidget * tmpContainer = new WContainerWidget(page);
-    tmpContainer->setId("header");
+    content =  new Wt::WStackedWidget();
+    langs = new LangsWidget();
+    menu = CreateMenu();
+    login = new LoginWidget(session, templ);
 
-    // add div "character" do div "header"
-    WContainerWidget * tmpContainer2 = new WContainerWidget(tmpContainer);
-    tmpContainer2->setId("character");
-    tmpContainer->addWidget(tmpContainer2);
+    templ->bindWidget("add-langs", langs);
+    templ->bindWidget("add-login", login);
+    templ->bindWidget("add-menu", menu);
+    templ->bindWidget("add-content", content);
+    templ->bindWidget("add-profile", new WText("testus profile"));
 
-    // add img logo to div "header"
-    WImage * tmpImg = new WImage("img/logo.png", tmpContainer);
-    tmpImg->setId("logo");
-    tmpImg->setAlternateText(SITE_NAME);
-    tmpContainer->addWidget(tmpImg);
+    templ->addFunction("tr", &WTemplate::Functions::tr);
+    templ->setCondition("if-loggedin", false);
+    templ->setCondition("if-notlogged", true);
 
-    page->addWidget(tmpContainer);
+    templ->setTemplateText(
+        "<div class=\"head\" ></div>"
+        "<div class=\"sidebar\" >"
 
-    // reset variables
-    tmpContainer = NULL;
-    tmpContainer2 = NULL;
-    tmpImg = NULL;
+            "<div class=\"profile-top\"></div>"
+            "<div class=\"profile\" >"
+//                "${<if-loggedin>}"
+//                    "${add-profile}"
+//                "${</if-loggedin>}"
+                "${<if-notlogged>}"
+                    "${add-login}"
+                "${</if-notlogged>}"
+            "</div>"
+            "<div class=\"profile-bottom\"></div>"
 
-    // add empty div "header-bot" to div "body"
-    tmpContainer = new WContainerWidget(page);
-    tmpContainer->setId("header-bot");
+            "<div class=\"langs-top\"></div>"
+            "<div class=\"langs\" >${add-langs}</div>"
+            "<div class=\"langs-bottom\"></div>"
 
-    page->addWidget(tmpContainer);
+            "<div class=\"menu-top\"></div>"
+            "<div class=\"menu\">${add-menu}</div>"
+            "<div class=\"menu-bottom\"></div>"
 
-    tmpContainer = NULL;
+        "</div>"
+        "<div class=\"content\" >${add-content}</div> "
+        "<div class=\"footer\" >${tr:site.footer}</div>");
 
-    // create and add div "content"
-    tmpContainer = new WContainerWidget(page);
-    tmpContainer->setId("content");
-    tmpContainer->setStyleClass("content-collapsed");
+    root()->addWidget(templ);
+}
 
-    WTable * tmpTable = new WTable(tmpContainer);
-    tmpTable->setStyleClass("content-table");
-    tmpTable->setAttributeValue("align", "center");
-    tmpTable->setAttributeValue("cellpadding", "0");
-    tmpTable->setAttributeValue("cellspacing", "0");
-    tmpTable->setAttributeValue("border", "0");
+Wt::WMenu * PlayersPanel::CreateMenu(Wt::Orientation ori)
+{
+    menu = new HGMenu(content, session, templ, ori);
 
-    tmpTable->elementAt(0, 0)->setId("sidebar");
-    menu->setId("sidemenubar");
-    tmpTable->elementAt(0, 0)->addWidget(menu);
-
-    tmpTable->elementAt(0, 1)->setId("main");
-    tmpTable->elementAt(0, 1)->setStyleClass("main-collapsed");
-    content->setId("mainframe");
-    content->setStyleClass("mainframe-collapsed");
-    tmpTable->elementAt(0, 1)->addWidget(content);
-
-    tmpContainer->addWidget(tmpTable);
-
-    page->addWidget(tmpContainer);
-
-    tmpTable = NULL;
-    tmpContainer = NULL;
-
-    // add div "footer"
-    tmpContainer = new WContainerWidget(page);
-    tmpContainer->setId("footer");
-
-    tmpContainer2 = new WContainerWidget(tmpContainer);
-    tmpContainer2->setId("chains");
-
-    tmpContainer->addWidget(tmpContainer2);
-
-    page->addWidget(tmpContainer);
-
-    if (env.agentIsIElt(7))
-        useStyleSheet("css/ie.css");
-    else
-        useStyleSheet("css/style.css");
-
-    root()->addWidget(page);
-
-    WBreak * tmpBreak = new WBreak(root());
-    tmpBreak->clearSides();
-    root()->addWidget(tmpBreak);
-
-    tmpBreak = NULL;
-
-    root()->addWidget(new WBreak());
-    root()->addWidget(new WBreak());
+    return menu;
 }
 
 PlayersPanel::~PlayersPanel()
 {
-    delete menu;
     delete content;
     delete session;
-    delete page;
 }
 
-WApplication *createApplication(const WEnvironment& env)
+WApplication *createApplication(const Wt::WEnvironment& env)
 {
     console(DEBUG_CODE, "Call WApplication *createApplication(const WEnvironment& env)");
     // You could read information from the environment to decide
     // whether the user has permission to start a new application
 
     PlayersPanel * tmpPanel = new PlayersPanel(env);
-
-    tmpPanel->messageResourceBundle().use("langs/panel");
 
     return tmpPanel;
 }

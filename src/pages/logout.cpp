@@ -29,9 +29,9 @@
 
 #include "logout.h"
 
-#include <Wt/WApplication>
 #include <Wt/WBreak>
 #include <Wt/WPushButton>
+#include <Wt/WTemplate>
 #include <Wt/WText>
 
 /********************************************//**
@@ -42,8 +42,8 @@
  *
  ***********************************************/
 
-LogoutPage::LogoutPage(SessionInfo * session, WContainerWidget * parent)
-: WContainerWidget(parent), sess(session)
+LogoutPage::LogoutPage(SessionInfo * session, WTemplate * tmpl, WContainerWidget * parent)
+: WContainerWidget(parent), sess(session), templ(tmpl)
 {
     btn = NULL;
 
@@ -61,10 +61,6 @@ LogoutPage::LogoutPage(SessionInfo * session, WContainerWidget * parent)
 void LogoutPage::refresh()
 {
     console(DEBUG_CODE, "\nLogoutPage::refresh()\n");
-
-    if (isHidden() || isDisabled())
-        return;
-
     WContainerWidget::refresh();
 }
 
@@ -79,10 +75,10 @@ void LogoutPage::CreateLogoutPage()
 {
     console(DEBUG_CODE, "\nLogoutPage::CreateLogoutPage()\n");
 
-    btn = new WPushButton(tr(TXT_BTN_LOGOUT));
+    btn = new WPushButton(Wt::WString::tr(TXT_BTN_LOGOUT));
     btn->clicked().connect(this, &LogoutPage::Logout);
 
-    addWidget(new WText(tr(TXT_INFO_LOGOUT)));
+    addWidget(new WText(Wt::WString::tr(TXT_INFO_LOGOUT)));
     addWidget(new WBreak());
     addWidget(new WBreak());
     addWidget(new WBreak());
@@ -103,5 +99,7 @@ void LogoutPage::Logout()
 
     sess->Clear();
 
-    wApp->root()->refresh();
+    templ->setCondition("if-loggedin", false);
+    templ->setCondition("if-notlogged", true);
+    templ->refresh();
 }

@@ -39,40 +39,15 @@
  *
  ***********************************************/
 
-DefaultPage::DefaultPage(SessionInfo * sess, WContainerWidget * parent)
-: WContainerWidget(parent), session(sess)
+DefaultPage::DefaultPage(WContainerWidget * parent)
+: WContainerWidget(parent)
 {
-    needCreation = true;
+    new WText(Wt::WString::tr(TXT_INFO_SERVER), this);
 }
 
 DefaultPage::~DefaultPage()
 {
-    session = NULL;
-}
 
-/********************************************//**
- * \brief Overloads WContainerWidget::refresh() for automatic content change.
- *
- * This function can delete old and create new content.
- * In most situations this is used for content update or language change ;)
- *
- ***********************************************/
-
-void DefaultPage::refresh()
-{
-    if (isHidden() || isDisabled())
-        return;
-
-    if (needCreation)
-    {
-        needCreation = false;
-        text = new WText(tr(TXT_INFO_SERVER), this);
-        text->setInternalPathEncoding(true);
-    }
-    else
-        text->setText(tr(TXT_INFO_SERVER));
-
-    WContainerWidget::refresh();
 }
 
 /********************************************//**

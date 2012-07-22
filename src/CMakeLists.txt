@@ -12,15 +12,20 @@ add_executable(panel.wt ${PANEL_SRCS})
 
 target_link_libraries(panel.wt
     ${Wt_LIBRARY}
-    ${Wt_FCGI_LIBRARY}
     ${Boost_REGEX_LIBRARY}
     ${MYSQL_LIBRARY}
     ${CURL_LIBRARY}
     ${JWSMTP_LIBRARY}
 )
 
+if (USE_HTTP)
+    target_link_libraries(panel.wt ${Wt_HTTP_LIBRARY})
+else (USE_HTTP)
+    target_link_libraries(panel.wt ${Wt_FCGI_LIBRARY})
+endif (USE_HTTP)
+
 install(TARGETS panel.wt
-    RUNTIME DESTINATION ${INSTALL_DIR}
+    RUNTIME DESTINATION .
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
                 GROUP_EXECUTE GROUP_READ
                 WORLD_EXECUTE WORLD_READ

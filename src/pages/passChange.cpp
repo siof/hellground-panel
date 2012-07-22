@@ -76,7 +76,7 @@ void PassChangePage::refresh()
 
 void PassChangePage::CreatePassChangePage()
 {
-    addWidget(new WText(tr(TXT_INFO_PASS_CHANGE)));
+    addWidget(new WText(Wt::WString::tr(TXT_INFO_PASS_CHANGE)));
     for (int i = 0; i < 4; ++i)
         addWidget(new WBreak());
 
@@ -86,23 +86,23 @@ void PassChangePage::CreatePassChangePage()
     addWidget(new WBreak());
 
     txtPassOld = new WLineEdit();
-    txtPassOld->setEmptyText(tr(TXT_PASS_OLD));
+    txtPassOld->setEmptyText(Wt::WString::tr(TXT_PASS_OLD));
     txtPassOld->setEchoMode(WLineEdit::Password);
-    addWidget(new WText(tr(TXT_PASS_OLD)));
+    addWidget(new WText(Wt::WString::tr(TXT_PASS_OLD)));
     addWidget(txtPassOld);
     addWidget(new WBreak());
 
     txtPass = new WLineEdit();
-    txtPass->setEmptyText(tr(TXT_PASS_NEW));
+    txtPass->setEmptyText(Wt::WString::tr(TXT_PASS_NEW));
     txtPass->setEchoMode(WLineEdit::Password);
-    addWidget(new WText(tr(TXT_PASS_NEW)));
+    addWidget(new WText(Wt::WString::tr(TXT_PASS_NEW)));
     addWidget(txtPass);
     addWidget(new WBreak());
 
     txtPass2 = new WLineEdit();
-    txtPass2->setEmptyText(tr(TXT_PASS_REPEAT));
+    txtPass2->setEmptyText(Wt::WString::tr(TXT_PASS_REPEAT));
     txtPass2->setEchoMode(WLineEdit::Password);
-    addWidget(new WText(tr(TXT_PASS_REPEAT)));
+    addWidget(new WText(Wt::WString::tr(TXT_PASS_REPEAT)));
     addWidget(txtPass2);
     addWidget(new WBreak());
     addWidget(new WBreak());
@@ -148,21 +148,21 @@ void PassChangePage::Change()
 
     if (tmpPass.size() > PASSWORD_LENGTH_MAX)
     {
-        changeInfo->setText(tr(TXT_ERROR_PASSWORD_TO_LONG));
+        changeInfo->setText(Wt::WString::tr(TXT_ERROR_PASSWORD_TO_LONG));
         ClearPass();
         return;
     }
 
     if (tmpPass.size() < PASSWORD_LENGTH_MIN)
     {
-        changeInfo->setText(tr(TXT_ERROR_PASSWORD_TO_SHORT));
+        changeInfo->setText(Wt::WString::tr(TXT_ERROR_PASSWORD_TO_SHORT));
         ClearPass();
         return;
     }
 
     if (pass != pass2)
     {
-        changeInfo->setText(tr(TXT_ERROR_PASSWORDS_MISMATCH));
+        changeInfo->setText(Wt::WString::tr(TXT_ERROR_PASSWORDS_MISMATCH));
         ClearPass();
         return;
     }
@@ -180,7 +180,7 @@ void PassChangePage::Change()
         shapass = db.GetRow()->fields[0].GetWString();
     else
     {
-        changeInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        changeInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         ClearPass();
         return;
     }
@@ -188,7 +188,7 @@ void PassChangePage::Change()
     if (shapass != session->pass)
     {
         console(DEBUG_CODE, "void PassChangePage::Change(): oldPass: %s , shapass: %s , pass: %s\n", txtPassOld->text().toUTF8().c_str(), shapass.toUTF8().c_str(), session->pass.toUTF8().c_str());
-        changeInfo->setText(tr(TXT_ERROR_WRONG_PASSWORD));
+        changeInfo->setText(Wt::WString::tr(TXT_ERROR_WRONG_PASSWORD));
         ClearPass();
         return;
     }
@@ -199,25 +199,25 @@ void PassChangePage::Change()
         shapass = db.GetRow()->fields[0].GetWString();
     else
     {
-        changeInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        changeInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         ClearPass();
         return;
     }
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        changeInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        changeInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
     db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = NULL, s = NULL, v = NULL WHERE id = '%u'", shapass.toUTF8().c_str(), session->accid);
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
-        changeInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        changeInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
     else
     {
         session->pass = shapass;
-        changeInfo->setText(tr(TXT_PASS_CHANGE_COMPLETE));
+        changeInfo->setText(Wt::WString::tr(TXT_PASS_CHANGE_COMPLETE));
     }
 
     ClearPass();
