@@ -48,9 +48,6 @@ Linki
     <message id='menu.licence'>
 Licencja
     </message>
-    <message id='menu.error'>
-Błąd
-    </message>
     <message id='menu.gm.panel'>
 Panel GM
     </message>
@@ -278,7 +275,7 @@ otrzymałeś tą wiadomość, Ponieważ dnia {1} ktoś z adresu IP {2} wygenerow
 
 Twoje nowe hasło: {3}
 
-Aby zmienić hasło zaloguj sie w panelu gracza (http://panel.hellground.pl/) używając nowego hasła przesłanego w tej wiadomości.
+Aby zmienić hasło zaloguj sie w panelu gracza ( http://panel.hellground.pl/p.wt/ ) używając nowego hasła przesłanego w tej wiadomości.
 
 Serdecznie pozdrawiamy, administracja HellGround.pl
     </message>
@@ -315,7 +312,7 @@ Dziękujemy za utworzenie konta w naszym projekcie.
 Proszę zachować tą wiadomość na wypadek zgubienia/zapomnienia loginu do konta – administracja nie przypomni ani nie zmieni Twoich danych do konta.
 Hasło do konta możesz zmienić poprzez panel gracza lub w grze poprzez użycie komendy. Aby poznać liste komend dostępnych dla Ciebie wpisz w chacie komendę .help
 
-Panel gracza: http://panel.hellground.pl.
+Panel gracza: http://panel.hellground.pl/p.wt/
 Jak zagrać: http://wow.hellground.pl/how-to-play/
 
 Życzymy przyjemnej gry, administracja Hellground.pl
@@ -475,7 +472,7 @@ Sprzęt:
 </ul><br/>
 Dla nowych graczy:<br/>
 <ul>
-    <li>Rejestracja: <a href="#/account"><font color="#00FF00">Otwarta</font></a></li>
+    <li>Rejestracja: <a href="#/register"><font color="#00FF00">Otwarta</font></a></li>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
     <li>Emulator: TrinityCore + <a href="http://wow.hellground.pl/changelog/">własne fixy</a></li>
@@ -634,6 +631,9 @@ Nazwa
     </message>
     <message id='general.state'>
 Stan
+    </message>
+    <message id='general.error'>
+Błąd
     </message>
 
     <message id='ip.current'>
@@ -815,7 +815,7 @@ Nie znaleziono postaci !
     <message id='error.ip.mistach'>
 Konto posiada włączoną blokadę IP oraz Twój aktualny adres IP nie pasuje do IP konta.<br/><br/>
 
-Jeśli to konto jest Twoje użyj opcji <a href="#/account">odzyskiwania hasła</a> w celu zresetowania hasła i blokady IP.
+Jeśli to konto jest Twoje użyj opcji <a href="#/recover">odzyskiwania hasła</a> w celu zresetowania hasła i blokady IP.
     </message>
     <message id='error.vote.multiple'>
 Nie możesz jeszcze zagłosować na tą liste

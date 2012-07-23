@@ -252,7 +252,6 @@ enum MenuOptions
 #define TXT_MENU_SERVER_STATUS          "menu.serverstatus"         /**< Server status menu button */
 #define TXT_MENU_LINKS                  "menu.links"                /**< Links menu button */
 #define TXT_MENU_LICENCE                "menu.licence"              /**< Licence informations page */
-#define TXT_MENU_ERROR                  "menu.error"                /**< Error page (shouldn't be visible) */
 
 #define TXT_MENU_GM_PANEL               "menu.gm.panel"             /**< Game Masters panel main page menu button */
 #define TXT_MENU_GM_TICKETS             "menu.gm.tickets"           /**< Game Masters tickets (in panel) menu button*/
@@ -461,6 +460,7 @@ enum MenuOptions
 #define TXT_GEN_OFF                     "general.off"               /**< General off label */
 #define TXT_GEN_NAME                    "general.name"              /**< General name label */
 #define TXT_GEN_STATE                   "general.state"             /**< Genaral state label */
+#define TXT_GEN_ERROR                   "general.error"             /**< Genaral error label */
 
 /** Current ip */
 #define TXT_CURRENT_IP                  "ip.current"                /**< Current ip label */

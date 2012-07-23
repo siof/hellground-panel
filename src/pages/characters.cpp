@@ -464,7 +464,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
             i = 1;
 
             DatabaseRow * tmpRow;
-            WText * tmpText;
+            Wt::WText * tmpText;
             for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
