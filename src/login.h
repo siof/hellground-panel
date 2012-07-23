@@ -34,6 +34,7 @@ private:
     Wt::WPushButton * btn;
 
     void Login();
+    void ShowError(const char * name, const char * txt);
     void AddActivityLogIn(bool success, const char * login = NULL);
     void AddActivityLogIn(uint32 id, bool success);
 };

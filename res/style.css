@@ -24,7 +24,24 @@ button
     background-color: white;
     border: 2px solid gray;
     border-radius: 10px;
-    padding: 2px;
+    margin: 1px;
+}
+
+.content table, .content div
+{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.Wt-dialog
+{
+    color: black;
+}
+
+ul
+{
+    text-align: left;
 }
 
 div.main
@@ -191,10 +208,3 @@ table, th, td
     text-align: center;
     vertical-align: middle;
 }
-
-.content table, div
-{
-    margin-left: auto;
-    margin-right: auto;
-}
-

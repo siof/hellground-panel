@@ -21,6 +21,7 @@
 #include <Wt/WBreak>
 #include <Wt/WLengthValidator>
 #include <Wt/WLineEdit>
+#include <Wt/WMessageBox>
 #include <Wt/WPushButton>
 #include <Wt/WRegExpValidator>
 #include <Wt/WTemplate>
@@ -64,6 +65,11 @@ LoginWidget::~LoginWidget()
     session = NULL;
 }
 
+void LoginWidget::ShowError(const char * name, const char * txt)
+{
+    WMessageBox::show(Wt::WString::tr(name), Wt::WString::tr(txt), Ok);
+}
+
 void LoginWidget::Login()
 {
     bool validLogin = login->validate() == Wt::WValidator::Valid;
@@ -72,13 +78,14 @@ void LoginWidget::Login()
     if (!validLogin || !validPass)
     {
         Log(LOG_INVALID_DATA, "User trying to log in with invalid data ! ip: %s login: %s pass: %s", session->sessionIp.toUTF8().c_str(), login->text().toUTF8().c_str(), pass->text().toUTF8().c_str());
+        ShowError(TXT_GEN_ERROR, TXT_ERROR_VALIDATION_LOGIN);
         return;
     }
 
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-//        ClearLoginData();
+        ShowError(TXT_GEN_ERROR, TXT_ERROR_DB_CANT_CONNECT);
         return;
     }
 
@@ -92,17 +99,15 @@ void LoginWidget::Login()
     {
         case DB_RESULT_ERROR:
         {
-//            AddActivityLogIn(false, escapedLogin.c_str());
-            // if there was database error
-//            ClearLoginData();
+            AddActivityLogIn(false, escapedLogin.c_str());
+            ShowError(TXT_GEN_ERROR, TXT_ERROR_DB_QUERY_ERROR);
             return;
         }
         case DB_RESULT_EMPTY:
         {
-//            AddActivityLogIn(false, escapedLogin.c_str());
+            AddActivityLogIn(false, escapedLogin.c_str());
             Log(LOG_STRANGE_DATA, "User with IP: %s tried to login with strange data (SHA return empty)! login: %s pass: %s", session->sessionIp.toUTF8().c_str(), escapedLogin.c_str(), escapedPass.c_str());
-            //if wrong data
-//            ClearLoginData();
+            ShowError(TXT_GEN_ERROR, TXT_ERROR_VALIDATION_LOGIN);
             return;
         }
         default:
@@ -122,16 +127,14 @@ void LoginWidget::Login()
     {
         case DB_RESULT_ERROR:
         {
-//            AddActivityLogIn(false, escapedLogin.c_str());
-            // if there was database error
-//            ClearLoginData();
+            AddActivityLogIn(false, escapedLogin.c_str());
+            ShowError(TXT_GEN_ERROR, TXT_ERROR_DB_QUERY_ERROR);
             return;
         }
         case DB_RESULT_EMPTY:
         {
-//            AddActivityLogIn(false, escapedLogin.c_str());
-            //if wrong data
-//            ClearLoginData();
+            AddActivityLogIn(false, escapedLogin.c_str());
+            ShowError(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
             return;
         }
         default:
@@ -140,26 +143,25 @@ void LoginWidget::Login()
 
             if (!row)
             {
-//                ClearLoginData();
+                ShowError(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
                 return;
             }
 
             if (row->fields[1].GetWString() != shapass)
             {
-//                AddActivityLogIn(row->fields[2].GetUInt32(), false);
-                //if wrong data
-//                ClearLoginData();
+                AddActivityLogIn(row->fields[2].GetUInt32(), false);
+                ShowError(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
                 return;
             }
 
             if (row->fields[7].GetBool() && row->fields[6].GetWString() != session->sessionIp)
             {
-//                AddActivityLogIn(row->fields[2].GetUInt32(), false);
-//                ClearLoginData();
+                AddActivityLogIn(row->fields[2].GetUInt32(), false);
+                ShowError(TXT_GEN_ERROR, TXT_ERROR_IP_MISMATCH);
                 return;
             }
 
-//            AddActivityLogIn(row->fields[2].GetUInt32(), true);
+            AddActivityLogIn(row->fields[2].GetUInt32(), true);
 
             session->login = row->fields[0].GetWString();
             session->pass = row->fields[1].GetWString();
@@ -179,22 +181,42 @@ void LoginWidget::Login()
             login->setText("");
             pass->setText("");
 
-//            WAnimation fade(WAnimation::Fade, WAnimation::Linear, 250);
-//            login->setHidden(true, fade);
-//            pass->setHidden(true, fade);
-//            btnLog->setHidden(true, fade);
-//            login->setDisabled(true);
-//            pass->setDisabled(true);
-//            btnLog->setDisabled(true);
-//            setHidden(true);
-//            refresh();
             templ->setCondition("if-loggedin", true);
             templ->setCondition("if-notlogged", false);
-            //templ->refresh();
-            wApp->root()->refresh();
+            templ->refresh();
+            //wApp->root()->refresh();
             break;
         }
     }
+}
 
-//    ClearLoginData();
+void LoginWidget::AddActivityLogIn(bool success, const char * login)
+{
+    Database db;
+
+    uint32 accId = session->accid;
+
+    if (!accId)
+    {
+        if (!login || !db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+            return;
+
+        if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login) > DB_RESULT_EMPTY)
+            accId = db.GetRow()->fields[0].GetUInt32();
+        else
+            return;
+    }
+
+    AddActivityLogIn(accId, success);
+}
+
+void LoginWidget::AddActivityLogIn(uint32 id, bool success)
+{
+    if (!id)
+        return;
+
+    Database db;
+
+    db.Connect(PANEL_DB_DATA, SQL_PANELDB);
+    db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_LOGIN_SUCCESS : TXT_ACT_LOGIN_FAIL);
 }
