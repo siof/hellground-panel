@@ -796,6 +796,26 @@ extern bool SameSide(const uint8 & race1, const uint8 & race2);
 extern uint32 CalculateTalentCost(uint32 lastCost, uint32 months);
 
 /********************************************//**
+ * \brief Uppers given text and returns sha1 from uppered text.
+ *
+ * \param txt   text to be uppered and sha1 hashed
+ * \return hashed hex string
+ *
+ ***********************************************/
+
+extern std::string GetUpperSHA1(std::string & txt);
+
+/********************************************//**
+ * \brief Uppers given text and returns sha1 from uppered text.
+ *
+ * \param txt   text to be uppered and sha1 hashed
+ * \return hashed hex WString
+ *
+ ***********************************************/
+
+extern Wt::WString WGetUpperSHA1(std::string & txt);
+
+/********************************************//**
  * \brief Represents single spell informations.
  ***********************************************/
 

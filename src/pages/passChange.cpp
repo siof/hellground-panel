@@ -174,15 +174,8 @@ void PassChangePage::Change()
     WString shapass;
     std::string escapedLogin = db.EscapeString(session->login);
     std::string escapedPass = db.EscapeString(txtPassOld->text());
-
-    if (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()) > DB_RESULT_EMPTY)
-        shapass = db.GetRow()->fields[0].GetWString();
-    else
-    {
-        changeInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
-        ClearPass();
-        return;
-    }
+    std::string passStr = GetFormattedString("%s:%s", escapedLogin.c_str(), escapedPass.c_str());
+    shapass = WGetUpperSHA1(passStr);
 
     if (shapass != session->pass)
     {
@@ -193,15 +186,8 @@ void PassChangePage::Change()
     }
 
     escapedPass = db.EscapeString(pass);
-
-    if (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()) > DB_RESULT_EMPTY)
-        shapass = db.GetRow()->fields[0].GetWString();
-    else
-    {
-        changeInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
-        ClearPass();
-        return;
-    }
+    passStr = GetFormattedString("%s:%s", escapedLogin.c_str(), escapedPass.c_str());
+    shapass = WGetUpperSHA1(passStr);
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {

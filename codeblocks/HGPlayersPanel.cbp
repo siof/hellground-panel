@@ -19,10 +19,8 @@
 					<Add library="wthttp" />
 				</Linker>
 				<ExtraCommands>
-					<Add after="cp -r ../img ./Debug/" />
-					<Add after="cp -r ../css ./Debug/" />
+					<Add after="cp -r ../res ./Debug/" />
 					<Add after="cp -r ../langs ./Debug/" />
-					<Add after="cp ../favicon.ico ./Debug/" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
