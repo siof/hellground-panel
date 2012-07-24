@@ -19,6 +19,8 @@
 
 #include <stdarg.h>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <jwsmtp/jwsmtp.h>
 
 #include <Wt/WEnvironment>
@@ -31,6 +33,7 @@
 #include <Wt/WTable>
 #include <Wt/WText>
 #include <Wt/WTemplate>
+#include <Wt/Utils>
 
 #include "defines.h"
 #include "database.h"
@@ -295,6 +298,19 @@ uint32 CalculateTalentCost(uint32 lastCost, uint32 months)
             return new_cost;
         }
     }
+}
+
+std::string GetUpperSHA1(std::string & txt)
+{
+    std::string upper = boost::algorithm::to_upper_copy(txt);
+    std::string sha1d = Wt::Utils::hexEncode(Wt::Utils::sha1(upper));
+
+    return sha1d;
+}
+
+Wt::WString WGetUpperSHA1(std::string & txt)
+{
+    return Wt::WString::fromUTF8(GetUpperSHA1(txt));
 }
 
 PlayersPanel::PlayersPanel(const WEnvironment& env)

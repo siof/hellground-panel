@@ -89,33 +89,10 @@ void LoginWidget::Login()
         return;
     }
 
-    // simple login check ... should be replaced with something better
-
     std::string escapedLogin = db.EscapeString(login->text());
     std::string escapedPass = db.EscapeString(pass->text());
-    WString shapass;
-
-    switch (db.ExecutePQuery("SELECT SHA1(UPPER('%s:%s'))", escapedLogin.c_str(), escapedPass.c_str()))
-    {
-        case DB_RESULT_ERROR:
-        {
-            AddActivityLogIn(false, escapedLogin.c_str());
-            ShowError(TXT_GEN_ERROR, TXT_ERROR_DB_QUERY_ERROR);
-            return;
-        }
-        case DB_RESULT_EMPTY:
-        {
-            AddActivityLogIn(false, escapedLogin.c_str());
-            Log(LOG_STRANGE_DATA, "User with IP: %s tried to login with strange data (SHA return empty)! login: %s pass: %s", session->sessionIp.toUTF8().c_str(), escapedLogin.c_str(), escapedPass.c_str());
-            ShowError(TXT_GEN_ERROR, TXT_ERROR_VALIDATION_LOGIN);
-            return;
-        }
-        default:
-        {
-            shapass = db.GetRow()->fields[0].GetWString();
-            break;
-        }
-    }
+    std::string passStr = GetFormattedString("%s:%s", escapedLogin.c_str(), escapedPass.c_str());
+    WString shapass = WGetUpperSHA1(passStr);
 
                //           0            1         2     3       4       5         6       7         8       9         10
     db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion, vote, account_flags "

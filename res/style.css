@@ -208,3 +208,11 @@ table, th, td
     text-align: center;
     vertical-align: middle;
 }
+
+.loading
+{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+}
