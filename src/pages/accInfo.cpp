@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -37,6 +37,8 @@
 #include <Wt/WText>
 
 #include "../database.h"
+#include "../misc.h"
+#include "../miscClient.h"
 
 /********************************************//**
  * \brief Creates new AccountInfoPage object.
@@ -175,7 +177,7 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
         tmpRow = realmDb.GetRow();
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_TYPE, 1)->widget(0);
-        ((WText*)tmpWidget)->setText(GetExpansionName(tmpRow->fields[4].GetInt()));
+        ((WText*)tmpWidget)->setText(Misc::Client::GetExpansionName(tmpRow->fields[4].GetInt()));
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_LAST_LOGIN_DATE, 1)->widget(0);
         ((WText*)tmpWidget)->setText(tmpRow->fields[2].GetWString());
@@ -190,10 +192,10 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
         ((WText*)tmpWidget)->setText(Wt::WString::tr(tmpRow->fields[3].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_CLIENT_VERSION, 1)->widget(0);
-        ((WText*)tmpWidget)->setText(GetLocale(tmpRow->fields[5].GetInt()));
+        ((WText*)tmpWidget)->setText(Misc::Client::GetLocale(tmpRow->fields[5].GetInt()));
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_VOTE_POINTS, 1)->widget(0);
-        ((WText*)tmpWidget)->setText(GetFormattedString("%u", session->vote));
+        ((WText*)tmpWidget)->setText(Misc::GetFormattedString("%u", session->vote));
 
         tmpWidget = accountInfo->elementAt(ACCINFO_SLOT_XP_RATE, 1)->widget(0);
         ((WPushButton*)tmpWidget)->setText(Wt::WString::tr(session->account_flags & 0x0008 ? TXT_XP_RATE_BLIZZLIKE : TXT_XP_RATE_SERVER));
@@ -240,10 +242,10 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
 
 WContainerWidget * AccountInfoPage::CreateAccountInfo()
 {
-    console(DEBUG_CODE, "\nCall WContainerWidget * AccountInfoPage::CreateAccountInfo()\n");
-    WContainerWidget * basicInfo = new WContainerWidget(this);
+    Misc::Console(DEBUG_CODE, "\nCall WContainerWidget * AccountInfoPage::CreateAccountInfo()\n");
+    Wt::WContainerWidget * basicInfo = new Wt::WContainerWidget(this);
 
-    accountInfo = new WTable(basicInfo);
+    accountInfo = new Wt::WTable(basicInfo);
 
     accountInfo->elementAt(ACCINFO_SLOT_TYPE, 0)->addWidget(new WText(Wt::WString::tr(TXT_ACC_EXPANSION)));
     accountInfo->elementAt(ACCINFO_SLOT_TYPE, 1)->addWidget(new WText(""));
@@ -406,7 +408,7 @@ WString AccountInfoPage::GetEmail()
 
 void AccountInfoPage::ClearPage()
 {
-    console(DEBUG_CODE, "\nAccountInfoPage::ClearPage()\n");
+    Misc::Console(DEBUG_CODE, "\nAccountInfoPage::ClearPage()\n");
 
     needCreation = true;
 

@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -38,6 +38,7 @@
 #include <Wt/WText>
 
 #include "../database.h"
+#include "../misc.h"
 
 /********************************************//**
  * \brief Creates new VotePage object.
@@ -68,7 +69,7 @@ VotePage::~VotePage()
 
 void VotePage::refresh()
 {
-    console(DEBUG_CODE, "void VotePage::refresh()\n");
+    Misc::Console(DEBUG_CODE, "void VotePage::refresh()\n");
 
     // only logged in players can visit this page so there is no need to create/update it in other cases
     if (session->accLvl <= LVL_NOT_LOGGED)
@@ -76,7 +77,7 @@ void VotePage::refresh()
     else if (needCreation)
         CreateVotePage();
 
-    WContainerWidget::refresh();
+    Wt::WContainerWidget::refresh();
 }
 
 /********************************************//**
@@ -89,31 +90,31 @@ void VotePage::refresh()
 
 void VotePage::CreateVotePage()
 {
-    console(DEBUG_CODE, "void VotePage::CreateVotePage()\n");
+    Misc::Console(DEBUG_CODE, "void VotePage::CreateVotePage()\n");
 
     needCreation = false;
 
     votePageInfo = new WText("");
 
-    addWidget(new WText(tr(TXT_INFO_SUPPORT_VOTE)));
-    addWidget(new WBreak());
-    addWidget(new WBreak());
+    addWidget(new Wt::WText(Wt::WString::tr(TXT_INFO_SUPPORT_VOTE)));
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WBreak());
     addWidget(votePageInfo);
-    addWidget(new WBreak());
-    addWidget(new WBreak());
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WBreak());
 
     votes = new Wt::WTable();
     votes->setHeaderCount(1);
 
-    votes->elementAt(0, 0)->addWidget(new WText(""));
-    votes->elementAt(0, 1)->addWidget(new WText(tr(TXT_GEN_NAME)));
-    votes->elementAt(0, 2)->addWidget(new WText(tr(TXT_GEN_STATE)));
+    votes->elementAt(0, 0)->addWidget(new Wt::WText(""));
+    votes->elementAt(0, 1)->addWidget(new Wt::WText(Wt::WString::tr(TXT_GEN_NAME)));
+    votes->elementAt(0, 2)->addWidget(new Wt::WText(Wt::WString::tr(TXT_GEN_STATE)));
 
     addWidget(votes);
 
     if (!wApp->environment().javaScript() || !wApp->environment().ajax())
     {
-        votePageInfo->setText(tr(TXT_ERROR_NEED_JAVA_SCRIPT));
+        votePageInfo->setText(Wt::WString::tr(TXT_ERROR_NEED_JAVA_SCRIPT));
         return;
     }
 
@@ -121,7 +122,7 @@ void VotePage::CreateVotePage()
 
     if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        votePageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -133,7 +134,7 @@ void VotePage::CreateVotePage()
     switch (db.ExecuteQuery("SELECT id, url, img_url, alt_text, name FROM Vote"))
     {
         case DB_RESULT_ERROR:
-            votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
         case DB_RESULT_EMPTY:
         default:
@@ -167,7 +168,7 @@ void VotePage::CreateVotePage()
     switch (db.ExecuteQuery())
     {
         case DB_RESULT_ERROR:
-            votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+            votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
         case DB_RESULT_EMPTY:
         default:
@@ -199,9 +200,9 @@ void VotePage::CreateVotePage()
     int i = 1;
     for (std::vector<VoteInfo>::iterator itr = votesInfo.begin(); itr != votesInfo.end(); ++itr, ++i)
     {
-        Wt::WAnchor * tmpAnch = new WAnchor(WLink((*itr).url.toUTF8()));
-        tmpAnch->setImage(new WImage(WLink((*itr).imgUrl.toUTF8()), (*itr).altText));
-        tmpAnch->setTarget(TargetNewWindow);
+        Wt::WAnchor * tmpAnch = new Wt::WAnchor(Wt::WLink((*itr).url.toUTF8()));
+        tmpAnch->setImage(new Wt::WImage(Wt::WLink((*itr).imgUrl.toUTF8()), (*itr).altText));
+        tmpAnch->setTarget(Wt::TargetNewWindow);
         tmpAnch->setDisabled((*itr).disabled);
 
         BindVote(tmpAnch->clicked(), (*itr).voteId);
@@ -209,9 +210,9 @@ void VotePage::CreateVotePage()
         votes->elementAt(i, 0)->addWidget(tmpAnch);
         votes->elementAt(i, 1)->addWidget(new WText((*itr).voteName));
         if ((*itr).disabled)
-            votes->elementAt(i, 2)->addWidget(new WText(tr(TXT_SUPPORT_VOTE_NEXT).arg((*itr).expire)));
+            votes->elementAt(i, 2)->addWidget(new Wt::WText(Wt::WString::tr(TXT_SUPPORT_VOTE_NEXT).arg((*itr).expire)));
         else
-            votes->elementAt(i, 2)->addWidget(new WText(tr(TXT_SUPPORT_VOTE_READY)));
+            votes->elementAt(i, 2)->addWidget(new Wt::WText(Wt::WString::tr(TXT_SUPPORT_VOTE_READY)));
 
         (*itr).index = i;
     }
@@ -223,26 +224,26 @@ void VotePage::CreateVotePage()
 
 void VotePage::ClearPage()
 {
-    console(DEBUG_CODE, "void VotePage::ClearPage()\n");
+    Misc::Console(DEBUG_CODE, "void VotePage::ClearPage()\n");
     votesInfo.clear();
     clear();
     needCreation = true;
 }
 
-void VotePage::BindVote(EventSignal<WMouseEvent>& signal, const uint32& id)
+void VotePage::BindVote(Wt::EventSignal<Wt::WMouseEvent>& signal, const uint32& id)
 {
     signal.connect(boost::bind(&VotePage::Vote, this, id));
 }
 
 void VotePage::Vote(const uint32& id)
 {
-    console(DEBUG_CODE, "void VotePage::Vote(const uint32& id = %u)\n", id);
-    if (WObject::sender())
+    Misc::Console(DEBUG_CODE, "void VotePage::Vote(const uint32& id = %u)\n", id);
+    if (Wt::WObject::sender())
     {
-        WAnchor * tmpAnch = ((WAnchor*)WObject::sender());
+        Wt::WAnchor * tmpAnch = ((Wt::WAnchor*)Wt::WObject::sender());
         if (tmpAnch->isDisabled())
         {
-            votePageInfo->setText(tr(TXT_ERROR_CANT_VOTE_TWICE));
+            votePageInfo->setText(Wt::WString::tr(TXT_ERROR_CANT_VOTE_TWICE));
             return;
         }
 
@@ -262,7 +263,7 @@ void VotePage::Vote(const uint32& id)
 
     if (currVote->disabled)
     {
-        votePageInfo->setText(tr(TXT_ERROR_CANT_VOTE_TWICE));
+        votePageInfo->setText(Wt::WString::tr(TXT_ERROR_CANT_VOTE_TWICE));
         return;
     }
 
@@ -272,7 +273,7 @@ void VotePage::Vote(const uint32& id)
 
     if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        votePageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -280,27 +281,27 @@ void VotePage::Vote(const uint32& id)
         currVote->expire = db.GetRow()->fields[0].GetWString();
     else
     {
-        votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
     db.SetPQuery("INSERT INTO AccVote VALUES ('%u', '%u', '%s')", session->accid, id, currVote->expire.toUTF8().c_str());
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
-        votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
     db.SetPQuery("INSERT INTO IPVote VALUES ('%s', '%u', '%s')", session->sessionIp.toUTF8().c_str(), id, currVote->expire.toUTF8().c_str());
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
-        votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        votePageInfo->setText(tr(TXT_ERROR_DB_CANT_CONNECT));
+        votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
@@ -308,11 +309,11 @@ void VotePage::Vote(const uint32& id)
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         session->vote--;
-        votePageInfo->setText(tr(TXT_ERROR_DB_QUERY_ERROR));
+        votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
-    votePageInfo->setText(tr(TXT_SUPPORT_VOTED));
+    votePageInfo->setText(Wt::WString::tr(TXT_SUPPORT_VOTED));
 
-    ((WText*)votes->elementAt(currVote->index, 2)->widget(0))->setText(tr(TXT_SUPPORT_VOTE_NEXT).arg(currVote->expire));
+    ((WText*)votes->elementAt(currVote->index, 2)->widget(0))->setText(Wt::WString::tr(TXT_SUPPORT_VOTE_NEXT).arg(currVote->expire));
 }

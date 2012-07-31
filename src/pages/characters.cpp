@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -38,6 +38,8 @@
 #include <Wt/WText>
 
 #include "../database.h"
+#include "../misc.h"
+#include "../miscCharacter.h"
 
 bool CharacterInfoPage::spellsLoaded = false;
 std::map<uint32, SpellInfo> CharacterInfoPage::spells;
@@ -374,8 +376,8 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
             DatabaseRow * tmpRow = db.GetRow();
 
             ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_LEVEL, 1)->widget(0))->setText(tmpRow->fields[0].GetWString());
-            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_RACE, 1)->widget(0))->setText(GetRaceName(tmpRow->fields[1].GetInt()));
-            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_CLASS, 1)->widget(0))->setText(GetClassName(tmpRow->fields[2].GetInt()));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_RACE, 1)->widget(0))->setText(Misc::Character::GetRaceName(tmpRow->fields[1].GetInt()));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_CLASS, 1)->widget(0))->setText(Misc::Character::GetClassName(tmpRow->fields[2].GetInt()));
             ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_NAME, 1)->widget(0))->setText(tmpRow->fields[3].GetWString());
             ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_ONLINE, 1)->widget(0))->setText(Wt::WString::tr(tmpRow->fields[4].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
 
@@ -400,12 +402,12 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
             tmpMinutes = tmpVal/60;
 
             ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_PLAYED_LVL, 1)->widget(0))->setText(Wt::WString::tr(TXT_CHAR_PLAYED_FMT).arg(tmpDays).arg(tmpHours).arg(tmpMinutes));
-            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_COST, 1)->widget(0))->setText(GetFormattedString("%u g", uint32(tmpRow->fields[7].GetUInt64()/GOLD)));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_COST, 1)->widget(0))->setText(Misc::GetFormattedString("%u g", uint32(tmpRow->fields[7].GetUInt64()/GOLD)));
             ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_LAST_RESET_TIME, 1)->widget(0))->setText(tmpRow->fields[8].GetWString());
 
             tmpVal = tmpRow->fields[9].GetUInt64();
             tmpVal /= 30;   // one month for core = 30 days
-            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_ACTUAL_RESET_COST, 1)->widget(0))->setText(GetFormattedString("%u g", uint32(CalculateTalentCost(tmpRow->fields[7].GetUInt64(), tmpVal)/GOLD)));
+            ((WText*)charBasicInfo->elementAt(CHARBASICINFO_SLOT_ACTUAL_RESET_COST, 1)->widget(0))->setText(Misc::GetFormattedString("%u g", uint32(Misc::Character::CalculateTalentCost(tmpRow->fields[7].GetUInt64(), tmpVal)/GOLD)));
 
             if (IsDeletedCharacter(guid))
             {
@@ -477,7 +479,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
 
                 tmpTable->elementAt(i, 0)->addWidget(tmpText);
                 tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[2].GetWString()));
-                tmpTable->elementAt(i, 2)->addWidget(new WText(GetQuestStatus(tmpRow->fields[3].GetInt(), tmpRow->fields[4].GetBool())));
+                tmpTable->elementAt(i, 2)->addWidget(new WText(Misc::Character::GetQuestStatus(tmpRow->fields[3].GetInt(), tmpRow->fields[4].GetBool())));
             }
 
             break;
@@ -654,7 +656,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
 
 void CharacterInfoPage::ClearPage(bool alsoCharList)
 {
-    console(DEBUG_CODE, "\nCharacterInfoPage::ClearPage()\n");
+    Misc::Console(DEBUG_CODE, "\nCharacterInfoPage::ClearPage()\n");
 
 /*
     WWidget * tmpWid;
@@ -777,12 +779,12 @@ void CharacterInfoPage::RestoreCharacter()
             bool sameFaction = true;
 
             #ifndef ALLOW_TWO_SIDE_ACCOUNTS
-            ConflictSide tmpConflictSide = GetSide(tmpCharInfo.race);
+            ConflictSide tmpConflictSide = Misc::Character::GetSide(tmpCharInfo.race);
             for (std::map<int, CharInfo>::const_iterator itr = indexToCharInfo.begin(); itr != indexToCharInfo.end(); ++itr)
             {
                 if (!itr->second.deleted)
                 {
-                    if (tmpConflictSide != GetSide(itr->second.race))
+                    if (tmpConflictSide != Misc::Character::GetSide(itr->second.race))
                     {
                         sameFaction = false;
                         break;

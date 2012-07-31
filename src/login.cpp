@@ -21,12 +21,14 @@
 #include <Wt/WBreak>
 #include <Wt/WLengthValidator>
 #include <Wt/WLineEdit>
-#include <Wt/WMessageBox>
 #include <Wt/WPushButton>
 #include <Wt/WRegExpValidator>
 #include <Wt/WTemplate>
 
 #include "database.h"
+#include "misc.h"
+#include "miscError.h"
+#include "miscHash.h"
 
 LoginWidget::LoginWidget(SessionInfo * sess, Wt::WTemplate * tmplt, Wt::WContainerWidget * parent)
 : Wt::WContainerWidget(parent)
@@ -65,11 +67,6 @@ LoginWidget::~LoginWidget()
     session = NULL;
 }
 
-void LoginWidget::ShowError(const char * name, const char * txt)
-{
-    WMessageBox::show(Wt::WString::tr(name), Wt::WString::tr(txt), Ok);
-}
-
 void LoginWidget::Login()
 {
     bool validLogin = login->validate() == Wt::WValidator::Valid;
@@ -77,22 +74,21 @@ void LoginWidget::Login()
 
     if (!validLogin || !validPass)
     {
-        Log(LOG_INVALID_DATA, "User trying to log in with invalid data ! ip: %s login: %s pass: %s", session->sessionIp.toUTF8().c_str(), login->text().toUTF8().c_str(), pass->text().toUTF8().c_str());
-        ShowError(TXT_GEN_ERROR, TXT_ERROR_VALIDATION_LOGIN);
+        Misc::Log(LOG_INVALID_DATA, "User trying to log in with invalid data ! ip: %s login: %s pass: %s", session->sessionIp.toUTF8().c_str(), login->text().toUTF8().c_str(), pass->text().toUTF8().c_str());
+        Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_VALIDATION_LOGIN);
         return;
     }
 
     Database db;
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {
-        ShowError(TXT_GEN_ERROR, TXT_ERROR_DB_CANT_CONNECT);
+        Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_DB_CANT_CONNECT);
         return;
     }
 
     std::string escapedLogin = db.EscapeString(login->text());
     std::string escapedPass = db.EscapeString(pass->text());
-    std::string passStr = GetFormattedString("%s:%s", escapedLogin.c_str(), escapedPass.c_str());
-    WString shapass = WGetUpperSHA1(passStr);
+    WString shapass = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.c_str(), escapedPass.c_str());
 
                //           0            1         2     3       4       5         6       7         8       9         10
     db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion, vote, account_flags "
@@ -105,13 +101,13 @@ void LoginWidget::Login()
         case DB_RESULT_ERROR:
         {
             AddActivityLogIn(false, escapedLogin.c_str());
-            ShowError(TXT_GEN_ERROR, TXT_ERROR_DB_QUERY_ERROR);
+            Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_DB_QUERY_ERROR);
             return;
         }
         case DB_RESULT_EMPTY:
         {
             AddActivityLogIn(false, escapedLogin.c_str());
-            ShowError(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
+            Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
             return;
         }
         default:
@@ -120,21 +116,21 @@ void LoginWidget::Login()
 
             if (!row)
             {
-                ShowError(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
+                Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
                 return;
             }
 
             if (row->fields[1].GetWString() != shapass)
             {
                 AddActivityLogIn(row->fields[2].GetUInt32(), false);
-                ShowError(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
+                Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
                 return;
             }
 
             if (row->fields[7].GetBool() && row->fields[6].GetWString() != session->sessionIp)
             {
                 AddActivityLogIn(row->fields[2].GetUInt32(), false);
-                ShowError(TXT_GEN_ERROR, TXT_ERROR_IP_MISMATCH);
+                Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_IP_MISMATCH);
                 return;
             }
 

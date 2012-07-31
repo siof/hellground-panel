@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -41,6 +41,7 @@
 #include "pages/characters.h"
 
 #include "database.h"
+#include "misc.h"
 
 HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, Wt::WTemplate * tmpl, Wt::Orientation ori, WContainerWidget *parent)
 : WMenu(menuContents, ori, parent)
@@ -130,7 +131,7 @@ void HGMenu::UpdateMenuOptions()
 
 void HGMenu::refresh()
 {
-    console(DEBUG_CODE, "\nHGMenu::refresh()\n");
+    Misc::Console(DEBUG_CODE, "\nHGMenu::refresh()\n");
 
     if (session->accLvl == LVL_LOGGED_OUT)
     {

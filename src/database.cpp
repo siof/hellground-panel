@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -19,9 +19,11 @@
 
 #include <cstdarg>
 
+#include "misc.h"
+
 /// DatabaseField
 
-WString DatabaseField::GetWString()
+Wt::WString DatabaseField::GetWString()
 {
     return value;
 }
@@ -90,7 +92,7 @@ AccountLevel DatabaseField::GetAccountLevel()
 /// DatabaseRow
 DatabaseRow::DatabaseRow(MYSQL_ROW row, int count)
 {
-    console(DEBUG_DB, "Call DatabaseRow::DatabaseRow(MYSQL_ROW row, int count = %i)\n", count);
+    Misc::Console(DEBUG_DB, "Call DatabaseRow::DatabaseRow(MYSQL_ROW row, int count = %i)\n", count);
 
     this->count = count;
     fields = new DatabaseField[count];
@@ -165,23 +167,23 @@ bool Database::SelectDatabase(std::string db)
 
 int Database::ExecuteQuery()
 {
-    console(DEBUG_DB, "\nCall int Database::ExecuteQuery() : actualQuery: %s", actualQuery.c_str());
+    Misc::Console(DEBUG_DB, "\nCall int Database::ExecuteQuery() : actualQuery: %s", actualQuery.c_str());
 
     Clear();
 
-    console(DEBUG_DB, "\n\nExecuteQuery(): test1\n");
+    Misc::Console(DEBUG_DB, "\n\nExecuteQuery(): test1\n");
 
     if (loggingEnabled)
-        Log(LOG_DB_QUERY, "DB Query execute: %s", actualQuery.c_str());
+        Misc::Log(LOG_DB_QUERY, "DB Query execute: %s", actualQuery.c_str());
 
     if (mysql_query(connection, actualQuery.c_str()))
     {
         if (loggingEnabled)
-            Log(LOG_DB_ERRORS, "DB Query error ! Error [%i]: %s", GetErrNo(), GetError());
+            Misc::Log(LOG_DB_ERRORS, "DB Query error ! Error [%i]: %s", GetErrNo(), GetError());
         return DB_RESULT_ERROR;
     }
 
-    console(DEBUG_DB, "\n\nExecuteQuery(): test2\n");
+    Misc::Console(DEBUG_DB, "\n\nExecuteQuery(): test2\n");
 
     MYSQL_RES * res;
 
@@ -190,7 +192,7 @@ int Database::ExecuteQuery()
         unsigned int count = mysql_field_count(connection);
         MYSQL_ROW row;
 
-        console(DEBUG_DB, "\n\nExecuteQuery(): test3 : count: %i\n", count);
+        Misc::Console(DEBUG_DB, "\n\nExecuteQuery(): test3 : count: %i\n", count);
         int i = 0;
 
         while (row = mysql_fetch_row(res))
@@ -199,12 +201,12 @@ int Database::ExecuteQuery()
             i++;
         }
 
-        console(DEBUG_DB, "\n\nExecuteQuery(): test4 : i: %i\n", i);
+        Misc::Console(DEBUG_DB, "\n\nExecuteQuery(): test4 : i: %i\n", i);
 
         mysql_free_result(res);
     }
 
-    console(DEBUG_DB, "\n\nExecuteQuery(): test5: rows.size(): %i\n", (int)rows.size());
+    Misc::Console(DEBUG_DB, "\n\nExecuteQuery(): test5: rows.size(): %i\n", (int)rows.size());
 
     return rows.size();
 }

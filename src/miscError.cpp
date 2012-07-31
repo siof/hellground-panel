@@ -15,25 +15,12 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Wt/WContainerWidget>
+#include "miscError.h"
 
-#include "defines.h"
+#include <Wt/WMessageBox>
+#include <Wt/WString>
 
-class LoginWidget : public Wt::WContainerWidget
+void Misc::Error::ShowErrorBoxTr(const char * name, const char * txt)
 {
-public:
-    LoginWidget(SessionInfo * sess, Wt::WTemplate * tmplt, Wt::WContainerWidget * parent = NULL);
-    ~LoginWidget();
-
-private:
-    SessionInfo * session;
-
-    Wt::WTemplate * templ;
-    Wt::WLineEdit * login;
-    Wt::WLineEdit * pass;
-    Wt::WPushButton * btn;
-
-    void Login();
-    void AddActivityLogIn(bool success, const char * login = NULL);
-    void AddActivityLogIn(uint32 id, bool success);
-};
+    Wt::WMessageBox::show(Wt::WString::tr(name), Wt::WString::tr(txt), Wt::Ok);
+}

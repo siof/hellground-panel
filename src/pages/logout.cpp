@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -34,6 +34,8 @@
 #include <Wt/WTemplate>
 #include <Wt/WText>
 
+#include "../misc.h"
+
 /********************************************//**
  * \brief Creates new LogoutPage object.
  *
@@ -60,7 +62,7 @@ LogoutPage::LogoutPage(SessionInfo * session, WTemplate * tmpl, WContainerWidget
 
 void LogoutPage::refresh()
 {
-    console(DEBUG_CODE, "\nLogoutPage::refresh()\n");
+    Misc::Console(DEBUG_CODE, "\nLogoutPage::refresh()\n");
     WContainerWidget::refresh();
 }
 
@@ -73,7 +75,7 @@ void LogoutPage::refresh()
 
 void LogoutPage::CreateLogoutPage()
 {
-    console(DEBUG_CODE, "\nLogoutPage::CreateLogoutPage()\n");
+    Misc::Console(DEBUG_CODE, "\nLogoutPage::CreateLogoutPage()\n");
 
     btn = new WPushButton(Wt::WString::tr(TXT_BTN_LOGOUT));
     btn->clicked().connect(this, &LogoutPage::Logout);
@@ -95,7 +97,7 @@ void LogoutPage::CreateLogoutPage()
 
 void LogoutPage::Logout()
 {
-    console(DEBUG_CODE, "\nLogoutPage::Logout()\n");
+    Misc::Console(DEBUG_CODE, "\nLogoutPage::Logout()\n");
 
     sess->Clear();
 

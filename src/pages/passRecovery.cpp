@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -37,6 +37,7 @@
 #include <Wt/WText>
 
 #include "../database.h"
+#include "../misc.h"
 
 PassRecoveryPage::PassRecoveryPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
@@ -63,7 +64,7 @@ PassRecoveryPage::~PassRecoveryPage()
 
 void PassRecoveryPage::refresh()
 {
-    console(DEBUG_CODE, "PassRecoveryPage::refresh()");
+    Misc::Console(DEBUG_CODE, "PassRecoveryPage::refresh()");
 
     if (isHidden() || isDisabled())
         return;
@@ -147,7 +148,7 @@ void PassRecoveryPage::Recover()
 
     if (!validLogin || !validEmail)
     {
-        Log(LOG_INVALID_DATA, "User trying to recover password with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
+        Misc::Log(LOG_INVALID_DATA, "User trying to recover password with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
         recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_VALIDATION_RECOVERY));
         return;
     }
@@ -183,12 +184,12 @@ void PassRecoveryPage::Recover()
     WString dbMail = db.GetRow()->fields[1].GetWString();
     std::string dbDate = db.GetRow()->fields[2].GetString();
 
-    console(DEBUG_CODE, "void Recover(): dbMail: %s mail: %s\n", txtEmail->text().toUTF8().c_str(), dbMail.toUTF8().c_str());
+    Misc::Console(DEBUG_CODE, "void Recover(): dbMail: %s mail: %s\n", txtEmail->text().toUTF8().c_str(), dbMail.toUTF8().c_str());
 
     mail = boost::to_upper_copy(txtEmail->text().toUTF8());
     dbMail = boost::to_upper_copy(dbMail.toUTF8());
 
-    console(DEBUG_CODE, "void Recover(): uppered: dbMail: %s mail: %s\n", mail.toUTF8().c_str(), dbMail.toUTF8().c_str());
+    Misc::Console(DEBUG_CODE, "void Recover(): uppered: dbMail: %s mail: %s\n", mail.toUTF8().c_str(), dbMail.toUTF8().c_str());
 
     if (mail != dbMail)
     {
@@ -200,12 +201,12 @@ void PassRecoveryPage::Recover()
 
     pass = "";
 
-    int passLen = irand(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
+    int passLen = Misc::Irand(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
 
     std::string tmpStr;
 
     for (int i = 0; i < passLen; ++i)
-        tmpStr += (char)(irand(PASSWORD_ASCII_START, PASSWORD_ASCII_END));
+        tmpStr += (char)(Misc::Irand(PASSWORD_ASCII_START, PASSWORD_ASCII_END));
 
     pass = db.EscapeString(WString::fromUTF8(tmpStr));
 
@@ -225,7 +226,7 @@ void PassRecoveryPage::Recover()
 
     msg = Wt::WString::tr(TXT_PASS_RECOVERY_MAIL).arg(dbDate).arg(session->sessionIp.toUTF8()).arg(tmpStr);
 
-    SendMail(from, mail, Wt::WString::tr(TXT_PASS_RECOVERY_SUBJECT), msg);
+    Misc::SendMail(from, mail, Wt::WString::tr(TXT_PASS_RECOVERY_SUBJECT), msg);
 
     ClearRecoveryData();
 
