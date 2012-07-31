@@ -40,6 +40,8 @@
 
 #include "../database.h"
 #include "../misc.h"
+#include "../miscAccount.h"
+#include "../miscHash.h"
 
 RegisterPage::RegisterPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
@@ -83,39 +85,39 @@ void RegisterPage::CreateRegisterPage()
 {
     addWidget(new WText(Wt::WString::tr(TXT_INFO_REGISTRATION)));
     for (int i = 0; i < 4; ++i)
-        addWidget(new WBreak());
+        addWidget(new Wt::WBreak());
 
-    regInfo = new WText("");
+    regInfo = new Wt::WText("");
     addWidget(regInfo);
-    addWidget(new WBreak());
-    addWidget(new WBreak());
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WBreak());
 
-    txtLogin = new WLineEdit();
+    txtLogin = new Wt::WLineEdit();
     txtLogin->setEmptyText(Wt::WString::tr(TXT_ACC_LOGIN));
-    WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
+    WRegExpValidator * validator = new Wt::WRegExpValidator(LOGIN_VALIDATOR);
     validator->setMandatory(true);
     txtLogin->setValidator(validator);
 
-    addWidget(new WText(Wt::WString::tr(TXT_ACC_LOGIN)));
+    addWidget(new Wt::WText(Wt::WString::tr(TXT_ACC_LOGIN)));
     addWidget(txtLogin);
-    addWidget(new WBreak());
+    addWidget(new Wt::WBreak());
 
-    txtEmail = new WLineEdit();
+    txtEmail = new Wt::WLineEdit();
     txtEmail->setEmptyText(Wt::WString::tr(TXT_ACC_MAIL));
-    validator = new WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
+    validator = new Wt::WRegExpValidator("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
     validator->setMandatory(true);
     txtEmail->setValidator(validator);
 
-    addWidget(new WText(Wt::WString::tr(TXT_ACC_MAIL)));
+    addWidget(new Wt::WText(Wt::WString::tr(TXT_ACC_MAIL)));
     addWidget(txtEmail);
-    addWidget(new WBreak());
+    addWidget(new Wt::WBreak());
 
-    chRules = new WCheckBox(Wt::WString::tr(TXT_REG_RULES));
+    chRules = new Wt::WCheckBox(Wt::WString::tr(TXT_REG_RULES));
     addWidget(chRules);
-    addWidget(new WBreak());
-    addWidget(new WBreak());
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WBreak());
 
-    btnRegister = new WPushButton(tr(TXT_BTN_REGISTER));
+    btnRegister = new Wt::WPushButton(tr(TXT_BTN_REGISTER));
 
     if (wApp->environment().javaScript())
         btnRegister->setDisabled(true);
@@ -185,7 +187,7 @@ void RegisterPage::Register()
         return;
     }
 
-    WString login, mail, pass;
+    WString login, mail, pass, escapedPass;
 
     login = db.EscapeString(txtLogin->text());
 
@@ -201,22 +203,15 @@ void RegisterPage::Register()
     }
 
     mail = txtEmail->text();
+    pass = Misc::Account::GeneratePassword();
+    escapedPass = db.EscapeString(pass);
 
-    pass = "";
-
-    int passLen = Misc::Irand(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
-
-    std::string tmpStr;
-
-    for (int i = 0; i < passLen; ++i)
-        tmpStr += (char)(Misc::Irand(PASSWORD_ASCII_START, PASSWORD_ASCII_END));
-
-    pass = db.EscapeString(WString::fromUTF8(tmpStr));
-
-    WString from, msg;
+    WString from, msg, sub, passHash;
     from = MAIL_FROM;
 
-    db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash, expansion) VALUES (UPPER('%s'), UPPER('%s'), SHA1(UPPER('%s:%s')), '%i')", login.toUTF8().c_str(), mail.toUTF8().c_str(), login.toUTF8().c_str(), pass.toUTF8().c_str(), STARTING_EXPANSION);
+    passHash = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, login.toUTF8().c_str(), escapedPass.toUTF8().c_str());
+
+    db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash, expansion) VALUES (UPPER('%s'), UPPER('%s'), '%s', '%i')", login.toUTF8().c_str(), mail.toUTF8().c_str(), passHash.toUTF8().c_str(), STARTING_EXPANSION);
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
@@ -227,9 +222,10 @@ void RegisterPage::Register()
         return;
     }
 
-    msg = tr(TXT_REG_MAIL).arg(login.toUTF8()).arg(tmpStr);
+    sub = Wt::WString::tr(TXT_REG_SUBJECT);
+    msg = Wt::WString::tr(TXT_REG_MAIL).arg(login.toUTF8()).arg(pass.toUTF8());
 
-    Misc::SendMail(from, mail, Wt::WString::tr(TXT_REG_SUBJECT), msg);
+    Misc::SendMail(from, mail, sub, msg);
 
     ClearRegisterData();
     chRules->setChecked(false);

@@ -15,22 +15,22 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "miscError.h"
+#ifndef MISCACCOUNT_H_INCLUDED
+#define MISCACCOUNT_H_INCLUDED
 
-#include <Wt/WFlags>
-#include <Wt/WMessageBox>
-#include <Wt/WString>
+#include "defines.h"
 
-Wt::StandardButton Misc::Error::ShowErrorBox(Wt::WString & name, Wt::WString & content, Wt::WFlags<Wt::StandardButton> buttons, const Wt::WAnimation &anim)
+namespace Misc
 {
-    return Wt::WMessageBox::show(name, content, buttons, anim);
+    namespace Account
+    {
+        void AddActivity(uint32 accountId, const char * ip, const char * activity, const char * activityArgs);
+        void AddActivity(uint32 accountId, const std::string & ip, const char * activity, const std::string & activityArgs);
+        void AddActivity(const char * username, const char * ip, const char * activity, const char * activityArgs, bool escape = false);
+        void AddActivity(const std::string & username, const std::string & ip, const char * activity, const std::string & activityArgs, bool escape = false);
+
+        std::string GeneratePassword();
+    }
 }
 
-void Misc::Error::ShowErrorBoxTr(const char * name, const char * txt)
-{
-    Wt::WString tmpStrN, tmpStrT;
-    tmpStrN = Wt::WString::tr(name);
-    tmpStrT = Wt::WString::tr(txt);
-
-    ShowErrorBox(tmpStrN, tmpStrT, Wt::Ok);
-}
+#endif // MISCACCOUNT_H_INCLUDED

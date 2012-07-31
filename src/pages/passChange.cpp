@@ -36,6 +36,7 @@
 
 #include "../database.h"
 #include "../misc.h"
+#include "../miscAccount.h"
 #include "../miscHash.h"
 
 PassChangePage::PassChangePage(SessionInfo * sess, WContainerWidget * parent):
@@ -168,10 +169,15 @@ void PassChangePage::Change()
         return;
     }
 
+    Misc::Account::AddActivity(session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_PASS_CHANGE, "");
+
     Database db;
 
-    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
-        db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_PASS_CHANGE);
+    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    {
+        changeInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
+        return;
+    }
 
     Wt::WString shapass;
     std::string escapedLogin = db.EscapeString(session->login);
@@ -188,12 +194,6 @@ void PassChangePage::Change()
 
     escapedPass = db.EscapeString(pass);
     shapass = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.c_str(), escapedPass.c_str());
-
-    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
-    {
-        changeInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
-        return;
-    }
 
     db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = NULL, s = NULL, v = NULL WHERE id = '%u'", shapass.toUTF8().c_str(), session->accid);
 

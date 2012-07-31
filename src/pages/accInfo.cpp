@@ -38,6 +38,7 @@
 
 #include "../database.h"
 #include "../misc.h"
+#include "../miscAccount.h"
 #include "../miscClient.h"
 
 /********************************************//**
@@ -494,8 +495,7 @@ void AccountInfoPage::ChangeXPRates()
     else
        accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
 
-    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
-        db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_XP_RATES);
+    Misc::Account::AddActivity(session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_XP_RATES, "");
 }
 
 /********************************************//**
