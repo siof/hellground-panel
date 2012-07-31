@@ -18,6 +18,7 @@
 #include "database.h"
 
 #include <cstdarg>
+#include <cstring>
 
 #include "misc.h"
 
@@ -234,12 +235,13 @@ int Database::ExecutePQuery(const char * format, ...)
     return ExecuteQuery();
 }
 
-std::string Database::EscapeString(const std::string & str)
+std::string Database::EscapeString(const char * str)
 {
+    size_t len = strlen(str);
     char * tmp;
-    tmp = new char[str.size()];
+    tmp = new char[len];
 
-    mysql_real_escape_string(connection, tmp, str.c_str(), str.size());
+    mysql_real_escape_string(connection, tmp, str, len);
 
     std::string tmpString = tmp;
 
@@ -248,9 +250,14 @@ std::string Database::EscapeString(const std::string & str)
     return tmpString;
 }
 
-std::string Database::EscapeString(const WString & str)
+std::string Database::EscapeString(const std::string & str)
 {
-    return EscapeString(str.toUTF8());
+    return EscapeString(str.c_str());
+}
+
+std::string Database::EscapeString(const Wt::WString & str)
+{
+    return EscapeString(str.toUTF8().c_str());
 }
 
 const char * Database::GetError()

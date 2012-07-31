@@ -38,6 +38,8 @@
 
 #include "../database.h"
 #include "../misc.h"
+#include "../miscAccount.h"
+#include "../miscHash.h"
 
 PassRecoveryPage::PassRecoveryPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
@@ -161,18 +163,18 @@ void PassRecoveryPage::Recover()
         return;
     }
 
-    WString login, mail, pass;
+    WString escapedLogin, mail, pass, escapedPass, passHash;
 
-    login = db.EscapeString(txtLogin->text());
+    escapedLogin = db.EscapeString(txtLogin->text());
 
     // check if account already exists
-    db.SetPQuery("SELECT id, email, NOW() FROM account WHERE username = '%s'", login.toUTF8().c_str());
+    db.SetPQuery("SELECT id, email, NOW() FROM account WHERE username = '%s'", escapedLogin.toUTF8().c_str());
 
     switch (db.ExecuteQuery())
     {
         case DB_RESULT_ERROR:
         case DB_RESULT_EMPTY:
-            AddActivityPassRecovery(false, login.toUTF8().c_str());
+            Misc::Account::AddActivity(escapedLogin.toUTF8(), session->sessionIp.toUTF8(), TXT_ACT_RECOVERY_FAIL, "");
             recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_WRONG_RECOVERY_DATA));
             ClearRecoveryData();
             return;
@@ -181,7 +183,7 @@ void PassRecoveryPage::Recover()
     }
 
     uint32 accId = db.GetRow()->fields[0].GetUInt32();
-    WString dbMail = db.GetRow()->fields[1].GetWString();
+    Wt::WString dbMail = db.GetRow()->fields[1].GetWString();
     std::string dbDate = db.GetRow()->fields[2].GetString();
 
     Misc::Console(DEBUG_CODE, "void Recover(): dbMail: %s mail: %s\n", txtEmail->text().toUTF8().c_str(), dbMail.toUTF8().c_str());
@@ -193,38 +195,30 @@ void PassRecoveryPage::Recover()
 
     if (mail != dbMail)
     {
-        AddActivityPassRecovery(accId, false);
+        Misc::Account::AddActivity(accId, session->sessionIp.toUTF8(), TXT_ACT_RECOVERY_FAIL, "");
         recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_WRONG_RECOVERY_DATA));
         ClearRecoveryData();
         return;
     }
 
-    pass = "";
-
-    int passLen = Misc::Irand(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
-
-    std::string tmpStr;
-
-    for (int i = 0; i < passLen; ++i)
-        tmpStr += (char)(Misc::Irand(PASSWORD_ASCII_START, PASSWORD_ASCII_END));
-
-    pass = db.EscapeString(WString::fromUTF8(tmpStr));
+    pass = Misc::Account::GeneratePassword();
+    escapedPass = db.EscapeString(pass);
+    passHash = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.toUTF8().c_str(), escapedPass.toUTF8().c_str());
 
     WString from, msg;
     from = MAIL_FROM;
 
-    // check should be moved to other place but here will be usefull for SendMail tests ;)
-    db.SetPQuery("UPDATE account SET sha_pass_hash = SHA1(UPPER('%s:%s')), sessionkey = '', s = '', v = '', locked = '0' WHERE id = '%u';", login.toUTF8().c_str(), pass.toUTF8().c_str(), accId);
+    db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = '', s = '', v = '', locked = '0' WHERE id = '%u';", passHash.toUTF8().c_str(), accId);
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
-        AddActivityPassRecovery(accId, false);
+        Misc::Account::AddActivity(accId, session->sessionIp.toUTF8(), TXT_ACT_RECOVERY_FAIL, "");
         recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         ClearRecoveryData();
         return;
     }
 
-    msg = Wt::WString::tr(TXT_PASS_RECOVERY_MAIL).arg(dbDate).arg(session->sessionIp.toUTF8()).arg(tmpStr);
+    msg = Wt::WString::tr(TXT_PASS_RECOVERY_MAIL).arg(dbDate).arg(session->sessionIp.toUTF8()).arg(pass.toUTF8());
 
     Misc::SendMail(from, mail, Wt::WString::tr(TXT_PASS_RECOVERY_SUBJECT), msg);
 
@@ -232,38 +226,7 @@ void PassRecoveryPage::Recover()
 
     recoveryInfo->setText(Wt::WString::tr(TXT_PASS_RECOVERY_COMPLETE));
 
-    AddActivityPassRecovery(accId, true);
-}
-
-void PassRecoveryPage::AddActivityPassRecovery(bool success, const char * login)
-{
-    Database db;
-
-    uint32 accId = session->accid;
-
-    if (!accId)
-    {
-        if (!login || !db.Connect(SERVER_DB_DATA, SQL_REALMDB))
-            return;
-
-        if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login) > DB_RESULT_EMPTY)
-            accId = db.GetRow()->fields[0].GetUInt32();
-        else
-            return;
-    }
-
-    AddActivityPassRecovery(accId, success);
-}
-
-void PassRecoveryPage::AddActivityPassRecovery(uint32 id, bool success)
-{
-    if (!id)
-        return;
-
-    Database db;
-
-    db.Connect(PANEL_DB_DATA, SQL_PANELDB);
-    db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_RECOVERY_SUCCESS : TXT_ACT_RECOVERY_FAIL);
+    Misc::Account::AddActivity(accId, session->sessionIp.toUTF8(), TXT_ACT_RECOVERY_SUCCESS, "");
 }
 
 /********************************************//**

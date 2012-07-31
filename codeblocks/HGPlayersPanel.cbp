@@ -117,8 +117,6 @@
 			<Add directory="/usr/lib" />
 			<Add directory="/usr/local/lib" />
 		</Linker>
-		<Unit filename="../LICENCE" />
-		<Unit filename="../LICENCE_PL" />
 		<Unit filename="../langs/panel.xml" />
 		<Unit filename="../langs/panel_pl.xml" />
 		<Unit filename="../sql/char.sql" />
@@ -139,6 +137,8 @@
 		<Unit filename="../src/menu.h" />
 		<Unit filename="../src/misc.cpp" />
 		<Unit filename="../src/misc.h" />
+		<Unit filename="../src/miscAccount.cpp" />
+		<Unit filename="../src/miscAccount.h" />
 		<Unit filename="../src/miscCharacter.cpp" />
 		<Unit filename="../src/miscCharacter.h" />
 		<Unit filename="../src/miscClient.cpp" />

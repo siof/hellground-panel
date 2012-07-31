@@ -38,6 +38,17 @@ void Misc::SendMail(const Wt::WString& from, const Wt::WString& to, const Wt::WS
     mail.send();
 }
 
+void Misc::SendMailTr(const char * from, const char * to, const char * sub, const char * msg)
+{
+    Wt::WString fromStr, toStr, subStr, msgStr;
+    fromStr = from;
+    toStr = to;
+    subStr = Wt::WString::tr(sub);
+    msgStr = Wt::WString::tr(msg);
+
+    SendMail(fromStr, toStr, subStr, msgStr);
+}
+
 int Misc::Irand(int min, int max)
 {
     return rand()%(max - min) + min;

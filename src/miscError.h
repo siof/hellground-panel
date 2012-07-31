@@ -18,10 +18,33 @@
 #ifndef MISCERROR_H_INCLUDED
 #define MISCERROR_H_INCLUDED
 
+#include <Wt/WAnimation>
+
 namespace Misc
 {
     namespace Error
     {
+        /********************************************//**
+         * \brief Shows WMessageBox with given content
+         *
+         * \param name      text to be shown as box name
+         * \param content   text to be shown as box content
+         * \param buttons   buttons to be shown
+         * \param anim      animation
+         * \return id of clicked button
+         *
+         ***********************************************/
+
+        Wt::StandardButton ShowErrorBox(Wt::WString & name, Wt::WString & content, Wt::WFlags<Wt::StandardButton> buttons, const Wt::WAnimation &anim = Wt::WAnimation());
+
+        /********************************************//**
+         * \brief Shows WMessageBox with given name/text localization id's by using ShowErrorBox(...) function
+         *
+         * \param name  localization id for message box name
+         * \param txt   localization id for message box content
+         *
+         ***********************************************/
+
         void ShowErrorBoxTr(const char * name, const char * txt);
     }
 }

@@ -86,6 +86,20 @@ namespace Misc
      ***********************************************/
 
     void SendMail(const Wt::WString& from, const Wt::WString& to, const Wt::WString& sub, const Wt::WString& msg);
+
+    /********************************************//**
+     * \brief Sends email by using SendMail function.
+     *
+     * \param from  source email address
+     * \param to    destination email address
+     * \param sub   subject localization id
+     * \param msg   message localization id
+     *
+     * Function to send email from source email address to destination email address contains given message and subject.
+     *
+     ***********************************************/
+
+    void SendMailTr(const char * from, const char * to, const char * sub, const char * msg);
 }
 
 #endif // MISC_H_INCLUDED

@@ -27,6 +27,7 @@
 
 #include "database.h"
 #include "misc.h"
+#include "miscAccount.h"
 #include "miscError.h"
 #include "miscHash.h"
 
@@ -100,13 +101,13 @@ void LoginWidget::Login()
     {
         case DB_RESULT_ERROR:
         {
-            AddActivityLogIn(false, escapedLogin.c_str());
+            Misc::Account::AddActivity(escapedLogin, session->sessionIp.toUTF8(), TXT_ACT_LOGIN_FAIL, "");
             Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_DB_QUERY_ERROR);
             return;
         }
         case DB_RESULT_EMPTY:
         {
-            AddActivityLogIn(false, escapedLogin.c_str());
+            Misc::Account::AddActivity(escapedLogin, session->sessionIp.toUTF8(), TXT_ACT_LOGIN_FAIL, "");
             Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
             return;
         }
@@ -122,19 +123,19 @@ void LoginWidget::Login()
 
             if (row->fields[1].GetWString() != shapass)
             {
-                AddActivityLogIn(row->fields[2].GetUInt32(), false);
+                Misc::Account::AddActivity(row->fields[2].GetUInt32(), session->sessionIp.toUTF8(), TXT_ACT_LOGIN_FAIL, "");
                 Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
                 return;
             }
 
             if (row->fields[7].GetBool() && row->fields[6].GetWString() != session->sessionIp)
             {
-                AddActivityLogIn(row->fields[2].GetUInt32(), false);
+                Misc::Account::AddActivity(row->fields[2].GetUInt32(), session->sessionIp.toUTF8(), TXT_ACT_LOGIN_FAIL, "");
                 Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_IP_MISMATCH);
                 return;
             }
 
-            AddActivityLogIn(row->fields[2].GetUInt32(), true);
+            Misc::Account::AddActivity(row->fields[2].GetUInt32(), session->sessionIp.toUTF8(), TXT_ACT_LOGIN_SUCCESS, "");
 
             session->login = row->fields[0].GetWString();
             session->pass = row->fields[1].GetWString();
@@ -157,39 +158,7 @@ void LoginWidget::Login()
             templ->setCondition("if-loggedin", true);
             templ->setCondition("if-notlogged", false);
             templ->refresh();
-            //wApp->root()->refresh();
             break;
         }
     }
-}
-
-void LoginWidget::AddActivityLogIn(bool success, const char * login)
-{
-    Database db;
-
-    uint32 accId = session->accid;
-
-    if (!accId)
-    {
-        if (!login || !db.Connect(SERVER_DB_DATA, SQL_REALMDB))
-            return;
-
-        if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login) > DB_RESULT_EMPTY)
-            accId = db.GetRow()->fields[0].GetUInt32();
-        else
-            return;
-    }
-
-    AddActivityLogIn(accId, success);
-}
-
-void LoginWidget::AddActivityLogIn(uint32 id, bool success)
-{
-    if (!id)
-        return;
-
-    Database db;
-
-    db.Connect(PANEL_DB_DATA, SQL_PANELDB);
-    db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", id, session->sessionIp.toUTF8().c_str(), success ? TXT_ACT_LOGIN_SUCCESS : TXT_ACT_LOGIN_FAIL);
 }

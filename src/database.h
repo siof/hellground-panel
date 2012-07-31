@@ -69,6 +69,7 @@ public:
     void Disconnect();
     bool SelectDatabase(std::string db);
 
+    std::string EscapeString(const char * str);         /// escape given string
     std::string EscapeString(const std::string & str);  /// escape given string
     std::string EscapeString(const Wt::WString & str);  /// escape given string
 
