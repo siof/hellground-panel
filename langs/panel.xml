@@ -487,9 +487,16 @@ For new players:<br/>
  </ul>
     </message>
     <message id='informations.teleport'>
-<h3>Teleport character</h3><br/>
-Teleport will move chosen character to its race starting point. You can use teleportation at any time, but every usage sets one hour cooldown on your character’s Heartstone. Your character must be offline during teleportation.<br/>
-Choose a character you want to teleport:
+<h3>Character teleport</h3><br/>
+There is a possibility of teleportate character locked somewhere in the middle of map, if for some reason 'unstuck' feature does not work.<br/>
+Few informations:
+<ul>
+    <li>Teleport allows also for debug a character which got stuck flying on a gryphon or wyvern.</li>
+    <li>Teleport will move you to your race's starting location.</li>
+    <li>You can teleportate yourself whenever you want, but every use assume an hour cooldown on your Heartstone.</li>
+    <li>Your character must not be online for time you are performing the teleportation.</li>
+</ul><br/><br/>
+Choose a character which you would like to teleport:
     </message>
     <message id='informations.instances'>
 <h3>TODO</h3>
@@ -501,19 +508,50 @@ Choose a character you want to teleport:
 <h3>TODO</h3>
     </message>
     <message id='informations.registration'>
-<h3>HellGround - Create Account</h3>
+<h3>Account creation</h3><br/><br/>
+For making a new account, fill the following fields in and click the button 'Register'.<br/>
+Basic requirements for successful registration:<br/>
+<ul>
+    <li>You have to accept server regulations prior to registration a new account.</li>
+    <li>Login has to consist of at least 6 and 16 at most signs.</li>
+    <li>Login has to consist entirely of z letters, digits or underlining sign.</li>
+    <li>E-mail address field's content has to be a correct information.</li>
+</ul><br/><br/>
+
+Please bear in mind providing authentic and actual e-mail address, because it will be sent a newly generated password on it (during account registration as well as later, for example regaining access to your account).<br/>
+In addition we want to instruct you that administration will not remind or change account informations.
     </message>
     <message id='informations.password.recovery'>
-<h3>TODO</h3>
+<h3>Regaining access to account</h3><br/><br/>
+
+Welcome on account recovery page.<br/>
+To regain access to your account, please fill the following fields in and click the button 'Send'.<br/>
+If provided information is agreed, then new password is generated and sent to you on your e-mail box, that you have given by registration.<br/><br/>
+
+Enter your account name in the field 'Login'.<br/>
+Enter e-mail address assigned to your game account (given by you during registration).<br/><br/>
+
+Also, we want to instruct you that besides the password reset, IP lock will be turned off.
     </message>
     <message id='informations.password.change'>
-<h3>TODO</h3>
+<h3>Change password</h3><br/><br/>
+
+For password changing, fill in fields below.<br/><br/>
+
+Field 'Old password' means current account's password.<br/>
+Field 'New password' means new, selected by you password.<br/>
+In field 'Repeat new password' please type the same password which you entered in 'New password' field.<br/><br/>
+
+Password for your account has to consist of at least 6 and 16 at most signs. <br/>
+If you can't change password through player's panel, do it in-game by typing a command:<br/>
+.password old_password new_password new_password
     </message>
     <message id='informations.account'>
-<h3>Account informations:</h3>
+<h3>Account details:</h3><br/>
+On this page you are able to check present essential informations about your account (e-mail address is partially hidden).
     </message>
     <message id='informations.support'>
-Help expanding Hellground server through donations and voting:<br/>
+Through donation and toplist votes you support Hellground server expanding:<br/>
 <a href="http://wowen.hellground.pl/donate-hellground/">Donate</a><br/>
 <a href="#/support/vote-event">Vote event</a>
     </message>
@@ -663,7 +701,7 @@ along with this program.  If not, see <a href="http://www.gnu.org/licenses/">htt
 contact: siof@hellground.pl
     </message>
     <message id='licence.repository'>
-Source code repository (also contains licence): <a href="https://bitbucket.org/siof/hgplayerspanel">https://bitbucket.org/siof/hgplayerspanel</a>
+Source code repository (also contains licence): <a href="https://bitbucket.org/_hellground/panel/">https://bitbucket.org/_hellground/panel/</a>
     </message>
     <message id='licence.informations'>
 
