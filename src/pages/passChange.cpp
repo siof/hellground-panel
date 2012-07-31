@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -35,6 +35,8 @@
 #include <Wt/WText>
 
 #include "../database.h"
+#include "../misc.h"
+#include "../miscHash.h"
 
 PassChangePage::PassChangePage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
@@ -61,8 +63,8 @@ PassChangePage::~PassChangePage()
 
 void PassChangePage::refresh()
 {
-    console(DEBUG_CODE, "PassChangePage::refresh()");
-    WContainerWidget::refresh();
+    Misc::Console(DEBUG_CODE, "PassChangePage::refresh()");
+    Wt::WContainerWidget::refresh();
 }
 
 /********************************************//**
@@ -75,38 +77,38 @@ void PassChangePage::refresh()
 
 void PassChangePage::CreatePassChangePage()
 {
-    addWidget(new WText(Wt::WString::tr(TXT_INFO_PASS_CHANGE)));
+    addWidget(new Wt::WText(Wt::WString::tr(TXT_INFO_PASS_CHANGE)));
     for (int i = 0; i < 4; ++i)
-        addWidget(new WBreak());
+        addWidget(new Wt::WBreak());
 
-    changeInfo = new WText("");
+    changeInfo = new Wt::WText("");
     addWidget(changeInfo);
-    addWidget(new WBreak());
-    addWidget(new WBreak());
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WBreak());
 
-    txtPassOld = new WLineEdit();
+    txtPassOld = new Wt::WLineEdit();
     txtPassOld->setEmptyText(Wt::WString::tr(TXT_PASS_OLD));
-    txtPassOld->setEchoMode(WLineEdit::Password);
-    addWidget(new WText(Wt::WString::tr(TXT_PASS_OLD)));
+    txtPassOld->setEchoMode(Wt::WLineEdit::Password);
+    addWidget(new Wt::WText(Wt::WString::tr(TXT_PASS_OLD)));
     addWidget(txtPassOld);
-    addWidget(new WBreak());
+    addWidget(new Wt::WBreak());
 
-    txtPass = new WLineEdit();
+    txtPass = new Wt::WLineEdit();
     txtPass->setEmptyText(Wt::WString::tr(TXT_PASS_NEW));
     txtPass->setEchoMode(WLineEdit::Password);
-    addWidget(new WText(Wt::WString::tr(TXT_PASS_NEW)));
+    addWidget(new Wt::WText(Wt::WString::tr(TXT_PASS_NEW)));
     addWidget(txtPass);
-    addWidget(new WBreak());
+    addWidget(new Wt::WBreak());
 
-    txtPass2 = new WLineEdit();
+    txtPass2 = new Wt::WLineEdit();
     txtPass2->setEmptyText(Wt::WString::tr(TXT_PASS_REPEAT));
-    txtPass2->setEchoMode(WLineEdit::Password);
-    addWidget(new WText(Wt::WString::tr(TXT_PASS_REPEAT)));
+    txtPass2->setEchoMode(Wt::WLineEdit::Password);
+    addWidget(new Wt::WText(Wt::WString::tr(TXT_PASS_REPEAT)));
     addWidget(txtPass2);
-    addWidget(new WBreak());
-    addWidget(new WBreak());
+    addWidget(new Wt::WBreak());
+    addWidget(new Wt::WBreak());
 
-    btnChange = new WPushButton(tr(TXT_BTN_PASS_CHANGE));
+    btnChange = new Wt::WPushButton(Wt::WString::tr(TXT_BTN_PASS_CHANGE));
     addWidget(btnChange);
 
     btnChange->clicked().connect(this, &PassChangePage::Change);
@@ -138,7 +140,7 @@ void PassChangePage::Change()
     if (session->accLvl < LVL_PLAYER)
         return;
 
-    WString pass, pass2;
+    Wt::WString pass, pass2;
 
     pass = txtPass->text();
     pass2 = txtPass2->text();
@@ -171,23 +173,21 @@ void PassChangePage::Change()
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
         db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_PASS_CHANGE);
 
-    WString shapass;
+    Wt::WString shapass;
     std::string escapedLogin = db.EscapeString(session->login);
     std::string escapedPass = db.EscapeString(txtPassOld->text());
-    std::string passStr = GetFormattedString("%s:%s", escapedLogin.c_str(), escapedPass.c_str());
-    shapass = WGetUpperSHA1(passStr);
+    shapass = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.c_str(), escapedPass.c_str());
 
     if (shapass != session->pass)
     {
-        console(DEBUG_CODE, "void PassChangePage::Change(): oldPass: %s , shapass: %s , pass: %s\n", txtPassOld->text().toUTF8().c_str(), shapass.toUTF8().c_str(), session->pass.toUTF8().c_str());
+        Misc::Console(DEBUG_CODE, "void PassChangePage::Change(): oldPass: %s , shapass: %s , pass: %s\n", txtPassOld->text().toUTF8().c_str(), shapass.toUTF8().c_str(), session->pass.toUTF8().c_str());
         changeInfo->setText(Wt::WString::tr(TXT_ERROR_WRONG_PASSWORD));
         ClearPass();
         return;
     }
 
     escapedPass = db.EscapeString(pass);
-    passStr = GetFormattedString("%s:%s", escapedLogin.c_str(), escapedPass.c_str());
-    shapass = WGetUpperSHA1(passStr);
+    shapass = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.c_str(), escapedPass.c_str());
 
     if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
     {

@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -39,6 +39,7 @@
 #include <Wt/WText>
 
 #include "../database.h"
+#include "../misc.h"
 
 RegisterPage::RegisterPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
@@ -66,7 +67,7 @@ RegisterPage::~RegisterPage()
 
 void RegisterPage::refresh()
 {
-    console(DEBUG_CODE, "RegisterPage::refresh()");
+    Misc::Console(DEBUG_CODE, "RegisterPage::refresh()");
     WContainerWidget::refresh();
 }
 
@@ -164,7 +165,7 @@ void RegisterPage::Register()
     bool validEmail = txtEmail->validate() == WValidator::Valid;
     if (!validLogin || !validEmail)
     {
-        Log(LOG_INVALID_DATA, "User trying to register with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
+        Misc::Log(LOG_INVALID_DATA, "User trying to register with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
         regInfo->setText(Wt::WString::tr(TXT_ERROR_VALIDATION_LOGIN));
         return;
     }
@@ -203,12 +204,12 @@ void RegisterPage::Register()
 
     pass = "";
 
-    int passLen = irand(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
+    int passLen = Misc::Irand(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
 
     std::string tmpStr;
 
     for (int i = 0; i < passLen; ++i)
-        tmpStr += (char)(irand(PASSWORD_ASCII_START, PASSWORD_ASCII_END));
+        tmpStr += (char)(Misc::Irand(PASSWORD_ASCII_START, PASSWORD_ASCII_END));
 
     pass = db.EscapeString(WString::fromUTF8(tmpStr));
 
@@ -228,7 +229,7 @@ void RegisterPage::Register()
 
     msg = tr(TXT_REG_MAIL).arg(login.toUTF8()).arg(tmpStr);
 
-    SendMail(from, mail, Wt::WString::tr(TXT_REG_SUBJECT), msg);
+    Misc::SendMail(from, mail, Wt::WString::tr(TXT_REG_SUBJECT), msg);
 
     ClearRegisterData();
     chRules->setChecked(false);

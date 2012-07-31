@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -522,97 +522,6 @@ enum MenuOptions
 #define TXT_ERROR_DB_QUERY_ERROR        "error.db.query.error"      /**< DB Error info: query error */
 
 /********************************************//**
- * \brief Sends email.
- *
- * \param from  source email address
- * \param to    destination email address
- * \param sub   subject for email
- * \param msg   message to send
- *
- * Function to send email from source email address to destination email address contains given message and subject.
- *
- ***********************************************/
-
-extern void SendMail(const WString& from, const WString& to, const WString& sub, const WString& msg);
-
-/********************************************//**
- * \brief Returns expansion name.
- *
- * \param sess      player session informations (needed to get expansion name from db)
- * \param index     expansion id
- * \return expansion name from db
- *
- * Returns expansion name for given index.
- * Name is stored in db and loaded on session creation so there is only need to read this information depends on index.
- *
- ***********************************************/
-
-extern WString GetExpansionName(int index);
-
-/********************************************//**
- * \brief Return client locale name.
- *
- * \param index     locale index
- * \return locale name
- *
- * Returns players client locale depends on locale index.
- *
- ***********************************************/
-
-extern WString GetLocale(int index);
-
-/********************************************//**
- * \brief Return character race name.
- *
- * \param sess      session informations to get text
- * \param index     race index
- * \return race name
- *
- * Returns character race name depends on race index.
- *
- ***********************************************/
-
-extern WString GetRaceName(int index);
-
-/********************************************//**
- * \brief Return character class name.
- *
- * \param sess      session informations to get text
- * \param index     class index
- * \return class name
- *
- * Returns character class name depends on class index.
- *
- ***********************************************/
-
-extern WString GetClassName(int index);
-
-/********************************************//**
- * \brief Return character quest status in string.
- *
- * \param sess      session informations to get text
- * \param index     quest status index
- * \param rewarded  information that quest is already rewarded or not
- * \return quest status
- *
- * Returns character quest status in string depends on status index and rewarded info.
- *
- ***********************************************/
-
-extern WString GetQuestStatus(int index, bool rewarded);
-
-/********************************************//**
- * \brief Simple random function.
- *
- * \param min   minimum value
- * \param max   maximum value
- * \return randomized value beatween min and max
- *
- ***********************************************/
-
-extern int irand(int min, int max);
-
-/********************************************//**
  * \brief Debug flags for console debug.
  ***********************************************/
 
@@ -640,46 +549,6 @@ enum LogFlags
 };
 
 /********************************************//**
- * \brief Writes debug info to console
- *
- * \param flag  Debug flags for which debug should be printed to console.
- * \param text  Text format which should be printed to console.
- *
- * This function checks flags defined in config and decides
- * if debug should be printed to standard output or not.
- * If yes then function fills format with additional data and
- * sends to std out.
- *
- ***********************************************/
-
-extern void console(DebugFlags flag, char const* text, ...);
-
-/********************************************//**
- * \brief Handles logging
- *
- * \param flag  Log flags for which logging should be done.
- * \param text  Text format which should be logged.
- *
- * This function checks flags defined in config and decides
- * if logging should be done or not.
- * If yes then function fills format with additional data and
- * sends it to log.
- *
- ***********************************************/
-
-extern void Log(LogFlags flag, char const* text, ...);
-
-/********************************************//**
- * \brief Resturns format string filled with data.
- *
- * \param format    string format to fill
- * \return format string with filled with data
- *
- ***********************************************/
-
-extern std::string GetFormattedString(const char * format, ...);
-
-/********************************************//**
  * \brief Represents simple character location.
  ***********************************************/
 
@@ -691,16 +560,6 @@ struct Location
     float posY;     /**< Y Position */
     float posZ;     /**< Z Position */
 };
-
-/********************************************//**
- * \brief Sets teleport position depends on race.
- *
- * \param race  Character race.
- * \param loc   Variable in which location will be stored.
- *
- ***********************************************/
-
-extern void GetTeleportPosition(int race, Location & loc);
 
 /********************************************//**
  * \brief Enum for DB Query result.
@@ -760,60 +619,6 @@ enum ConflictSide
 
     SIDE_UNKNOWN    = 5     /**< Unknown conflict side */
 };
-
-/********************************************//**
- * \brief Returns conflict side.
- *
- * \param race  character race
- * \return inforamtion about side in conflict.
- *
- ***********************************************/
-
-extern ConflictSide GetSide(const uint8 & race);
-
-/********************************************//**
- * \brief Returns informations if races are in same faction
- *
- * \param race1 first character race
- * \param race2 second character race
- * \return information that races are in same faction or not
- *
- * Function checks if given races are in same side and returns this information.
- *
- ***********************************************/
-
-extern bool SameSide(const uint8 & race1, const uint8 & race2);
-
-/********************************************//**
- * \brief Calculates and returns reset talent cost.
- *
- * \param lastCost  last reset talent cost
- * \param monts     count of months from last reset talent time
- * \return actual reset talent cost
- *
- ***********************************************/
-
-extern uint32 CalculateTalentCost(uint32 lastCost, uint32 months);
-
-/********************************************//**
- * \brief Uppers given text and returns sha1 from uppered text.
- *
- * \param txt   text to be uppered and sha1 hashed
- * \return hashed hex string
- *
- ***********************************************/
-
-extern std::string GetUpperSHA1(std::string & txt);
-
-/********************************************//**
- * \brief Uppers given text and returns sha1 from uppered text.
- *
- * \param txt   text to be uppered and sha1 hashed
- * \return hashed hex WString
- *
- ***********************************************/
-
-extern Wt::WString WGetUpperSHA1(std::string & txt);
 
 /********************************************//**
  * \brief Represents single spell informations.

@@ -1,6 +1,6 @@
 /*
 *    HG Players Panel - web panel for HellGround server Players
-*    Copyright (C) 2011 HellGround Team : Siof, lukaasm,
+*    Copyright (C) 2011-2012 HellGround Team : Siof, lukaasm,
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Affero General Public License version 3 as
@@ -35,11 +35,13 @@
 #include <Wt/WText>
 
 #include "../database.h"
+#include "../misc.h"
+#include "../miscCharacter.h"
 
-TeleportPage::TeleportPage(SessionInfo * sess, WContainerWidget * parent):
-    WContainerWidget(parent), session(sess), guids(NULL)
+TeleportPage::TeleportPage(SessionInfo * sess, Wt::WContainerWidget * parent):
+    Wt::WContainerWidget(parent), session(sess), guids(NULL)
 {
-    console(DEBUG_CODE, "TeleportPage::TeleportPage(SessionInfo * sess = %i, WContainerWidget * parent = %i)", sess != NULL, parent != NULL);
+    Misc::Console(DEBUG_CODE, "TeleportPage::TeleportPage(SessionInfo * sess = %i, WContainerWidget * parent = %i)", sess != NULL, parent != NULL);
 
     teleInfo = new WText("");
 
@@ -75,7 +77,7 @@ TeleportPage::~TeleportPage()
 
 void TeleportPage::refresh()
 {
-    console(DEBUG_CODE, "TeleportPage::refresh()");
+    Misc::Console(DEBUG_CODE, "TeleportPage::refresh()");
 
     // teleport page should be only for not logged yet players so there is no need to update it in other cases
     if (session->accLvl > LVL_NOT_LOGGED)
@@ -175,7 +177,7 @@ void TeleportPage::Teleport()
                 if (tmpRow->fields[0].GetBool() == false)
                 {
                     Location loc;
-                    GetTeleportPosition(tmpRow->fields[1].GetInt(), loc);
+                    Misc::Character::GetTeleportPosition(tmpRow->fields[1].GetInt(), loc);
 
                     db.SetPQuery("UPDATE characters "
                                  "SET map = '%u', position_x = '%f', position_y = '%f', position_z = '%f', taxi_path = '', trans_x = '0.0', trans_y = '0.0', trans_z = '0.0', transguid = '0.0' "
@@ -203,7 +205,7 @@ void TeleportPage::Teleport()
 
     if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
     {
-        std::string tmpStr = GetFormattedString("Teleport. Character: %s. success: %s", db.EscapeString(name).c_str(), success ? "Yes" : "No");
+        std::string tmpStr = Misc::GetFormattedString("Teleport. Character: %s. success: %s", db.EscapeString(name).c_str(), success ? "Yes" : "No");
         db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '', '%s')", session->accid, session->sessionIp.toUTF8().c_str(), tmpStr.c_str());
     }
 }

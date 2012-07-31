@@ -15,25 +15,15 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Wt/WContainerWidget>
+#ifndef MISCERROR_H_INCLUDED
+#define MISCERROR_H_INCLUDED
 
-#include "defines.h"
-
-class LoginWidget : public Wt::WContainerWidget
+namespace Misc
 {
-public:
-    LoginWidget(SessionInfo * sess, Wt::WTemplate * tmplt, Wt::WContainerWidget * parent = NULL);
-    ~LoginWidget();
+    namespace Error
+    {
+        void ShowErrorBoxTr(const char * name, const char * txt);
+    }
+}
 
-private:
-    SessionInfo * session;
-
-    Wt::WTemplate * templ;
-    Wt::WLineEdit * login;
-    Wt::WLineEdit * pass;
-    Wt::WPushButton * btn;
-
-    void Login();
-    void AddActivityLogIn(bool success, const char * login = NULL);
-    void AddActivityLogIn(uint32 id, bool success);
-};
+#endif // MISCERROR_H_INCLUDED
