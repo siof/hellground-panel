@@ -489,14 +489,13 @@ Dla nowych graczy:<br/>
     <message id='informations.teleport'>
 <h3>Teleport postaci</h3><br/>
 Opcja teleportu jest dodatkową możliwością odblokowania postaci która utknęła w grze jeśliby z jakiegoś powodu wbudowana opcja 'unstack' nie zadziałała.<br/>
-Opcja teleportu pozwala także na odbugowanie postaci w pewnych okolicznościach jak np utknięcie na gryfie/wiwernie i lecenie przez tekstury.<br/><br/>
-
-Teleport przeniesie wybraną postać do lokacji startowej <b>danej</b> rasy.<br/><br/>
-
-Teleportacji możesz używać w dowolnym momencie, jednak każde jegj użycie nakłada godzinny cooldown na HeartStone’a.<br/><br/>
-
-Twoja postać nie może być zalogowana w momencie używania teleportu.<br/><br/>
-
+Kilka informacji:
+<ul>
+    <li>Opcja teleportu pozwala także na odbugowanie postaci w pewnych okolicznościach jak np utknięcie na gryfie/wiwernie i lecenie przez tekstury.</li>
+    <li>Teleport przeniesie wybraną postać do lokacji startowej <b>danej</b> rasy.</li>
+    <li>Teleportacji możesz używać w dowolnym momencie, jednak każde jegj użycie nakłada godzinny cooldown na HeartStone’a.</li>
+    <li>Twoja postać nie może być zalogowana w momencie używania teleportu.</li>
+</ul><br/><br/>
 Wybierz postać, którą chcesz teleportować:
     </message>
     <message id='informations.instances'>
@@ -704,7 +703,7 @@ wraz z programem. Jeżeli nie otrzymałeś jej, zobacz na <a href="http://www.gn
 kontakt: siof@hellground.pl
     </message>
     <message id='licence.repository'>
-Repozytorium kodu źródłowego (zawiera także licencję): <a href="https://bitbucket.org/siof/hgplayerspanel">https://bitbucket.org/siof/hgplayerspanel</a>
+Repozytorium kodu źródłowego (zawiera także licencję): <a href="https://bitbucket.org/_hellground/panel/">https://bitbucket.org/_hellground/panel/</a>
     </message>
     <message id='licence.informations'>
 
