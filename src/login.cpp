@@ -125,6 +125,7 @@ void LoginWidget::Login()
             {
                 Misc::Account::AddActivity(row->fields[2].GetUInt32(), session->sessionIp.toUTF8(), TXT_ACT_LOGIN_FAIL, "");
                 Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_WRONG_LOGIN_DATA);
+                //printf("\npassess: db: %s | calculated: %s\n", row->fields[1].GetCString(), shapass.toUTF8().c_str());
                 return;
             }
 

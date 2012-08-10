@@ -24,6 +24,7 @@ message(
 You can use following options for customization:
     CMAKE_INSTALL_PREFIX: Path where the server should be installed to (default - ${CMAKE_INSTALL_PREFIX})
     USE_HTTP: Uses wthttp to linking instead of wtfcgi (default - OFF)
+    INSTALL_ADDITIONAL: installs also res and langs directories (default - ON)
 
 For example: cmake -DCMAKE_INSTALL_PREFIX=\"${CMAKE_INSTALL_PREFIX}\"
              cmake -DUSE_HTTP=ON\n"
@@ -55,7 +56,10 @@ else (USE_HTTP)
 endif (USE_HTTP)
 
 message("Install directory: ${CMAKE_INSTALL_PREFIX}\n\n")
-install(DIRECTORY res langs DESTINATION .
-    FILE_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
-    DIRECTORY_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
-)
+
+if (INSTALL_ADDITIONAL)
+    install(DIRECTORY res langs DESTINATION .
+        FILE_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
+        DIRECTORY_PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_WRITE GROUP_READ GROUP_EXECUTE WORLD_WRITE WORLD_READ WORLD_EXECUTE
+    )
+endif (INSTALL_ADDITIONAL)

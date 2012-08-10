@@ -33,7 +33,7 @@ std::string Misc::Hash::GetSHA1(const char * txt, uint32 flags)
 
     tmpStr = Wt::Utils::sha1(tmpStr);
 
-    if (!flags & HASH_FLAG_BIN)
+    if (flags &~ HASH_FLAG_BIN)
         tmpStr = Wt::Utils::hexEncode(tmpStr);
 
     return tmpStr;

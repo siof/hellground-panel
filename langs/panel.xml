@@ -488,12 +488,12 @@ For new players:<br/>
     </message>
     <message id='informations.teleport'>
 <h3>Character teleport</h3><br/>
-There is a possibility of teleportate character locked somewhere in the middle of map, if for some reason 'unstuck' feature does not work.<br/>
+There is a possibility of relocate character locked somewhere in the middle of map, if for some reason 'unstuck' feature does not work.<br/>
 Few informations:
 <ul>
     <li>Teleport allows also for debug a character which got stuck flying on a gryphon or wyvern.</li>
     <li>Teleport will move you to your race's starting location.</li>
-    <li>You can teleportate yourself whenever you want, but every use assume an hour cooldown on your Heartstone.</li>
+    <li>You can relocate yourself whenever you want, but every use assume an hour cooldown on your Heartstone.</li>
     <li>Your character must not be online for time you are performing the teleportation.</li>
 </ul><br/><br/>
 Choose a character which you would like to teleport:

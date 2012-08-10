@@ -631,7 +631,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
             i = 1;
 
             DatabaseRow * tmpRow;
-            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
             {
                 tmpRow = *itr;
 
@@ -640,6 +640,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
                     tmpTable->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
                     tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[1].GetWString()));
                     tmpTable->elementAt(i, 2)->addWidget(new WText(Wt::WString::tr(tmpRow->fields[3].GetBool() ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE)));
+                    ++i;
                 }
             }
 
