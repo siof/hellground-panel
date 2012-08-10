@@ -114,7 +114,7 @@ Zadania
 Czary
     </message>
     <message id='character.tab.inventory'>
-Inwentarz
+Ekwipunek
     </message>
     <message id='character.tab.fiends'>
 Znajomi
@@ -475,7 +475,7 @@ Dla nowych graczy:<br/>
     <li>Rejestracja: <a href="#/register"><font color="#00FF00">Otwarta</font></a></li>
     <li>realmlist: set realmlist logon.hellground.pl</li>
     <li>Patch: The Burning Crusade (TBC 2.4.3)</li>
-    <li>Emulator: TrinityCore + <a href="http://wow.hellground.pl/changelog/">własne fixy</a></li>
+    <li>Emulator: TrinityCore + <a href="http://wow.hellground.pl/changelog/">własne poprawki</a></li>
     <li>Rates xp: opcjonalnie x1 - x2 (wybór w panelu)</li>
     <li>Rates xp quest: opcjonalnie x1 - x2 (wybór w panelu)</li>
     <li>Rates drop: x1</li>
@@ -493,7 +493,7 @@ Kilka informacji:
 <ul>
     <li>Opcja teleportu pozwala także na odbugowanie postaci w pewnych okolicznościach jak np utknięcie na gryfie/wiwernie i lecenie przez tekstury.</li>
     <li>Teleport przeniesie wybraną postać do lokacji startowej <b>danej</b> rasy.</li>
-    <li>Teleportacji możesz używać w dowolnym momencie, jednak każde jegj użycie nakłada godzinny cooldown na HeartStone’a.</li>
+    <li>Teleportacji możesz używać w dowolnym momencie, jednak każde jej użycie nakłada godzinny cooldown na HeartStone’a.</li>
     <li>Twoja postać nie może być zalogowana w momencie używania teleportu.</li>
 </ul><br/><br/>
 Wybierz postać, którą chcesz teleportować:
@@ -549,7 +549,7 @@ Hasło do konta musi mieć conajmniej 6 a maksymalnie 16 znaków.
     </message>
     <message id='informations.account'>
 <h3>Informacje o koncie:</h3><br/>
-Na tej stronie możesz sprawdzic aktualne podstawowe informacje o Twoim koncie (adres email jest zamaskowany).
+Na tej stronie możesz sprawdzic aktualne podstawowe informacje o Twoim koncie (adres email jest wyświetlany częściowo).
     </message>
     <message id='informations.support'>
 Pomóż rozwijać serwer Hellground poprzez dotacje oraz głosowanie na toplistach:<br/>
@@ -809,7 +809,7 @@ W polu email musi znajdować sie adres email.
 Postać nie może być zalogowana aby została przeniesiona
     </message>
     <message id='error.character.notfound'>
-Nie znaleziono postaci !
+Nie znaleziono postaci!
     </message>
     <message id='error.ip.mistach'>
 Konto posiada włączoną blokadę IP oraz Twój aktualny adres IP nie pasuje do IP konta.<br/><br/>
@@ -832,7 +832,7 @@ Nie możesz posiadać postaci w obu frakcjach na jednym koncie
 Zbyt dużo postaci na koncie
     </message>
     <message id='error.cant.while.banned'>
-Nie możesz tego zrobić podczas posiadania bana
+Nie możesz tego zrobić podczas trwania bana
     </message>
 
     <message id='error.db.connection'>
@@ -842,7 +842,7 @@ DB Error: Błąd połączenia z bazą danych
 DB Error: Wynik zapytania pusty
     </message>
     <message id='error.db.query.error'>
-DB Error: Błąd w zapytanie do bazy danych
+DB Error: Błąd w zapytaniu do bazy danych
     </message>
 
     <message id='realm.informations.hellground'>
