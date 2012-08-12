@@ -81,4 +81,6 @@ void TemplateWidget::ChangeTemplate()
     wApp->useStyleSheet(tmpltInfo.GetFullStylePath());
     templt->setTemplateText(tmpltInfo.currentTemplate);
     templt->refresh();
+
+    wApp->setCookie("tmplt", tmpltInfo.name, WEEK);
 }
