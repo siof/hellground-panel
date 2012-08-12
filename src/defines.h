@@ -388,6 +388,7 @@ enum MenuOptions
 #define TXT_BTN_REGISTER                "button.register"           /**< Register button label */
 #define TXT_BTN_TELEPORT                "button.teleport"           /**< Character teleport button label */
 #define TXT_BTN_CHARACTER_RESTORE       "button.character.restore"  /**< Button to restore deleted character */
+#define TXT_BTN_CHANGE_TEMPLATE         "button.template.change"    /**< Button to change panel template */
 
 /** Spells */
 #define TXT_SPELL_ID                    "spell.id"                  /**< Spell id label. */
@@ -496,6 +497,9 @@ enum MenuOptions
 /** XP modes */
 #define TXT_XP_RATE_SERVER              "xp.rate.default"           /**< Text for server default XP rates */
 #define TXT_XP_RATE_BLIZZLIKE           "xp.rate.blizzlike"         /**< Text for blizzlike XP rates */
+
+/** Template chooser */
+#define TXT_TEMPLATE_CHOOSE             "template.choose"           /**< Text for chosing template */
 
 /** Errors */
 #define TXT_ERROR_WRONG_LOGIN_DATA      "error.wrong.data.login"    /**< Error info: wrong login or password */
@@ -686,6 +690,7 @@ enum MoneyConstants
 
 struct TemplateInfo
 {
+    TemplateInfo() : name(""), stylePath(""), tmpltPath(""), currentTemplate("") {}
     TemplateInfo(const char * name, const char * style, const char * tmplt)
         : name(name), stylePath(style), tmpltPath(tmplt), currentTemplate("") {}
 

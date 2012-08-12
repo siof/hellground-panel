@@ -419,6 +419,9 @@ Teleport
     <message id='button.character.restore'>
 Restore character
     </message>
+    <message id='button.template.change'>
+Change template
+    </message>
 
     <message id='spell.id'>
 Spell ID
@@ -722,6 +725,10 @@ Server default
     </message>
     <message id='xp.rate.blizzlike'>
 Blizzlike
+    </message>
+
+    <message id='template.choose'>
+Choose template
     </message>
 
     <message id='quest.link.name.fmt'>

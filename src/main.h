@@ -15,10 +15,18 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef MAIN_H_INCLUDED
+#define MAIN_H_INCLUDED
+
 #include <Wt/WApplication>
 #include <Wt/WEnvironment>
 
 #include "defines.h"
+
+class LangsWidget;
+class LoginWidget;
+class HGMenu;
+class TemplateWidget;
 
 class PlayersPanel : public Wt::WApplication
 {
@@ -31,9 +39,12 @@ private:
     SessionInfo * session;              // store info about user session
 
     Wt::WTemplate * templ;
-    Wt::WContainerWidget * langs;
-    Wt::WContainerWidget * login;
-    Wt::WMenu * menu;
+    LangsWidget * langs;
+    LoginWidget * login;
+    HGMenu * menu;
+    TemplateWidget * templChooser;
 
-    Wt::WMenu * CreateMenu(Wt::Orientation ori = Wt::Horizontal);
+    HGMenu * CreateMenu(Wt::Orientation ori = Wt::Horizontal);
 };
+
+#endif // MAIN_H_INCLUDED

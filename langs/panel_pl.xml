@@ -419,6 +419,9 @@ Przenieś
     <message id='button.character.restore'>
 Przywróć postać
     </message>
+    <message id='button.template.change'>
+Zmień templatkę
+    </message>
 
     <message id='spell.id'>
 ID czaru
@@ -724,6 +727,10 @@ Domyślne serwerowe (x2)
     </message>
     <message id='xp.rate.blizzlike'>
 Blizzlike (x1)
+    </message>
+
+    <message id='template.choose'>
+Wybierz templatke
     </message>
 
     <message id='quest.link.name.fmt'>

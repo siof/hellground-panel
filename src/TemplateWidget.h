@@ -15,23 +15,25 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LANGS_WIDGET_H_INCLUDED
-#define LANGS_WIDGET_H_INCLUDED
+#ifndef TEMPLATE_WIDGET_H_INCLUDED
+#define TEMPLATE_WIDGET_H_INCLUDED
 
 #include <Wt/WContainerWidget>
 
 #include "defines.h"
 
-class LangsWidget : public Wt::WContainerWidget
+class TemplateWidget : public Wt::WContainerWidget
 {
 public:
-    LangsWidget(Wt::WContainerWidget * parent = NULL);
-    ~LangsWidget() {}
+    TemplateWidget(Wt::WTemplate * templ, Wt::WContainerWidget * parent = NULL);
+    ~TemplateWidget() {}
 
 private:
-    void ChangeLanguage(Lang lang);
+    std::vector<TemplateInfo> templates;
+    Wt::WComboBox * templateCombo;
+    Wt::WTemplate * templt;
 
-    void AddLangButton(Lang lang, const char * txt);
+    void ChangeTemplate();
 };
 
-#endif // LANGS_WIDGET_H_INCLUDED
+#endif // TEMPLATE_WIDGET_H_INCLUDED

@@ -17,7 +17,11 @@
     <div class="menu">${add-menu}</div>
     <div class="menu-bottom"></div>
 
+    <div class="templates-top"></div>
+    <div class="templates">${add-templatechooser}</div>
+    <div class="templates-bottom"></div>
+
 </div>
 
 <div class="content" >${add-content}</div>
-<div class="footer" >${tr:site.footer}</div>
+<div class="footer" >${add-footer}</div>
