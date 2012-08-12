@@ -684,6 +684,28 @@ enum MoneyConstants
     GOLD    = SILVER * 100
 };
 
+struct TemplateInfo
+{
+    TemplateInfo(const char * name, const char * style, const char * tmplt)
+        : name(name), stylePath(style), tmpltPath(tmplt), currentTemplate("") {}
+
+    std::string GetFullStylePath()
+    {
+        return stylePath + "/style.css";
+    }
+
+    std::string GetFullTemplatePath()
+    {
+        return tmpltPath + "/" + name + ".tmplt";
+    }
+
+    std::string name;
+    std::string stylePath;
+    std::string tmpltPath;
+
+    std::string currentTemplate;
+};
+
 #define QUEST_TYPE_DAILY    87
 
 #endif // DEFINES_H_INCLUDED
