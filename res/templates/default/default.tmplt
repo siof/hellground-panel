@@ -1,0 +1,23 @@
+<div class="head" ></div>
+<div class="sidebar" >
+
+    <div class="profile-top"></div>
+    <div class="profile" >
+        ${<if-notlogged>}
+            ${add-login}
+        ${</if-notlogged>}
+    </div>
+    <div class="profile-bottom"></div>
+
+    <div class="langs-top"></div>
+    <div class="langs" >${add-langs}</div>
+    <div class="langs-bottom"></div>
+
+    <div class="menu-top"></div>
+    <div class="menu">${add-menu}</div>
+    <div class="menu-bottom"></div>
+
+</div>
+
+<div class="content" >${add-content}</div>
+<div class="footer" >${tr:site.footer}</div>

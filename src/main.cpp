@@ -17,6 +17,8 @@
 
 #include "main.h"
 
+#include <fstream>
+
 #include <Wt/WEnvironment>
 #include <Wt/WImage>
 #include <Wt/WMenu>
@@ -42,13 +44,46 @@ PlayersPanel::PlayersPanel(const Wt::WEnvironment& env)
     session->sessionIp = env.clientAddress();
 
     setLoadingIndicator(new Wt::WOverlayLoadingIndicator("loading"));
+    messageResourceBundle().use("langs/panel");
 
     setTitle(Wt::WString::tr(TXT_SITE_TITLE));
 
-    useStyleSheet("res/style.css");
+    // template info - assign default paths for default template
+    TemplateInfo tmplt(TMPLT_DEFAULT_NAME, TMPLT_DEFAULT_STYLE_PATH, TMPLT_DEFAULT_TMPLT_PATH);
+
+    const std::string * cookieVal = env.getCookieValue("tmplt");
+    if (cookieVal && !cookieVal->empty() && *cookieVal != "0")
+    {
+        Database db;
+        if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+        {
+            std::string tmpName = db.EscapeString(*cookieVal);
+            if (db.ExecutePQuery("SELECT name, stylePath, tmpltPath FROM Templates WHERE name = '%s'", tmpName.c_str()) > DB_RESULT_EMPTY)
+            {
+                tmplt.name = db.GetRow()->fields[0].GetString();
+                tmplt.stylePath = db.GetRow()->fields[1].GetString();
+                tmplt.tmpltPath = db.GetRow()->fields[2].GetString();
+            }
+        }
+    }
+
+    useStyleSheet(tmplt.GetFullStylePath());
+
     root()->setStyleClass("main");
 
-    messageResourceBundle().use("langs/panel");
+    std::fstream tmpltFile;
+
+    tmpltFile.open(tmplt.GetFullTemplatePath().c_str(), std::fstream::in);
+    if (tmpltFile.is_open() && tmpltFile.good())
+    {
+        char tmpStr[1000];
+        while (!tmpltFile.eof())
+        {
+            tmpltFile.getline(tmpStr, 1000, '\n');
+            tmplt.currentTemplate += tmpStr;
+        }
+    }
+    tmpltFile.close();
 
     // page creation
     templ = new Wt::WTemplate();
@@ -68,32 +103,7 @@ PlayersPanel::PlayersPanel(const Wt::WEnvironment& env)
     templ->setCondition("if-loggedin", false);
     templ->setCondition("if-notlogged", true);
 
-    templ->setTemplateText(
-        "<div class=\"head\" ></div>"
-        "<div class=\"sidebar\" >"
-
-            "<div class=\"profile-top\"></div>"
-            "<div class=\"profile\" >"
-//                "${<if-loggedin>}"
-//                    "${add-profile}"
-//                "${</if-loggedin>}"
-                "${<if-notlogged>}"
-                    "${add-login}"
-                "${</if-notlogged>}"
-            "</div>"
-            "<div class=\"profile-bottom\"></div>"
-
-            "<div class=\"langs-top\"></div>"
-            "<div class=\"langs\" >${add-langs}</div>"
-            "<div class=\"langs-bottom\"></div>"
-
-            "<div class=\"menu-top\"></div>"
-            "<div class=\"menu\">${add-menu}</div>"
-            "<div class=\"menu-bottom\"></div>"
-
-        "</div>"
-        "<div class=\"content\" >${add-content}</div> "
-        "<div class=\"footer\" >${tr:site.footer}</div>");
+    templ->setTemplateText(tmplt.currentTemplate);
 
     root()->addWidget(templ);
 }

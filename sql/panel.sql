@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Activity
     activity_id VARCHAR(50) NOT NULL,
     activity_args VARCHAR(100) NOT NULL DEFAULT '',
     PRIMARY KEY(account_id, event_date)
-) ENGINE = InnoDB, CHARACTER SET utf8;
+) CHARACTER SET utf8;
 
 CREATE TABLE IF NOT EXISTS Vote
 (
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS Vote
     img_url VARCHAR(200) NOT NULL,
     alt_text VARCHAR(200) NOT NULL DEFAULT '',
     name VARCHAR(30) NOT NULL
-) ENGINE = InnoDB, CHARACTER SET utf8;
+) CHARACTER SET utf8;
 
 CREATE TABLE IF NOT EXISTS AccVote
 (
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS AccVote
     FOREIGN KEY (vote_id) REFERENCES Vote(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-) ENGINE = InnoDB, CHARACTER SET utf8;
+) CHARACTER SET utf8;
 
 CREATE TABLE IF NOT EXISTS IPVote
 (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS IPVote
     FOREIGN KEY (vote_id) REFERENCES Vote(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-) ENGINE = InnoDB, CHARACTER SET utf8;
+) CHARACTER SET utf8;
 
 DELETE FROM Vote;
 INSERT INTO Vote VALUES
@@ -50,3 +50,12 @@ INSERT INTO Vote VALUES
 ('7', 'http://rpgtextowe.topka.pl/?we=nasgothhg', 'http://www.top-rpg.yoyo.pl/152x52ver1.png', 'Toplista-Gier', 'top-rpg'),
 ('8', 'http://mmorpg.toplista.pl/?we=nasgothhg', 'http://s207272909.onlinehome.us/tm.gif', 'MMORPG Top50', 'MMORPG Top50'),
 ('9', 'http://www.rpg-paradize.com/?page=vote&vote=30150', 'http://www.rpg-paradize.com/pubmini.gif', 'rpg-paradize', 'rpg-paradize');
+
+CREATE TABLE IF NOT EXISTS Templates
+(
+    name VARCHAR(25) PRIMARY KEY,
+    stylePath VARCHAR(500) NOT NULL,
+    tmpltPath VARCHAR(500) NOT NULL
+) CHARACTER SET utf8;
+
+INSERT INTO Templates VALUES ("default", "res/templates/default", "res/templates/default");
