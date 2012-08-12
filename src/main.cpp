@@ -17,8 +17,6 @@
 
 #include "main.h"
 
-#include <fstream>
-
 #include <Wt/WEnvironment>
 #include <Wt/WImage>
 #include <Wt/WMenu>
@@ -36,6 +34,7 @@
 #include "misc.h"
 #include "LangsWidget.h"
 #include "login.h"
+#include "TemplateWidget.h"
 
 PlayersPanel::PlayersPanel(const Wt::WEnvironment& env)
     : WApplication(env)
@@ -49,41 +48,22 @@ PlayersPanel::PlayersPanel(const Wt::WEnvironment& env)
     setTitle(Wt::WString::tr(TXT_SITE_TITLE));
 
     // template info - assign default paths for default template
-    TemplateInfo tmplt(TMPLT_DEFAULT_NAME, TMPLT_DEFAULT_STYLE_PATH, TMPLT_DEFAULT_TMPLT_PATH);
+    TemplateInfo tmplt;
 
     const std::string * cookieVal = env.getCookieValue("tmplt");
     if (cookieVal && !cookieVal->empty() && *cookieVal != "0")
+        tmplt = Misc::GetTemplateInfoFromDB(*cookieVal);
+    else
     {
-        Database db;
-        if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
-        {
-            std::string tmpName = db.EscapeString(*cookieVal);
-            if (db.ExecutePQuery("SELECT name, stylePath, tmpltPath FROM Templates WHERE name = '%s'", tmpName.c_str()) > DB_RESULT_EMPTY)
-            {
-                tmplt.name = db.GetRow()->fields[0].GetString();
-                tmplt.stylePath = db.GetRow()->fields[1].GetString();
-                tmplt.tmpltPath = db.GetRow()->fields[2].GetString();
-            }
-        }
+        tmplt.name = TMPLT_DEFAULT_NAME;
+        tmplt.stylePath = TMPLT_DEFAULT_STYLE_PATH;
+        tmplt.tmpltPath = TMPLT_DEFAULT_TMPLT_PATH;
+        tmplt.currentTemplate = Misc::GetTemplate(tmplt.tmpltPath, tmplt.name);
     }
 
     useStyleSheet(tmplt.GetFullStylePath());
 
     root()->setStyleClass("main");
-
-    std::fstream tmpltFile;
-
-    tmpltFile.open(tmplt.GetFullTemplatePath().c_str(), std::fstream::in);
-    if (tmpltFile.is_open() && tmpltFile.good())
-    {
-        char tmpStr[1000];
-        while (!tmpltFile.eof())
-        {
-            tmpltFile.getline(tmpStr, 1000, '\n');
-            tmplt.currentTemplate += tmpStr;
-        }
-    }
-    tmpltFile.close();
 
     // page creation
     templ = new Wt::WTemplate();
@@ -92,12 +72,15 @@ PlayersPanel::PlayersPanel(const Wt::WEnvironment& env)
     langs = new LangsWidget();
     menu = CreateMenu();
     login = new LoginWidget(session, templ);
+    templChooser = new TemplateWidget(templ);
 
     templ->bindWidget("add-langs", langs);
     templ->bindWidget("add-login", login);
     templ->bindWidget("add-menu", menu);
     templ->bindWidget("add-content", content);
     templ->bindWidget("add-profile", new Wt::WText("testus profile"));
+    templ->bindWidget("add-templatechooser", templChooser);
+    templ->bindWidget("add-footer", new Wt::WText(Wt::WString::tr(TXT_SITE_FOOTER)));
 
     templ->addFunction("tr", &Wt::WTemplate::Functions::tr);
     templ->setCondition("if-loggedin", false);
@@ -108,7 +91,7 @@ PlayersPanel::PlayersPanel(const Wt::WEnvironment& env)
     root()->addWidget(templ);
 }
 
-Wt::WMenu * PlayersPanel::CreateMenu(Wt::Orientation ori)
+HGMenu * PlayersPanel::CreateMenu(Wt::Orientation ori)
 {
     menu = new HGMenu(content, session, templ, ori);
 

@@ -15,6 +15,9 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef LOGIN_WIDGET_H_INCLUDED
+#define LOGIN_WIDGET_H_INCLUDED
+
 #include <Wt/WContainerWidget>
 
 #include "defines.h"
@@ -37,3 +40,5 @@ private:
     void AddActivityLogIn(bool success, const char * login = NULL);
     void AddActivityLogIn(uint32 id, bool success);
 };
+
+#endif // LOGIN_WIDGET_H_INCLUDED

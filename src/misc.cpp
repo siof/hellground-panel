@@ -18,9 +18,12 @@
 #include "misc.h"
 
 #include <stdarg.h>
+#include <fstream>
 
 #include <jwsmtp/jwsmtp.h>
 #include <Wt/WApplication>
+
+#include "database.h"
 
 void Misc::SendMail(const Wt::WString& from, const Wt::WString& to, const Wt::WString& sub, const Wt::WString& msg)
 {
@@ -90,4 +93,62 @@ std::string Misc::GetFormattedString(const char * format, ...)
     va_end(args);
 
     return std::string(buffer);
+}
+
+std::string Misc::GetTemplate(const std::string & fullPath)
+{
+    std::string templateStr;
+    std::fstream tmpltFile;
+
+    tmpltFile.open(fullPath.c_str(), std::fstream::in);
+    if (tmpltFile.is_open() && tmpltFile.good())
+    {
+        char tmpStr[1000];
+        while (!tmpltFile.eof())
+        {
+            tmpltFile.getline(tmpStr, 1000, '\n');
+            templateStr += tmpStr;
+        }
+    }
+    tmpltFile.close();
+
+    return templateStr;
+}
+
+std::string Misc::GetTemplate(const std::string & tmpltPath, const std::string & name)
+{
+    return GetTemplate(tmpltPath + "/" + name + ".tmplt");
+}
+
+TemplateInfo Misc::GetTemplateInfoFromDB(const std::string & name)
+{
+    TemplateInfo templateInfo;
+    Database db;
+
+    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    {
+        std::string tmpName = db.EscapeString(name);
+        if (db.ExecutePQuery("SELECT name, stylePath, tmpltPath FROM Templates WHERE name = '%s'", tmpName.c_str()) > DB_RESULT_EMPTY)
+        {
+            templateInfo.name = db.GetRow()->fields[0].GetString();
+            templateInfo.stylePath = db.GetRow()->fields[1].GetString();
+            templateInfo.tmpltPath = db.GetRow()->fields[2].GetString();
+
+            templateInfo.currentTemplate = GetTemplate(templateInfo.GetFullTemplatePath());
+        }
+    }
+
+    if (templateInfo.currentTemplate.empty() || templateInfo.stylePath.empty())
+    {
+        templateInfo.name = TMPLT_DEFAULT_NAME;
+        templateInfo.stylePath = TMPLT_DEFAULT_STYLE_PATH;
+        templateInfo.tmpltPath = TMPLT_DEFAULT_TMPLT_PATH;
+    }
+
+    return templateInfo;
+}
+
+TemplateInfo Misc::GetTemplateInfoFromDB(const Wt::WString & name)
+{
+    return GetTemplateInfoFromDB(name.toUTF8());
 }

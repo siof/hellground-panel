@@ -100,6 +100,40 @@ namespace Misc
      ***********************************************/
 
     void SendMailTr(const char * from, const char * to, const char * sub, const char * msg);
+
+    /********************************************//**
+     * \brief Reads template from file.
+     *
+     * \param fullPath  full path to .tmplt file contains template
+     * \return string containing template from .tmplt file
+     *
+     ***********************************************/
+
+    std::string GetTemplate(const std::string & fullPath);
+
+    /********************************************//**
+     * \brief Reads template from file.
+     *
+     * \param tmpltPath path to folder containing template
+     * \param name      template name
+     * \return string containing template from name.tmplt file
+     *
+     * Function executes GetTemplate(std::string & fullPath) after creation of full path to .tmplt file.
+     *
+     ***********************************************/
+
+    std::string GetTemplate(const std::string & tmpltPath, const std::string & name);
+
+    /********************************************//**
+     * \brief Gets full template info from DB and tmplt file.
+     *
+     * \param name  template name
+     * \return template informations from DB and .tmplt file
+     *
+     ***********************************************/
+
+    TemplateInfo GetTemplateInfoFromDB(const std::string & name);
+    TemplateInfo GetTemplateInfoFromDB(const Wt::WString & name);
 }
 
 #endif // MISC_H_INCLUDED
