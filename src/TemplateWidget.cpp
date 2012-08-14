@@ -33,27 +33,7 @@ TemplateWidget::TemplateWidget(Wt::WTemplate * templ, Wt::WContainerWidget * par
     templt = templ;
     templateCombo = new Wt::WComboBox();
 
-    Database db;
-    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
-    {
-        if (db.ExecutePQuery("SELECT name, stylePath, tmpltPath FROM Templates") > DB_RESULT_EMPTY)
-        {
-            std::vector<DatabaseRow *> tmpRows = db.GetRows();
-            const DatabaseRow * tmpRow;
-            for (std::vector<DatabaseRow*>::const_iterator itr = tmpRows.begin(); itr != tmpRows.end(); ++itr)
-            {
-                tmpRow = *itr;
-
-                TemplateInfo tmplt;
-                tmplt.name = tmpRow->fields[0].GetString();
-                tmplt.stylePath = tmpRow->fields[1].GetString();
-                tmplt.tmpltPath = tmpRow->fields[2].GetString();
-
-                templates.push_back(tmplt);
-                templateCombo->addItem(tmplt.name);
-            }
-        }
-    }
+    templates = Misc::GetTemplatesFromDB();
 
     Wt::WPushButton * tmpButton = new Wt::WPushButton();
     tmpButton->setText(Wt::WString::tr(TXT_BTN_CHANGE_TEMPLATE));
@@ -73,14 +53,26 @@ void TemplateWidget::ChangeTemplate()
 
     TemplateInfo tmpltInfo;
 
-    tmpltInfo = Misc::GetTemplateInfoFromDB(templateCombo->currentText());
+    int index = templateCombo->currentIndex();
+
+    std::vector<TemplateInfo>::const_iterator itr = templates.begin();
+    std::advance(itr, index);
+
+    // it's probably impossible but ...
+    if (itr == templates.end())
+        return;
+
+    tmpltInfo = *itr;
+
+    // it's probably impossible but ...
+    if (tmpltInfo.name != templateCombo->currentText())
+        return;
 
     if (tmpltInfo.currentTemplate.empty() || tmpltInfo.stylePath.empty())
         return;
 
     wApp->useStyleSheet(tmpltInfo.GetFullStylePath());
+    wApp->setCookie("tmplt", tmpltInfo.name, WEEK);
     templt->setTemplateText(tmpltInfo.currentTemplate);
     templt->refresh();
-
-    wApp->setCookie("tmplt", tmpltInfo.name, WEEK);
 }

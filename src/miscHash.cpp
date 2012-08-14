@@ -49,7 +49,7 @@ std::string Misc::Hash::PGetSHA1(const char * format, uint32 flags, ...)
     char buffer[strlen(format) + 1000];
 
     va_list args;
-    va_start(args, format);
+    va_start(args, flags);
     vsprintf(buffer, format, args);
     va_end(args);
 
@@ -61,7 +61,7 @@ Wt::WString Misc::Hash::PWGetSHA1(const char * format, uint32 flags, ...)
     char buffer[strlen(format) + 1000];
 
     va_list args;
-    va_start(args, format);
+    va_start(args, flags);
     vsprintf(buffer, format, args);
     va_end(args);
 
