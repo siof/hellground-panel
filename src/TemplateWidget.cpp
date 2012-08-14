@@ -35,6 +35,9 @@ TemplateWidget::TemplateWidget(Wt::WTemplate * templ, Wt::WContainerWidget * par
 
     templates = Misc::GetTemplatesFromDB();
 
+    for (std::vector<TemplateInfo>::const_iterator itr = templates.begin(); itr != templates.end(); ++itr)
+        templateCombo->addItem((*itr).name);
+
     Wt::WPushButton * tmpButton = new Wt::WPushButton();
     tmpButton->setText(Wt::WString::tr(TXT_BTN_CHANGE_TEMPLATE));
     tmpButton->clicked().connect(this, &TemplateWidget::ChangeTemplate);
