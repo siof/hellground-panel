@@ -655,40 +655,9 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
  *
  ***********************************************/
 
-void CharacterInfoPage::ClearPage(bool alsoCharList)
+void CharacterInfoPage::ClearPage()
 {
     Misc::Console(DEBUG_CODE, "\nCharacterInfoPage::ClearPage()\n");
-
-/*
-    WWidget * tmpWid;
-    int i;
-
-    for (i = CHAR_TAB_COUNT - 1; i >= 0; --i)
-    {
-        if (tmpWid = tabs->widget(i))
-        {
-            tabs->removeTab(tmpWid);
-
-            switch (i)
-            {
-                case CHAR_TAB_BASIC:
-                    charBasicInfo->clear();
-                    ((WContainerWidget*)tmpWid)->clear();
-                    charBasicInfo = NULL;
-                    delete tmpWid;
-                    break;
-                case CHAR_TAB_QUEST:
-                case CHAR_TAB_SPELL:
-                case CHAR_TAB_INVENTORY:
-                    ((WTable*)tmpWid)->clear();
-                    delete tmpWid;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-*/
 
     clear();
 

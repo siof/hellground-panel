@@ -134,6 +134,15 @@ namespace Misc
 
     TemplateInfo GetTemplateInfoFromDB(const std::string & name);
     TemplateInfo GetTemplateInfoFromDB(const Wt::WString & name);
+
+    /********************************************//**
+     * \brief Get full tamplate info for all templates in DB.
+     *
+     * \return vector with template info for templates recorded in DB
+     *
+     ***********************************************/
+
+    std::vector<TemplateInfo> GetTemplatesFromDB();
 }
 
 #endif // MISC_H_INCLUDED

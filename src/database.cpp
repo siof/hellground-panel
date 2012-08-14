@@ -186,9 +186,9 @@ int Database::ExecuteQuery()
 
     Misc::Console(DEBUG_DB, "\n\nExecuteQuery(): test2\n");
 
-    MYSQL_RES * res;
+    MYSQL_RES * res = mysql_store_result(connection);
 
-    if (res = mysql_store_result(connection))
+    if (res)
     {
         unsigned int count = mysql_field_count(connection);
         MYSQL_ROW row;

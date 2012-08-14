@@ -227,7 +227,7 @@ private:
     WTable * CreateCharacterFriendInfo();
     void UpdateCharacterFriendInfo(uint64 guid);
 
-    void ClearPage(bool alsoCharList = true);
+    void ClearPage();
 
     void SelectionChanged(int selected);
 

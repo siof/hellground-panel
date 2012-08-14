@@ -12,6 +12,8 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-std=c++0x" />
+					<Add option="-Wall" />
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
@@ -124,6 +126,8 @@
 		<Unit filename="../sql/spell.sql" />
 		<Unit filename="../src/LangsWidget.cpp" />
 		<Unit filename="../src/LangsWidget.h" />
+		<Unit filename="../src/TemplateWidget.cpp" />
+		<Unit filename="../src/TemplateWidget.h" />
 		<Unit filename="../src/config.h" />
 		<Unit filename="../src/config.h.dist" />
 		<Unit filename="../src/database.cpp" />

@@ -152,3 +152,31 @@ TemplateInfo Misc::GetTemplateInfoFromDB(const Wt::WString & name)
 {
     return GetTemplateInfoFromDB(name.toUTF8());
 }
+
+std::vector<TemplateInfo> Misc::GetTemplatesFromDB()
+{
+    std::vector<TemplateInfo> templates;
+    Database db;
+    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    {
+        if (db.ExecutePQuery("SELECT name, stylePath, tmpltPath FROM Templates") > DB_RESULT_EMPTY)
+        {
+            std::vector<DatabaseRow *> tmpRows = db.GetRows();
+            const DatabaseRow * tmpRow;
+            for (std::vector<DatabaseRow*>::const_iterator itr = tmpRows.begin(); itr != tmpRows.end(); ++itr)
+            {
+                tmpRow = *itr;
+
+                TemplateInfo tmplt;
+                tmplt.name = tmpRow->fields[0].GetString();
+                tmplt.stylePath = tmpRow->fields[1].GetString();
+                tmplt.tmpltPath = tmpRow->fields[2].GetString();
+                tmplt.currentTemplate = GetTemplate(tmplt.tmpltPath, tmplt.name);
+
+                templates.push_back(tmplt);
+            }
+        }
+    }
+
+    return templates;
+}
