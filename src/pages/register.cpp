@@ -92,6 +92,12 @@ void RegisterPage::CreateRegisterPage()
     addWidget(new Wt::WBreak());
     addWidget(new Wt::WBreak());
 
+    if (!wApp->environment().javaScript() || !wApp->environment().ajax())
+    {
+        regInfo->setText(Wt::WString::tr(TXT_ERROR_NEED_JAVA_SCRIPT));
+        return;
+    }
+
     txtLogin = new Wt::WLineEdit();
     txtLogin->setEmptyText(Wt::WString::tr(TXT_ACC_LOGIN));
     WRegExpValidator * validator = new Wt::WRegExpValidator(LOGIN_VALIDATOR);
@@ -163,6 +169,9 @@ void RegisterPage::CheckChange()
 
 void RegisterPage::Register()
 {
+    if (!wApp->environment().javaScript() || !wApp->environment().ajax())
+        return;
+
     bool validLogin = txtLogin->validate() == WValidator::Valid;
     bool validEmail = txtEmail->validate() == WValidator::Valid;
     if (!validLogin || !validEmail)
