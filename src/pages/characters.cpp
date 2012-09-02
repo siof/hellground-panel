@@ -442,7 +442,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
         return;
     }
 
-    switch (db.ExecutePQuery("SELECT cq.quest, qt.Title, qt.QuestLevel, cq.status, cq.rewarded, qt.Type, qt.MinLevel "
+    switch (db.ExecutePQuery("SELECT cq.quest, qt.Name, qt.QuestLevel, cq.status, cq.rewarded, qt.Type, qt.MinLevel "
                             "FROM character_queststatus AS cq JOIN %s.quest_template AS qt ON cq.quest = qt.entry "
                             "WHERE guid = %u", SQL_WORLDDB, guid))
     {
