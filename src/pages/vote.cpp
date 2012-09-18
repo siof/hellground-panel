@@ -179,7 +179,7 @@ void VotePage::CreateVotePage()
             {
                 tmpRow = *itr;
 
-                for (std::vector<VoteInfo>::iterator vItr = votesInfo.begin(); vItr != votesInfo.end(); ++vItr)
+                for (std::list<VoteInfo>::iterator vItr = votesInfo.begin(); vItr != votesInfo.end(); ++vItr)
                 {
                     if ((*vItr).voteId == tmpRow->fields[0].GetUInt32())
                     {
@@ -198,7 +198,7 @@ void VotePage::CreateVotePage()
     }
 
     int i = 1;
-    for (std::vector<VoteInfo>::iterator itr = votesInfo.begin(); itr != votesInfo.end(); ++itr, ++i)
+    for (std::list<VoteInfo>::iterator itr = votesInfo.begin(); itr != votesInfo.end(); ++itr, ++i)
     {
         Wt::WAnchor * tmpAnch = new Wt::WAnchor(Wt::WLink((*itr).url.toUTF8()));
         tmpAnch->setImage(new Wt::WImage(Wt::WLink((*itr).imgUrl.toUTF8()), (*itr).altText));
@@ -241,18 +241,12 @@ void VotePage::Vote(const uint32& id)
     if (Wt::WObject::sender())
     {
         Wt::WAnchor * tmpAnch = ((Wt::WAnchor*)Wt::WObject::sender());
-        if (tmpAnch->isDisabled())
-        {
-            votePageInfo->setText(Wt::WString::tr(TXT_ERROR_CANT_VOTE_TWICE));
-            return;
-        }
-
         tmpAnch->setDisabled(true);
     }
 
     VoteInfo * currVote;
 
-    for (std::vector<VoteInfo>::iterator itr = votesInfo.begin(); itr != votesInfo.end(); ++itr)
+    for (std::list<VoteInfo>::iterator itr = votesInfo.begin(); itr != votesInfo.end(); ++itr)
     {
         if ((*itr).voteId == id)
         {
