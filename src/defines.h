@@ -33,7 +33,6 @@
 #include "config.h"
 
 #include <cstdio>
-#include <map>
 
 #ifdef DEBUG
 #include <iostream>
@@ -51,15 +50,8 @@ typedef int16_t     int16;
 typedef int8_t      int8;
 
 #ifdef WIN32
-#define SSCANF      sscanf_s
-#define VSNPRINTF   vsnprintf_s
-#define OPENFILE    fopen_s
-#define CLOSEFILE   fclose
-#else
-#define SSCANF      sscanf
-#define VSNPRINTF   vsnprintf
-#define OPENFILE    popen
-#define CLOSEFILE   pclose
+#define sscanf      sscanf_s
+#define vsnprintf   vsnprintf_s
 #endif
 
 using namespace Wt;

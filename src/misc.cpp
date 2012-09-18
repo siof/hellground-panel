@@ -161,9 +161,9 @@ std::vector<TemplateInfo> Misc::GetTemplatesFromDB()
     {
         if (db.ExecutePQuery("SELECT name, stylePath, tmpltPath FROM Templates") > DB_RESULT_EMPTY)
         {
-            std::vector<DatabaseRow *> tmpRows = db.GetRows();
+            std::list<DatabaseRow*> tmpRows = db.GetRows();
             const DatabaseRow * tmpRow;
-            for (std::vector<DatabaseRow*>::const_iterator itr = tmpRows.begin(); itr != tmpRows.end(); ++itr)
+            for (std::list<DatabaseRow*>::const_iterator itr = tmpRows.begin(); itr != tmpRows.end(); ++itr)
             {
                 tmpRow = *itr;
 

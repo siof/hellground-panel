@@ -42,28 +42,28 @@ std::string DatabaseField::GetString()
 uint64 DatabaseField::GetUInt64()
 {
     uint64 tmp = 0;
-    SSCANF(value.toUTF8().c_str(), "%lu", &tmp);
+    sscanf(value.toUTF8().c_str(), "%lu", &tmp);
     return tmp;
 }
 
 uint32 DatabaseField::GetUInt32()
 {
     uint32 tmp = 0;
-    SSCANF(value.toUTF8().c_str(), "%u", &tmp);
+    sscanf(value.toUTF8().c_str(), "%u", &tmp);
     return tmp;
 }
 
 int DatabaseField::GetInt()
 {
     int tmp = 0;
-    SSCANF(value.toUTF8().c_str(), "%i", &tmp);
+    sscanf(value.toUTF8().c_str(), "%i", &tmp);
     return tmp;
 }
 
 bool DatabaseField::GetBool()
 {
     int tmp = 0;
-    SSCANF(value.toUTF8().c_str(), "%i", &tmp);
+    sscanf(value.toUTF8().c_str(), "%i", &tmp);
 
     if (tmp)
         return true;
@@ -74,7 +74,7 @@ bool DatabaseField::GetBool()
 AccountLevel DatabaseField::GetAccountLevel()
 {
     int tmp = 0;
-    SSCANF(value.toUTF8().c_str(), "%i", &tmp);
+    sscanf(value.toUTF8().c_str(), "%i", &tmp);
 
     switch (tmp)
     {
@@ -130,7 +130,7 @@ bool Database::SetPQuery(const char *format, ...)
     va_list ap;
     char szQuery[MAX_QUERY_LEN];
     va_start(ap, format);
-    int res = VSNPRINTF(szQuery, MAX_QUERY_LEN, format, ap);
+    int res = vsnprintf(szQuery, MAX_QUERY_LEN, format, ap);
     va_end(ap);
 
     if (res == DB_RESULT_ERROR)
@@ -224,7 +224,7 @@ int Database::ExecutePQuery(const char * format, ...)
     va_list ap;
     char szQuery[MAX_QUERY_LEN];
     va_start(ap, format);
-    int res = VSNPRINTF(szQuery, MAX_QUERY_LEN, format, ap);
+    int res = vsnprintf(szQuery, MAX_QUERY_LEN, format, ap);
     va_end(ap);
 
     if (res == DB_RESULT_ERROR)
@@ -272,7 +272,7 @@ unsigned int Database::GetErrNo()
 
 void Database::Clear()
 {
-    for (std::vector<DatabaseRow*>::iterator itr = rows.begin(); itr != rows.end(); ++itr)
+    for (std::list<DatabaseRow*>::iterator itr = rows.begin(); itr != rows.end(); ++itr)
         delete *itr;
 
     rows.clear();
@@ -289,7 +289,10 @@ DatabaseRow * Database::GetRow(uint32 index)
     if (index >= rows.size())
         return NULL;
 
-    return rows[index];
+    std::list<DatabaseRow*>::iterator itr = rows.begin();
+    std::advance(itr, index);
+
+    return *itr;
 }
 
 DatabaseRow * Database::GetRow()
@@ -300,7 +303,7 @@ DatabaseRow * Database::GetRow()
     return rows.front();
 }
 
-std::vector<DatabaseRow*> Database::GetRows()
+std::list<DatabaseRow*> Database::GetRows()
 {
     return rows;
 }
