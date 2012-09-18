@@ -67,7 +67,7 @@ private:
     SessionInfo * session;
     WTemplate * templ;
 
-    std::vector<MenuItemInfo*> menuItems;
+    std::list<MenuItemInfo*> menuItems;
 
     void AddMenuItem(const char * txt, Wt::WWidget * contents, AccountLevel reqLvl, bool notLoggedAlso, const char * path = "");
 

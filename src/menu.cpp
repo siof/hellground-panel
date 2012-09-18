@@ -84,7 +84,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, Wt::WTemplate 
     AddMenuItem(TXT_MENU_LOGOUT, new LogoutPage(sess, templ), LVL_PLAYER, false, "logout");
     AddMenuItem(TXT_MENU_LICENCE, new LicencePage(), LVL_PLAYER, true, "licence");
 
-    for (std::vector<MenuItemInfo*>::const_iterator itr = menuItems.begin(); itr != menuItems.end(); ++itr)
+    for (std::list<MenuItemInfo*>::const_iterator itr = menuItems.begin(); itr != menuItems.end(); ++itr)
         addItem((*itr)->item);
 
     UpdateMenuOptions();
@@ -117,7 +117,7 @@ HGMenu::~HGMenu()
 
 void HGMenu::UpdateMenuOptions()
 {
-    for (std::vector<MenuItemInfo*>::iterator itr = menuItems.begin(); itr != menuItems.end(); ++itr)
+    for (std::list<MenuItemInfo*>::iterator itr = menuItems.begin(); itr != menuItems.end(); ++itr)
     {
         MenuItemInfo * tmpItem = (*itr);
 
