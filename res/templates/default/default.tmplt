@@ -9,17 +9,17 @@
     </div>
     <div class="profile-bottom"></div>
 
-    <div class="langs-top"></div>
+    <div class="border-top"></div>
     <div class="langs" >${add-langs}</div>
-    <div class="langs-bottom"></div>
+    <div class="border-bottom"></div>
 
-    <div class="menu-top"></div>
+    <div class="border-top"></div>
     <div class="menu">${add-menu}</div>
-    <div class="menu-bottom"></div>
+    <div class="border-bottom"></div>
 
-    <div class="templates-top"></div>
+    <div class="border-top"></div>
     <div class="templates">${add-templatechooser}</div>
-    <div class="templates-bottom"></div>
+    <div class="border-bottom"></div>
 
 </div>
 

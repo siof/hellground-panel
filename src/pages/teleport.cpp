@@ -108,7 +108,7 @@ void TeleportPage::LoadCharacters()
 
         if (db.ExecuteQuery() > DB_RESULT_EMPTY)
         {
-            std::vector<DatabaseRow*> rows = db.GetRows();
+            std::list<DatabaseRow*> rows = db.GetRows();
             db.Disconnect();
 
             DatabaseRow * tmpRow;
@@ -116,7 +116,7 @@ void TeleportPage::LoadCharacters()
             guids = new uint64[rows.size()];
             int i = 0;
 
-            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
 

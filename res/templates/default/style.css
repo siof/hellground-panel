@@ -1,20 +1,20 @@
 body
 {
-    background-color: #191919;
+    background-color: black;
     color: #FFF;
     font-size: 14px;
-}     
+}
 
-a 
+a
 {
-    cursor: pointer; cursor: hand;
+    cursor: pointer;
     color: white;
     text-decoration: none;
 }
 
 a:hover
 {
-    cursor: pointer; cursor: hand;
+    cursor: pointer;
     color: orange;
     text-decoration: none;
 }
@@ -55,7 +55,7 @@ div.main
 div.head
 {
     width: 100%;
-    height: 350px;
+    height: 335px;
     overflow: hidden;
     float: left;
     background-image: url(img/header.png);
@@ -70,37 +70,41 @@ div.sidebar
     overflow: hidden;
 }
 
-div.menu-top 
+div.border-top
+{
+    float: left;
+    margin-top: 10px;
+    width: 100%;
+    height: 10px;
+    background-image: url(img/border-top.png);
+}
+
+div.border-bottom
 {
     float: left;
     width: 100%;
-    height: 30px;
-    background-image: url(img/menutop.png);
+    height: 10px;
+    background-image: url(img/border-bottom.png);
 }
 
 div.menu
 {
     float: left;
     width: 100%;
-    background-image: url(img/menucont.png);
+    background-image: url(img/border-mid.png);
     background-repeat: repeat-y;
     overflow: hidden;
 }
 
-div.menu-bottom 
+div.templates
 {
     float: left;
     width: 100%;
-    height: 30px;
-    background-image: url(img/menubottom.png);
-}
-
-div.langs-top 
-{
-    float: left;
-    width: 100%;
-    height: 30px;
-    background-image: url(img/menutop.png);
+    padding-left: 30px;
+    padding-right: 30px;
+    background-image: url(img/border-mid.png);
+    background-repeat: repeat-y;
+    overflow: hidden;
 }
 
 div.langs
@@ -108,20 +112,12 @@ div.langs
     margin: auto 0px;
     float: left;
     width: 100%;
-    min-height: 20px;   
+    min-height: 20px;
     padding-left: 30px;
     padding-right: 30px;
-    background-image: url(img/menucont.png);
+    background-image: url(img/border-mid.png);
     background-repeat: repeat-y;
-    overflow: hidden; 
-}
-
-div.langs-bottom 
-{
-    float: left;
-    width: 100%;
-    height: 30px;
-    background-image: url(img/menubottom.png);
+    overflow: hidden;
 }
 
 div.profile-top {}
@@ -129,9 +125,9 @@ div.profile-top {}
 div.profile
 {
     float: left;
-    width: 100%; 
-    overflow: hidden;  
-    padding: 5px 20px 5px 20px;  
+    width: 100%;
+    overflow: hidden;
+    padding: 5px 20px 5px 20px;
 }
 
 div.profile-bottom {}
@@ -141,14 +137,14 @@ div.content
     float: right;
     padding: 20px 10px 10px 10px;
     width: 720px;
-    overflow: hidden;    
+    overflow: hidden;
     min-height: 500px;
 }
 
 div.footer
 {
-    clear: both;  
-    min-height: 50px;  
+    clear: both;
+    min-height: 50px;
     text-align: center;
 }
 
@@ -158,16 +154,16 @@ div.footer
     list-style-image: url(img/ul.png);
 }
 
-.menu * .item 
+.menu * .item
 {
-    cursor: pointer; cursor: hand;
+    cursor: pointer;
     color: white;
     text-decoration: none;
 }
 
-.menu * .item a 
+.menu * .item a
 {
-    cursor: pointer; cursor: hand;
+    cursor: pointer;
     color: white;
     text-decoration: none;
 }
@@ -182,18 +178,18 @@ div.footer
     color: orange;
 }
 
-.menu * .itemselected 
+.menu * .itemselected
 {
     color: white;
     text-decoration: none;
-    font-weight: bold;  
+    font-weight: bold;
 }
 
-.menu * .itemselected a 
+.menu * .itemselected a
 {
     color: white;
     text-decoration: none;
-    font-weight: bold;  
+    font-weight: bold;
 }
 
 p
@@ -207,12 +203,4 @@ table, th, td
     padding: 2px 5px 2px 5px;
     text-align: center;
     vertical-align: middle;
-}
-
-.loading
-{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    text-align: center;
 }

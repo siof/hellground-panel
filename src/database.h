@@ -23,6 +23,7 @@
 //#include "mysql.h"
 #endif
 
+#include <list>
 #include <mysql/mysql.h>
 
 #include "defines.h"
@@ -87,7 +88,7 @@ public:
     int GetRowsCount() { return rows.size(); }          /// return rows count
     DatabaseRow * GetRow(uint32 index);                 /// returns row from given index
     DatabaseRow * GetRow();                             /// returns first row
-    std::vector<DatabaseRow*> GetRows();                /// returns all rows
+    std::list<DatabaseRow*> GetRows();                  /// returns all rows
     std::string GetQuery() { return actualQuery; }      /// returns actual query
 
     void SetLogging(bool enabled) { loggingEnabled = enabled; }
@@ -95,7 +96,7 @@ public:
 private:
     MYSQL * connection;                                 /// mysql connection
     std::string actualQuery;                            /// actual query
-    std::vector<DatabaseRow*> rows;                     /// query result
+    std::list<DatabaseRow*> rows;                       /// query result
 
     bool loggingEnabled;                                /// queries should be logged ?
 };

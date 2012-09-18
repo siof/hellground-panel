@@ -128,10 +128,10 @@ void CharacterInfoPage::refresh()
                     break;
                 default:
 
-                    std::vector<DatabaseRow*> rows = db.GetRows();
+                    std::list<DatabaseRow*> rows = db.GetRows();
                     DatabaseRow * tmpRow;
 
-                    for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+                    for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
                     {
                         tmpRow = *itr;
 
@@ -148,10 +148,10 @@ void CharacterInfoPage::refresh()
                                  "WHERE acc = '%u'", session->accid) > DB_RESULT_EMPTY)
             {
 
-                std::vector<DatabaseRow*> rows = db.GetRows();
+                std::list<DatabaseRow*> rows = db.GetRows();
                 DatabaseRow * tmpRow;
 
-                for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
                 {
                     tmpRow = *itr;
 
@@ -454,7 +454,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
             return;
         default:
             db.Disconnect();
-            std::vector<DatabaseRow*> rows = db.GetRows();
+            std::list<DatabaseRow*> rows = db.GetRows();
 
             WTable * tmpTable = (WTable*)tabs->widget(CHAR_TAB_QUEST);
 
@@ -467,17 +467,15 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
 
             DatabaseRow * tmpRow;
             Wt::WText * tmpText;
-            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
 
                 if (tmpRow->fields[5].GetInt() == QUEST_TYPE_DAILY)
                     continue;
 
-                tmpText = new WText(Wt::WString::tr(TXT_QUEST_LINK_NAME_FMT).arg(tmpRow->fields[0].GetInt()).arg(tmpRow->fields[1].GetCString()));
-                tmpText->setToolTip(Wt::WString::tr(TXT_QUEST_TOOLTIP_FMT).arg(tmpRow->fields[0].GetInt()).arg(tmpRow->fields[6].GetInt()), Wt::XHTMLText);
-
-                tmpTable->elementAt(i, 0)->addWidget(tmpText);
+                tmpTable->elementAt(i, 0)->addWidget(new WText(Wt::WString::tr(TXT_QUEST_LINK_NAME_FMT).arg(tmpRow->fields[0].GetInt()).arg(tmpRow->fields[1].GetCString())));
+                tmpTable->elementAt(i, 0)->setToolTip(Wt::WString::tr(TXT_QUEST_TOOLTIP_FMT).arg(tmpRow->fields[0].GetInt()).arg(tmpRow->fields[6].GetInt()), Wt::XHTMLText);
                 tmpTable->elementAt(i, 1)->addWidget(new WText(tmpRow->fields[2].GetWString()));
                 tmpTable->elementAt(i, 2)->addWidget(new WText(Misc::Character::GetQuestStatus(tmpRow->fields[3].GetInt(), tmpRow->fields[4].GetBool())));
             }
@@ -514,7 +512,7 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
             return;
         default:
             db.Disconnect();
-            std::vector<DatabaseRow*> rows = db.GetRows();
+            std::list<DatabaseRow*> rows = db.GetRows();
 
             WTable * tmpTable = (WTable*)tabs->widget(CHAR_TAB_SPELL);
 
@@ -526,7 +524,7 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
             i = 1;
 
             DatabaseRow * tmpRow;
-            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
 
@@ -567,7 +565,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
             return;
         default:
             db.Disconnect();
-            std::vector<DatabaseRow*> rows = db.GetRows();
+            std::list<DatabaseRow*> rows = db.GetRows();
 
             WTable * tmpTable = (WTable*)tabs->widget(CHAR_TAB_INVENTORY);
 
@@ -579,7 +577,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
             i = 1;
 
             DatabaseRow * tmpRow;
-            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
 
@@ -619,7 +617,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
             return;
         default:
             db.Disconnect();
-            std::vector<DatabaseRow*> rows = db.GetRows();
+            std::list<DatabaseRow*> rows = db.GetRows();
 
             WTable * tmpTable = (WTable*)tabs->widget(CHAR_TAB_FRIENDS);
 
@@ -631,7 +629,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
             i = 1;
 
             DatabaseRow * tmpRow;
-            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
             {
                 tmpRow = *itr;
 
@@ -823,10 +821,10 @@ void CharacterInfoPage::LoadSpells()
 
     db.ExecuteQuery("SELECT entry, name FROM spells");
 
-    std::vector<DatabaseRow*> rows = db.GetRows();
+    std::list<DatabaseRow*> rows = db.GetRows();
 
     uint32 tmpEntry;
-    for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+    for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
     {
         tmpEntry = (*itr)->fields[0].GetUInt32();
         spells[tmpEntry].entry = tmpEntry;

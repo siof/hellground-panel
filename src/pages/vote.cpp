@@ -139,10 +139,10 @@ void VotePage::CreateVotePage()
         case DB_RESULT_EMPTY:
         default:
         {
-            std::vector<DatabaseRow*> rows = db.GetRows();
+            std::list<DatabaseRow*> rows = db.GetRows();
             DatabaseRow * tmpRow;
 
-            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
             {
                 tmpRow = *itr;
 
@@ -173,9 +173,9 @@ void VotePage::CreateVotePage()
         case DB_RESULT_EMPTY:
         default:
         {
-            std::vector<DatabaseRow*> rows = db.GetRows();
+            std::list<DatabaseRow*> rows = db.GetRows();
             DatabaseRow * tmpRow;
-            for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
+            for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr)
             {
                 tmpRow = *itr;
 

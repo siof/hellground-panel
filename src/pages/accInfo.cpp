@@ -544,10 +544,10 @@ WTable * AccountInfoPage::CreateBanInfo()
                 int i = 1, j;
                 bool active;
                 bool perm;
-                std::vector<DatabaseRow*> rows = realmDB.GetRows();
+                std::list<DatabaseRow*> rows = realmDB.GetRows();
                 realmDB.Disconnect();
 
-                for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
                 {
                     for (j = 0; j < 4; ++j)
                         banInfo->elementAt(i, j)->addWidget(new WText((*itr)->fields[j].GetWString()));
@@ -609,10 +609,10 @@ WTable * AccountInfoPage::CreateMuteInfo()
             {
                 int i = 1, j;
                 bool active;
-                std::vector<DatabaseRow*> rows = realmDB.GetRows();
+                std::list<DatabaseRow*> rows = realmDB.GetRows();
                 realmDB.Disconnect();
 
-                for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
                 {
                     for (j = 0; j < 4; ++j)
                         muteInfo->elementAt(i, j)->addWidget(new WText((*itr)->fields[j].GetWString()));
@@ -675,11 +675,11 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
             default:
             {
                 DatabaseRow * tmpRow;
-                std::vector<DatabaseRow*> rows = db.GetRows();
+                std::list<DatabaseRow*> rows = db.GetRows();
                 db.Disconnect();
                 i = 1;
 
-                for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
                 {
                     tmpRow = *itr;
 
@@ -717,11 +717,11 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
             default:
             {
                 DatabaseRow * tmpRow;
-                std::vector<DatabaseRow*> rows = db.GetRows();
+                std::list<DatabaseRow*> rows = db.GetRows();
                 db.Disconnect();
                 i = 1;
 
-                for (std::vector<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
+                for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
                 {
                     tmpRow = *itr;
                     tabServer->elementAt(i, 0)->addWidget(new WText(tmpRow->fields[0].GetWString()));
