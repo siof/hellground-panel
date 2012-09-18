@@ -30,6 +30,7 @@
 #ifndef SERVERSTATUS_H_INCLUDED
 #define SERVERSTATUS_H_INCLUDED
 
+#include <boost/system/error_code.hpp>
 #include <Wt/WContainerWidget>
 
 #include "../defines.h"
@@ -79,9 +80,12 @@ private:
     Wt::WTimer * timer;
     /// tables for multiple realm status
     Wt::WTable * realms[REALMS_COUNT];
+    /// http clients for multiple realms
+    Wt::Http::Client * clients[REALMS_COUNT];
 
     void CreateStatusPage();
-    void UpdateStatus();
+    void RunUpdateStatus();
+    void UpdateStatus(boost::system::error_code err, const Wt::Http::Message& response, int realmId);
 };
 
 #endif // SERVERSTATUS_H_INCLUDED

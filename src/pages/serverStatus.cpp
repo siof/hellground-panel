@@ -32,7 +32,8 @@
 #include <iostream>
 #include <sstream>
 
-#include <curl/curl.h>
+#include <Wt/Http/Client>
+#include <Wt/Http/Message>
 #include <Wt/WBreak>
 #include <Wt/WTable>
 #include <Wt/WText>
@@ -51,7 +52,7 @@ ServerStatusPage::ServerStatusPage(Wt::WContainerWidget * parent)
 {
     timer = new Wt::WTimer();
     timer->setInterval(60000);
-    timer->timeout().connect(this, &ServerStatusPage::UpdateStatus);
+    timer->timeout().connect(this, &ServerStatusPage::RunUpdateStatus);
 
     CreateStatusPage();
 }
@@ -116,9 +117,13 @@ void ServerStatusPage::CreateStatusPage()
         addWidget(realms[i]);
         addWidget(new WBreak());
         addWidget(new WBreak());
+
+        clients[i] = new Wt::Http::Client(this);
+        clients[i]->setTimeout(15);
+        clients[i]->done().connect(boost::bind(&ServerStatusPage::UpdateStatus, this, _1, _2, i));
     }
 
-    UpdateStatus();
+    RunUpdateStatus();
     timer->start();
 }
 
@@ -129,87 +134,62 @@ void ServerStatusPage::CreateStatusPage()
  *
  ***********************************************/
 
-size_t writebuffer( char *ptr, size_t /*size*/, size_t /*nmemb*/, char * userdata)
-{
-    strcpy(userdata, ptr);
-
-    return strlen(userdata);
-}
-
-void ServerStatusPage::UpdateStatus()
+void ServerStatusPage::RunUpdateStatus()
 {
     if (isHidden() || isDisabled())
         return;
 
-    CURL *curl;
-    CURLcode results;
+    for (int i = 0; i < REALMS_COUNT; ++i)
+        clients[i]->get(realmsInfo[i][REALM_INFO_STATUS_URL]);
+}
 
-    curl = curl_easy_init();
+void ServerStatusPage::UpdateStatus(boost::system::error_code err, const Wt::Http::Message& response, int realmId)
+{
+    if (realmId < 0 || realmId > REALMS_COUNT)
+        return;
 
-    if (curl)
+    std::istringstream iss;
+
+    if (!err && response.status() == 200)
+        iss.str(response.body());
+    else
+        iss.str("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
+
+    std::string online, maxOnline, rev, diff, avgDiff, queue, maxQueue, unk;
+    int tmpUp, ally = 0, horde = 0;
+
+    iss >> tmpUp;
+    iss >> online;
+    iss >> maxOnline;
+    iss >> queue;
+    iss >> maxQueue;
+    iss >> unk;
+    iss >> rev;
+    iss >> diff;
+    iss >> avgDiff;
+    iss >> ally;
+    iss >> horde;
+
+    if (ally || horde)
     {
-        for (int i = 0; i < REALMS_COUNT; ++i)
-        {
-            char * buffer = new char[256];
-            curl_easy_setopt(curl, CURLOPT_URL, realmsInfo[i][REALM_INFO_STATUS_URL]);
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writebuffer);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, buffer);
-            curl_easy_setopt(curl, CURLOPT_TIMEOUT, MAX_STATUS_WAIT_TIME);
-
-            results = curl_easy_perform(curl);
-
-            if (results != CURLE_OK)
-            {
-                for (int i = 0; i < 20; ++i)
-                {
-                    if (i%2)
-                        buffer[i] = '0';
-                    else
-                        buffer[i] = ' ';
-                }
-            }
-
-            std::istringstream iss(buffer);
-            delete [] buffer;
-            std::string online, maxOnline, rev, diff, avgDiff, queue, maxQueue, unk;
-            int tmpUp, ally = 0, horde = 0;
-
-            iss >> tmpUp;
-            iss >> online;
-            iss >> maxOnline;
-            iss >> queue;
-            iss >> maxQueue;
-            iss >> unk;
-            iss >> rev;
-            iss >> diff;
-            iss >> avgDiff;
-            iss >> ally;
-            iss >> horde;
-
-            if (ally || horde)
-            {
-                horde = horde/float(ally+horde) * 100;
-                ally = 100 - horde;
-            }
-
-            int d, h, m, s;
-            d = tmpUp/DAY;
-            h = (tmpUp - d*DAY)/HOUR;
-            m = (tmpUp - d*DAY - h*HOUR)/MINUTE;
-            s = tmpUp - d*DAY - h*HOUR - m*MINUTE;
-
-            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_REALM, 1)->widget(0))->setText(realmsInfo[i][REALM_INFO_NAME]);
-            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_STATE, 1)->widget(0))->setText(tr(tmpUp ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
-            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_ONLINE, 1)->widget(0))->setText(online);
-            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_MAXONLINE, 1)->widget(0))->setText(maxOnline);
-            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_FACTIONS, 1)->widget(0))->setText(tr(TXT_STATUS_FACTIONS_FMT).arg(horde).arg(ally));
-            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_UPTIME, 1)->widget(0))->setText(tr(TXT_STATUS_UPTIME_FMT).arg(d).arg(h).arg(m).arg(s));
-            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_REVISION, 1)->widget(0))->setText(rev);
-            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_DIFF, 1)->widget(0))->setText(diff);
-            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_AVGDIFF, 1)->widget(0))->setText(avgDiff);
-//            ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_INFO, 1)->widget(0))->setText();
-        }
-
-        curl_easy_cleanup(curl);
+        horde = horde/float(ally+horde) * 100;
+        ally = 100 - horde;
     }
+
+    int d, h, m, s;
+    d = tmpUp/DAY;
+    h = (tmpUp - d*DAY)/HOUR;
+    m = (tmpUp - d*DAY - h*HOUR)/MINUTE;
+    s = tmpUp - d*DAY - h*HOUR - m*MINUTE;
+
+    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_REALM, 1)->widget(0))->setText(realmsInfo[realmId][REALM_INFO_NAME]);
+    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_STATE, 1)->widget(0))->setText(tr(tmpUp ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
+    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_ONLINE, 1)->widget(0))->setText(online);
+    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_MAXONLINE, 1)->widget(0))->setText(maxOnline);
+    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_FACTIONS, 1)->widget(0))->setText(tr(TXT_STATUS_FACTIONS_FMT).arg(horde).arg(ally));
+    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_UPTIME, 1)->widget(0))->setText(tr(TXT_STATUS_UPTIME_FMT).arg(d).arg(h).arg(m).arg(s));
+    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_REVISION, 1)->widget(0))->setText(rev);
+    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_DIFF, 1)->widget(0))->setText(diff);
+    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_AVGDIFF, 1)->widget(0))->setText(avgDiff);
+//    ((Wt::WText*)realms[i]->elementAt(SERVER_STATUS_TEXT_INFO, 1)->widget(0))->setText();
 }
