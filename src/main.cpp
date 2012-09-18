@@ -42,7 +42,8 @@ PlayersPanel::PlayersPanel(const Wt::WEnvironment& env)
     session = new SessionInfo();
     session->sessionIp = env.clientAddress();
 
-    setLoadingIndicator(new Wt::WOverlayLoadingIndicator("loading"));
+    setLoadingIndicator(new Wt::WOverlayLoadingIndicator());
+    loadingIndicator()->setMessage(Wt::WString::tr(TXT_GEN_LOADING));
     messageResourceBundle().use("langs/panel");
 
     setTitle(Wt::WString::tr(TXT_SITE_TITLE));

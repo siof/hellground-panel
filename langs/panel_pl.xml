@@ -637,7 +637,10 @@ Stan
     <message id='general.error'>
 Błąd
     </message>
-
+    <message id='general.loading'>
+Ładowanie ...
+    </message>
+    
     <message id='ip.current'>
 Aktualne IP
     </message>

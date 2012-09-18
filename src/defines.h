@@ -462,6 +462,7 @@ enum MenuOptions
 #define TXT_GEN_NAME                    "general.name"              /**< General name label */
 #define TXT_GEN_STATE                   "general.state"             /**< Genaral state label */
 #define TXT_GEN_ERROR                   "general.error"             /**< Genaral error label */
+#define TXT_GEN_LOADING                 "general.loading"           /**< General loading label */
 
 /** Current ip */
 #define TXT_CURRENT_IP                  "ip.current"                /**< Current ip label */

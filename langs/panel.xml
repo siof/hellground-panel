@@ -636,6 +636,9 @@ State
     <message id='general.error'>
 Error
     </message>
+    <message id='general.loading'>
+Loading ...
+    </message>
 
     <message id='ip.current'>
 Current IP
