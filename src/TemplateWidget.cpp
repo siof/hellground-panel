@@ -54,18 +54,7 @@ void TemplateWidget::ChangeTemplate()
     if (!templateCombo->count() || templateCombo->currentIndex() < 0 || templateCombo->currentIndex() > templates.size())
         return;
 
-    TemplateInfo tmpltInfo;
-
-    int index = templateCombo->currentIndex();
-
-    std::vector<TemplateInfo>::const_iterator itr = templates.begin();
-    std::advance(itr, index);
-
-    // it's probably impossible but ...
-    if (itr == templates.end())
-        return;
-
-    tmpltInfo = *itr;
+    TemplateInfo tmpltInfo = templates[templateCombo->currentIndex()];
 
     // it's probably impossible but ...
     if (tmpltInfo.name != templateCombo->currentText())
