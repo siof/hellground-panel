@@ -99,7 +99,7 @@ private:
     void Vote(const uint32& id);
 
     /// stores vote informations
-    std::vector<VoteInfo> votesInfo;
+    std::list<VoteInfo> votesInfo;
 };
 
 #endif //VOTE_H_INCLUDED
