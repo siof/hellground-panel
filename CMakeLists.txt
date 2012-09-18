@@ -40,7 +40,6 @@ set(CMAKE_MODULE_PATH
 find_package(Wt REQUIRED)
 find_package(MySQL REQUIRED)
 find_package(JWSMTP REQUIRED)
-find_package(CURL REQUIRED)
 
 set(Boost_USE_MULTITHREADED  ON)
 find_package(Boost 1.34.0 COMPONENTS regex signals REQUIRED)

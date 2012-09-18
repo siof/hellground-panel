@@ -4,7 +4,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${Wt_INCLUDE_DIR}
     ${MYSQL_INCLUDE_DIR}
-    ${CURL_INCLUDE_DIR}
     ${JWSMTP_INCLUDE_DIR}
 )
 
@@ -14,7 +13,6 @@ target_link_libraries(panel.wt
     ${Wt_LIBRARY}
     ${Boost_LIBRARIES}
     ${MYSQL_LIBRARY}
-    ${CURL_LIBRARY}
     ${JWSMTP_LIBRARY}
 )
 
