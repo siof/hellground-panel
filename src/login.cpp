@@ -61,6 +61,8 @@ LoginWidget::LoginWidget(SessionInfo * sess, Wt::WTemplate * tmplt, Wt::WContain
     addWidget(pass);
     addWidget(new Wt::WBreak());
     addWidget(btn);
+
+    setStyleClass("loginwidget");
 }
 
 LoginWidget::~LoginWidget()

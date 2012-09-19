@@ -54,6 +54,8 @@ AccountInfoPage::AccountInfoPage(SessionInfo * sess, WContainerWidget * parent) 
 {
     session = sess;
     needCreation = true;
+
+    setStyleClass("page accountwidget");
 }
 
 AccountInfoPage::~AccountInfoPage()

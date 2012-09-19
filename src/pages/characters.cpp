@@ -58,6 +58,8 @@ CharacterInfoPage::CharacterInfoPage(SessionInfo * sess, WContainerWidget * pare
     session = sess;
 
     needCreation = true;
+
+    setStyleClass("page characterswidget");
 }
 
 CharacterInfoPage::~CharacterInfoPage()

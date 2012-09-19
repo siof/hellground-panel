@@ -49,6 +49,7 @@ PassRecoveryPage::PassRecoveryPage(SessionInfo * sess, WContainerWidget * parent
     btnRecover = NULL;
 
     CreateRecoveryPage();
+    setStyleClass("page passwordrecoverywidget");
 }
 
 PassRecoveryPage::~PassRecoveryPage()

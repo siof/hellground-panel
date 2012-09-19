@@ -52,6 +52,7 @@ RegisterPage::RegisterPage(SessionInfo * sess, WContainerWidget * parent):
     chRules = NULL;
 
     CreateRegisterPage();
+    setStyleClass("page registerwidget");
 }
 
 RegisterPage::~RegisterPage()
