@@ -43,8 +43,6 @@ private:
     LoginWidget * login;
     HGMenu * menu;
     TemplateWidget * templChooser;
-
-    HGMenu * CreateMenu(Wt::Orientation ori = Wt::Horizontal);
 };
 
 #endif // MAIN_H_INCLUDED

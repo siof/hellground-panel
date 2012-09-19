@@ -67,12 +67,12 @@ PlayersPanel::PlayersPanel(const Wt::WEnvironment& env)
     root()->setStyleClass("main");
 
     // page creation
-    templ = new Wt::WTemplate();
+    templ = new Wt::WTemplate(root());
 
     content =  new Wt::WStackedWidget();
     langs = new LangsWidget();
-    menu = CreateMenu();
     login = new LoginWidget(session, templ);
+    menu = new HGMenu(content, session, templ);
     templChooser = new TemplateWidget(templ);
 
     templ->bindWidget("add-langs", langs);
@@ -88,15 +88,6 @@ PlayersPanel::PlayersPanel(const Wt::WEnvironment& env)
     templ->setCondition("if-notlogged", true);
 
     templ->setTemplateText(tmplt.currentTemplate);
-
-    root()->addWidget(templ);
-}
-
-HGMenu * PlayersPanel::CreateMenu(Wt::Orientation ori)
-{
-    menu = new HGMenu(content, session, templ, ori);
-
-    return menu;
 }
 
 PlayersPanel::~PlayersPanel()

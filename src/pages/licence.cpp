@@ -44,6 +44,7 @@ LicencePage::LicencePage(WContainerWidget * parent)
 : Wt::WContainerWidget(parent)
 {
     ShowText();
+    setStyleClass("page licencewidget");
 }
 
 /********************************************//**

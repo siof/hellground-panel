@@ -43,6 +43,7 @@ DefaultPage::DefaultPage(WContainerWidget * parent)
 : WContainerWidget(parent)
 {
     new WText(Wt::WString::tr(TXT_INFO_SERVER), this);
+    setStyleClass("page defaultwidget");
 }
 
 DefaultPage::~DefaultPage()

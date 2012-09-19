@@ -55,6 +55,8 @@ ServerStatusPage::ServerStatusPage(Wt::WContainerWidget * parent)
     timer->timeout().connect(this, &ServerStatusPage::RunUpdateStatus);
 
     CreateStatusPage();
+
+    setStyleClass("page statuswidget");
 }
 
 /********************************************//**

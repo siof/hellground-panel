@@ -50,6 +50,7 @@ LogoutPage::LogoutPage(SessionInfo * session, WTemplate * tmpl, WContainerWidget
     btn = NULL;
 
     CreateLogoutPage();
+    setStyleClass("page logoutwidget");
 }
 
 /********************************************//**

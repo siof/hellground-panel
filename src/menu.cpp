@@ -93,6 +93,8 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, Wt::WTemplate 
 
     // must be here to provide internal path functionality
     setInternalPathEnabled("/");
+
+    setStyleClass("menuwidget");
 }
 
 void HGMenu::RefreshActiveMenuWidget()

@@ -43,6 +43,8 @@ SupportPage::SupportPage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
 {
     needCreation = true;
+
+    setStyleClass("page supportwidget");
 }
 
 SupportPage::~SupportPage()

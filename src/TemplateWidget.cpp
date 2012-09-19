@@ -47,6 +47,8 @@ TemplateWidget::TemplateWidget(Wt::WTemplate * templ, Wt::WContainerWidget * par
     addWidget(templateCombo);
     addWidget(new Wt::WBreak());
     addWidget(tmpButton);
+
+    setStyleClass("templatewidget");
 }
 
 void TemplateWidget::ChangeTemplate()

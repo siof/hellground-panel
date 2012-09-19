@@ -47,6 +47,7 @@ PassChangePage::PassChangePage(SessionInfo * sess, WContainerWidget * parent):
     btnChange = NULL;
 
     CreatePassChangePage();
+    setStyleClass("page passwordchangewidget");
 }
 
 PassChangePage::~PassChangePage()

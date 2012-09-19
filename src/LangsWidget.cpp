@@ -25,6 +25,8 @@ LangsWidget::LangsWidget(Wt::WContainerWidget * parent)
 {
     AddLangButton(LANG_PL, "pl");
     AddLangButton(LANG_EN, "en");
+
+    setStyleClass("langswidget");
 }
 
 void LangsWidget::AddLangButton(Lang lang, const char * txt)
