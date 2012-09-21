@@ -29,7 +29,10 @@
 
 #include "support.h"
 
+#include <Wt/WTabWidget>
 #include <Wt/WText>
+
+#include "vote.h"
 
 /********************************************//**
  * \brief Creates new SupportPage object.
@@ -71,7 +74,9 @@ void SupportPage::refresh()
         if (needCreation)
         {
             needCreation = false;
-            addWidget(new WText(tr(TXT_INFO_SUPPORT)));
+            tabs = new Wt::WTabWidget(this);
+            tabs->addTab(new Wt::WText(Wt::WString::tr(TXT_INFO_SUPPORT)), Wt::WString::tr(TXT_MENU_SUPPORT));
+            tabs->addTab(new VotePage(session), Wt::WString::tr(TXT_MENU_VOTE));
         }
     }
     else

@@ -9,6 +9,7 @@ a
 {
     cursor: pointer;
     color: white;
+    font-weight: bold;
     text-decoration: none;
 }
 
@@ -150,8 +151,10 @@ div.footer
 
 .menu ul
 {
-    list-style-type: none;
-    list-style-image: url(img/ul.png);
+    padding-left: 18px;
+    list-style: none;
+#    list-style-type: none;
+#    list-style-image: url(img/ul.png);
 }
 
 .menu * .item
@@ -168,14 +171,26 @@ div.footer
     text-decoration: none;
 }
 
-.menu a:visited
+.menu a
 {
+    background-image: url(img/menuitem.jpg);
+    display: block;
+    width: 205px;
+    background-repeat: no-repeat;
+    line-height: 30px;
     color: white;
+    text-decoration: none;
+    padding-left: 15px;
+    font-weight: normal;
 }
 
 .menu a:hover
 {
-    color: orange;
+    width: 205px;
+    height: 30px;
+    color: black;
+    font-weight: bold;
+    background-image: url(img/menuitemhover.jpg);
 }
 
 .menu * .itemselected
@@ -203,4 +218,9 @@ table, th, td
     padding: 2px 5px 2px 5px;
     text-align: center;
     vertical-align: middle;
+}
+
+.Wt-loading
+{
+    color: black;
 }
