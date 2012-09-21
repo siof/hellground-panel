@@ -60,7 +60,12 @@ public:
 private:
     /// created or not?
     bool needCreation;
+    /// tabs
+    Wt::WTabWidget * tabs;
+
     SessionInfo * session;
+
+    Wt::WContainerWidget * CreateInfo();
 };
 
 #endif //SUPPORT_H_INCLUDED

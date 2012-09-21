@@ -51,9 +51,8 @@
 VotePage::VotePage(SessionInfo * sess, WContainerWidget * parent):
     WContainerWidget(parent), session(sess)
 {
-    needCreation = true;
-
     setStyleClass("page votewidget");
+    CreateVotePage();
 }
 
 VotePage::~VotePage()

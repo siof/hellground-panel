@@ -51,10 +51,6 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, Wt::WTemplate 
 
     setRenderAsList(true);
 
-    Wt::WMenu * tmpMenu;
-    Wt::WMenuItem * tmpItem;
-    Wt::WSubMenuItem * tmpSubMenu;
-
     AddMenuItem(TXT_MENU_HOME, new DefaultPage(), LVL_PLAYER, true);
     AddMenuItem(TXT_MENU_REGISTER, new RegisterPage(sess), LVL_NONE, true, "register");
     AddMenuItem(TXT_MENU_ACC_INFO, new AccountInfoPage(sess), LVL_PLAYER, false, "account");
@@ -62,24 +58,7 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, Wt::WTemplate 
     AddMenuItem(TXT_MENU_PASS_CHANGE, new PassChangePage(sess), LVL_PLAYER, false, "changepassword");
     AddMenuItem(TXT_MENU_CHARACTERS, new CharacterInfoPage(sess), LVL_PLAYER, false, "characters");
     AddMenuItem(TXT_MENU_TELEPORT, new TeleportPage(sess), LVL_PLAYER, false, "teleport");
-
-    tmpSubMenu = new Wt::WSubMenuItem(Wt::WString::tr(TXT_MENU_SUPPORT), new SupportPage(session));
-    tmpSubMenu->setPathComponent("support");
-
-    tmpMenu = new Wt::WMenu(menuContents, Wt::Vertical);
-    tmpMenu->setInternalPathEnabled("/support");
-
-    tmpItem = new Wt::WMenuItem(Wt::WString::tr(TXT_MENU_VOTE), new VotePage(session));
-    tmpItem->setPathComponent("vote");
-    tmpMenu->setRenderAsList(true);
-    tmpMenu->addItem(tmpItem);
-    tmpSubMenu->setSubMenu(tmpMenu);
-    tmpMenu->select(-1);
-
-    tmpMenu = NULL;
-    menuItems.push_back(new MenuItemInfo(tmpSubMenu, LVL_PLAYER, false));
-    tmpSubMenu = NULL;
-
+    AddMenuItem(TXT_MENU_SUPPORT, new SupportPage(sess), LVL_PLAYER, false, "support");
     AddMenuItem(TXT_MENU_SERVER_STATUS, new ServerStatusPage(), LVL_PLAYER, true, "status");
     AddMenuItem(TXT_MENU_LOGOUT, new LogoutPage(sess, templ), LVL_PLAYER, false, "logout");
     AddMenuItem(TXT_MENU_LICENCE, new LicencePage(), LVL_PLAYER, true, "licence");
