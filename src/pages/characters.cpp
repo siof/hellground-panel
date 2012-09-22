@@ -168,19 +168,17 @@ void CharacterInfoPage::refresh()
                     indexToCharInfo[index] = tmpCharInfo;
                     charList->insertItem(index++, "[Del] " + tmpCharInfo.name);
                 }
+
+                if (charList->count() > 0)
+                    charList->setCurrentIndex(0);
             }
 
             db.Disconnect();
-
-            // i think there is no need to update this informations
-            if (charList->count() > 0)
-            {
-                charList->setCurrentIndex(0);
-                std::map<int, CharInfo>::const_iterator tmpItr = indexToCharInfo.find(charList->currentIndex());
-                if (tmpItr != indexToCharInfo.end())
-                    UpdateInformations(tmpItr->second.guid);
-            }
         }
+
+        std::map<int, CharInfo>::const_iterator tmpItr = indexToCharInfo.find(charList->currentIndex());
+        if (tmpItr != indexToCharInfo.end())
+            UpdateInformations(tmpItr->second.guid);
     }
     else
         ClearPage();
@@ -195,9 +193,12 @@ void CharacterInfoPage::refresh()
  *
  ***********************************************/
 
-void CharacterInfoPage::UpdateInformations(uint64 guid)
+void CharacterInfoPage::UpdateInformations(uint64 guid, bool force)
 {
     if (!guid)
+        return;
+
+    if (!force && lastUpdateTime + CHAR_UPDATE_INTERVAL > std::time(NULL))
         return;
 
     UpdateCharacterBasicInfo(guid);
@@ -205,6 +206,8 @@ void CharacterInfoPage::UpdateInformations(uint64 guid)
     UpdateCharacterSpellInfo(guid);
     UpdateCharacterInventoryInfo(guid);
     UpdateCharacterFriendInfo(guid);
+
+    lastUpdateTime = std::time(NULL);
 }
 
 /********************************************//**
