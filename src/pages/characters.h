@@ -36,6 +36,8 @@
 #ifndef CHARACTERS_H_INCLUDED
 #define CHARACTERS_H_INCLUDED
 
+#include <ctime>
+
 #include <Wt/WContainerWidget>
 
 #include "../defines.h"
@@ -202,6 +204,8 @@ private:
     WPushButton * restoreCharacter;
     /// combo box index to character guid map
     std::map<int, CharInfo> indexToCharInfo;
+    /// last character info update time
+    std::time_t lastUpdateTime;
 
     /// informs that RestoreCharacter function is actually executed
     bool restoring;
@@ -209,7 +213,7 @@ private:
     bool IsDeletedCharacter(const uint64 & guid);
     bool IsDeletedCharacter(const CharInfo & charInfo) { return charInfo.deleted; }
 
-    void UpdateInformations(uint64 guid);
+    void UpdateInformations(uint64 guid, bool force = false);
 
     Wt::WTable * charBasicInfo;
     Wt::WContainerWidget * CreateCharacterBasicInfo();

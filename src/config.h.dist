@@ -109,6 +109,8 @@ static const char * realmsInfo[REALMS_COUNT][4] =
 #define TMPLT_DEFAULT_STYLE_PATH    "res/templates/default" /**< path to style.css for default template */
 #define TMPLT_DEFAULT_TMPLT_PATH    "res/templates/default" /**< path to tmplt file for default template */
 
+#define CHAR_UPDATE_INTERVAL        5           /**< minimum time between character info update (in seconds) */
+
 #endif // CONFIG_H_INCLUDED
 
 /**< \} */
