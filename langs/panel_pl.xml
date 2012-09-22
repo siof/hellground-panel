@@ -377,7 +377,7 @@ Najwięcej graczy online
 Podział frakcji
     </message>
     <message id='status.factions.fmt'>
-Horda: {1} % Przymierze: {2} %
+Horda: {1} ({2}%) Przymierze: {3} ({4}%)
     </message>
     <message id='status.uptime'>
 Czas działania realmu
@@ -584,10 +584,10 @@ World Of Warcraft: Cataclysm
     </message>
 
     <message id='general.online'>
-Online
+<font color="green">Online</font>
     </message>
     <message id='general.offline'>
-Offline
+<font color="red">Offline</font>
     </message>
     <message id='general.unknown'>
 Nieznane
@@ -640,7 +640,7 @@ Błąd
     <message id='general.loading'>
 Ładowanie ...
     </message>
-    
+
     <message id='ip.current'>
 Aktualne IP
     </message>

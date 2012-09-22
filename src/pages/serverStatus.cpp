@@ -158,7 +158,7 @@ void ServerStatusPage::UpdateStatus(boost::system::error_code err, const Wt::Htt
         iss.str("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
 
     std::string online, maxOnline, rev, diff, avgDiff, queue, maxQueue, unk;
-    int tmpUp, ally = 0, horde = 0;
+    int tmpUp, ally = 0, horde = 0, hordePct = 0, allyPct = 0;
 
     iss >> tmpUp;
     iss >> online;
@@ -174,8 +174,8 @@ void ServerStatusPage::UpdateStatus(boost::system::error_code err, const Wt::Htt
 
     if (ally || horde)
     {
-        horde = horde/float(ally+horde) * 100;
-        ally = 100 - horde;
+        hordePct = horde/float(ally+horde) * 100;
+        allyPct = 100 - hordePct;
     }
 
     int d, h, m, s;
@@ -188,7 +188,7 @@ void ServerStatusPage::UpdateStatus(boost::system::error_code err, const Wt::Htt
     ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_STATE, 1)->widget(0))->setText(tr(tmpUp ? TXT_GEN_ONLINE : TXT_GEN_OFFLINE));
     ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_ONLINE, 1)->widget(0))->setText(online);
     ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_MAXONLINE, 1)->widget(0))->setText(maxOnline);
-    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_FACTIONS, 1)->widget(0))->setText(tr(TXT_STATUS_FACTIONS_FMT).arg(horde).arg(ally));
+    ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_FACTIONS, 1)->widget(0))->setText(tr(TXT_STATUS_FACTIONS_FMT).arg(horde).arg(hordePct).arg(ally).arg(allyPct));
     ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_UPTIME, 1)->widget(0))->setText(tr(TXT_STATUS_UPTIME_FMT).arg(d).arg(h).arg(m).arg(s));
     ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_REVISION, 1)->widget(0))->setText(rev);
     ((Wt::WText*)realms[realmId]->elementAt(SERVER_STATUS_TEXT_DIFF, 1)->widget(0))->setText(diff);
