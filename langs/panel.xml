@@ -377,7 +377,7 @@ Max players online
 Factions
     </message>
     <message id='status.factions.fmt'>
-Horde: {1} % Alliance: {2} %
+Horde: {1} ({2}%) Alliance: {3} ({4}%)
     </message>
     <message id='status.uptime'>
 Realm uptime
@@ -583,10 +583,10 @@ World Of Warcraft: Cataclysm
     </message>
 
     <message id='general.online'>
-Online
+<font color="green">Online</font>
     </message>
     <message id='general.offline'>
-Offline
+<font color="red">Offline</font>
     </message>
     <message id='general.unknown'>
 Unknown
