@@ -87,7 +87,7 @@ Całkowity czas gry
 Czas gry na tym poziomie
     </message>
     <message id='character.played.fmt'>
-
+{1} d {2} g {3} m
     </message>
     <message id='character.list'>
 Wybierz postać
