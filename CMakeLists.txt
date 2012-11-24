@@ -42,7 +42,7 @@ find_package(MySQL REQUIRED)
 find_package(JWSMTP REQUIRED)
 
 set(Boost_USE_MULTITHREADED  ON)
-find_package(Boost 1.34.0 COMPONENTS regex signals REQUIRED)
+find_package(Boost 1.34.0 COMPONENTS system regex signals REQUIRED)
 
 add_subdirectory(src)
 
