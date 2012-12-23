@@ -31,6 +31,7 @@
 
 #include <Wt/WBreak>
 #include <Wt/WComboBox>
+#include <Wt/WLineF>
 #include <Wt/WPushButton>
 #include <Wt/WStackedWidget>
 #include <Wt/WTable>
@@ -43,6 +44,98 @@
 
 bool CharacterInfoPage::spellsLoaded = false;
 std::map<uint32, SpellInfo> CharacterInfoPage::spells;
+
+MailInfo::MailInfo(const MailInfo & mi)
+{
+    id = mi.id;
+    from = mi.from;
+    type = mi.type;
+    stationery = mi.stationery;
+    subject = mi.subject;
+    deliverTime = mi.deliverTime;
+    expireTime = mi.expireTime;
+    text = mi.text;
+    money = mi.money;
+    cod = mi.cod;
+    checkMask = mi.checkMask;
+    templateId = mi.templateId;
+
+    items = mi.items;
+}
+
+MailInfo::MailInfo(const DatabaseRow * row)
+{
+    id = row->fields[0].GetUInt64();
+    from = row->fields[1].GetWString();
+    type = MailMessageType(row->fields[2].GetInt());
+    stationery = MailStationery(row->fields[3].GetInt());
+    subject = row->fields[4].GetWString();
+    deliverTime = row->fields[5].GetWString();
+    expireTime = row->fields[6].GetWString();
+    text = row->fields[7].GetWString();
+    money = row->fields[8].GetUInt32();
+    cod = row->fields[9].GetUInt32();
+    checkMask = row->fields[10].GetUInt32();
+}
+
+/********************************************//**
+ * \brief Loads items to mail from given database row list.
+ *
+ * \param mailItems list contains database result with all mailed items to given character
+ *
+ * Funcion iterates on given mail items list. When item attached to this mail will be found
+ * function will store it's data and item will be removed from mail items list.
+ ***********************************************/
+
+void MailInfo::LoadItems(std::list<DatabaseRow*> & mailItems)
+{
+    // process all currently loaded mail items
+    for (std::list<DatabaseRow*>::iterator itr = mailItems.begin(); itr != mailItems.end();)
+    {
+        std::list<DatabaseRow*>::iterator tmpItr = itr;
+        ++itr;
+        DatabaseRow * tmpRow = *tmpItr;
+
+        // if it's item from this mail get store his data and remove from loaded mail items list
+        if (tmpRow->fields[0].GetUInt64() == id)
+        {
+            Item tmpItem;
+            tmpItem.id = tmpRow->fields[1].GetUInt32();
+            tmpItem.name = tmpRow->fields[2].GetWString();
+            tmpItem.stackCount = tmpRow->fields[3].GetUInt32();
+            tmpItem.guid = tmpRow->fields[4].GetUInt32();
+
+            items.push_back(tmpItem);
+
+            mailItems.erase(tmpItr);
+        }
+    }
+}
+
+/********************************************//**
+ * \brief Returns 'From' clause depends on mail stationery.
+ *
+ * Function returns 'From' clause depends on mail stationery.
+ * Mails in game can be send by different sources (Auction House, GM, NPC, Player) and
+ * we should return other values for each of them.
+ ***********************************************/
+
+Wt::WString MailInfo::GetFrom() const
+{
+    switch (stationery)
+    {
+        case MAIL_STATIONERY_GM:
+            return Wt::WString::tr(TXT_MAIL_FROM_SUPPORT);
+        case MAIL_STATIONERY_AUCTION:
+            return Wt::WString::tr(TXT_MAIL_FROM_AUCTION);
+        case MAIL_STATIONERY_CHR:
+            return from;
+        default:
+            break;
+    }
+
+    return Wt::WString::tr(TXT_GEN_UNKNOWN);
+}
 
 /********************************************//**
  * \brief Creates new CharacterInfoPage object.
@@ -77,9 +170,6 @@ CharacterInfoPage::~CharacterInfoPage()
 
 void CharacterInfoPage::refresh()
 {
-    if (isHidden() || isDisabled())
-        return;
-
     // only logged in players can visit this page so there is no need to create/update it in other cases
     if (session->accLvl > LVL_NOT_LOGGED)
     {
@@ -110,6 +200,7 @@ void CharacterInfoPage::refresh()
             tabs->addTab(CreateCharacterSpellInfo(), Wt::WString::tr(TXT_CHAR_TAB_SPELL)/*, WTabWidget::PreLoading*/);
             tabs->addTab(CreateCharacterInventoryInfo(), Wt::WString::tr(TXT_CHAR_TAB_INVENTORY)/*, WTabWidget::PreLoading*/);
             tabs->addTab(CreateCharacterFriendInfo(), Wt::WString::tr(TXT_CHAR_TAB_FRIENDS)/*, WTabWidget::PreLoading*/);
+            tabs->addTab(CreateCharacterMailInfo(), Wt::WString::tr(TXT_CHAR_TAB_MAIL));
 
             charList->clear();
             indexToCharInfo.clear();
@@ -187,9 +278,11 @@ void CharacterInfoPage::refresh()
 }
 
 /********************************************//**
- * \brief Update informations.
+ * \brief Update character informations.
  *
- * Informations from current selected tab will be updated.
+ * Function updates all informations of currenly selected character, but only
+ * if update interval will be greater than configured in config file (or will be forced).
+ * Minimum update interval prevents 'over updating character' if there is no need for that.
  *
  ***********************************************/
 
@@ -213,7 +306,7 @@ void CharacterInfoPage::UpdateInformations(uint64 guid, bool force)
 /********************************************//**
  * \brief Create informations widgets.
  *
- * Create widgets for each slot and fills them with informations.
+ * Create widgets for each slot and fills them with basic informations.
  * This should be done only once for player.
  *
  ***********************************************/
@@ -350,6 +443,55 @@ WTable * CharacterInfoPage::CreateCharacterFriendInfo()
 }
 
 /********************************************//**
+ * \brief Create widget to contain in game mails
+ *
+ * All in game mails will be here.
+ *
+ ***********************************************/
+
+Wt::WContainerWidget * CharacterInfoPage::CreateCharacterMailInfo()
+{
+    Wt::WContainerWidget * tmpCont = new Wt::WContainerWidget();
+    mailList = new Wt::WTable();
+    mailList->setStyleClass("maillist");
+
+    ClearMails();
+
+    tmpCont->addWidget(mailList);
+
+    mailPreviewCont = new Wt::WContainerWidget();
+    mailPreviewCont->setStyleClass("mailpreview");
+
+    Wt::WBreak * tmpBreak = new Wt::WBreak();
+    tmpBreak->setStyleClass("line");
+    tmpCont->addWidget(tmpBreak);
+
+    mailPreviewFrom = new Wt::WText("");
+    mailPreviewFrom->setStyleClass("mailpreview mailfrom");
+
+    mailPreviewExpire = new Wt::WText("");
+    mailPreviewExpire->setStyleClass("mailpreview mailexpire");
+
+    mailPreviewSubject = new Wt::WText("");
+    mailPreviewSubject->setStyleClass("mailpreview mailsubject");
+
+    mailPreviewBody = new Wt::WText("");
+    mailPreviewBody->setStyleClass("mailpreview mailbody");
+
+    mailPreviewCont->addWidget(mailPreviewFrom);
+    mailPreviewCont->addWidget(mailPreviewExpire);
+    mailPreviewCont->addWidget(new Wt::WBreak());
+    mailPreviewCont->addWidget(mailPreviewSubject);
+    mailPreviewCont->addWidget(new Wt::WBreak());
+    mailPreviewCont->addWidget(mailPreviewBody);
+    mailPreviewCont->addWidget(new Wt::WBreak());
+
+    tmpCont->addWidget(mailPreviewCont);
+
+    return tmpCont;
+}
+
+/********************************************//**
  * \brief Update Basic Character Informations widgets.
  *
  * Only informations update. There is no need to delete old and create new widgets.
@@ -452,12 +594,17 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
                             "WHERE guid = %u", SQL_WORLDDB, guid))
     {
         case DB_RESULT_ERROR:
+        {
             charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
+        }
         case DB_RESULT_EMPTY:
+        {
             charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_EMPTY));
             return;
+        }
         default:
+        {
             db.Disconnect();
             std::list<DatabaseRow*> rows = db.GetRows();
 
@@ -471,7 +618,6 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
             i = 1;
 
             DatabaseRow * tmpRow;
-            Wt::WText * tmpText;
             for (std::list<DatabaseRow*>::const_iterator itr = rows.begin(); itr != rows.end(); ++itr, ++i)
             {
                 tmpRow = *itr;
@@ -486,6 +632,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
             }
 
             break;
+        }
     }
 }
 
@@ -510,12 +657,17 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
                              "WHERE guid = '%u'", guid))
     {
         case DB_RESULT_ERROR:
+        {
             charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
+        }
         case DB_RESULT_EMPTY:
+        {
             charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_EMPTY));
             return;
+        }
         default:
+        {
             db.Disconnect();
             std::list<DatabaseRow*> rows = db.GetRows();
 
@@ -540,6 +692,7 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
             }
 
             break;
+        }
     }
 }
 
@@ -564,11 +717,16 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
                             "WHERE ci.guid = %u", SQL_WORLDDB, guid))
     {
         case DB_RESULT_ERROR:
+        {
             charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
+        }
         case DB_RESULT_EMPTY:
+        {
             return;
+        }
         default:
+        {
             db.Disconnect();
             std::list<DatabaseRow*> rows = db.GetRows();
 
@@ -592,6 +750,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
             }
 
             break;
+        }
     }
 }
 
@@ -616,11 +775,14 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
                             "WHERE cs.guid = '%u'", guid))
     {
         case DB_RESULT_ERROR:
+        {
             charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             return;
+        }
         case DB_RESULT_EMPTY:
             return;
         default:
+        {
             db.Disconnect();
             std::list<DatabaseRow*> rows = db.GetRows();
 
@@ -648,7 +810,108 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
             }
 
             break;
+        }
     }
+}
+
+/********************************************//**
+ * \brief Update Character Mails widgets.
+ ***********************************************/
+
+void CharacterInfoPage::UpdateCharacterMailInfo(uint64 guid)
+{
+    Database db;
+    if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    {
+        charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
+        return;
+    }
+
+    // get all delivered mails
+    switch (db.ExecutePQuery("SELECT mail.id, ch.name, mail.messageType, mail.stationery, mail.subject, FROM_UNIXTIME(mail.deliver_time), FROM_UNIXTIME(mail.expire_time), it.text, mail.money, mail.cod, mail.checked "
+                            "FROM mail LEFT OUTER JOIN item_text as it on mail.itemTextId = it.id JOIN characters AS ch ON mail.sender = ch.guid "
+                            "WHERE mail.receiver = '%u' AND mail.deliver_time < UNIX_TIMESTAMP()", guid))
+    {
+        case DB_RESULT_ERROR:
+        {
+            charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
+            return;
+        }
+        case DB_RESULT_EMPTY:
+            return;
+        default:
+        {
+            std::list<DatabaseRow*> mailItems;
+            std::list<DatabaseRow*> mails = db.GetRows();
+            db.Disconnect();
+
+            Database db2;
+            if (db2.Connect(SERVER_DB_DATA, SQL_CHARDB))
+            {
+                // get all items attached to mails
+                if (db2.ExecutePQuery("SELECT mail_id, item_template, name, CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`data`, ' ', 15), ' ', -1) AS UNSIGNED) AS count, item_guid "
+                                        "FROM mail_items AS mi JOIN item_instance AS ii ON mi.item_guid = ii.guid LEFT OUTER JOIN world.item_template AS it ON mi.item_template = it.entry "
+                                        "WHERE receiver = '%u'", guid) == DB_RESULT_ERROR)
+                    charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
+
+                db2.Disconnect();
+                mailItems = db2.GetRows();
+            }
+
+            // clear mail table if there is anything in it
+            ClearMails();
+
+            DatabaseRow * tmpRow;
+
+            // prepare character mail informations
+            for (std::list<DatabaseRow*>::const_iterator itr = mails.begin(); itr != mails.end(); ++itr)
+            {
+                // copy mail data
+                MailInfo info(*itr);
+                // and load items attached to current mail
+                info.LoadItems(mailItems);
+
+                // store prepared mail
+                characterMails.push_back(info);
+            }
+
+            // fill character mail list
+            int i = 1;
+            for (std::vector<MailInfo>::const_iterator itr = characterMails.begin(); itr != characterMails.end(); ++itr, ++i)
+            {
+                const MailInfo & tmpMailInfo = *itr;
+
+                mailList->elementAt(i, CHARMAILS_SLOT_FROM)->addWidget(new Wt::WText(tmpMailInfo.GetFrom()));
+                mailList->elementAt(i, CHARMAILS_SLOT_TITLE)->addWidget(new Wt::WText(tmpMailInfo.GetSubject()));
+                mailList->elementAt(i, CHARMAILS_SLOT_DATE)->addWidget(new Wt::WText(tmpMailInfo.GetDeliverTime()));
+                mailList->elementAt(i, CHARMAILS_SLOT_EXPIRES)->addWidget(new Wt::WText(tmpMailInfo.GetExpireTime()));
+                mailList->elementAt(i, CHARMAILS_SLOT_READED)->addWidget(new Wt::WText(Wt::WString::tr(tmpMailInfo.IsReaded() ? TXT_GEN_YES : TXT_GEN_NO)));
+
+                // bind mail loading
+                for (uint8 j = 0; j < CHARMAILS_SLOT_COUNT; ++j)
+                    BindPreviewMail(mailList->elementAt(i, j)->clicked(), i-1); // i-1 'cause we have 1 header row
+            }
+
+            break;
+        }
+    }
+}
+
+/********************************************//**
+ * \brief Loads mail preview.
+ *
+ * \param mailIdx   mail id in characterMails vector
+ ***********************************************/
+
+void CharacterInfoPage::PreviewMail(int mailIdx)
+{
+    if (mailIdx >= characterMails.size())
+        return;
+
+    mailPreviewFrom->setText(characterMails[mailIdx].GetFrom());
+    mailPreviewExpire->setText(characterMails[mailIdx].GetExpireTime());
+    mailPreviewSubject->setText(characterMails[mailIdx].GetSubject());
+    mailPreviewBody->setText(characterMails[mailIdx].GetBody());
 }
 
 /********************************************//**
@@ -666,6 +929,32 @@ void CharacterInfoPage::ClearPage()
 
     needCreation = true;
     indexToCharInfo.clear();
+}
+
+/********************************************//**
+ * \brief Clears mails from character mail list, recreates header for table and also resets current mail preview.
+ ***********************************************/
+
+void CharacterInfoPage::ClearMails()
+{
+    if (!mailList)
+        return;
+
+    mailList->clear();
+    mailList->setHeaderCount(1);
+
+    mailList->elementAt(0, CHARMAILS_SLOT_FROM)->addWidget(new Wt::WText(Wt::WString::tr(TXT_MAIL_FROM)));
+    mailList->elementAt(0, CHARMAILS_SLOT_TITLE)->addWidget(new Wt::WText(Wt::WString::tr(TXT_MAIL_SUBJECT)));
+    mailList->elementAt(0, CHARMAILS_SLOT_DATE)->addWidget(new Wt::WText(Wt::WString::tr(TXT_MAIL_DATE)));
+    mailList->elementAt(0, CHARMAILS_SLOT_EXPIRES)->addWidget(new Wt::WText(Wt::WString::tr(TXT_MAIL_EXPIRES)));
+    mailList->elementAt(0, CHARMAILS_SLOT_READED)->addWidget(new Wt::WText(Wt::WString::tr(TXT_MAIL_READED)));
+
+    characterMails.clear();
+
+    mailPreviewFrom->setText("");
+    mailPreviewExpire->setText("");
+    mailPreviewSubject->setText("");
+    mailPreviewBody->setText("");
 }
 
 void CharacterInfoPage::SelectionChanged(int selected)
@@ -745,8 +1034,10 @@ void CharacterInfoPage::RestoreCharacter()
     switch (db.ExecutePQuery("SELECT guid FROM characters WHERE name = '%s'", escapedName.c_str()))
     {
         case DB_RESULT_ERROR:
+        {
             charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
             break;
+        }
         case DB_RESULT_EMPTY:
         {
             bool sameFaction = true;
@@ -795,8 +1086,10 @@ void CharacterInfoPage::RestoreCharacter()
             break;
         }
         default:
+        {
             charPageInfo->setText(Wt::WString::tr(TXT_ERROR_CHARACTER_NAME_EXISTS));
             break;
+        }
     }
 
     restoring = false;
@@ -837,6 +1130,11 @@ void CharacterInfoPage::LoadSpells()
     }
 
     spellsLoaded = true;
+}
+
+void CharacterInfoPage::BindPreviewMail(Wt::EventSignal<Wt::WMouseEvent>& signal, int mailIdx)
+{
+    signal.connect(boost::bind(&CharacterInfoPage::PreviewMail, this, mailIdx));
 }
 
 /********************************************//**

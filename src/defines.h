@@ -270,6 +270,7 @@ enum MenuOptions
 #define TXT_CHAR_TAB_SPELL              "character.tab.spell"       /**< Character spell informations tab label */
 #define TXT_CHAR_TAB_INVENTORY          "character.tab.inventory"   /**< Character inventory informations tab label */
 #define TXT_CHAR_TAB_FRIENDS            "character.tab.fiends"      /**< Character friends informations tab label */
+#define TXT_CHAR_TAB_MAIL               "character.tab.mails"       /**< Character mails preview tab label */
 #define TXT_CHAR_DELETION_DATE          "character.deletion.date"   /**< Character deletion date label */
 
 #define TXT_CHAR_RESTORED               "character.restored"        /**< Information that character was restored successfully */
@@ -410,6 +411,16 @@ enum MenuOptions
 /** Friends */
 #define TXT_FRIEND_NAME                 "friend.name"               /**< Friend name label. */
 #define TXT_FRIEND_NOTE                 "friend.note"               /**< Friend note label. */
+
+/** Mails */
+#define TXT_MAIL_FROM                   "mail.from"                 /**< Mail from label. */
+#define TXT_MAIL_SUBJECT                "mail.subject"              /**< Mail subject label. */
+#define TXT_MAIL_DATE                   "mail.date"                 /**< Mail delivery date label. */
+#define TXT_MAIL_EXPIRES                "mail.expires"              /**< Mail expire date label. */
+#define TXT_MAIL_READED                 "mail.readed"               /**< Mail readed label. */
+#define TXT_MAIL_PREVIEW_FMT            "mail.preview.fmt"          /**< Mail preview display format. */
+#define TXT_MAIL_FROM_SUPPORT           "mail.from.support"         /**< Mail from support label. <-- predefinied from clause */
+#define TXT_MAIL_FROM_AUCTION           "mail.from.auction"         /**< Mail from auction house label. <-- predefined from clause */
 
 /** Site */
 #define TXT_SITE_TITLE                  "site.title"                /**< Players panel site title */
@@ -679,6 +690,77 @@ enum MoneyConstants
     BRONZE  = 1,
     SILVER  = BRONZE * 100,
     GOLD    = SILVER * 100
+};
+
+/**
+ * The type of the mail.
+ * A mail can have 5 Different Types.
+ */
+enum MailMessageType
+{
+    MAIL_NORMAL         = 0,
+    MAIL_AUCTION        = 2,
+    MAIL_CREATURE       = 3,                                /// client send CMSG_CREATURE_QUERY on this mailmessagetype
+    MAIL_GAMEOBJECT     = 4,                                /// client send CMSG_GAMEOBJECT_QUERY on this mailmessagetype
+    MAIL_ITEM           = 5,                                /// client send CMSG_ITEM_QUERY on this mailmessagetype
+};
+
+/**
+ * A Mask representing the status of the mail.
+ */
+enum MailCheckMask
+{
+    MAIL_CHECK_MASK_NONE        = 0x00,                     /// Nothing.
+    MAIL_CHECK_MASK_READ        = 0x01,                     /// This mail was read.
+    MAIL_CHECK_MASK_RETURNED    = 0x02,                     /// This mail was returned. No allow return mail.
+    MAIL_CHECK_MASK_COPIED      = 0x04,                     /// This mail was copied. No allow make item copy from mail text.
+    MAIL_CHECK_MASK_COD_PAYMENT = 0x08,                     /// This mail is payable on delivery.
+    MAIL_CHECK_MASK_HAS_BODY    = 0x10,                     /// This mail has body text.
+};
+
+/**
+ * The different types of Stationaries that exist for mails.
+ * They have been gathered from Stationery.dbc
+ */
+enum MailStationery
+{
+    MAIL_STATIONERY_UNKNOWN =  1,
+    MAIL_STATIONERY_DEFAULT = 41,
+    MAIL_STATIONERY_GM      = 61,
+    MAIL_STATIONERY_AUCTION = 62,
+    MAIL_STATIONERY_VAL     = 64,
+    MAIL_STATIONERY_CHR     = 65,
+};
+
+/**
+ * Answers contained in mails from auctionhouses.
+ */
+enum MailAuctionAnswers
+{
+    AUCTION_OUTBIDDED           = 0,
+    AUCTION_WON                 = 1,
+    AUCTION_SUCCESSFUL          = 2,
+    AUCTION_EXPIRED             = 3,
+    AUCTION_CANCELLED_TO_BIDDER = 4,
+    AUCTION_CANCELED            = 5,
+    AUCTION_SALE_PENDING        = 6
+};
+
+struct Item
+{
+    Item() : name(""), id(0), guid(0), stackCount(0) {}
+    Item(const Item & it)
+    {
+        name = it.name;
+        id = it.id;
+        guid = it.guid;
+        stackCount = it.stackCount;
+    }
+
+    Wt::WString name;
+    uint32 id;
+    uint32 guid;
+    uint32 stackCount;
 };
 
 struct TemplateInfo

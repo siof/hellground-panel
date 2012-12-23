@@ -453,6 +453,28 @@ Imię znajomego
 Notka znajomego
     </message>
 
+    <message id='mail.from'>
+Od:
+    </message>
+    <message id='mail.subject'>
+Temat:
+    </message>
+    <message id='mail.date'>
+Data:
+    </message>
+    <message id='mail.expires'>
+Wygasa:
+    </message>
+    <message id='mail.readed'>
+Przeczytano
+    </message>
+    <message id='mail.from.support'>
+Wsparcie
+    </message>
+    <message id='mail.from.auction'>
+Dom aukcyjny
+    </message>
+
     <message id='site.title'>
 Panel gracza  - projekt HellGround
     </message>

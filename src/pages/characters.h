@@ -127,6 +127,23 @@ enum CharacterFriendInfoSlot
 };
 
 /********************************************//**
+ * \brief Slots for Character Friend Informations
+ *
+ * Must be same as order on page.
+ ***********************************************/
+
+enum CharacterMailsSlot
+{
+    CHARMAILS_SLOT_FROM     = 0,            /**< From who is this mail. */
+    CHARMAILS_SLOT_TITLE    = 1,            /**< Mail title. */
+    CHARMAILS_SLOT_DATE     = 2,            /**< Delivery date. */
+    CHARMAILS_SLOT_EXPIRES  = 3,            /**< Expire date. */
+    CHARMAILS_SLOT_READED   = 4,            /**< Infomations if mail was readed. */
+
+    CHARMAILS_SLOT_COUNT
+};
+
+/********************************************//**
  * \brief Slots for character informations tabs
  ***********************************************/
 
@@ -137,6 +154,7 @@ enum CharacterTabsSlots
     CHAR_TAB_SPELL          = 2,            /**< Spell informations tab */
     CHAR_TAB_INVENTORY      = 3,            /**< Inventory informations tab */
     CHAR_TAB_FRIENDS        = 4,            /**< Friends informations tab */
+    CHAR_TAB_MAILS          = 5,            /**< Mail informations tab */
 
     CHAR_TAB_COUNT
 };
@@ -166,6 +184,72 @@ struct CharInfo
     uint8 race;
     bool deleted;
     WString deletionDate;
+};
+
+/********************************************//**
+ * \brief Structure to store character mail informations
+ *
+ * This structure is used to store some informations
+ * needed by mail preview system.
+ *
+ ***********************************************/
+
+/*Table: mail
+Columns:
+id	int(11) UN PK
+messageType	tinyint(3) UN
+stationery	tinyint(3)
+mailTemplateId	mediumint(8) UN
+sender	int(11) UN
+receiver	int(11) UN
+subject	longtext
+itemTextId	int(11) UN
+has_items	tinyint(3) UN
+expire_time	bigint(40)
+deliver_time	bigint(40)
+money	int(11) UN
+cod	int(11) UN
+checked	tinyint(3) UN */
+
+struct DatabaseRow;
+
+struct MailInfo
+{
+    MailInfo() {}
+    MailInfo(const MailInfo & mi);
+    MailInfo(const DatabaseRow * row);
+
+    ~MailInfo() {}
+
+    void LoadItems(std::list<DatabaseRow*> & mailItems);
+
+    Wt::WString GetFrom() const;
+
+    Wt::WString GetSubject() const { return subject; }
+    Wt::WString GetBody() const { return text; }
+    Wt::WString GetDeliverTime() const { return deliverTime; }
+    Wt::WString GetExpireTime() const { return expireTime; }
+
+    bool IsReaded() const { return checkMask & MAIL_CHECK_MASK_READ; }
+    bool IsCOD() const { return checkMask & MAIL_CHECK_MASK_COD_PAYMENT; }
+    bool HasMoney() const { return money != 0; }
+    bool HasItems() const { return !items.empty(); }
+
+    uint64 id;
+    MailMessageType type;
+    MailStationery stationery;
+    uint32 templateId;
+    uint32 money;
+    uint32 cod;
+    uint64 checkMask;
+
+    Wt::WString from;
+    Wt::WString subject;
+    Wt::WString text;
+    Wt::WString deliverTime;
+    Wt::WString expireTime;
+
+    std::list<Item> items;
 };
 
 /********************************************//**
@@ -206,6 +290,18 @@ private:
     std::map<int, CharInfo> indexToCharInfo;
     /// last character info update time
     std::time_t lastUpdateTime;
+    /// table with character mail list
+    Wt::WTable * mailList;
+    /// container with mail preview
+    Wt::WContainerWidget * mailPreviewCont;
+    /// mail preview data
+    Wt::WText * mailPreviewFrom;
+    Wt::WText * mailPreviewExpire;
+    Wt::WText * mailPreviewSubject;
+    Wt::WText * mailPreviewBody;
+
+
+    std::vector<MailInfo> characterMails;
 
     /// informs that RestoreCharacter function is actually executed
     bool restoring;
@@ -230,6 +326,11 @@ private:
 
     WTable * CreateCharacterFriendInfo();
     void UpdateCharacterFriendInfo(uint64 guid);
+    void ClearFriendsTable();
+
+    Wt::WContainerWidget * CreateCharacterMailInfo();
+    void UpdateCharacterMailInfo(uint64 guid);
+    void ClearMails();
 
     void ClearPage();
 
@@ -240,6 +341,9 @@ private:
     void RestoreCharacter();
 
     void LoadSpells();
+
+    void PreviewMail(int mailIdx);
+    void BindPreviewMail(Wt::EventSignal<Wt::WMouseEvent>& signal, int mailIdx);
 };
 
 #endif // CHARACTERS_H_INCLUDED
