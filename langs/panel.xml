@@ -453,6 +453,28 @@ Friend name
 Note
     </message>
 
+    <message id='mail.from'>
+From:
+    </message>
+    <message id='mail.subject'>
+Subject:
+    </message>
+    <message id='mail.date'>
+Date:
+    </message>
+    <message id='mail.expires'>
+Expires:
+    </message>
+    <message id='mail.readed'>
+Readed
+    </message>
+    <message id='mail.from.support'>
+Support
+    </message>
+    <message id='mail.from.auction'>
+Auction House
+    </message>
+
     <message id='site.title'>
 HellGround Players Panel
     </message>
