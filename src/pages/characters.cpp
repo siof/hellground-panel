@@ -294,6 +294,8 @@ void CharacterInfoPage::UpdateInformations(uint64 guid, bool force)
     if (!force && lastUpdateTime + CHAR_UPDATE_INTERVAL > std::time(NULL))
         return;
 
+    charPageInfo->setText("");
+
     UpdateCharacterBasicInfo(guid);
     UpdateCharacterQuestInfo(guid);
     UpdateCharacterSpellInfo(guid);
