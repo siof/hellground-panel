@@ -72,7 +72,7 @@ void Misc::Log(LogFlags flag, char const* text, ...)
 {
     if (LogFlags(LOG_OPTIONS) & flag)
     {
-        char buffer[strlen(text) + 250];
+        char buffer[strlen(text) + 1000];
 
         va_list args;
         va_start(args, text);

@@ -93,8 +93,8 @@ void LoginWidget::Login()
     std::string escapedPass = db.EscapeString(pass->text());
     WString shapass = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.c_str(), escapedPass.c_str());
 
-               //           0            1         2     3       4       5         6       7         8       9         10
-    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion, vote, account_flags "
+               //           0            1         2     3       4       5         6       7         8       9
+    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion, account_flags "
                  "FROM account "
                  "WHERE username = '%s'", escapedLogin.c_str());
 
@@ -149,8 +149,8 @@ void LoginWidget::Login()
             session->lastIp = row->fields[6].GetWString();
             session->locked = row->fields[7].GetBool();
             session->expansion = row->fields[8].GetInt();
-            session->vote = row->fields[9].GetUInt32();
-            session->account_flags = row->fields[10].GetUInt64();
+            session->account_flags = row->fields[9].GetUInt64();
+            session->vote = 0;//row->fields[10].GetUInt32();
 
             if (db.ExecutePQuery("SELECT * FROM account_banned WHERE id = '%u' AND active = 1 AND (bandate = unbandate OR unbandate > UNIX_TIMESTAMP())", session->accid) > DB_RESULT_EMPTY)
                 session->banned = true;

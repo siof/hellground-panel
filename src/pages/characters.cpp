@@ -299,6 +299,7 @@ void CharacterInfoPage::UpdateInformations(uint64 guid, bool force)
     UpdateCharacterSpellInfo(guid);
     UpdateCharacterInventoryInfo(guid);
     UpdateCharacterFriendInfo(guid);
+    UpdateCharacterMailInfo(guid);
 
     lastUpdateTime = std::time(NULL);
 }
@@ -455,8 +456,6 @@ Wt::WContainerWidget * CharacterInfoPage::CreateCharacterMailInfo()
     mailList = new Wt::WTable();
     mailList->setStyleClass("maillist");
 
-    ClearMails();
-
     tmpCont->addWidget(mailList);
 
     mailPreviewCont = new Wt::WContainerWidget();
@@ -487,6 +486,8 @@ Wt::WContainerWidget * CharacterInfoPage::CreateCharacterMailInfo()
     mailPreviewCont->addWidget(new Wt::WBreak());
 
     tmpCont->addWidget(mailPreviewCont);
+
+    ClearMails();
 
     return tmpCont;
 }
@@ -607,6 +608,8 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
         {
             db.Disconnect();
             std::list<DatabaseRow*> rows = db.GetRows();
+
+            Misc::Console(DEBUG_CODE, "Quest count: %lu | %lu", rows.size(), db.GetRowsCount());
 
             WTable * tmpTable = (WTable*)tabs->widget(CHAR_TAB_QUEST);
 
