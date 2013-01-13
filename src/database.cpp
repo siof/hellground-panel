@@ -193,6 +193,8 @@ int Database::ExecuteQuery()
         unsigned int count = mysql_field_count(connection);
         MYSQL_ROW row;
 
+        Misc::Log(LOG_DB_QUERY, "Returned rows: %u", mysql_num_rows(res));
+
         Misc::Console(DEBUG_DB, "\n\nExecuteQuery(): test3 : count: %i\n", count);
         int i = 0;
 
