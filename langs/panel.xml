@@ -119,6 +119,9 @@ Inventory
     <message id='character.tab.fiends'>
 Friends
     </message>
+    <message id='character.tab.mails'>
+Mails
+    </message>
     <message id='character.deletion.date'>
 Character deletion date
     </message>
