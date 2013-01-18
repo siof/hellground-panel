@@ -128,7 +128,7 @@ Wt::WString MailInfo::GetFrom() const
             return Wt::WString::tr(TXT_MAIL_FROM_SUPPORT);
         case MAIL_STATIONERY_AUCTION:
             return Wt::WString::tr(TXT_MAIL_FROM_AUCTION);
-        case MAIL_STATIONERY_CHR:
+        case MAIL_STATIONERY_DEFAULT:
             return from;
         default:
             break;
