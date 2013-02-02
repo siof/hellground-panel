@@ -34,6 +34,7 @@
 #include <Wt/WPushButton>
 #include <Wt/WText>
 
+#include "../config.h"
 #include "../database.h"
 #include "../misc.h"
 #include "../miscCharacter.h"
@@ -104,7 +105,7 @@ void TeleportPage::LoadCharacters()
     characters->clear();
 
     Database db;
-    if (db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    if (db.Connect(DB_REALM_DATA(session->currentRealm)))
     {
         db.SetPQuery("SELECT guid, name FROM characters WHERE account = %u", session->accid);
 
@@ -161,7 +162,7 @@ void TeleportPage::Teleport()
     bool success = false;
     WString name = characters->currentText();
 
-    if (db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    if (db.Connect(DB_REALM_DATA(session->currentRealm)))
     {
         db.SetPQuery("SELECT online, race, name FROM characters WHERE guid = %u", guids[index]);
 
@@ -205,7 +206,7 @@ void TeleportPage::Teleport()
 
     teleInfo->setText(tr(teleportStatus));
 
-    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    if (db.Connect(DB_PANEL_DATA))
     {
         std::string tmpStr = Misc::GetFormattedString("Teleport. Character: %s. success: %s", db.EscapeString(name).c_str(), success ? "Yes" : "No");
         db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '', '%s')", session->accid, session->sessionIp.toUTF8().c_str(), tmpStr.c_str());

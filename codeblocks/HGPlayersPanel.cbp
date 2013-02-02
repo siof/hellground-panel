@@ -128,8 +128,8 @@
 		<Unit filename="../src/LangsWidget.h" />
 		<Unit filename="../src/TemplateWidget.cpp" />
 		<Unit filename="../src/TemplateWidget.h" />
+		<Unit filename="../src/config.cpp" />
 		<Unit filename="../src/config.h" />
-		<Unit filename="../src/config.h.dist" />
 		<Unit filename="../src/database.cpp" />
 		<Unit filename="../src/database.h" />
 		<Unit filename="../src/defines.h" />

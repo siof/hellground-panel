@@ -36,6 +36,7 @@
 #include <Wt/WRegExpValidator>
 #include <Wt/WText>
 
+#include "../config.h"
 #include "../database.h"
 #include "../misc.h"
 #include "../miscAccount.h"
@@ -99,7 +100,7 @@ void PassRecoveryPage::CreateRecoveryPage()
 
     txtLogin = new WLineEdit();
 
-    WRegExpValidator * validator = new WRegExpValidator(LOGIN_VALIDATOR);
+    WRegExpValidator * validator = new WRegExpValidator(sConfig.GetConfig(CONFIG_LOGIN_VALIDATOR));
     txtLogin->setValidator(validator);
     txtLogin->setEmptyText(Wt::WString::tr(TXT_ACC_LOGIN));
 
@@ -158,7 +159,7 @@ void PassRecoveryPage::Recover()
 
     Database db;
 
-    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (!db.Connect(DB_ACCOUNTS_DATA))
     {
         recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
@@ -207,7 +208,7 @@ void PassRecoveryPage::Recover()
     passHash = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.toUTF8().c_str(), escapedPass.toUTF8().c_str());
 
     WString from, msg;
-    from = MAIL_FROM;
+    from = sConfig.GetConfig(CONFIG_MAIL_FROM);
 
     db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = '', s = '', v = '', locked = '0' WHERE id = '%u';", passHash.toUTF8().c_str(), accId);
 

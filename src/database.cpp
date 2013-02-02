@@ -140,8 +140,11 @@ bool Database::SetPQuery(const char *format, ...)
     return true;
 }
 
-bool Database::Connect(std::string host, std::string login, std::string pass, unsigned int port, std::string db)
+bool Database::Connect(const std::string & host, const std::string & login, const std::string & pass, unsigned int port, const std::string & db)
 {
+    Misc::Console(DEBUG_CODE, "%s(const std::string & host = %s, const std::string & login = %s, const std::string & pass = %s, unsigned int port = %i, const std::string & db = %s)\n",
+                    __FUNCTION__, host.c_str(), login.c_str(), pass.c_str(), port, db.c_str());
+
     if (connection)
     {
         Disconnect();
@@ -150,7 +153,15 @@ bool Database::Connect(std::string host, std::string login, std::string pass, un
 
     connection = mysql_init(NULL);
 
-    return mysql_real_connect(connection, host.c_str(), login.c_str(), pass.c_str(), db.c_str(), port, NULL, 0) != NULL;
+    bool connected = mysql_real_connect(connection, host.c_str(), login.c_str(), pass.c_str(), db.c_str(), port, NULL, 0) != NULL;
+
+    if (!connected)
+    {
+        Misc::Console(DEBUG_DB, "%s: Can't connect to db ! Data: host (%s) login (%s) pass(%s) port(%i) db(%s)\n",
+                        __FUNCTION__, host.c_str(), login.c_str(), pass.c_str(), port, db.c_str());
+    }
+
+    return connected;
 }
 
 void Database::Disconnect()
@@ -161,7 +172,7 @@ void Database::Disconnect()
     connection = NULL;
 }
 
-bool Database::SelectDatabase(std::string db)
+bool Database::SelectDatabase(const std::string & db)
 {
     return mysql_select_db(connection, db.c_str()) != NULL;
 }

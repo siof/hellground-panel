@@ -38,8 +38,10 @@
 #include <Wt/WTabWidget>
 #include <Wt/WText>
 
+#include "../config.h"
 #include "../database.h"
 #include "../misc.h"
+#include "../miscAccount.h"
 #include "../miscCharacter.h"
 
 bool CharacterInfoPage::spellsLoaded = false;
@@ -205,7 +207,7 @@ void CharacterInfoPage::refresh()
             charList->clear();
             indexToCharInfo.clear();
             Database db;
-            if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+            if (!db.Connect(DB_REALM_DATA(session->currentRealm)))
             {
                 charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
                 return;
@@ -291,7 +293,7 @@ void CharacterInfoPage::UpdateInformations(uint64 guid, bool force)
     if (!guid)
         return;
 
-    if (!force && lastUpdateTime + CHAR_UPDATE_INTERVAL > std::time(NULL))
+    if (!force && lastUpdateTime + sConfig.GetConfig(CONFIG_INTERVAL_UPDATE_CHARACTERS) > std::time(NULL))
         return;
 
     charPageInfo->setText("");
@@ -504,7 +506,7 @@ Wt::WContainerWidget * CharacterInfoPage::CreateCharacterMailInfo()
 void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
 {
     Database db;
-    if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    if (!db.Connect(DB_REALM_DATA(session->currentRealm)))
     {
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
@@ -586,15 +588,16 @@ void CharacterInfoPage::UpdateCharacterBasicInfo(uint64 guid)
 void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
 {
     Database db;
-    if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    if (!db.Connect(DB_REALM_DATA(session->currentRealm)))
     {
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
+    // TODO: fix world join
     switch (db.ExecutePQuery("SELECT cq.quest, qt.Name, qt.QuestLevel, cq.status, cq.rewarded, qt.Type, qt.MinLevel "
                             "FROM character_queststatus AS cq JOIN %s.quest_template AS qt ON cq.quest = qt.entry "
-                            "WHERE guid = %u", SQL_WORLDDB, guid))
+                            "WHERE guid = %u", "world", guid))
     {
         case DB_RESULT_ERROR:
         {
@@ -651,7 +654,7 @@ void CharacterInfoPage::UpdateCharacterQuestInfo(uint64 guid)
 void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
 {
     Database db;
-    if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    if (!db.Connect(DB_REALM_DATA(session->currentRealm)))
     {
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
@@ -711,15 +714,16 @@ void CharacterInfoPage::UpdateCharacterSpellInfo(uint64 guid)
 void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
 {
     Database db;
-    if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    if (!db.Connect(DB_REALM_DATA(session->currentRealm)))
     {
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
+    // TODO: fix world join
     switch (db.ExecutePQuery("SELECT ci.item_template, it.name, CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`data`, ' ', 15), ' ', -1) AS UNSIGNED) AS count "
                             "FROM character_inventory AS ci JOIN item_instance AS ii ON ci.item = ii.guid JOIN %s.item_template AS it ON ci.item_template = it.entry "
-                            "WHERE ci.guid = %u", SQL_WORLDDB, guid))
+                            "WHERE ci.guid = %u", "world", guid))
     {
         case DB_RESULT_ERROR:
         {
@@ -769,7 +773,7 @@ void CharacterInfoPage::UpdateCharacterInventoryInfo(uint64 guid)
 void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
 {
     Database db;
-    if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    if (!db.Connect(DB_REALM_DATA(session->currentRealm)))
     {
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
@@ -826,7 +830,7 @@ void CharacterInfoPage::UpdateCharacterFriendInfo(uint64 guid)
 void CharacterInfoPage::UpdateCharacterMailInfo(uint64 guid)
 {
     Database db;
-    if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    if (!db.Connect(DB_REALM_DATA(session->currentRealm)))
     {
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
@@ -851,7 +855,7 @@ void CharacterInfoPage::UpdateCharacterMailInfo(uint64 guid)
             db.Disconnect();
 
             Database db2;
-            if (db2.Connect(SERVER_DB_DATA, SQL_CHARDB))
+            if (db2.Connect(DB_REALM_DATA(session->currentRealm)))
             {
                 // get all items attached to mails
                 if (db2.ExecutePQuery("SELECT mail_id, item_template, name, CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`data`, ' ', 15), ' ', -1) AS UNSIGNED) AS count, item_guid "
@@ -1011,7 +1015,7 @@ void CharacterInfoPage::RestoreCharacter()
     }
 
     Database db;
-    if (!db.Connect(SERVER_DB_DATA, SQL_CHARDB))
+    if (!db.Connect(DB_REALM_DATA(session->currentRealm)))
     {
         restoring = false;
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
@@ -1027,7 +1031,7 @@ void CharacterInfoPage::RestoreCharacter()
 
     uint32 charactersCount = db.GetRow()->fields[0].GetUInt32();
 
-    if (charactersCount >= MAX_CHARS_ON_ACCOUNT)
+    if (charactersCount >= sConfig.GetConfig(CONFIG_MAX_CHARACTERS_PER_ACCOUNT))
     {
         restoring = false;
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_TO_MUCH_CHARACTERS));
@@ -1047,20 +1051,21 @@ void CharacterInfoPage::RestoreCharacter()
         {
             bool sameFaction = true;
 
-            #ifndef ALLOW_TWO_SIDE_ACCOUNTS
-            ConflictSide tmpConflictSide = Misc::Character::GetSide(tmpCharInfo.race);
-            for (std::map<int, CharInfo>::const_iterator itr = indexToCharInfo.begin(); itr != indexToCharInfo.end(); ++itr)
+            if (!sConfig.GetConfig(CONFIG_ALLOW_TWO_SIDE_ACCOUNTS))
             {
-                if (!itr->second.deleted)
+                ConflictSide tmpConflictSide = Misc::Character::GetSide(tmpCharInfo.race);
+                for (std::map<int, CharInfo>::const_iterator itr = indexToCharInfo.begin(); itr != indexToCharInfo.end(); ++itr)
                 {
-                    if (tmpConflictSide != Misc::Character::GetSide(itr->second.race))
+                    if (!itr->second.deleted)
                     {
-                        sameFaction = false;
-                        break;
+                        if (tmpConflictSide != Misc::Character::GetSide(itr->second.race))
+                        {
+                            sameFaction = false;
+                            break;
+                        }
                     }
                 }
             }
-            #endif
 
             if (sameFaction)
             {
@@ -1068,7 +1073,8 @@ void CharacterInfoPage::RestoreCharacter()
                 {
                     db.ExecutePQuery("DELETE FROM deleted_chars WHERE char_guid = '%u'", tmpCharInfo.guid);
 
-                    if (db.SelectDatabase(SQL_REALMDB))
+
+                    if (db.Connect(DB_ACCOUNTS_DATA))
                         db.ExecutePQuery("UPDATE realmcharacters SET numchars = '%u' WHERE account = '%u' AND realmid = 1", charactersCount + 1, tmpCharInfo.account);
 
                     tmpItr->second.deleted = false;
@@ -1079,8 +1085,7 @@ void CharacterInfoPage::RestoreCharacter()
                     restoreCharacter->hide();
                     charBasicInfo->rowAt(CHARBASICINFO_SLOT_DELETION_TIME)->hide();
 
-                    db.Connect(PANEL_DB_DATA, SQL_PANELDB);
-                    db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '%s')", tmpCharInfo.account, session->sessionIp.toUTF8().c_str(), TXT_ACT_CHARACTER_RESTORE, escapedName.c_str());
+                    Misc::Account::AddActivity(tmpCharInfo.account, session->sessionIp.toUTF8().c_str(), TXT_ACT_CHARACTER_RESTORE, escapedName.c_str());
                 }
                 else
                     charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
@@ -1119,7 +1124,7 @@ void CharacterInfoPage::LoadSpells()
         return;
 
     Database db;
-    if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    if (!db.Connect(DB_PANEL_DATA))
         return;
 
     db.ExecuteQuery("SELECT entry, name FROM spells");

@@ -23,6 +23,7 @@
 #include <jwsmtp/jwsmtp.h>
 #include <Wt/WApplication>
 
+#include "config.h"
 #include "database.h"
 
 void Misc::SendMail(const Wt::WString& from, const Wt::WString& to, const Wt::WString& sub, const Wt::WString& msg)
@@ -34,9 +35,9 @@ void Misc::SendMail(const Wt::WString& from, const Wt::WString& to, const Wt::WS
     mail.setsubject(sub.toUTF8().c_str());
     mail.setmessage(msg.toUTF8().c_str());
 
-    mail.setserver(MAIL_HOST);
-    mail.username(MAIL_USER);
-    mail.password(MAIL_PASS);
+    mail.setserver(sConfig.GetConfig(CONFIG_MAIL_HOST));
+    mail.username(sConfig.GetConfig(CONFIG_MAIL_USER));
+    mail.password(sConfig.GetConfig(CONFIG_MAIL_PASSWORD));
 
     mail.send();
 }
@@ -59,7 +60,7 @@ int Misc::Irand(int min, int max)
 
 void Misc::Console(DebugFlags flag, char const* text, ...)
 {
-    if (DebugFlags(DEBUG_OPTIONS) & flag)
+    if (sConfig.GetConfig(CONFIG_OPTIONS_DEBUG) & flag)
     {
         va_list args;
         va_start(args, text);
@@ -70,7 +71,7 @@ void Misc::Console(DebugFlags flag, char const* text, ...)
 
 void Misc::Log(LogFlags flag, char const* text, ...)
 {
-    if (LogFlags(LOG_OPTIONS) & flag)
+    if (sConfig.GetConfig(CONFIG_OPTIONS_LOG) & flag)
     {
         char buffer[strlen(text) + 1000];
 
@@ -125,7 +126,7 @@ TemplateInfo Misc::GetTemplateInfoFromDB(const std::string & name)
     TemplateInfo templateInfo;
     Database db;
 
-    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    if (db.Connect(DB_PANEL_DATA))
     {
         std::string tmpName = db.EscapeString(name);
         if (db.ExecutePQuery("SELECT name, stylePath, tmpltPath FROM Templates WHERE name = '%s'", tmpName.c_str()) > DB_RESULT_EMPTY)
@@ -140,9 +141,9 @@ TemplateInfo Misc::GetTemplateInfoFromDB(const std::string & name)
 
     if (templateInfo.currentTemplate.empty() || templateInfo.stylePath.empty())
     {
-        templateInfo.name = TMPLT_DEFAULT_NAME;
-        templateInfo.stylePath = TMPLT_DEFAULT_STYLE_PATH;
-        templateInfo.tmpltPath = TMPLT_DEFAULT_TMPLT_PATH;
+        templateInfo.name = sConfig.GetConfig(CONFIG_DEFAULT_TEMPLATE_NAME);
+        templateInfo.stylePath = sConfig.GetConfig(CONFIG_DEFAULT_TEMPLATE_STYLE_PATH);
+        templateInfo.tmpltPath = sConfig.GetConfig(CONFIG_DEFAULT_TEMPLATE_TMPLT_PATH);
     }
 
     return templateInfo;
@@ -157,7 +158,7 @@ std::vector<TemplateInfo> Misc::GetTemplatesFromDB()
 {
     std::vector<TemplateInfo> templates;
     Database db;
-    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    if (db.Connect(DB_PANEL_DATA))
     {
         if (db.ExecutePQuery("SELECT name, stylePath, tmpltPath FROM Templates") > DB_RESULT_EMPTY)
         {

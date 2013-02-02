@@ -36,6 +36,7 @@
 #include <Wt/WTabWidget>
 #include <Wt/WText>
 
+#include "../config.h"
 #include "../database.h"
 #include "../misc.h"
 #include "../miscAccount.h"
@@ -164,7 +165,7 @@ void AccountInfoPage::UpdateAccountInfo(bool first)
 
     Database realmDb;
 
-    if (!realmDb.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (!realmDb.Connect(DB_ACCOUNTS_DATA))
     {
         accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
@@ -320,9 +321,7 @@ WString AccountInfoPage::GetEmail()
     if (session->accLvl < LVL_PLAYER)
         return tmpStr;
 
-    #ifdef SHOW_EMAIL_CHARACTERS_COUNT
-    visible = SHOW_EMAIL_CHARACTERS_COUNT;
-    #endif
+    visible = sConfig.GetConfig(CONFIG_EMAIL_SHOW_CHAR_COUNT);
 
     if (visible)
     {
@@ -357,38 +356,37 @@ WString AccountInfoPage::GetEmail()
         for (i = 0; i < visible; ++i)
             hiddenMail += tmpEmail[i];
 
-        #ifdef EMAIL_HIDE_CHAR_COUNT
-        hidden = EMAIL_HIDE_CHAR_COUNT;
-        #endif
+        hidden = sConfig.GetConfig(CONFIG_EMAIL_HIDE_CHAR_COUNT);
 
         if (hidden <= 0)
             hidden = atPlace;
         else
             hidden += visible;
 
+        std::string hideChar = sConfig.GetConfig(CONFIG_EMAIL_HIDE_CHARACTER);
+
         for (i = visible; i < hidden; ++i)
-            hiddenMail += EMAIL_HIDE_CHAR;
+            hiddenMail += hideChar;
 
         std::string hiddenDomain;
 
-        #ifdef HIDE_EMAIL_DOMAIN
-
-        int dotPlace = 0, showChars = 1 + (j > 4 ? 2 : 1);
-
-        for (i = 0; i < j; ++i)
+        if (sConfig.GetConfig(CONFIG_EMAIL_HIDE_DOMAIN))
         {
-            if (domain[i] == '.')
-                dotPlace = i;
+            int dotPlace = 0, showChars = 1 + (j > 4 ? 2 : 1);
 
-            if (i < showChars || (dotPlace && i >= dotPlace))
-                hiddenDomain += domain[i];
-            else
-                hiddenDomain += EMAIL_HIDE_CHAR;
+            for (i = 0; i < j; ++i)
+            {
+                if (domain[i] == '.')
+                    dotPlace = i;
+
+                if (i < showChars || (dotPlace && i >= dotPlace))
+                    hiddenDomain += domain[i];
+                else
+                    hiddenDomain += hideChar;
+            }
         }
-
-        #else
-        hiddenDomain = domain;
-        #endif
+        else
+            hiddenDomain = domain;
 
         hiddenMail += hiddenDomain;
 
@@ -437,7 +435,7 @@ void AccountInfoPage::ChangeIPLock()
         return;
 
     Database db;
-    if (db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (db.Connect(DB_ACCOUNTS_DATA))
     {
         session->locked = !session->locked;
         db.SetPQuery("UPDATE account SET locked = '%i' WHERE id = %u", session->locked, session->accid);
@@ -455,7 +453,7 @@ void AccountInfoPage::ChangeIPLock()
     else
        accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
 
-    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    if (db.Connect(DB_PANEL_DATA))
         db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_IP_LOCK);
 }
 
@@ -472,7 +470,7 @@ void AccountInfoPage::ChangeXPRates()
         return;
 
     Database db;
-    if (db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (db.Connect(DB_ACCOUNTS_DATA))
     {
         uint64 prevflags = session->account_flags;
         if (session->account_flags & 0x0008)
@@ -523,7 +521,7 @@ WTable * AccountInfoPage::CreateBanInfo()
 
     Database realmDB;
 
-    if (!realmDB.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (!realmDB.Connect(DB_ACCOUNTS_DATA))
     {
         accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return banInfo;
@@ -531,9 +529,7 @@ WTable * AccountInfoPage::CreateBanInfo()
 
     realmDB.SetPQuery("SELECT FROM_UNIXTIME(bandate), FROM_UNIXTIME(unbandate), bannedby, banreason, active FROM account_banned WHERE id = %u ORDER BY active DESC, bandate DESC", session->accid);
 
-    int count = realmDB.ExecuteQuery();
-
-    switch (count)
+    switch (realmDB.ExecuteQuery())
     {
         case DB_RESULT_ERROR:
             accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
@@ -589,7 +585,7 @@ WTable * AccountInfoPage::CreateMuteInfo()
 
     Database realmDB;
 
-    if (!realmDB.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (!realmDB.Connect(DB_ACCOUNTS_DATA))
     {
         accPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return muteInfo;
@@ -663,9 +659,9 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
     Database db;
     int i;
 
-    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    if (db.Connect(DB_PANEL_DATA))
     {
-        db.SetPQuery("SELECT event_date, ip, activity_id, activity_args FROM Activity WHERE account_id = %u ORDER BY event_date DESC LIMIT %i", session->accid, ACTIVITY_PANEL_LIMIT);
+        db.SetPQuery("SELECT event_date, ip, activity_id, activity_args FROM Activity WHERE account_id = %u ORDER BY event_date DESC LIMIT %i", session->accid, sConfig.GetConfig(CONFIG_ACTIVITY_LIMIT_PANEL));
 
         switch (db.ExecuteQuery())
         {
@@ -705,9 +701,9 @@ WContainerWidget * AccountInfoPage::CreateActivityInfo()
         }
     }
 
-    if (db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (db.Connect(DB_ACCOUNTS_DATA))
     {
-        db.SetPQuery("SELECT logindate, ip FROM account_login WHERE id = %u ORDER BY logindate DESC LIMIT %i", session->accid, ACTIVITY_SERVER_LIMIT);
+        db.SetPQuery("SELECT logindate, ip FROM account_login WHERE id = %u ORDER BY logindate DESC LIMIT %i", session->accid, sConfig.GetConfig(CONFIG_ACTIVITY_LIMIT_SERVER));
 
         switch (db.ExecuteQuery())
         {

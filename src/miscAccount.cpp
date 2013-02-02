@@ -17,17 +17,18 @@
 
 #include "miscAccount.h"
 
+#include "config.h"
 #include "database.h"
 #include "misc.h"
 
 std::string Misc::Account::GeneratePassword()
 {
-    int passLen = Misc::Irand(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
+    int passLen = Misc::Irand(sConfig.GetConfig(CONFIG_PASSWORD_LENGTH_MIN), sConfig.GetConfig(CONFIG_PASSWORD_LENGTH_MAX));
 
     std::string tmpStr;
 
     for (int i = 0; i < passLen; ++i)
-        tmpStr += char(Misc::Irand(PASSWORD_ASCII_START, PASSWORD_ASCII_END));
+        tmpStr += char(Misc::Irand(sConfig.GetConfig(CONFIG_PASSWORD_GEN_ASCII_START), sConfig.GetConfig(CONFIG_PASSWORD_GEN_ASCII_STOP)));
 
     return tmpStr;
 }
@@ -39,7 +40,7 @@ void Misc::Account::AddActivity(uint32 accountId, const char * ip, const char * 
 
     Database db;
 
-    db.Connect(PANEL_DB_DATA, SQL_PANELDB);
+    db.Connect(DB_PANEL_DATA);
     db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '%s')", accountId, ip, activity, activityArgs);
 }
 
@@ -50,7 +51,7 @@ void Misc::Account::AddActivity(uint32 accountId, const std::string & ip, const 
 
     Database db;
 
-    db.Connect(PANEL_DB_DATA, SQL_PANELDB);
+    db.Connect(DB_PANEL_DATA);
     db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '%s')", accountId, ip.c_str(), activity, activityArgs.c_str());
 
 }
@@ -62,7 +63,7 @@ void Misc::Account::AddActivity(const char * username, const char * ip, const ch
 
     Database db;
 
-    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (!db.Connect(DB_ACCOUNTS_DATA))
         return;
 
     uint32 accountId;
@@ -91,7 +92,7 @@ void Misc::Account::AddActivity(const std::string & username, const std::string 
 
     Database db;
 
-    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (!db.Connect(DB_ACCOUNTS_DATA))
         return;
 
     uint32 accountId;

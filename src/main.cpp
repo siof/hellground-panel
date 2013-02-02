@@ -28,7 +28,7 @@
 #include <Wt/WText>
 #include <Wt/WTemplate>
 
-#include "defines.h"
+#include "config.h"
 #include "database.h"
 #include "menu.h"
 #include "misc.h"
@@ -56,9 +56,9 @@ PlayersPanel::PlayersPanel(const Wt::WEnvironment& env)
         tmplt = Misc::GetTemplateInfoFromDB(*cookieVal);
     else
     {
-        tmplt.name = TMPLT_DEFAULT_NAME;
-        tmplt.stylePath = TMPLT_DEFAULT_STYLE_PATH;
-        tmplt.tmpltPath = TMPLT_DEFAULT_TMPLT_PATH;
+        tmplt.name = sConfig.GetConfig(CONFIG_DEFAULT_TEMPLATE_NAME);
+        tmplt.stylePath = sConfig.GetConfig(CONFIG_DEFAULT_TEMPLATE_STYLE_PATH);
+        tmplt.tmpltPath = sConfig.GetConfig(CONFIG_DEFAULT_TEMPLATE_TMPLT_PATH);
         tmplt.currentTemplate = Misc::GetTemplate(tmplt.tmpltPath, tmplt.name);
     }
 
@@ -101,6 +101,8 @@ WApplication * CreateApplication(const Wt::WEnvironment& env)
     Misc::Console(DEBUG_CODE, "Call WApplication * CreateApplication(const WEnvironment& env)");
     // You could read information from the environment to decide
     // whether the user has permission to start a new application
+
+    sConfig.ReadConfig();
 
     PlayersPanel * tmpPanel = new PlayersPanel(env);
 

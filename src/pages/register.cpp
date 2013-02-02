@@ -38,6 +38,7 @@
 #include <Wt/WRegExpValidator>
 #include <Wt/WText>
 
+#include "../config.h"
 #include "../database.h"
 #include "../misc.h"
 #include "../miscAccount.h"
@@ -101,7 +102,7 @@ void RegisterPage::CreateRegisterPage()
 
     txtLogin = new Wt::WLineEdit();
     txtLogin->setEmptyText(Wt::WString::tr(TXT_ACC_LOGIN));
-    WRegExpValidator * validator = new Wt::WRegExpValidator(LOGIN_VALIDATOR);
+    WRegExpValidator * validator = new Wt::WRegExpValidator(sConfig.GetConfig(CONFIG_LOGIN_VALIDATOR));
     validator->setMandatory(true);
     txtLogin->setValidator(validator);
 
@@ -190,7 +191,7 @@ void RegisterPage::Register()
 
     Database db;
 
-    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (!db.Connect(DB_ACCOUNTS_DATA))
     {
         regInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         ClearRegisterData();
@@ -217,11 +218,12 @@ void RegisterPage::Register()
     escapedPass = db.EscapeString(pass);
 
     WString from, msg, sub, passHash;
-    from = MAIL_FROM;
+    from = sConfig.GetConfig(CONFIG_MAIL_FROM);
 
     passHash = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, login.toUTF8().c_str(), escapedPass.toUTF8().c_str());
 
-    db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash, expansion) VALUES (UPPER('%s'), UPPER('%s'), '%s', '%i')", login.toUTF8().c_str(), mail.toUTF8().c_str(), passHash.toUTF8().c_str(), STARTING_EXPANSION);
+    db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash, expansion) VALUES (UPPER('%s'), UPPER('%s'), '%s', '%i')",
+                 login.toUTF8().c_str(), mail.toUTF8().c_str(), passHash.toUTF8().c_str(), sConfig.GetConfig(CONFIG_STARTING_EXPANSION));
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
@@ -250,7 +252,7 @@ void RegisterPage::Register()
     else
         return;
 
-    if (db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    if (db.Connect(DB_PANEL_DATA))
         db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '%s', '')", accId, session->sessionIp.toUTF8().c_str(), TXT_ACT_REGISTRATION_COMPLETE);
 }
 

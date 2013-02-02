@@ -37,6 +37,7 @@
 #include <Wt/WTable>
 #include <Wt/WText>
 
+#include "../config.h"
 #include "../database.h"
 #include "../misc.h"
 
@@ -121,7 +122,7 @@ void VotePage::CreateVotePage()
 
     Database db;
 
-    if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    if (!db.Connect(DB_PANEL_DATA))
     {
         votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
@@ -266,13 +267,13 @@ void VotePage::Vote(const uint32& id)
 
     Database db;
 
-    if (!db.Connect(PANEL_DB_DATA, SQL_PANELDB))
+    if (!db.Connect(DB_PANEL_DATA))
     {
         votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
-    if (db.ExecutePQuery("SELECT NOW() + INTERVAL %u HOUR", VOTE_INTERVAL) > DB_RESULT_EMPTY)
+    if (db.ExecutePQuery("SELECT NOW() + INTERVAL %u HOUR", sConfig.GetConfig(CONFIG_INTERVAL_VOTE)) > DB_RESULT_EMPTY)
         currVote->expire = db.GetRow()->fields[0].GetWString();
     else
     {
@@ -294,7 +295,7 @@ void VotePage::Vote(const uint32& id)
         return;
     }
 
-    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (!db.Connect(DB_ACCOUNTS_DATA))
     {
         votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
