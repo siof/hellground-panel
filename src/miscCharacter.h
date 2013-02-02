@@ -25,6 +25,19 @@ namespace Misc
     namespace Character
     {
         /********************************************//**
+         * \brief Return default hardcoded character race name.
+         *
+         * \param sess      session informations to get text
+         * \param index     race index
+         * \return race name
+         *
+         * Returns default hardcoded character race name depends on race index.
+         *
+         ***********************************************/
+
+        std::string GetGlobalRaceName(int index);
+
+        /********************************************//**
          * \brief Return character race name.
          *
          * \param sess      session informations to get text

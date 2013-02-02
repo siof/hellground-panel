@@ -17,6 +17,7 @@
 
 #include "miscCharacter.h"
 
+#include "config.h"
 #include "defines.h"
 
 ConflictSide Misc::Character::GetSide(const uint8 & race)
@@ -86,17 +87,38 @@ void Misc::Character::GetTeleportPosition(int race, Location & loc)
     if (race < 0 || race > 11 || race == 9)
         return;
 
-    int mod = 1;
-
-    if (race > 8)
-        ++mod;
-
-    loc.mapId = RaceLocs[race - mod][0];
-    loc.zone = RaceLocs[race - mod][1];
-    loc.posX = RaceLocs[race - mod][2];
-    loc.posY = RaceLocs[race - mod][3];
-    loc.posZ = RaceLocs[race - mod][4];
+    loc = sConfig.GetStartingLocation(CharacterRaces(race));
 }
+
+std::string Misc::Character::GetGlobalRaceName(int index)
+{
+    switch (index)
+    {
+        case RACE_HUMAN:
+            return "Human";
+        case RACE_ORC:
+            return "Orc";
+        case RACE_DWARF:
+            return "Dwarf";
+        case RACE_NIGHT_ELF:
+            return "NightElf";
+        case RACE_UNDEAD:
+            return "Undead";
+        case RACE_TAUREN:
+            return "Tauren";
+        case RACE_GNOME:
+            return "Gnome";
+        case RACE_TROLL:
+            return "Troll";
+        case RACE_BLOOD_ELF:
+            return "BloodElf";
+        case RACE_DRAENEI:
+            return "Draenei";
+        default:
+            return "Unknown";
+    }
+}
+
 Wt::WString Misc::Character::GetRaceName(int index)
 {
     switch (index)

@@ -72,16 +72,18 @@ class ServerStatusPage : public WContainerWidget
 {
 public:
     ServerStatusPage(WContainerWidget * parent = 0);
-    ~ServerStatusPage() { clear(); }
+    ~ServerStatusPage();
 
     void refresh();
 private:
     /// status refresh timer
     Wt::WTimer * timer;
     /// tables for multiple realm status
-    Wt::WTable * realms[REALMS_COUNT];
+    Wt::WTable ** realms;
     /// http clients for multiple realms
-    Wt::Http::Client * clients[REALMS_COUNT];
+    Wt::Http::Client ** clients;
+    /// text widgets for tables
+    Wt::WText *** texts;
 
     void CreateStatusPage();
     void RunUpdateStatus();

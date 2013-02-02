@@ -25,6 +25,7 @@
 #include <Wt/WRegExpValidator>
 #include <Wt/WTemplate>
 
+#include "config.h"
 #include "database.h"
 #include "misc.h"
 #include "miscAccount.h"
@@ -42,14 +43,14 @@ LoginWidget::LoginWidget(SessionInfo * sess, Wt::WTemplate * tmplt, Wt::WContain
     login = new Wt::WLineEdit(this);
     login->setEchoMode(WLineEdit::Normal);
     login->setEmptyText(Wt::WString::tr(TXT_ACC_LOGIN));
-    validator = new Wt::WRegExpValidator(LOGIN_VALIDATOR);
+    validator = new Wt::WRegExpValidator(sConfig.GetConfig(CONFIG_LOGIN_VALIDATOR));
     validator->setMandatory(true);
     login->setValidator(validator);
 
     pass = new Wt::WLineEdit(this);
     pass->setEchoMode(Wt::WLineEdit::Password);
     pass->setEmptyText(Wt::WString("pass"));
-    validator = new Wt::WLengthValidator(PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
+    validator = new Wt::WLengthValidator(sConfig.GetConfig(CONFIG_PASSWORD_LENGTH_MIN), sConfig.GetConfig(CONFIG_PASSWORD_LENGTH_MAX));
     validator->setMandatory(true);
     pass->setValidator(validator);
 
@@ -83,7 +84,8 @@ void LoginWidget::Login()
     }
 
     Database db;
-    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (!db.Connect(sConfig.GetConfig(CONFIG_DB_ACCOUNTS_HOST), sConfig.GetConfig(CONFIG_DB_ACCOUNTS_LOGIN),
+                    sConfig.GetConfig(CONFIG_DB_ACCOUNTS_PASSWORD), sConfig.GetConfig(CONFIG_DB_ACCOUNTS_PORT), sConfig.GetConfig(CONFIG_DB_ACCOUNTS_NAME)))
     {
         Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_DB_CANT_CONNECT);
         return;

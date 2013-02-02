@@ -34,6 +34,7 @@
 #include <Wt/WPushButton>
 #include <Wt/WText>
 
+#include "../config.h"
 #include "../database.h"
 #include "../misc.h"
 #include "../miscAccount.h"
@@ -149,14 +150,14 @@ void PassChangePage::Change()
 
     std::string tmpPass = pass.toUTF8();
 
-    if (tmpPass.size() > PASSWORD_LENGTH_MAX)
+    if (tmpPass.size() > sConfig.GetConfig(CONFIG_PASSWORD_LENGTH_MAX))
     {
         changeInfo->setText(Wt::WString::tr(TXT_ERROR_PASSWORD_TO_LONG));
         ClearPass();
         return;
     }
 
-    if (tmpPass.size() < PASSWORD_LENGTH_MIN)
+    if (tmpPass.size() < sConfig.GetConfig(CONFIG_PASSWORD_LENGTH_MIN))
     {
         changeInfo->setText(Wt::WString::tr(TXT_ERROR_PASSWORD_TO_SHORT));
         ClearPass();
@@ -174,7 +175,7 @@ void PassChangePage::Change()
 
     Database db;
 
-    if (!db.Connect(SERVER_DB_DATA, SQL_REALMDB))
+    if (!db.Connect(DB_ACCOUNTS_DATA))
     {
         changeInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;

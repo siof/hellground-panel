@@ -30,8 +30,6 @@
 #ifndef DEFINES_H_INCLUDED
 #define DEFINES_H_INCLUDED
 
-#include "config.h"
-
 #include <cstdio>
 
 #ifdef DEBUG
@@ -115,7 +113,7 @@ struct SessionInfo
      *
      ***********************************************/
 
-    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), vote(0), account_flags(0), banned(false) {}
+    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), vote(0), account_flags(0), banned(false), currentRealm(0) {}
     ~SessionInfo() {}
 
     WString login;          /**< Login used to log on account. */
@@ -132,6 +130,7 @@ struct SessionInfo
     uint32 vote;            /**< Vote points count */
     uint64 account_flags;   /**< Account custom flags (blizz xp rates for example) */
     bool banned;            /**< Account was banned while login? */
+    int currentRealm;       /**< Current realm - not used yet */
 
     /********************************************//**
      * \brief Clears session informations.
@@ -562,6 +561,9 @@ enum LogFlags
 
 struct Location
 {
+    Location() : mapId(0), zone(0), posX(0.0f), posY(0.0f), posZ(0.0f) {}
+    Location (const Location & p) : mapId(p.mapId), zone(p.zone), posX(p.posX), posY(p.posY), posZ(p.posZ) {}
+
     uint32 mapId;   /**< Map id */
     uint32 zone;    /**< Zone on map */
     float posX;     /**< X Position */
@@ -654,16 +656,47 @@ struct SpellInfo
  * \brief Enum for realm informations
  ***********************************************/
 
-enum RealmInformations
+enum RealmInfo
 {
     REALM_INFO_NAME         = 0,    /**< Realm name */
     REALM_INFO_STATUS_URL   = 1,    /**< Link to file with realm status */
     REALM_INFO_ADDITIONAL   = 2,    /**< Additional informations about realm */
-    REALM_INFO_ID           = 3     /**< Realm id from Accounts database */
+    REALM_INFO_ID           = 3,    /**< Realm id from Accounts database */
+    REALM_INFO_DB_HOST      = 4,    /**< Host to realm database */
+    REALM_INFO_DB_USER      = 5,    /**< User to realm database */
+    REALM_INFO_DB_PASSWORD  = 6,    /**< Password to realm database */
+    REALM_INFO_DB_PORT      = 7,    /**< Port to realm database */
+    REALM_INFO_DB_NAME      = 8,    /**< Name of realm database */
+
+    REALM_INFO_COUNT
 };
 
-#define SERVER_DB_DATA  SQL_HOST, SQL_LOGIN, SQL_PASSWORD, SQL_PORT
-#define PANEL_DB_DATA   PANEL_SQL_HOST, PANEL_SQL_LOGIN, PANEL_SQL_PASS, PANEL_SQL_PORT
+struct RealmInformations
+{
+    RealmInformations()
+        : name(""), statusUrl(""), additionalInfo(""), id(0),
+            dbHost(""), dbLogin(""), dbPass(""), dbPort(0), dbName("")
+    {
+
+    }
+
+    RealmInformations(const RealmInformations & p)
+        : name(p.name), statusUrl(p.statusUrl), additionalInfo(p.additionalInfo), id(p.id),
+            dbHost(p.dbHost), dbLogin(p.dbLogin), dbPass(p.dbPass), dbPort(p.dbPort), dbName(p.dbName)
+    {
+
+    }
+
+    std::string name;
+    std::string statusUrl;
+    std::string additionalInfo;
+    uint32 id;
+    std::string dbHost;
+    std::string dbLogin;
+    std::string dbPass;
+    int dbPort;
+    std::string dbName;
+};
 
 // enums/defines from core:
 
@@ -787,5 +820,7 @@ struct TemplateInfo
 };
 
 #define QUEST_TYPE_DAILY    87
+
+#define Wttr Wt::WString::tr
 
 #endif // DEFINES_H_INCLUDED

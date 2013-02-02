@@ -66,9 +66,9 @@ public:
     void SetQuery(const std::string & query);           /// set query to execute
     bool SetPQuery(const char *format, ...);            /// set query to execute
 
-    bool Connect(std::string host, std::string login, std::string pass, unsigned int port, std::string db); // connects to db
+    bool Connect(const std::string & host, const std::string & login, const std::string & pass, unsigned int port, const std::string & db); // connects to db
     void Disconnect();
-    bool SelectDatabase(std::string db);
+    bool SelectDatabase(const std::string & db);
 
     std::string EscapeString(const char * str);         /// escape given string
     std::string EscapeString(const std::string & str);  /// escape given string
