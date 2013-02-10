@@ -1,4 +1,3 @@
-glob:config.h
 glob:visualstudio/lib/wt.lib
 glob:visualstudio/lib/wthttp.lib
 glob:*/Release/*.*
