@@ -41,7 +41,7 @@ Config & Config::Instance()
         _createMutex.unlock();
     }
 
-    return * _config;
+    return * const_cast<Config*>(_config);
 }
 
 const std::string & Config::GetConfig(StringConfig option) const
@@ -437,5 +437,5 @@ void Config::ReadConfig()
     _configMutex.unlock();
 }
 
-Config * Config::_config = nullptr;
+volatile Config * Config::_config = nullptr;
 std::mutex Config::_createMutex;
