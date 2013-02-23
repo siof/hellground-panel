@@ -1,0 +1,424 @@
+<!-- 
+# default template options
+#   name 
+#     Name of default template
+#     Default: default
+#   style.path 
+#     Relative path to directory with default template style.css file
+#     Default: res/templates/default
+#   file.path 
+#     Relative path to directory with default template template file
+#     Default: res/templates/default
+-->
+
+<template>
+    <name>default</name>
+    <path>
+        <style>res/templates/default</style>
+        <file>res/templates/default</file>
+    </path>
+</template>
+
+<!--
+# language options
+#   file.path 
+#     Relative path to default (en) file with texts for panel - without extension !
+#     Rest of localized files should have same name with addition depends on language (for example: panel.xml is for english and panel_pl.xml is for polish)
+#     Default: langs/panel
+-->
+
+<language>
+    <file>
+        <path>langs/panel</path>
+    </file>
+</language>
+
+<!--
+# options for validators
+#   login 
+#     Validator for account login in regex
+#     Default: [a-zA-Z0-9_-]{6-16}  <- characters, numbers - and _ with minimum length of 6 and maximum 16 signs
+-->
+
+<validator>
+    <login>[a-zA-Z0-9_-]{6,16}</login>
+</validator>
+
+<!--
+# mail options
+#   from 
+#     Email address which should be added in from clause
+#     Default: none@none.none
+#   host 
+#     Host which will be used to sending mails
+#     Default: localhost
+#   user 
+#     Username to mail account
+#     Default: lala
+#   password 
+#     Password to mail account
+#     Default: lala
+-->
+
+<mail>
+    <from>none@none.none</from>
+    <host>localhost</host>
+    <user>lala</user>
+    <password>lala</password>
+</mail>
+
+<!--
+# database general options
+#   show.errors
+#     Database errors should be visible ?
+#     Default: true
+-->
+
+<database>
+    <show>
+        <errors>true</errors>
+    </show>
+
+    <!--
+    # Panel database options
+    #   host
+    #     Panel database host
+    #     Default: localhost
+    #   login
+    #     Login to panel database
+    #     Deafult: panel
+    #   password
+    #     Password to panel database
+    #     Default: panel
+    #   port
+    #     Port on which we should connect to database
+    #     Default: 3306
+    #   name
+    #     Panel database name
+    #     Default: panel
+    -->
+    <panel>
+        <host>localhost</host>
+        <login>panel</login>
+        <password>panel</password>
+        <port>3306</port>
+        <name>panel</name>
+    </panel>
+
+    <!--
+    # Accounts database options
+    #   host
+    #     Accounts database host
+    #     Default: localhost
+    #   login
+    #     Login to accounts database
+    #     Deafult: accounts
+    #   password
+    #     Password to accounts database
+    #     Default: accounts
+    #   port
+    #     Port on which we should connect to database
+    #     Default: 3306
+    #   name
+    #     Accounts database name
+    #     Default: accounts
+    -->
+
+    <accounts>
+        <host>localhost</host>
+        <login>panel</login>
+        <password>panel</password>
+        <port>3306</port>
+        <name>accounts</name>
+    </accounts>
+</databse>
+
+<!--
+# Accounts email options
+#   show.count
+#     How many characters from email should be shown
+#     Default: 2  (set to <= 0 if you don't want to hide account email)
+#   hide.count
+#     How many characters should be added after those from show.char.count option - for hiding email length
+#     Default: 4 (set to <= 0 if you wan't to have same hidden characters as rest of email address - if you don't want to hide email length)
+#   hide.character
+#     Character which should be added to hide parts of email
+#     Default: *
+#   hide.domain
+#     Should we also hide email domain ? (option is using above options for hiding)
+#     Default: true
+-->
+
+<email>
+    <show>
+        <count>2</count>
+    </show>
+    <hide>
+        <count>4</count>
+        <character>*</character>
+        <domain>true</domain>
+    </hide>
+</email>
+
+
+
+<!--
+# General options
+#   debug
+#     Debug level as mask - 0 none, 1 code, 2 database
+#     Default: 0 
+#   log
+#     Log level as mask - 0 none, 1 DB Query, 2 DB errors, 4 invalid data, 8 strange data
+-->
+
+<options>
+    <debug>0</debug>
+    <log>3</log>
+</options>
+
+<!--
+# Genaral password options
+#   length.min
+#     Minimal length of password
+#     Default: 6
+#   length.max
+#     Maximum length of password
+#     Default: 16
+-->
+
+<password>
+    <length>
+        <min>6</min>
+        <max>16</max>
+    </length>
+
+    <!--
+    # Password genaration options
+    #   ascii.start
+    #     Id of ascii char from which we should randomly pick characters for password generation
+    #     Default: 33
+    #   ascii.stop
+    #     Id of ascii char to which we should randomly pick characters for password generation
+    #     Default: 126
+    -->
+    <generation>
+        <ascii>
+            <start>33</start>
+            <stop>126</stop>
+        </ascii>
+    </generation>
+</password>
+
+<!--
+# Generatl interval options
+#   update.characters
+#     Interval for update characters informations in characters page.
+#     Default: 5 (seconds)
+#   vote
+#     Interval for voting on same vote list.
+#     Default: 12 (hours)
+-->
+<interval>
+    <update>
+        <characters>5</characters>
+    </update>
+    <vote>12</vote>
+</interval>
+
+<!--
+# Options to limit activity show
+#   panel
+#     How many records should be shown from panel activity.
+#     Default: 100
+#   server
+#     How many records should be shown from server activity.
+#     Default: 100
+-->
+<activity>
+    <limit>
+        <panel>100</panel>
+        <server>100</server>
+    </limit>
+</activity>
+
+<!--
+# Locations for races - for teleport feature
+#   map
+#     Map id
+#   zone
+#     Zone id
+#   x
+#     X coord
+#   y
+#     Y coord
+#   z
+#     Z coord
+#
+# NOTE: default values are from HG DB
+-->
+
+<race>
+    <location>
+        <human>
+            <map>0</map>
+            <zone>12</zone>
+            <x>8949.95</x>
+            <y>-132.493</y>
+            <z>83.5312</z>
+        </human>
+        
+        <orc>
+            <map>1</map>
+            <zone>14</zone>
+            <x>-618.518</x>
+            <y>-4251.67</y>
+            <z>38.718</z>
+        </orc>
+
+        <dwarf>
+            <map>0</map>
+            <zone>1</zone>
+            <x>-6240.32</x>
+            <y>331.033</y>
+            <z>382.758</z>
+        </dwarf>
+
+        <nightelf>
+            <map>1</map>
+            <zone>141</zone>
+            <x>10311.3</x>
+            <y>832.463</y>
+            <z>1326.41</z>
+        </nightelf>
+
+        <undead>
+            <map>0</map>
+            <zone>85</zone>
+            <x>1676.71</x>
+            <y>1678.31</y>
+            <z>121.67</z>
+        </undead>
+
+        <tauren>
+            <map>1</map>
+            <zone>215</zone>
+            <x>-2917.58</x>
+            <y>-257.98</y>
+            <z>52.9968</z>
+        </tauren>
+
+        <gnome>
+            <map>0</map>
+            <zone>1</zone>
+            <x>-6240.32</x>
+            <y>331.033</y>
+            <z>382.758</z>
+        </gnome>
+
+        <troll>
+            <map>1</map>
+            <zone>14</zone>
+            <x>-618.518</x>
+            <y>-4251.67</y>
+            <z>38.718</z>
+        </troll>
+
+        <bloodelf>
+            <map>530</map>
+            <zone>3431</zone>
+            <x>10349.6</x>
+            <y>6357.29</y>
+            <z>33.4026</z>
+        </bloodelf>
+
+        <draenei>
+            <map>530</map>
+            <zone>3526</zone>
+            <x>-3961.64</x>
+            <y>-13931.2</y>
+            <z>100.615</z>
+        </draenei>
+    </location>
+</race>
+
+<!--
+# Server eneral options
+#   allow.two.side.accounts
+#     Is server allowing two side accounts ? option for restore character feature
+#     Default: false
+#   registration.enabled
+#     Is registration enabled ?
+#     Default: true
+#   realms.count
+#     Count of realms which panel should handle
+#     Default: 1
+#   max.characters.per.realm
+#     Maximum characters for one realm
+#     Default: 10 (client restrictions)
+#   max.characters.per.account
+#     Maximum characters for one account (counts multiple realms)
+#     Default: 50
+#   starting.expansion
+#     Expansion which should be setted for new accounts
+#     Default: 1 (The Burning Crusade)
+-->
+
+<server>
+    <allow>
+        <two-side-accounts>false</two-side-accounts>
+    </allow>
+    <registration>
+        <enabled>true</enabled>
+    </registration>
+    <max>
+        <characters>
+            <realm>50</realm>
+            <account>10</realm>
+        </characters>
+    </max>
+    <starting>
+        <expansion>1</expansion>
+    </starting>
+
+    <realms>
+        <count>1</count>
+        
+    <!--
+    # Realms informations - for server status feature and many other
+    #   name
+    #     Name of realm - which should be displayed
+    #   statusurl
+    #     Url to file with serwer status informations
+    #   additional
+    #     Text with additional informations about realm
+    #   id
+    #     Realm id
+    #   dbhost
+    #     Realm data database host
+    #   dblogin
+    #     Realm data database login
+    #   dbpass
+    #     Realm data database password
+    #   dbport
+    #     Realm data database port
+    #   dbname
+    #     Realm data database name
+    -->
+        <info>
+            <0>
+                <name>HellGround</name>
+                <statusurl>http://logon.hellground.net/parser.irc</statusurl>
+                <additional>bla bla bla</additional>
+                <id>1</id>
+                <dbhost>host.host</dbhost>
+                <dblogin>login</dblogin>
+                <dbpass>pass</dbpass>
+                <dbport>3306</dbport>
+                <dbname>realm</dbname>
+            </0>
+        </info>
+    </realms>
+</server>
+
+
+
