@@ -87,6 +87,7 @@ void Misc::Log(LogFlags flag, char const* text, ...)
 std::string Misc::GetFormattedString(const char * format, ...)
 {
     char buffer[strlen(format) + 1000];
+    memset(buffer, '\0', strlen(format) + 1000);
 
     va_list args;
     va_start(args, format);
