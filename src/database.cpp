@@ -71,25 +71,6 @@ bool DatabaseField::GetBool()
     return false;
 }
 
-AccountLevel DatabaseField::GetAccountLevel()
-{
-    int tmp = 0;
-    sscanf(value.toUTF8().c_str(), "%i", &tmp);
-
-    switch (tmp)
-    {
-        case LVL_PLAYER:
-        case LVL_GM_TRIAL:
-        case LVL_GM_HELPER:
-        case LVL_GM_HEAD:
-        case LVL_ADM:
-            return AccountLevel(tmp);
-        default:
-            return LVL_PLAYER;
-
-    }
-}
-
 /// DatabaseRow
 DatabaseRow::DatabaseRow(MYSQL_ROW row, int count)
 {
@@ -140,10 +121,10 @@ bool Database::SetPQuery(const char *format, ...)
     return true;
 }
 
-bool Database::Connect(const std::string & host, const std::string & login, const std::string & pass, unsigned int port, const std::string & db)
+bool Database::Connect(const std::string & host, const std::string & login, const std::string & password, unsigned int port, const std::string & db)
 {
     Misc::Console(DEBUG_CODE, "%s(const std::string & host = %s, const std::string & login = %s, const std::string & pass = %s, unsigned int port = %i, const std::string & db = %s)\n",
-                    __FUNCTION__, host.c_str(), login.c_str(), pass.c_str(), port, db.c_str());
+                    __FUNCTION__, host.c_str(), login.c_str(), password.c_str(), port, db.c_str());
 
     if (connection)
     {
@@ -153,12 +134,12 @@ bool Database::Connect(const std::string & host, const std::string & login, cons
 
     connection = mysql_init(NULL);
 
-    bool connected = mysql_real_connect(connection, host.c_str(), login.c_str(), pass.c_str(), db.c_str(), port, NULL, 0) != NULL;
+    bool connected = mysql_real_connect(connection, host.c_str(), login.c_str(), password.c_str(), db.c_str(), port, NULL, 0) != NULL;
 
     if (!connected)
     {
         Misc::Console(DEBUG_DB, "%s: Can't connect to db ! Data: host (%s) login (%s) pass(%s) port(%i) db(%s)\n",
-                        __FUNCTION__, host.c_str(), login.c_str(), pass.c_str(), port, db.c_str());
+                        __FUNCTION__, host.c_str(), login.c_str(), password.c_str(), port, db.c_str());
     }
 
     return connected;

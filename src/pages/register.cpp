@@ -198,12 +198,12 @@ void RegisterPage::Register()
         return;
     }
 
-    WString login, mail, pass, escapedPass;
+    WString login, mail, password, escapedPass;
 
     login = db.EscapeString(txtLogin->text());
 
     // check if account already exists
-    db.SetPQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str());
+    db.SetPQuery("SELECT account_id FROM account WHERE username = '%s'", login.toUTF8().c_str());
     if (db.ExecuteQuery() > DB_RESULT_EMPTY)
     {
         ClearRegisterData();
@@ -214,15 +214,15 @@ void RegisterPage::Register()
     }
 
     mail = txtEmail->text();
-    pass = Misc::Account::GeneratePassword();
-    escapedPass = db.EscapeString(pass);
+    password = Misc::Account::GeneratePassword();
+    escapedPass = db.EscapeString(password);
 
     WString from, msg, sub, passHash;
     from = sConfig.GetConfig(CONFIG_MAIL_FROM);
 
     passHash = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, login.toUTF8().c_str(), escapedPass.toUTF8().c_str());
 
-    db.SetPQuery("INSERT INTO account (username, email, sha_pass_hash, expansion) VALUES (UPPER('%s'), UPPER('%s'), '%s', '%i')",
+    db.SetPQuery("INSERT INTO account (username, email, pass_hash, expansion_id) VALUES (UPPER('%s'), UPPER('%s'), '%s', '%i')",
                  login.toUTF8().c_str(), mail.toUTF8().c_str(), passHash.toUTF8().c_str(), sConfig.GetConfig(CONFIG_STARTING_EXPANSION));
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
@@ -235,7 +235,7 @@ void RegisterPage::Register()
     }
 
     sub = Wt::WString::tr(TXT_REG_SUBJECT);
-    msg = Wt::WString::tr(TXT_REG_MAIL).arg(login.toUTF8()).arg(pass.toUTF8());
+    msg = Wt::WString::tr(TXT_REG_MAIL).arg(login.toUTF8()).arg(password.toUTF8());
 
     Misc::SendMail(from, mail, sub, msg);
 
@@ -247,7 +247,7 @@ void RegisterPage::Register()
 
     uint32 accId;
 
-    if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", login.toUTF8().c_str()) > DB_RESULT_EMPTY)
+    if (db.ExecutePQuery("SELECT account_id FROM account WHERE username = '%s'", login.toUTF8().c_str()) > DB_RESULT_EMPTY)
         accId = db.GetRow()->fields[0].GetUInt32();
     else
         return;

@@ -33,12 +33,12 @@ private:
 
     Wt::WTemplate * templ;
     Wt::WLineEdit * login;
-    Wt::WLineEdit * pass;
+    Wt::WLineEdit * password;
     Wt::WPushButton * btn;
 
     void Login();
     void AddActivityLogIn(bool success, const char * login = NULL);
-    void AddActivityLogIn(uint32 id, bool success);
+    void AddActivityLogIn(uint32 accountId, bool success);
 };
 
 #endif // LOGIN_WIDGET_H_INCLUDED

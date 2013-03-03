@@ -47,19 +47,19 @@ LoginWidget::LoginWidget(SessionInfo * sess, Wt::WTemplate * tmplt, Wt::WContain
     validator->setMandatory(true);
     login->setValidator(validator);
 
-    pass = new Wt::WLineEdit(this);
-    pass->setEchoMode(Wt::WLineEdit::Password);
-    pass->setEmptyText(Wt::WString("pass"));
+    password = new Wt::WLineEdit(this);
+    password->setEchoMode(Wt::WLineEdit::Password);
+    password->setEmptyText(Wt::WString("pass"));
     validator = new Wt::WLengthValidator(sConfig.GetConfig(CONFIG_PASSWORD_LENGTH_MIN), sConfig.GetConfig(CONFIG_PASSWORD_LENGTH_MAX));
     validator->setMandatory(true);
-    pass->setValidator(validator);
+    password->setValidator(validator);
 
     btn = new Wt::WPushButton(Wt::WString::tr(TXT_BTN_LOGIN));
     btn->clicked().connect(this, &LoginWidget::Login);
 
     addWidget(login);
     addWidget(new Wt::WBreak());
-    addWidget(pass);
+    addWidget(password);
     addWidget(new Wt::WBreak());
     addWidget(btn);
 
@@ -74,11 +74,11 @@ LoginWidget::~LoginWidget()
 void LoginWidget::Login()
 {
     bool validLogin = login->validate() == Wt::WValidator::Valid;
-    bool validPass = pass->validate() == Wt::WValidator::Valid;
+    bool validPass = password->validate() == Wt::WValidator::Valid;
 
     if (!validLogin || !validPass)
     {
-        Misc::Log(LOG_INVALID_DATA, "User trying to log in with invalid data ! ip: %s login: %s pass: %s", session->sessionIp.toUTF8().c_str(), login->text().toUTF8().c_str(), pass->text().toUTF8().c_str());
+        Misc::Log(LOG_INVALID_DATA, "User trying to log in with invalid data ! ip: %s login: %s pass: %s", session->sessionIp.toUTF8().c_str(), login->text().toUTF8().c_str(), password->text().toUTF8().c_str());
         Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_VALIDATION_LOGIN);
         return;
     }
@@ -92,13 +92,13 @@ void LoginWidget::Login()
     }
 
     std::string escapedLogin = db.EscapeString(login->text());
-    std::string escapedPass = db.EscapeString(pass->text());
+    std::string escapedPass = db.EscapeString(password->text());
     WString shapass = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.c_str(), escapedPass.c_str());
 
-               //           0            1         2     3       4       5         6       7         8       9
-    db.SetPQuery("SELECT username, sha_pass_hash, id, gmlevel, email, joindate, last_ip, locked, expansion, account_flags "
-                 "FROM account "
-                 "WHERE username = '%s'", escapedLogin.c_str());
+               //           0          1           2          3        4         5            6              7           8               9               10
+    db.SetPQuery("SELECT username, pass_hash, a.account_id, email, join_date, last_ip, account_state_id, expansion, account_flags, support_points, permission_mask "
+                 "FROM account AS a JOIN account_support AS as ON a.account_id = as.account_id JOIN account_permissions AS ap ON a.account_id = ap.account_id "
+                 "WHERE username = '%s' AND realm_id = '%i'", escapedLogin.c_str(), session->currentRealm);
 
     // execute will return 0 if result will be empty and -1 if there will be DB error.
     switch (db.ExecuteQuery())
@@ -133,32 +133,57 @@ void LoginWidget::Login()
                 return;
             }
 
-            if (row->fields[7].GetBool() && row->fields[6].GetWString() != session->sessionIp)
+            uint8 accountState = row->fields[6].GetInt();
+
+            switch (accountState)
             {
-                Misc::Account::AddActivity(row->fields[2].GetUInt32(), session->sessionIp.toUTF8(), TXT_ACT_LOGIN_FAIL, "");
-                Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_IP_MISMATCH);
-                return;
+                case ACCOUNT_STATE_INACTIVE:
+                {
+                    Misc::Account::AddActivity(row->fields[2].GetUInt32(), session->sessionIp.toUTF8(), TXT_ACT_LOGIN_FAIL, "");
+                    Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_ACCOUNT_INACTIVE);
+                    return;
+                }
+                case ACCOUNT_STATE_IP_LOCKED:
+                {
+                    if (row->fields[5].GetWString() != session->sessionIp)
+                    {
+                        Misc::Account::AddActivity(row->fields[2].GetUInt32(), session->sessionIp.toUTF8(), TXT_ACT_LOGIN_FAIL, "");
+                        Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_IP_MISMATCH);
+                        return;
+                    }
+                    break;
+                }
+                case ACCOUNT_STATE_ACTIVE:
+                case ACCOUNT_STATE_FROZEN:
+                    break;
+                default:
+                {
+                    Misc::Account::AddActivity(row->fields[2].GetUInt32(), session->sessionIp.toUTF8(), TXT_ACT_LOGIN_FAIL, "");
+                    Misc::Error::ShowErrorBoxTr(TXT_GEN_ERROR, TXT_ERROR_ACCOUNT_STATE_UNKNOWN);
+                    return;
+                }
             }
 
             Misc::Account::AddActivity(row->fields[2].GetUInt32(), session->sessionIp.toUTF8(), TXT_ACT_LOGIN_SUCCESS, "");
 
             session->login = row->fields[0].GetWString();
-            session->pass = row->fields[1].GetWString();
-            session->accid = row->fields[2].GetUInt64();
-            session->accLvl = row->fields[3].GetAccountLevel();
-            session->email = row->fields[4].GetWString();
-            session->joinDate = row->fields[5].GetWString();
-            session->lastIp = row->fields[6].GetWString();
-            session->locked = row->fields[7].GetBool();
-            session->expansion = row->fields[8].GetInt();
-            session->account_flags = row->fields[9].GetUInt64();
-            session->vote = 0;//row->fields[10].GetUInt32();
+            session->password = row->fields[1].GetWString();
+            session->accountId = row->fields[2].GetUInt64();
+            //session->accLvl = row->fields[3].GetAccountLevel();
+            session->email = row->fields[3].GetWString();
+            session->joinDate = row->fields[4].GetWString();
+            session->lastIp = row->fields[5].GetWString();
+            session->accountState = static_cast<AccountState>(accountState);
+            session->expansion = row->fields[7].GetInt();
+            session->accountFlags = row->fields[8].GetUInt64();
+            session->supportPoints = row->fields[9].GetUInt32();
+            session->permissions = row->fields[10].GetUInt64();
 
-            if (db.ExecutePQuery("SELECT * FROM account_banned WHERE id = '%u' AND active = 1 AND (bandate = unbandate OR unbandate > UNIX_TIMESTAMP())", session->accid) > DB_RESULT_EMPTY)
+            if (db.ExecutePQuery("SELECT 1 FROM account_punishment WHERE account_id = '%u' AND punishment_type_id = '%u' AND (punishment_date = expiration_date OR expiration_date > UNIX_TIMESTAMP())", session->accountId) > DB_RESULT_EMPTY)
                 session->banned = true;
 
             login->setText("");
-            pass->setText("");
+            password->setText("");
 
             templ->setCondition("if-loggedin", true);
             templ->setCondition("if-notlogged", false);

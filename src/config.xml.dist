@@ -1,12 +1,12 @@
-<!-- 
+<!--
 # default template options
-#   name 
+#   name
 #     Name of default template
 #     Default: default
-#   style.path 
+#   style.path
 #     Relative path to directory with default template style.css file
 #     Default: res/templates/default
-#   file.path 
+#   file.path
 #     Relative path to directory with default template template file
 #     Default: res/templates/default
 -->
@@ -21,7 +21,7 @@
 
 <!--
 # language options
-#   file.path 
+#   file.path
 #     Relative path to default (en) file with texts for panel - without extension !
 #     Rest of localized files should have same name with addition depends on language (for example: panel.xml is for english and panel_pl.xml is for polish)
 #     Default: langs/panel
@@ -35,7 +35,7 @@
 
 <!--
 # options for validators
-#   login 
+#   login
 #     Validator for account login in regex
 #     Default: [a-zA-Z0-9_-]{6-16}  <- characters, numbers - and _ with minimum length of 6 and maximum 16 signs
 -->
@@ -46,16 +46,16 @@
 
 <!--
 # mail options
-#   from 
+#   from
 #     Email address which should be added in from clause
 #     Default: none@none.none
-#   host 
+#   host
 #     Host which will be used to sending mails
 #     Default: localhost
-#   user 
+#   user
 #     Username to mail account
 #     Default: lala
-#   password 
+#   password
 #     Password to mail account
 #     Default: lala
 -->
@@ -166,7 +166,7 @@
 # General options
 #   debug
 #     Debug level as mask - 0 none, 1 code, 2 database
-#     Default: 0 
+#     Default: 0
 #   log
 #     Log level as mask - 0 none, 1 DB Query, 2 DB errors, 4 invalid data, 8 strange data
 -->
@@ -266,7 +266,7 @@
             <y>-132.493</y>
             <z>83.5312</z>
         </human>
-        
+
         <orc>
             <map>1</map>
             <zone>14</zone>
@@ -343,7 +343,7 @@
 
 <!--
 # Server eneral options
-#   allow.two.side.accounts
+#   allow.two-side-accounts
 #     Is server allowing two side accounts ? option for restore character feature
 #     Default: false
 #   registration.enabled
@@ -373,7 +373,7 @@
     <max>
         <characters>
             <realm>50</realm>
-            <account>10</realm>
+            <account>10</account>
         </characters>
     </max>
     <starting>
@@ -382,7 +382,7 @@
 
     <realms>
         <count>1</count>
-        
+
     <!--
     # Realms informations - for server status feature and many other
     #   name

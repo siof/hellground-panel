@@ -51,17 +51,17 @@ HGMenu::HGMenu(WStackedWidget * menuContents, SessionInfo * sess, Wt::WTemplate 
 
     setRenderAsList(true);
 
-    AddMenuItem(TXT_MENU_HOME, new DefaultPage(), LVL_PLAYER, true);
-    AddMenuItem(TXT_MENU_REGISTER, new RegisterPage(sess), LVL_NONE, true, "register");
-    AddMenuItem(TXT_MENU_ACC_INFO, new AccountInfoPage(sess), LVL_PLAYER, false, "account");
-    AddMenuItem(TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess), LVL_NONE, true, "recover");
-    AddMenuItem(TXT_MENU_PASS_CHANGE, new PassChangePage(sess), LVL_PLAYER, false, "changepassword");
-    AddMenuItem(TXT_MENU_CHARACTERS, new CharacterInfoPage(sess), LVL_PLAYER, false, "characters");
-    AddMenuItem(TXT_MENU_TELEPORT, new TeleportPage(sess), LVL_PLAYER, false, "teleport");
-    AddMenuItem(TXT_MENU_SUPPORT, new SupportPage(sess), LVL_PLAYER, false, "support");
-    AddMenuItem(TXT_MENU_SERVER_STATUS, new ServerStatusPage(), LVL_PLAYER, true, "status");
-    AddMenuItem(TXT_MENU_LOGOUT, new LogoutPage(sess, templ), LVL_PLAYER, false, "logout");
-    AddMenuItem(TXT_MENU_LICENCE, new LicencePage(), LVL_PLAYER, true, "licence");
+    AddMenuItem(TXT_MENU_HOME, new DefaultPage(), PERM_PLAYER, true);
+    AddMenuItem(TXT_MENU_REGISTER, new RegisterPage(sess), PERM_NONE, true, "register");
+    AddMenuItem(TXT_MENU_ACC_INFO, new AccountInfoPage(sess), PERM_NONE, false, "account");
+    AddMenuItem(TXT_MENU_PASS_RECOVERY, new PassRecoveryPage(sess), PERM_NONE, true, "recover");
+    AddMenuItem(TXT_MENU_PASS_CHANGE, new PassChangePage(sess), PERM_PLAYER, false, "changepassword");
+    AddMenuItem(TXT_MENU_CHARACTERS, new CharacterInfoPage(sess), PERM_PLAYER, false, "characters");
+    AddMenuItem(TXT_MENU_TELEPORT, new TeleportPage(sess), PERM_PLAYER, false, "teleport");
+    AddMenuItem(TXT_MENU_SUPPORT, new SupportPage(sess), PERM_PLAYER, false, "support");
+    AddMenuItem(TXT_MENU_SERVER_STATUS, new ServerStatusPage(), PERM_PLAYER, true, "status");
+    AddMenuItem(TXT_MENU_LOGOUT, new LogoutPage(sess, templ), PERM_PLAYER, false, "logout");
+    AddMenuItem(TXT_MENU_LICENCE, new LicencePage(), PERM_PLAYER, true, "licence");
 
     for (std::list<MenuItemInfo*>::const_iterator itr = menuItems.begin(); itr != menuItems.end(); ++itr)
         addItem((*itr)->item);
@@ -81,14 +81,14 @@ void HGMenu::RefreshActiveMenuWidget()
     contentsStack()->currentWidget()->refresh();
 }
 
-void HGMenu::AddMenuItem(const char * txt, Wt::WWidget * contents, AccountLevel reqLvl, bool notLogged, const char * path)
+void HGMenu::AddMenuItem(const char * txt, Wt::WWidget * contents, uint64 reqPerms, bool notLogged, const char * path)
 {
     Wt::WMenuItem * tmpItem = new Wt::WMenuItem(Wt::WString::tr(txt), contents);
 
     if (path)
         tmpItem->setPathComponent(path);
 
-    menuItems.push_back(new MenuItemInfo(tmpItem, reqLvl, notLogged));
+    menuItems.push_back(new MenuItemInfo(tmpItem, reqPerms, notLogged));
 }
 
 HGMenu::~HGMenu()
@@ -103,7 +103,7 @@ void HGMenu::UpdateMenuOptions()
         MenuItemInfo * tmpItem = (*itr);
 
         // checks for menu permissions will be improved after moving account levels to permission masks
-        if (session->accLvl >= tmpItem->reqAccLvl || (session->accLvl == LVL_NOT_LOGGED && tmpItem->notLoggedAlso))
+        if (session->permissions & tmpItem->reqPermissions || (session->sessionState == SESSION_STATE_NOT_LOGGED && tmpItem->notLoggedAlso))
             tmpItem->item->show();
         else
             tmpItem->item->hide();
@@ -114,10 +114,10 @@ void HGMenu::refresh()
 {
     Misc::Console(DEBUG_CODE, "\nHGMenu::refresh()\n");
 
-    if (session->accLvl == LVL_LOGGED_OUT)
+    if (session->sessionState == SESSION_STATE_LOGGED_OUT)
     {
         contentsStack()->refresh();
-        session->accLvl = LVL_NOT_LOGGED;
+        session->sessionState = SESSION_STATE_NOT_LOGGED;
     }
 
     UpdateMenuOptions();

@@ -74,7 +74,7 @@ void VotePage::refresh()
     Misc::Console(DEBUG_CODE, "void VotePage::refresh()\n");
 
     // only logged in players can visit this page so there is no need to create/update it in other cases
-    if (session->accLvl <= LVL_NOT_LOGGED)
+    if (!session->IsLoggedIn())
         ClearPage();
     else if (needCreation)
         CreateVotePage();
@@ -129,7 +129,7 @@ void VotePage::CreateVotePage()
     }
 
     // delete expired votes
-    db.ExecutePQuery("DELETE FROM AccVote WHERE reset_date < NOW()", session->accid);
+    db.ExecutePQuery("DELETE FROM AccVote WHERE reset_date < NOW()", session->accountId);
     db.ExecutePQuery("DELETE FROM IPVote WHERE reset_date < NOW()", session->sessionIp.toUTF8().c_str());
 
     // load vote lists
@@ -165,7 +165,7 @@ void VotePage::CreateVotePage()
     // load cooldowns
     db.SetPQuery("SELECT vote_id, reset_date FROM AccVote WHERE account_id = '%u' "
                 "UNION "
-                "SELECT vote_id, reset_date FROM IPVote WHERE ip = '%s'", session->accid, session->sessionIp.toUTF8().c_str());
+                "SELECT vote_id, reset_date FROM IPVote WHERE ip = '%s'", session->accountId, session->sessionIp.toUTF8().c_str());
 
     switch (db.ExecuteQuery())
     {
@@ -232,14 +232,14 @@ void VotePage::ClearPage()
     needCreation = true;
 }
 
-void VotePage::BindVote(Wt::EventSignal<Wt::WMouseEvent>& signal, const uint32& id)
+void VotePage::BindVote(Wt::EventSignal<Wt::WMouseEvent>& signal, const uint32& accountId)
 {
-    signal.connect(boost::bind(&VotePage::Vote, this, id));
+    signal.connect(boost::bind(&VotePage::Vote, this, accountId));
 }
 
-void VotePage::Vote(const uint32& id)
+void VotePage::Vote(const uint32& accountId)
 {
-    Misc::Console(DEBUG_CODE, "void VotePage::Vote(const uint32& id = %u)\n", id);
+    Misc::Console(DEBUG_CODE, "void VotePage::Vote(const uint32& id = %u)\n", accountId);
     if (Wt::WObject::sender())
     {
         Wt::WAnchor * tmpAnch = ((Wt::WAnchor*)Wt::WObject::sender());
@@ -250,7 +250,7 @@ void VotePage::Vote(const uint32& id)
 
     for (std::list<VoteInfo>::iterator itr = votesInfo.begin(); itr != votesInfo.end(); ++itr)
     {
-        if ((*itr).voteId == id)
+        if ((*itr).voteId == accountId)
         {
             currVote = &(*itr);
             break;
@@ -281,14 +281,14 @@ void VotePage::Vote(const uint32& id)
         return;
     }
 
-    db.SetPQuery("INSERT INTO AccVote VALUES ('%u', '%u', '%s')", session->accid, id, currVote->expire.toUTF8().c_str());
+    db.SetPQuery("INSERT INTO AccVote VALUES ('%u', '%u', '%s')", session->accountId, accountId, currVote->expire.toUTF8().c_str());
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
-    db.SetPQuery("INSERT INTO IPVote VALUES ('%s', '%u', '%s')", session->sessionIp.toUTF8().c_str(), id, currVote->expire.toUTF8().c_str());
+    db.SetPQuery("INSERT INTO IPVote VALUES ('%s', '%u', '%s')", session->sessionIp.toUTF8().c_str(), accountId, currVote->expire.toUTF8().c_str());
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
         votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
@@ -301,10 +301,10 @@ void VotePage::Vote(const uint32& id)
         return;
     }
 
-    db.SetPQuery("UPDATE account SET vote = '%u' WHERE id = '%u'", ++session->vote, session->accid);
+    db.SetPQuery("UPDATE account_support SET support_points = '%u' WHERE account_id = '%u'", ++session->supportPoints, session->accountId);
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
-        session->vote--;
+        session->supportPoints--;
         votePageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }

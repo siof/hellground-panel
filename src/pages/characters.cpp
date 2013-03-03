@@ -173,7 +173,7 @@ CharacterInfoPage::~CharacterInfoPage()
 void CharacterInfoPage::refresh()
 {
     // only logged in players can visit this page so there is no need to create/update it in other cases
-    if (session->accLvl > LVL_NOT_LOGGED)
+    if (session->IsLoggedIn())
     {
         if (needCreation)
         {
@@ -214,7 +214,7 @@ void CharacterInfoPage::refresh()
             }
 
             int index = 0;
-            switch (db.ExecutePQuery("SELECT guid, account, name, race FROM characters WHERE account = '%u'", session->accid))
+            switch (db.ExecutePQuery("SELECT guid, account, name, race FROM characters WHERE account = '%u'", session->accountId))
             {
                 case DB_RESULT_ERROR:
                     charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
@@ -240,7 +240,7 @@ void CharacterInfoPage::refresh()
 
             if (db.ExecutePQuery("SELECT char_guid, acc, oldname, race, date "
                                  "FROM deleted_chars JOIN characters ON deleted_chars.char_guid = characters.guid "
-                                 "WHERE acc = '%u'", session->accid) > DB_RESULT_EMPTY)
+                                 "WHERE acc = '%u'", session->accountId) > DB_RESULT_EMPTY)
             {
 
                 std::list<DatabaseRow*> rows = db.GetRows();
@@ -1014,33 +1014,35 @@ void CharacterInfoPage::RestoreCharacter()
         return;
     }
 
-    Database db;
-    if (!db.Connect(DB_REALM_DATA(session->currentRealm)))
+    Database dbR, dbA;
+    if (!dbR.Connect(DB_REALM_DATA(session->currentRealm)) || !dbA.Connect(DB_ACCOUNTS_DATA))
     {
         restoring = false;
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_CANT_CONNECT));
         return;
     }
 
-    if (db.ExecutePQuery("SELECT Count(*) FROM characters WHERE account = '%u'", tmpCharInfo.account) == DB_RESULT_ERROR)
+    if (dbR.ExecutePQuery("SELECT Count(*) FROM characters WHERE account = '%u'", tmpCharInfo.account) == DB_RESULT_EMPTY ||
+        dbA.ExecutePQuery("SELECT SUM(characters_count) FROM realm_characters WHERE account_id = '%u'", tmpCharInfo.account) == DB_RESULT_ERROR)
     {
         restoring = false;
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
         return;
     }
 
-    uint32 charactersCount = db.GetRow()->fields[0].GetUInt32();
+    uint32 charactersCount = dbR.GetRow()->fields[0].GetUInt32();
 
-    if (charactersCount >= sConfig.GetConfig(CONFIG_MAX_CHARACTERS_PER_ACCOUNT))
+    if (charactersCount >= sConfig.GetConfig(CONFIG_MAX_CHARACTERS_PER_REALM) ||
+        dbA.GetRow()->fields[0].GetUInt32() >= sConfig.GetConfig(CONFIG_MAX_CHARACTERS_PER_ACCOUNT))
     {
         restoring = false;
         charPageInfo->setText(Wt::WString::tr(TXT_ERROR_TO_MUCH_CHARACTERS));
         return;
     }
 
-    std::string escapedName = db.EscapeString(tmpCharInfo.name);
+    std::string escapedName = dbR.EscapeString(tmpCharInfo.name);
 
-    switch (db.ExecutePQuery("SELECT guid FROM characters WHERE name = '%s'", escapedName.c_str()))
+    switch (dbR.ExecutePQuery("SELECT guid FROM characters WHERE name = '%s'", escapedName.c_str()))
     {
         case DB_RESULT_ERROR:
         {
@@ -1069,13 +1071,10 @@ void CharacterInfoPage::RestoreCharacter()
 
             if (sameFaction)
             {
-                if (db.ExecutePQuery("UPDATE characters SET name = '%s', account = '%u' WHERE guid = '%u'", escapedName.c_str(), tmpCharInfo.account, tmpCharInfo.guid) != DB_RESULT_ERROR)
+                if (dbR.ExecutePQuery("UPDATE characters SET name = '%s', account = '%u' WHERE guid = '%u'", escapedName.c_str(), tmpCharInfo.account, tmpCharInfo.guid) != DB_RESULT_ERROR)
                 {
-                    db.ExecutePQuery("DELETE FROM deleted_chars WHERE char_guid = '%u'", tmpCharInfo.guid);
-
-
-                    if (db.Connect(DB_ACCOUNTS_DATA))
-                        db.ExecutePQuery("UPDATE realmcharacters SET numchars = '%u' WHERE account = '%u' AND realmid = 1", charactersCount + 1, tmpCharInfo.account);
+                    dbR.ExecutePQuery("DELETE FROM deleted_chars WHERE char_guid = '%u'", tmpCharInfo.guid);
+                    dbA.ExecutePQuery("UPDATE realm_characters SET characters_count = '%u' WHERE account_id = '%u' AND realm_id = 1", charactersCount + 1, tmpCharInfo.account);
 
                     tmpItr->second.deleted = false;
                     charList->setItemText(tmpItr->first, tmpItr->second.name);

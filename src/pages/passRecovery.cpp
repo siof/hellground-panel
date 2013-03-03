@@ -152,7 +152,7 @@ void PassRecoveryPage::Recover()
 
     if (!validLogin || !validEmail)
     {
-        Misc::Log(LOG_INVALID_DATA, "User trying to recover password with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
+        Misc::Log(LOG_INVALID_DATA, "Validation: User is trying to recover password with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
         recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_VALIDATION_RECOVERY));
         return;
     }
@@ -165,18 +165,18 @@ void PassRecoveryPage::Recover()
         return;
     }
 
-    WString escapedLogin, mail, pass, escapedPass, passHash;
+    WString escapedLogin, mail, password, escapedPass, passHash;
 
     escapedLogin = db.EscapeString(txtLogin->text());
 
     // check if account already exists
-    db.SetPQuery("SELECT id, email, NOW() FROM account WHERE username = '%s'", escapedLogin.toUTF8().c_str());
+    db.SetPQuery("SELECT account_id, email, NOW(), account_state_id FROM account WHERE username = '%s'", escapedLogin.toUTF8().c_str());
 
     switch (db.ExecuteQuery())
     {
         case DB_RESULT_ERROR:
         case DB_RESULT_EMPTY:
-            Misc::Account::AddActivity(escapedLogin.toUTF8(), session->sessionIp.toUTF8(), TXT_ACT_RECOVERY_FAIL, "");
+            Misc::Log(LOG_INVALID_DATA, "User is trying to recover password with invalid data ! IP: %s login: %s email: %s", session->sessionIp.toUTF8().c_str(), txtLogin->text().toUTF8().c_str(), txtEmail->text().toUTF8().c_str());
             recoveryInfo->setText(Wt::WString::tr(TXT_ERROR_WRONG_RECOVERY_DATA));
             ClearRecoveryData();
             return;
@@ -187,6 +187,7 @@ void PassRecoveryPage::Recover()
     uint32 accId = db.GetRow()->fields[0].GetUInt32();
     Wt::WString dbMail = db.GetRow()->fields[1].GetWString();
     std::string dbDate = db.GetRow()->fields[2].GetString();
+    AccountState accountState = AccountState(db.GetRow()->fields[3].GetInt());
 
     Misc::Console(DEBUG_CODE, "void Recover(): dbMail: %s mail: %s\n", txtEmail->text().toUTF8().c_str(), dbMail.toUTF8().c_str());
 
@@ -203,14 +204,18 @@ void PassRecoveryPage::Recover()
         return;
     }
 
-    pass = Misc::Account::GeneratePassword();
-    escapedPass = db.EscapeString(pass);
+    password = Misc::Account::GeneratePassword();
+    escapedPass = db.EscapeString(password);
     passHash = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.toUTF8().c_str(), escapedPass.toUTF8().c_str());
 
     WString from, msg;
     from = sConfig.GetConfig(CONFIG_MAIL_FROM);
 
-    db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = '', s = '', v = '', locked = '0' WHERE id = '%u';", passHash.toUTF8().c_str(), accId);
+    // if account was ip locked - unlock it
+    if (accountState == ACCOUNT_STATE_IP_LOCKED)
+        accountState = ACCOUNT_STATE_ACTIVE;
+
+    db.SetPQuery("UPDATE account SET pass_hash = '%s', account_state_id = '%u' WHERE account_id = '%u'", passHash.toUTF8().c_str(), static_cast<uint32>(accountState), accId);
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
     {
@@ -220,7 +225,7 @@ void PassRecoveryPage::Recover()
         return;
     }
 
-    msg = Wt::WString::tr(TXT_PASS_RECOVERY_MAIL).arg(dbDate).arg(session->sessionIp.toUTF8()).arg(pass.toUTF8());
+    msg = Wt::WString::tr(TXT_PASS_RECOVERY_MAIL).arg(dbDate).arg(session->sessionIp.toUTF8()).arg(password.toUTF8());
 
     Misc::SendMail(from, mail, Wt::WString::tr(TXT_PASS_RECOVERY_SUBJECT), msg);
 

@@ -53,7 +53,7 @@ enum AccountInfoSlot
     ACCINFO_SLOT_CREATE_DATE,       /**< Account create time. */
     ACCINFO_SLOT_LAST_LOGIN_DATE,   /**< Last login date. */
     ACCINFO_SLOT_LAST_LOGGED_IP,    /**< Last logged (in game) ip. */
-    ACCINFO_SLOT_IP_LOCK,           /**< Is ip lock on or not ? */
+    ACCINFO_SLOT_STATE,             /**< Account state */
     ACCINFO_SLOT_ONLINE,            /**< Account is actually online. */
     ACCINFO_SLOT_CLIENT_VERSION,    /**< Players client locale name. */
     ACCINFO_SLOT_EMAIL,             /**< Player account email address. */
@@ -68,40 +68,23 @@ enum AccountInfoSlot
 };
 
 /********************************************//**
- * \brief Slots for Ban informations.
+ * \brief Slots for punishment informations.
  *
  * It's only for simple text update on lang change.
  *
  ***********************************************/
 
-enum BanInfoSlot
+enum PunishInfoSlot
 {
-    ACCBANINFO_SLOT_BANDATE   = 0,      /**< Account ban date */
-    ACCBANINFO_SLOT_UNBANDATE,          /**< Account unban date (or text for permanent bans) */
-    ACCBANINFO_SLOT_BANNEDBY,           /**< GM Name who banned account */
-    ACCBANINFO_SLOT_BANREASON,          /**< Account ban reason */
-    ACCBANINFO_SLOT_PERMANENT,          /**< Info if ban is permanent */
-    ACCBANINFO_SLOT_ACTIVE,             /**< Info if ban is still active */
+    ACCPUNISHINFO_SLOT_PUNISHMENTDATE   = 0,    /**< Account punishment date */
+    ACCPUNISHINFO_SLOT_EXPIRATIONDATE,          /**< Account punishment expiration date (or text for permanent bans) */
+    ACCPUNISHINFO_SLOT_PUNISHEDBY,              /**< GM Name who punished account */
+    ACCPUNISHINFO_SLOT_REASON,                  /**< Account punishment reason */
+    ACCPUNISHINFO_SLOT_TYPE,                    /**< Info about punishment type */
+    ACCPUNISHINFO_SLOT_PERMANENT,               /**< Info if punishment is permanent */
+    ACCPUNISHINFO_SLOT_ACTIVE,                  /**< Info if punishment is still active */
 
-    ACCBANINFO_SLOT_COUNT
-};
-
-/********************************************//**
- * \brief Slots for Mute informations.
- *
- * It's only for simple text update on lang change.
- *
- ***********************************************/
-
-enum MuteInfoSlot
-{
-    ACCMUTEINFO_SLOT_MUTEDATE   = 0,    /**< Account mute date */
-    ACCMUTEINFO_SLOT_UNMUTEDATE,        /**< Account unmute date */
-    ACCMUTEINFO_SLOT_MUTEDBY,           /**< GM Name who muted account */
-    ACCMUTEINFO_SLOT_MUTEREASON,        /**< Account mute reason */
-    ACCMUTEINFO_SLOT_ACTIVE,            /**< Info if mute is still active */
-
-    ACCMUTEINFO_SLOT_COUNT
+    ACCPUNISHINFO_SLOT_COUNT
 };
 
 /********************************************//**
@@ -115,9 +98,8 @@ enum AccInfoTabSlot
 {
     ACCTAB_SLOT_BASIC       = 0,    /**< Tab with basic account informations */
     ACCTAB_SLOT_BANS        = 1,    /**< Tab with ban informations */
-    ACCTAB_SLOT_MUTE        = 2,    /**< Tab with mute informations */
-    ACCTAB_SLOT_TICKET      = 3,    /**< Tab with ticket history */
-    ACCTAB_SLOT_ACTIVITY    = 4,    /**< Tab with account activity history */
+    ACCTAB_SLOT_TICKET      = 2,    /**< Tab with ticket history */
+    ACCTAB_SLOT_ACTIVITY    = 3,    /**< Tab with account activity history */
 
     ACCTAB_SLOT_COUNT
 };
@@ -157,9 +139,7 @@ private:
     WContainerWidget * CreateAccountInfo();
     void UpdateAccountInfo(bool first = false);
 
-    WTable * CreateBanInfo();
-
-    WTable * CreateMuteInfo();
+    WTable * CreatePunishmentInfo();
 
     WTabWidget * activityTabs;
     WContainerWidget * CreateActivityInfo();

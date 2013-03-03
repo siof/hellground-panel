@@ -161,7 +161,7 @@ void Config::ReadConfig()
     SetConfig(CONFIG_EMAIL_HIDE_DOMAIN, pt.get("email.hide.domain", true));
 
     std::cout << "    server" << std::endl;
-    SetConfig(CONFIG_ALLOW_TWO_SIDE_ACCOUNTS, pt.get("server.allow.two.side.accounts", false));
+    SetConfig(CONFIG_ALLOW_TWO_SIDE_ACCOUNTS, pt.get("server.allow.two-side-accounts", false));
     SetConfig(CONFIG_REGISTRATION_ENABLED, pt.get("server.registration.enabled", true));
     SetConfig(CONFIG_REALMS_COUNT, pt.get("server.realms.count", 1));
     SetConfig(CONFIG_MAX_CHARACTERS_PER_REALM, pt.get("server.max.characters.per.realm", 50));
@@ -272,7 +272,7 @@ void Config::ReadConfig()
         realmInfos[i].name = pt.get(fullOption, "None");
         realmInfos[i].statusUrl = pt.get(partialOption + "statusurl", "http://localhost/status.prsr");
         realmInfos[i].additionalInfo = pt.get(partialOption + "additional", "");
-        realmInfos[i].id = pt.get(partialOption + "id", realmCount);
+        realmInfos[i].realmId = pt.get(partialOption + "id", realmCount);
         realmInfos[i].dbHost = pt.get(partialOption + "dbhost", "localhost");
         realmInfos[i].dbLogin = pt.get(partialOption + "dblogin", "panel");
         realmInfos[i].dbPass = pt.get(partialOption + "dbpass", "panel");
