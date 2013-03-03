@@ -83,7 +83,7 @@ void TeleportPage::refresh()
     Misc::Console(DEBUG_CODE, "TeleportPage::refresh()");
 
     // teleport page should be only for not logged yet players so there is no need to update it in other cases
-    if (session->accLvl > LVL_NOT_LOGGED)
+    if (session->IsLoggedIn())
         LoadCharacters();
 
     WContainerWidget::refresh();
@@ -107,7 +107,7 @@ void TeleportPage::LoadCharacters()
     Database db;
     if (db.Connect(DB_REALM_DATA(session->currentRealm)))
     {
-        db.SetPQuery("SELECT guid, name FROM characters WHERE account = %u", session->accid);
+        db.SetPQuery("SELECT guid, name FROM characters WHERE account = %u", session->accountId);
 
         if (db.ExecuteQuery() > DB_RESULT_EMPTY)
         {
@@ -145,7 +145,7 @@ void TeleportPage::LoadCharacters()
 
 void TeleportPage::Teleport()
 {
-    if (session->accLvl < LVL_PLAYER)
+    if (session->IsLoggedIn())
         return;
 
     if (characters->count() < 1)
@@ -209,7 +209,7 @@ void TeleportPage::Teleport()
     if (db.Connect(DB_PANEL_DATA))
     {
         std::string tmpStr = Misc::GetFormattedString("Teleport. Character: %s. success: %s", db.EscapeString(name).c_str(), success ? "Yes" : "No");
-        db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '', '%s')", session->accid, session->sessionIp.toUTF8().c_str(), tmpStr.c_str());
+        db.ExecutePQuery("INSERT INTO Activity VALUES ('%u', NOW(), '%s', '', '%s')", session->accountId, session->sessionIp.toUTF8().c_str(), tmpStr.c_str());
     }
 }
 

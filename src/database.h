@@ -45,7 +45,6 @@ struct DatabaseField
     uint32 GetUInt32();
     int GetInt();
     bool GetBool();
-    AccountLevel GetAccountLevel();
 };
 
 struct DatabaseRow
@@ -66,7 +65,7 @@ public:
     void SetQuery(const std::string & query);           /// set query to execute
     bool SetPQuery(const char *format, ...);            /// set query to execute
 
-    bool Connect(const std::string & host, const std::string & login, const std::string & pass, unsigned int port, const std::string & db); // connects to db
+    bool Connect(const std::string & host, const std::string & login, const std::string & password, unsigned int port, const std::string & db); // connects to db
     void Disconnect();
     bool SelectDatabase(const std::string & db);
 

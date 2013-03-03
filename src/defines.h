@@ -79,23 +79,67 @@ enum Lang
     LANG_COUNT
 };
 
+///********************************************//**
+// * \brief Contains ids for all account levels
+// *
+// ***********************************************/
+//
+//enum AccountLevel
+//{
+//    LVL_LOGGED_OUT  = -2,   /**< recently logged out player */
+//    LVL_NOT_LOGGED  = -1,   /**< not logged yet or new player */
+//    LVL_PLAYER      = 0,    /**< logged normal player with no special rights */
+//    LVL_GM_TRIAL    = 1,    /**< Game Master level 1 (Trial/Moderator) */
+//    LVL_GM_HELPER   = 2,    /**< Game Master level 2 (Game Master Helper) */
+//    LVL_GM_HEAD     = 3,    /**< Game Master level 3 (Head/Root Game Master) */
+//    LVL_ADM         = 4,    /**< Server Administrator */
+//
+//
+//    LVL_NONE        = 999,  /**< not existing level */
+//};
+
+enum AccountPermissionMasks
+{
+    PERM_NONE           = 0x000000,
+
+    PERM_PLAYER         = 0x000001,
+    PERM_DEVELOPER      = 0x000002,
+
+    PERM_GM_TRIAL       = 0x000100,
+    PERM_GM_HELPER      = 0x000200,
+
+    PERM_GM_HEAD        = 0x000800,
+
+    PERM_ADM_NORM       = 0x001000,
+    PERM_ADM_HEAD       = 0x002000,
+
+    PERM_CONSOLE        = 0x800000,
+
+    PERM_GMT            = PERM_GM_TRIAL | PERM_GM_HELPER | PERM_GM_HEAD,
+    PERM_ADM            = PERM_GMT | PERM_ADM_NORM | PERM_ADM_HEAD,
+    PERM_HIGH_GMT       = PERM_ADM | PERM_GM_HEAD,
+    PERM_GMT_DEV        = PERM_GMT | PERM_DEVELOPER,
+    PERM_HIGH_DEV       = PERM_HIGH_GMT | PERM_DEVELOPER,
+    PERM_ALL            = PERM_PLAYER | PERM_GMT_DEV | PERM_ADM
+};
+
 /********************************************//**
- * \brief Contains ids for all account levels
- *
+ * \brief Contains ids for account states
  ***********************************************/
 
-enum AccountLevel
+enum AccountState
 {
-    LVL_LOGGED_OUT  = -2,   /**< recently logged out player */
-    LVL_NOT_LOGGED  = -1,   /**< not logged yet or new player */
-    LVL_PLAYER      = 0,    /**< logged normal player with no special rights */
-    LVL_GM_TRIAL    = 1,    /**< Game Master level 1 (Trial/Moderator) */
-    LVL_GM_HELPER   = 2,    /**< Game Master level 2 (Game Master Helper) */
-    LVL_GM_HEAD     = 3,    /**< Game Master level 3 (Head/Root Game Master) */
-    LVL_ADM         = 4,    /**< Server Administrator */
+    ACCOUNT_STATE_INACTIVE  = 0,
+    ACCOUNT_STATE_ACTIVE    = 1,
+    ACCOUNT_STATE_IP_LOCKED = 2,
+    ACCOUNT_STATE_FROZEN    = 3
+};
 
-
-    LVL_NONE        = 999,  /**< not existing level */
+enum SessionState
+{
+    SESSION_STATE_LOGGED_OUT    = 0,
+    SESSION_STATE_NOT_LOGGED    = 1,
+    SESSION_STATE_LOGGED_IN     = 2
 };
 
 /********************************************//**
@@ -113,24 +157,78 @@ struct SessionInfo
      *
      ***********************************************/
 
-    SessionInfo() : login(""), accid(0), pass(""), email(""), language(LANG_PL), accLvl(LVL_NOT_LOGGED), locked(false), expansion(0), vote(0), account_flags(0), banned(false), currentRealm(0) {}
+    SessionInfo() : sessionState(SESSION_STATE_NOT_LOGGED), login(""), accountId(0), password(""),
+                    email(""), language(LANG_PL), permissions(PERM_NONE), accountState(ACCOUNT_STATE_INACTIVE),
+                    expansion(0), supportPoints(0), accountFlags(0), banned(false), currentRealm(0) {}
     ~SessionInfo() {}
 
-    WString login;          /**< Login used to log on account. */
-    uint64 accid;           /**< Players account id. Is 0 if player isn't logged in. */
-    WString pass;           /**< Password used to log on account. */
-    WString email;          /**< Email used to register account. */
-    WString joinDate;       /**< Account registration date */
-    WString lastIp;         /**< Last ip used while connecting to server. */
-    WString sessionIp;      /**< Ip for current panel session. */
-    Lang language;          /**< Chosen language which should be used to show informations in panel. */
-    AccountLevel accLvl;    /**< Security level for this account(player, gm etc). Which content should be shown depends on this variable (For example: Player can't use GM section. Not logged player can't view account informations.). */
-    bool locked;            /**< IP lock */
-    int expansion;          /**< Expansion enabled for this account. */
-    uint32 vote;            /**< Vote points count */
-    uint64 account_flags;   /**< Account custom flags (blizz xp rates for example) */
-    bool banned;            /**< Account was banned while login? */
-    int currentRealm;       /**< Current realm - not used yet */
+    SessionState sessionState;
+
+    WString login;              /**< Login used to log on account. */
+    uint64 accountId;           /**< Players account id. Is 0 if player isn't logged in. */
+    WString password;           /**< Password used to log on account. */
+    WString email;              /**< Email used to register account. */
+    WString joinDate;           /**< Account registration date */
+    WString lastIp;             /**< Last ip used while connecting to server. */
+    WString sessionIp;          /**< Ip for current panel session. */
+    Lang language;              /**< Chosen language which should be used to show informations in panel. */
+    uint64 permissions;         /**< Account permissions. */
+    AccountState accountState;  /**< Account state - inactive/active/ip locked/frozen */
+    int expansion;              /**< Expansion enabled for this account. */
+    uint32 supportPoints;       /**< Vote points count */
+    uint64 accountFlags;        /**< Account custom flags (blizz xp rates for example) */
+    bool banned;                /**< Account was banned while login? */
+    int currentRealm;           /**< Current realm - not used yet */
+
+    /********************************************//**
+     * \brief Returns information if account have ip lock enabled.
+     * \return information about ip lock
+     ***********************************************/
+
+    bool IsIPLocked()
+    {
+        return accountState == ACCOUNT_STATE_IP_LOCKED;
+    }
+
+    /********************************************//**
+     * \brief Returns information if account have ip lock enabled.
+     * \return information about ip lock
+     ***********************************************/
+
+    bool IsFrozen()
+    {
+        return accountState == ACCOUNT_STATE_FROZEN;
+    }
+
+    /********************************************//**
+     * \brief Returns information if account have ip lock enabled.
+     * \return information about ip lock
+     ***********************************************/
+
+    bool IsActive()
+    {
+        return accountState == ACCOUNT_STATE_ACTIVE;
+    }
+
+    /********************************************//**
+     * \brief Returns information if session is logged in.
+     * \return information about session logged in state
+     ***********************************************/
+
+    bool IsLoggedIn()
+    {
+        return sessionState == SESSION_STATE_LOGGED_IN;
+    }
+
+    /********************************************//**
+     * \brief Checks permissions for given permission mask
+     * \return information if session has proper permissions
+     ***********************************************/
+
+    bool HasPermissionMask(uint64 mask)
+    {
+        return permissions & mask;
+    }
 
     /********************************************//**
      * \brief Clears session informations.
@@ -142,17 +240,19 @@ struct SessionInfo
 
     void Clear()
     {
+        sessionState = SESSION_STATE_LOGGED_OUT;
+
         login = "";
-        pass = "";
+        password = "";
         email = "";
         joinDate = "";
         lastIp = "";
 
-        accid = 0;
-        accLvl = LVL_LOGGED_OUT;
-        locked = false;
+        accountId = 0;
+        permissions = PERM_NONE;
+        accountState = ACCOUNT_STATE_INACTIVE;
         expansion = 0;
-        vote = 0;
+        supportPoints = 0;
         banned = false;
     }
 };
@@ -345,12 +445,13 @@ enum MenuOptions
 #define TXT_REG_ERROR                   "registration.error"        /**< Information that there was an error in registration. */
 
 /** Ban informations */
-#define TXT_BAN_FROM                    "ban.date.from"             /**< Ban time label */
-#define TXT_BAN_TO                      "ban.date.to"               /**< Unban time label */
-#define TXT_BAN_BY                      "ban.by"                    /**< Banned by label */
-#define TXT_BAN_REASON                  "ban.reason"                /**< Ban reason label */
-#define TXT_BAN_PERMANENT               "ban.permanent"             /**< Ban is permanent label */
-#define TXT_BAN_BANNED                  "ban.banned"                /**< Info that account is banned till xxx */
+#define TXT_PUNISHMENT_FROM             "punishment.date.from"      /**< Punishment time label */
+#define TXT_PUNISHMENT_TO               "punishment.date.to"        /**< Expiration time label */
+#define TXT_PUNISHMENT_BY               "punishment.by"             /**< Punished by label */
+#define TXT_PUNISHMENT_REASON           "punishment.reason"         /**< Reason label */
+#define TXT_PUNISHMENT_TYPE             "punishment.type"           /**< Punishment type label */
+#define TXT_PUNISHMENT_PERMANENT        "punishment.permanent"      /**< Panishment is permanent label */
+#define TXT_PUNISHMENT_BANNED           "punishment.banned"         /**< Info that account is banned till xxx */
 
 /** Mute informations */
 #define TXT_MUTE_FROM                   "mute.date.from"            /**< Ban time label */
@@ -522,6 +623,9 @@ enum MenuOptions
 #define TXT_ERROR_FACTION_MISMATCH      "error.faction.mismatch"    /**< Error info: you can't have characters in both sides */
 #define TXT_ERROR_TO_MUCH_CHARACTERS    "error.tomuch.characters"   /**< Error info: to much characters on account */
 #define TXT_ERROR_NOT_WHILE_BANNED      "error.cant.while.banned"   /**< Error info: you can't do that while banned */
+#define TXT_ERROR_ACCOUNT_INACTIVE      "error.account.inactive"    /**< Error info: You can't login to inactive account. */
+#define TXT_ERROR_ACCOUNT_STATE_UNKNOWN "error.account.state.unknown"   /**< Error info: Your account state is unknown. Please contact to administrator. */
+#define TXT_ERROR_CANT_WHILE_FROZEN     "error.cant.while.frozen"   /**< Error info: You can't do that while account is frozen. */
 
 /** Database errors */
 #define TXT_ERROR_DB_CANT_CONNECT       "error.db.connection"       /**< DB Error info: can't connect to database */
@@ -674,14 +778,14 @@ enum RealmInfo
 struct RealmInformations
 {
     RealmInformations()
-        : name(""), statusUrl(""), additionalInfo(""), id(0),
+        : name(""), statusUrl(""), additionalInfo(""), realmId(0),
             dbHost(""), dbLogin(""), dbPass(""), dbPort(0), dbName("")
     {
 
     }
 
     RealmInformations(const RealmInformations & p)
-        : name(p.name), statusUrl(p.statusUrl), additionalInfo(p.additionalInfo), id(p.id),
+        : name(p.name), statusUrl(p.statusUrl), additionalInfo(p.additionalInfo), realmId(p.realmId),
             dbHost(p.dbHost), dbLogin(p.dbLogin), dbPass(p.dbPass), dbPort(p.dbPort), dbName(p.dbName)
     {
 
@@ -690,7 +794,7 @@ struct RealmInformations
     std::string name;
     std::string statusUrl;
     std::string additionalInfo;
-    uint32 id;
+    uint32 realmId;
     std::string dbHost;
     std::string dbLogin;
     std::string dbPass;
@@ -699,6 +803,12 @@ struct RealmInformations
 };
 
 // enums/defines from core:
+
+enum PunishmentTypes
+{
+    PUNISHMENT_MUTE     = 1,
+    PUNISHMENT_BAN      = 2
+};
 
 enum TimeConstants
 {

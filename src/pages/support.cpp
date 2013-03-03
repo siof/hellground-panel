@@ -69,7 +69,7 @@ void SupportPage::refresh()
         return;
 
     // only logged in players can visit this page so there is no need to create/update it in other cases
-    if (session->accLvl > LVL_NOT_LOGGED)
+    if (session->IsLoggedIn())
     {
         if (needCreation)
         {

@@ -140,15 +140,15 @@ void PassChangePage::ClearPass()
 
 void PassChangePage::Change()
 {
-    if (session->accLvl < LVL_PLAYER)
+    if (session->IsLoggedIn())
         return;
 
-    Wt::WString pass, pass2;
+    Wt::WString password, pass2;
 
-    pass = txtPass->text();
+    password = txtPass->text();
     pass2 = txtPass2->text();
 
-    std::string tmpPass = pass.toUTF8();
+    std::string tmpPass = password.toUTF8();
 
     if (tmpPass.size() > sConfig.GetConfig(CONFIG_PASSWORD_LENGTH_MAX))
     {
@@ -164,14 +164,14 @@ void PassChangePage::Change()
         return;
     }
 
-    if (pass != pass2)
+    if (password != pass2)
     {
         changeInfo->setText(Wt::WString::tr(TXT_ERROR_PASSWORDS_MISMATCH));
         ClearPass();
         return;
     }
 
-    Misc::Account::AddActivity(session->accid, session->sessionIp.toUTF8().c_str(), TXT_ACT_PASS_CHANGE, "");
+    Misc::Account::AddActivity(session->accountId, session->sessionIp.toUTF8().c_str(), TXT_ACT_PASS_CHANGE, "");
 
     Database db;
 
@@ -186,26 +186,28 @@ void PassChangePage::Change()
     std::string escapedPass = db.EscapeString(txtPassOld->text());
     shapass = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.c_str(), escapedPass.c_str());
 
-    if (shapass != session->pass)
+    if (shapass != session->password)
     {
-        Misc::Console(DEBUG_CODE, "void PassChangePage::Change(): oldPass: %s , shapass: %s , pass: %s\n", txtPassOld->text().toUTF8().c_str(), shapass.toUTF8().c_str(), session->pass.toUTF8().c_str());
+        Misc::Console(DEBUG_CODE, "void PassChangePage::Change(): oldPass: %s , shapass: %s , pass: %s\n", txtPassOld->text().toUTF8().c_str(), shapass.toUTF8().c_str(), session->password.toUTF8().c_str());
         changeInfo->setText(Wt::WString::tr(TXT_ERROR_WRONG_PASSWORD));
         ClearPass();
         return;
     }
 
-    escapedPass = db.EscapeString(pass);
+    escapedPass = db.EscapeString(password);
     shapass = Misc::Hash::PWGetSHA1("%s:%s", Misc::Hash::HASH_FLAG_UPPER, escapedLogin.c_str(), escapedPass.c_str());
 
-    db.SetPQuery("UPDATE account SET sha_pass_hash = '%s', sessionkey = NULL, s = NULL, v = NULL WHERE id = '%u'", shapass.toUTF8().c_str(), session->accid);
+    db.SetPQuery("UPDATE account SET pass_hash = '%s' WHERE account_id = '%u'", shapass.toUTF8().c_str(), session->accountId);
 
     if (db.ExecuteQuery() == DB_RESULT_ERROR)
         changeInfo->setText(Wt::WString::tr(TXT_ERROR_DB_QUERY_ERROR));
     else
     {
-        session->pass = shapass;
+        session->password = shapass;
         changeInfo->setText(Wt::WString::tr(TXT_PASS_CHANGE_COMPLETE));
     }
+
+    db.ExecutePQuery("UPDATE account_session SET session_key = '0', v = '0', s = '0' WHERE account_id = '%u'", session->accountId);
 
     ClearPass();
 }

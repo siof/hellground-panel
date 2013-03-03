@@ -12,7 +12,6 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-std=c++0x" />
 					<Add option="-Wall" />
 					<Add option="-g" />
 				</Compiler>
@@ -97,6 +96,7 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-std=c++11" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-DUNIX" />
@@ -130,6 +130,7 @@
 		<Unit filename="../src/TemplateWidget.h" />
 		<Unit filename="../src/config.cpp" />
 		<Unit filename="../src/config.h" />
+		<Unit filename="../src/config.xml.dist" />
 		<Unit filename="../src/database.cpp" />
 		<Unit filename="../src/database.h" />
 		<Unit filename="../src/defines.h" />

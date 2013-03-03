@@ -27,31 +27,31 @@
 
 struct MenuItemInfo
 {
-    MenuItemInfo() : item(NULL), reqAccLvl(LVL_NOT_LOGGED), notLoggedAlso(false) {}
-    MenuItemInfo(const Wt::WString &text, Wt::WWidget *contents, AccountLevel reqLvl, bool notLogged, Wt::WMenuItem::LoadPolicy policy = Wt::WMenuItem::LazyLoading)
+    MenuItemInfo() : item(NULL), reqPermissions(PERM_NONE), notLoggedAlso(false) {}
+    MenuItemInfo(const Wt::WString &text, Wt::WWidget *contents, uint64 reqPerms, bool notLogged, Wt::WMenuItem::LoadPolicy policy = Wt::WMenuItem::LazyLoading)
     {
         item = new Wt::WMenuItem(text, contents, policy);
-        reqAccLvl = reqLvl;
+        reqPermissions = reqPerms;
         notLoggedAlso = notLogged;
     }
 
-    MenuItemInfo(Wt::WMenuItem * menuItem, AccountLevel reqLvl, bool notLogged)
+    MenuItemInfo(Wt::WMenuItem * menuItem, uint64 reqPerms, bool notLogged)
     {
         item = menuItem;
-        reqAccLvl = reqLvl;
+        reqPermissions = reqPerms;
         notLoggedAlso = notLogged;
     }
 
     ~MenuItemInfo()
     {
         item = NULL;
-        reqAccLvl = LVL_NOT_LOGGED;
+        reqPermissions = PERM_NONE;
         notLoggedAlso = false;
     }
 
 
     Wt::WMenuItem * item;
-    AccountLevel reqAccLvl;
+    uint64 reqPermissions;
     bool notLoggedAlso;
 };
 
@@ -69,7 +69,7 @@ private:
 
     std::list<MenuItemInfo*> menuItems;
 
-    void AddMenuItem(const char * txt, Wt::WWidget * contents, AccountLevel reqLvl, bool notLoggedAlso, const char * path = "");
+    void AddMenuItem(const char * txt, Wt::WWidget * contents, uint64 reqPerms, bool notLoggedAlso, const char * path = "");
 
     void UpdateMenuOptions();
     void RefreshActiveMenuWidget();

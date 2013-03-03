@@ -75,7 +75,7 @@ void Misc::Account::AddActivity(const char * username, const char * ip, const ch
     else
         tmpUsr = username;
 
-    if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", tmpUsr.c_str()) > DB_RESULT_EMPTY)
+    if (db.ExecutePQuery("SELECT account_id FROM account WHERE username = '%s'", tmpUsr.c_str()) > DB_RESULT_EMPTY)
         accountId = db.GetRow()->fields[0].GetUInt32();
     else
         return;
@@ -104,7 +104,7 @@ void Misc::Account::AddActivity(const std::string & username, const std::string 
     else
         tmpUsr = username;
 
-    if (db.ExecutePQuery("SELECT id FROM account WHERE username = '%s'", tmpUsr.c_str()) > DB_RESULT_EMPTY)
+    if (db.ExecutePQuery("SELECT account_id FROM account WHERE username = '%s'", tmpUsr.c_str()) > DB_RESULT_EMPTY)
         accountId = db.GetRow()->fields[0].GetUInt32();
     else
         return;

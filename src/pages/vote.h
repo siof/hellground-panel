@@ -94,9 +94,9 @@ private:
     void CreateVotePage();
     void UpdateVotePage();
     void ClearPage();
-    void BindVote(EventSignal<WMouseEvent>& signal, const uint32& id);
+    void BindVote(EventSignal<WMouseEvent>& signal, const uint32& accountId);
 
-    void Vote(const uint32& id);
+    void Vote(const uint32& accountId);
 
     /// stores vote informations
     std::list<VoteInfo> votesInfo;
